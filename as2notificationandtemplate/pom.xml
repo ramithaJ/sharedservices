@@ -1,0 +1,201 @@
+<!-- Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved. -->
+
+<!-- All material contained herein is proprietary to John Wiley & Sons -->
+<!-- and its third party suppliers, if any. The methods, techniques and -->
+<!-- technical concepts contained herein are considered trade secrets -->
+<!-- and confidential and may be protected by intellectual property laws. -->
+<!-- Reproduction or distribution of this material, in whole or in part, -->
+<!-- is strictly forbidden except by express prior written permission -->
+<!-- of John Wiley & Sons. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.wiley.gr.ace</groupId>
+	<artifactId>notification-template</artifactId>
+	<packaging>pom</packaging>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>AuthorServices</name>
+
+	<properties>
+		<spring.version>4.1.4.RELEASE</spring.version>
+		<sl4j.version>1.7.10</sl4j.version>
+		<spring.boot>1.2.3.RELEASE</spring.boot>
+		<restlet.version>2.0.5</restlet.version>
+	</properties>
+
+	<modules>
+		<module>web</module>
+		<module>services</module>
+		<module>model</module>
+		<module>persistence</module>
+		<module>email</module>
+	</modules>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.2.3.RELEASE</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.8.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${sl4j.version}</version>
+		</dependency>
+		<!-- Begin: ORCID specific dependency -->
+		<dependency>
+			<groupId>org.restlet</groupId>
+			<artifactId>org.restlet</artifactId>
+			<version>${restlet.version}</version>
+			<!-- <optional>true</optional> -->
+			<!-- <scope>provided</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<!-- End -->
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>wiley-maven</id>
+			<name>wiley maven</name>
+			<url>http://build.wiley.com/nexus/content/repositories/central</url>
+		</repository>
+		<repository>
+			<id>wiley-maven-jdbc</id>
+			<name>wiley maven-jdbc</name>
+			<url>http://build.wiley.com/nexus/content/repositories/thirdparty</url>
+		</repository>
+	</repositories>
+	<build>
+		<finalName>notification-template</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Tests.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<!-- PMD CPD plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>check-pmd</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+							<goal>cpd-check</goal>
+
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<targetJdk>${jdk.version}</targetJdk>
+					<excludes>
+						<exclude>**/entity/*.java</exclude>
+					</excludes>
+					<format>xml</format>
+					<outputDirectory>target/pmd-cpd/</outputDirectory>
+				</configuration>
+			</plugin>
+			<!-- PMD CPD plugin ends here -->
+		</plugins>
+	</build>
+</project>
