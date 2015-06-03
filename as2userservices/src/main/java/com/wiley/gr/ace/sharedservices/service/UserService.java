@@ -21,12 +21,12 @@ import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
  */
 public interface UserService {
 
-    void createUserService(UserServiceRequest userServiceRequest);
+    void createUserService(UserServiceRequest userServiceRequest) throws Exception;
 
-    void updateUserService(UserServiceRequest userServiceRequest, String userId);
+    void updateUserService(UserServiceRequest userServiceRequest, String userId) throws Exception;
 
-    void deleteUserService(UserServiceRequest userServiceRequest, String userId);
+    void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws Exception;
 
-    UserServiceRequest getUserService(String userId);
+    UserServiceRequest getUserService(String userId) throws Exception;
 
 }

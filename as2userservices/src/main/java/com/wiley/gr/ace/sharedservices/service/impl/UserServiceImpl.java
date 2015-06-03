@@ -27,19 +27,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUserService(UserServiceRequest userServiceRequest) {
+    public void createUserService(UserServiceRequest userServiceRequest) throws Exception {
         userRepository.createUserRepository(userServiceRequest);
     }
 
-    public void updateUserService(UserServiceRequest userServiceRequest, String userId) {
+    public void updateUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {
         userRepository.updateUserRepository(userServiceRequest, userId);
     }
 
-    public void deleteUserService(UserServiceRequest userServiceRequest, String userId) {
+    public void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {
         userRepository.deleteUserRepository(userServiceRequest, userId);
     }
 
-    public UserServiceRequest getUserService(String userId) {
+    public UserServiceRequest getUserService(String userId) throws Exception {
         return userRepository.getUserRepository(userId);
     }
 }

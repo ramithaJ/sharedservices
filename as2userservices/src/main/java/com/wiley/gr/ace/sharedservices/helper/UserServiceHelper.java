@@ -20,6 +20,7 @@ import com.wiley.gr.ace.sharedservices.profile.Expertise;
 import com.wiley.gr.ace.sharedservices.profile.Society;
 import org.apache.commons.lang.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -220,14 +221,23 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(society.getSocietyCd())) {
             userSocietyDetails.setSocietyCd(society.getSocietyCd());
         }
+        if (!StringUtils.isEmpty(society.getSocietyName())) {
+            userSocietyDetails.setSocietyName(society.getSocietyName());
+        }
         if (!StringUtils.isEmpty(society.getMembershipNumber())) {
             userSocietyDetails.setMembershipNo(society.getMembershipNumber());
         }
         if (!StringUtils.isEmpty(society.getPromotionCode())) {
             userSocietyDetails.setPromoCode(society.getPromotionCode());
         }
-        userSocietyDetails.setStartDt(getDate());
-        userSocietyDetails.setEndDt(getDate());
+        if (!StringUtils.isEmpty(society.getFromDate())) {
+            userSocietyDetails.setStartDt(convertStringToDate(society.getFromDate()));
+        }
+        if (!StringUtils.isEmpty(society.getToDate())) {
+            userSocietyDetails.setEndDt(convertStringToDate(society.getToDate()));
+        }
+        userSocietyDetails.setCreatedDate(getDate());
+        userSocietyDetails.setUpdatedDate(getDate());
         return userSocietyDetails;
     }
 
@@ -299,6 +309,22 @@ public class UserServiceHelper {
      */
     private static Date getDate() {
         return new Date();
+    }
+
+    /**
+     * Method to convert String date to Date obj.
+     * @param date
+     * @return
+     */
+    private static Date convertStringToDate(String date) {
+        Date convertedDate = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            convertedDate = sdf.parse(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return convertedDate;
     }
 
 }

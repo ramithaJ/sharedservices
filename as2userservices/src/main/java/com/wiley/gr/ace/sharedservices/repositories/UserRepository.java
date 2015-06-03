@@ -21,12 +21,12 @@ import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
  */
 public interface UserRepository {
 
-    void createUserRepository(UserServiceRequest userServiceRequest);
+    void createUserRepository(UserServiceRequest userServiceRequest) throws Exception;
 
-    void updateUserRepository(UserServiceRequest userServiceRequest, String userId);
+    void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception;
 
-    void deleteUserRepository(UserServiceRequest userServiceRequest, String userId);
+    void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception;
 
-    UserServiceRequest getUserRepository(String userId);
+    UserServiceRequest getUserRepository(String userId) throws Exception;
 
 }

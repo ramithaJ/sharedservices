@@ -22,6 +22,7 @@ public class Society implements Serializable {
 
     private String id;
     private String societyCd;
+    private String societyName;
     private String membershipNumber;
     private String promotionCode;
     private String fromDate;
@@ -73,6 +74,14 @@ public class Society implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSocietyName() {
+        return societyName;
+    }
+
+    public void setSocietyName(String societyName) {
+        this.societyName = societyName;
     }
 
     @Override

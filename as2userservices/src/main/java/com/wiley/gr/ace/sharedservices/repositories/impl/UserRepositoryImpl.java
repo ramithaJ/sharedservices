@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
      *
      * @param userServiceRequest Input Json Request Info
      */
-    public void createUserRepository(UserServiceRequest userServiceRequest) {
+    public void createUserRepository(UserServiceRequest userServiceRequest) throws Exception {
         //Get the session from sessionFactory pool.
         Session session = null;
         try {
@@ -76,18 +76,23 @@ public class UserRepositoryImpl implements UserRepository {
                 secondaryEmailAddr.setUsersByUserId(user);
             }
 
+            session.save(user);
 
             //Create user Address Object
             List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
             UserAddresses userAddresses = null;
-            com.wiley.gr.ace.sharedservices.persistence.entity.Address address = null;
             if (null != addressList && addressList.size() > 0) {
                 Set<UserAddresses> userAddressesSet = new HashSet<>();
                 LOGGER.info("Set User  Addr...");
                 for (Address addressProfile : addressList) {
                     userAddresses = new UserAddresses();
-                    address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
+                    com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
                     address = UserServiceHelper.setAddress(address, addressProfile);
+                    session.save(address);
+                    UserAddressesId userAddressesId = new UserAddressesId();
+                    userAddressesId.setAddressId(address.getAddressId());
+                    userAddressesId.setUserId(user.getUserId());
+                    userAddresses.setId(userAddressesId);
                     userAddresses.setAddress(address);
                     userAddresses.setUsersByUserId(user);
                     userAddressesSet.add(userAddresses);
@@ -167,9 +172,13 @@ public class UserRepositoryImpl implements UserRepository {
                     userAreaOfInterest = new UserAreaOfInterest();
                     areaOfInterest = new AreaOfInterest();
                     areaOfInterest = UserServiceHelper.setAreaOfInterest(areaOfInterest, expertise);
+                    UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
+                    userAreaOfInterestId.setUserId(user.getUserId());
+                    userAreaOfInterestId.setAreaOfInterestCd(expertise.getAreaofInterestCd());
                     userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
                     userAreaOfInterest.setAreaOfInterest(areaOfInterest);
                     userAreaOfInterest.setAuthorProfile(authorProfile);
+                    userAreaOfInterest.setId(userAreaOfInterestId);
                     userAreaOfInterestHashSet.add(userAreaOfInterest);
                 }
                 authorProfile.setUserAreaOfInterests(userAreaOfInterestHashSet);
@@ -180,7 +189,7 @@ public class UserRepositoryImpl implements UserRepository {
             //Set Preferred Journals
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
             UserPreferredJournals userPreferredJournals = null;
-            Journals journals = null;
+
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
 
                 LOGGER.info("Set PreferredJournal...");
@@ -188,16 +197,14 @@ public class UserRepositoryImpl implements UserRepository {
                 for (PreferredJournal preferredJournal : preferredJournalList) {
                     UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
                     userPreferredJournals = new UserPreferredJournals();
-                    journals = new Journals();
+                    Journals journals = new Journals();
                     journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalId());
+                    session.save(journals);
                     userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
-                    session.persist(user);
-                    session.persist(journals);
                     userPreferredJournalsId.setUserId(user.getUserId());
                     userPreferredJournalsId.setJournalId(journals.getJournalId());
                     userPreferredJournals.setId(userPreferredJournalsId);
                     userPreferredJournals.setAuthorProfile(authorProfile);
-                    session.persist(userPreferredJournals);
                     userPreferredJournalsSet.add(userPreferredJournals);
                 }
                 authorProfile.setUserPreferredJournalses(userPreferredJournalsSet);
@@ -205,7 +212,7 @@ public class UserRepositoryImpl implements UserRepository {
             //Set Author Profile to user
             authorProfile.setUsersByUserId(user);
 
-            session.save(user);
+            //session.save(user);
             session.save(authorProfile);
             if (null != secondaryEmailAddr) {
                 session.save(secondaryEmailAddr);
@@ -233,9 +240,9 @@ public class UserRepositoryImpl implements UserRepository {
             session.clear();
 
         } catch (Exception e) {
-            e.printStackTrace();
             session.getTransaction().rollback();
             LOGGER.error("Exception Occurred during user profile creation...", e);
+            throw e;
         } finally {
             //Commit the transaction.
             session.getTransaction().commit();
@@ -253,7 +260,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @param userServiceRequest
      * @param userId
      */
-    public void updateUserRepository(UserServiceRequest userServiceRequest, String userId) {
+    public void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception {
         //Get the session from sessionFactory pool.
         Session session = null;
         try {
@@ -287,17 +294,72 @@ public class UserRepositoryImpl implements UserRepository {
                 secondaryEmailAddr.setUsersByUserId(user);
             }
 
+            //Create/Update user Address Object
+            List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
+            UserAddresses userAddresses = null;
+            if (null != addressList && addressList.size() > 0) {
+                Set<UserAddresses> userAddressesSet = new HashSet<>();
+                for (Address address : addressList) {
+                    com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = null;
+                    if (null != address.getId()) {
+                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntity("addressId", address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                        addressObj = UserServiceHelper.setAddress(addressObj, address);
+                        session.save(addressObj);
+                    } else {
+                        userAddresses = new UserAddresses();
+                        addressObj = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
+                        addressObj = UserServiceHelper.setAddress(addressObj, address);
+                        session.save(addressObj);
+                        UserAddressesId userAddressesId = new UserAddressesId();
+                        userAddressesId.setUserId(user.getUserId());
+                        userAddressesId.setAddressId(addressObj.getAddressId());
+                        userAddresses.setId(userAddressesId);
+                        userAddresses.setAddress(addressObj);
+                        userAddresses.setUsersByUserId(user);
+                        userAddressesSet.add(userAddresses);
+                    }
+
+                }
+                if (userAddressesSet.size() > 0) {
+                    userAddresses.setUsersByUserId(user);
+                }
+            }
+
 
             //Set Author Profile to user
             authorProfile.setUsersByUserId(user);
+
             session.update(user);
+            session.update(authorProfile);
+            if (null != secondaryEmailAddr) {
+                session.saveOrUpdate(secondaryEmailAddr);
+            }
+            if (null != userAddresses) {
+                session.saveOrUpdate(userAddresses);
+            }
+            /* if (null != affiliations) {
+                session.update(affiliations);
+            }
+            if (null != userFunderGrants) {
+                session.update(userFunderGrants);
+            }
+            if (null != userSocietyDetails) {
+                session.update(userSocietyDetails);
+            }
+            if (null != userAreaOfInterest) {
+                session.update(userAreaOfInterest);
+            }
+            if (null != userPreferredJournals) {
+                session.update(userPreferredJournals);
+            }*/
+
             session.flush();
             session.clear();
 
 
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Exception Occurred during user profile creation...", e);
+            throw e;
         } finally {
             if (null != session) {
                 session.close();
@@ -311,11 +373,18 @@ public class UserRepositoryImpl implements UserRepository {
      * @param userServiceRequest
      * @param userId
      */
-    public void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) {
+    public void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception {
 
     }
 
-    public UserServiceRequest getUserRepository(String userId) {
+    /**
+     * Method to get user profile.
+     *
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public UserServiceRequest getUserRepository(String userId) throws Exception {
         //Get the session from sessionFactory pool.
         Session session = null;
         UserServiceRequest userResponse = new UserServiceRequest();
@@ -468,8 +537,8 @@ public class UserRepositoryImpl implements UserRepository {
             userResponse.setUserProfile(userProfile);
 
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Exception Occurred during user profile creation...", e);
+            throw e;
         } finally {
             if (null != session) {
                 session.close();
@@ -505,8 +574,8 @@ public class UserRepositoryImpl implements UserRepository {
             //Commit the transaction.
             session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Exception Occurred during get entity...", e);
+            throw e;
         } finally {
             if (null != session) {
                 session.close();

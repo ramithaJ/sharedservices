@@ -13,12 +13,16 @@
  */
 package com.wiley.gr.ace.sharedservices.controllers;
 
+import com.wiley.gr.ace.sharedservices.input.ErrorDescription;
+import com.wiley.gr.ace.sharedservices.input.ErrorResponse;
 import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -38,9 +42,15 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void createUserService(@RequestBody UserServiceRequest userServiceRequest) {
-        userService.createUserService(userServiceRequest);
+    public ResponseEntity createUserService(@RequestBody UserServiceRequest userServiceRequest) {
+        try {
+            userService.createUserService(userServiceRequest);
+        } catch (Exception e) {
+            return new ResponseEntity(new ErrorResponse("201", "CREATE", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("CREATED", null, HttpStatus.OK);
     }
+
 
     /**
      * Method to update User Build Profile.
@@ -50,8 +60,13 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/{userId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
-        userService.updateUserService(userServiceRequest, userId);
+    public ResponseEntity<ErrorResponse> updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+        try {
+            userService.updateUserService(userServiceRequest, userId);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse("202", "UPDATE", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("UPDATED", null, HttpStatus.OK);
     }
 
     /**
@@ -61,8 +76,14 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public UserServiceRequest getUserService(@PathVariable("userId") String userId) {
-        return userService.getUserService(userId);
+    public ResponseEntity getUserService(@PathVariable("userId") String userId) {
+        UserServiceRequest userServiceRequest = null;
+        try {
+            userServiceRequest = userService.getUserService(userId);
+        } catch (Exception e) {
+            return new ResponseEntity(new ErrorResponse("203", "GET", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(userServiceRequest, null, HttpStatus.OK);
     }
 
     /**
@@ -73,8 +94,13 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
-        userService.deleteUserService(userServiceRequest, userId);
+    public ResponseEntity deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+        try {
+            userService.deleteUserService(userServiceRequest, userId);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse("204", "DELETE", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("DELETED", null, HttpStatus.OK);
     }
 
 }
