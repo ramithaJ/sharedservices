@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	        http://www.springframework.org/schema/context
+	        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/mvc
+		    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		    http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config />
+    <mvc:annotation-driven/>
+
+    <context:component-scan base-package="com.wiley.gr.ace" />
+    <context:property-placeholder location="classpath:*.properties" file-encoding="UTF-8"/>
+
+    <!-- Server Configuration -->
+    <bean id="contextSource"
+          class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="${directory.service.url}"/>
+        <property name="userDn" value="${directory.service.user}"/>
+        <property name="password" value="${directory.service.password}"/>
+    </bean>
+
+	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+    <bean id="authenticationController" class="com.wiley.gr.ace.auth.security.web.controllers.AuthenticationController"/>
+    <bean id="authenticationService" class="com.wiley.gr.ace.auth.security.service.impl.AuthenticationServiceImpl"/>
+    <bean id="tokenService" class="com.wiley.gr.ace.auth.security.service.impl.TokenServiceImpl"/>
+    <bean id="tokenHandler" class="com.wiley.gr.ace.auth.security.handler.TokenHandler"/>
+
+
+    <util:properties id="applicationProperties" location="classpath:/application.properties"/>
+    <util:properties id="messageProperties" location="classpath:/message.properties"/>
+</beans>
