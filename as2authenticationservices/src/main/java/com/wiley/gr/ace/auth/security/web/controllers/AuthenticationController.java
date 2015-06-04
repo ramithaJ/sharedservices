@@ -13,14 +13,9 @@
  */
 package com.wiley.gr.ace.auth.security.web.controllers;
 
-import com.wiley.gr.ace.auth.security.constants.CommonConstant;
-import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
-import com.wiley.gr.ace.auth.security.model.Response;
-import com.wiley.gr.ace.auth.security.model.TokenRequest;
-import com.wiley.gr.ace.auth.security.service.AuthenticationService;
-import com.wiley.gr.ace.auth.security.service.TokenService;
+import java.util.Properties;
+
 import org.apache.commons.lang.StringUtils;
-import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +24,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Properties;
+import com.wiley.gr.ace.auth.security.constants.CommonConstant;
+import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
+import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/")
@@ -83,7 +85,7 @@ public class AuthenticationController {
                 return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_004)), null, HttpStatus.UNAUTHORIZED);
             }
 
-            authResponse = authenticationService.authenticate(request.getUserId(), request.getPassword(), request.getAuthenticationType(), request.getAppKey());
+            authResponse = authenticationService.userLogin(request);
             if (null != authResponse && authResponse.getStatus().equalsIgnoreCase(String.valueOf(Response.STATUS.FAILURE))) {
                 LOGGER.info("Authentication Response..." + authResponse);
                 return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_005)), null, HttpStatus.UNAUTHORIZED);

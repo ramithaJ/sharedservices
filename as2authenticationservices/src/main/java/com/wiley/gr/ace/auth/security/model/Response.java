@@ -20,6 +20,10 @@ public class Response {
     private String code;
     private String message;
     private String status;
+    
+    public Response(){
+    	
+    }
 
     public Response(String code, String message, String status) {
         this.code = code;

@@ -33,6 +33,7 @@
 
     <bean id="authenticationController" class="com.wiley.gr.ace.auth.security.web.controllers.AuthenticationController"/>
     <bean id="authenticationService" class="com.wiley.gr.ace.auth.security.service.impl.AuthenticationServiceImpl"/>
+    <bean id="userLoginDao" class="com.wiley.gr.ace.auth.security.dao.UserLoginDAOImpl"/>
     <bean id="tokenService" class="com.wiley.gr.ace.auth.security.service.impl.TokenServiceImpl"/>
     <bean id="tokenHandler" class="com.wiley.gr.ace.auth.security.handler.TokenHandler"/>
 

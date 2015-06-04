@@ -13,12 +13,10 @@
  */
 package com.wiley.gr.ace.auth.security.service.impl;
 
-import com.wiley.gr.ace.auth.security.constants.CommonConstant;
-import com.wiley.gr.ace.auth.security.model.Response;
-import com.wiley.gr.ace.auth.security.model.Response.STATUS;
-import com.wiley.gr.ace.auth.security.model.TokenRequest;
-import com.wiley.gr.ace.auth.security.service.AuthenticationService;
-import com.wiley.gr.ace.auth.security.service.TokenService;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
@@ -34,163 +32,226 @@ import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.wiley.gr.ace.auth.security.dao.LockedAccountDetails;
+import com.wiley.gr.ace.auth.security.dao.UserLoginDAO;
+import com.wiley.gr.ace.auth.security.constants.CommonConstant;
+import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
+import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.model.TokenRequest;
+import com.wiley.gr.ace.auth.security.service.AuthenticationService;
+import com.wiley.gr.ace.auth.security.service.TokenService;
 
 /**
  * Created by sripads on 5/16/2015.
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AuthenticationServiceImpl.class);
 
-    protected Response response = null;
+	protected Response response = null;
 
-    @Autowired(required = true)
-    private LdapTemplate ldapTemplate;
+	@Autowired(required = true)
+	private LdapTemplate ldapTemplate;
 
-    @Autowired(required = true)
-    private TokenService tokenService;
+	@Autowired(required = true)
+	private TokenService tokenService;
 
-    @Autowired(required = true)
-    private LdapContextSource contextSource;
+	@Autowired(required = true)
+	private LdapContextSource contextSource;
 
+	@Autowired(required = true)
+	private UserLoginDAO userLoginDao;
 
-    @Value("${directory.service.filter}")
-    private String directoryServicefilterPath;
+	@Value("${directory.service.filter}")
+	private String directoryServicefilterPath;
 
-    @Value("${directory.service.filter.match}")
-    private String directoryServicefilterMatch;
+	@Value("${directory.service.filter.match}")
+	private String directoryServicefilterMatch;
 
-    @Value("${directory.service.url}")
-    private String directoyServiceUrl;
+	@Value("${directory.service.url}")
+	private String directoyServiceUrl;
 
-    @Value("${directory.service.user}")
-    private String directoryUser;
+	@Value("${directory.service.user}")
+	private String directoryUser;
 
-    @Value("${directory.service.password}")
-    private String directoryPassword;
+	@Value("${directory.service.password}")
+	private String directoryPassword;
 
+	@Value("${directory.service.filter}")
+	private String directoryFilter;
 
-    @Value("${directory.service.filter}")
-    private String directoryFilter;
+	@Value("${directory.service.filter.match}")
+	private String directoryFilterMatch;
 
+	@Value("${ldap.service.url}")
+	private String ldapServiceUrl;
 
-    @Value("${directory.service.filter.match}")
-    private String directoryFilterMatch;
+	@Value("${ldap.service.user}")
+	private String ldapUser;
 
+	@Value("${ldap.service.password}")
+	private String ldapPassword;
 
-    @Value("${ldap.service.url}")
-    private String ldapServiceUrl;
+	@Value("${ldap.service.filter}")
+	private String ldapFilter;
 
-    @Value("${ldap.service.user}")
-    private String ldapUser;
+	@Value("${ldap.service.filter.match}")
+	private String ldapFilterMatch;
 
-    @Value("${ldap.service.password}")
-    private String ldapPassword;
+	/**
+	 * Method to authenticate the user.
+	 *
+	 * @param userId
+	 * @param password
+	 * @param authenticationType
+	 * @param appKey
+	 * @return
+	 */
 
+	@Override
+	public Response userLogin(AuthenticateRequest request) {
+		
+		LockedAccountDetails lockedAccountDetails = userLoginDao.userAccountDetails(request.getUserId());
+		Response response = new Response();
+		
+		if (null == lockedAccountDetails) {
+			return processAuthenticatedUser(request);
+		}
 
-    @Value("${ldap.service.filter}")
-    private String ldapFilter;
+		Date loginAttemptTime = new Date(lockedAccountDetails
+				.getLoginAttemptTime().getTime());
 
+		if ((new Date().getTime() - loginAttemptTime.getTime()) >= 300) { //300 should be moved to property file
+			//if block {
+			//check the locked time is set, if yes then call ESB to unlock
+			//}
+			
+			userLoginDao.removeUser(request.getUserId());
+			return processAuthenticatedUser(request);
+		}
 
-    @Value("${ldap.service.filter.match}")
-    private String ldapFilterMatch;
+		if (lockedAccountDetails.getInvalidLoginCount() >= 3) {
+			// lock user esb service
+			//update the locked time in the table
+			response.setMessage("Your account is locked. Please try after sometime.");
+			return response;
+		}else{
+			
+			response = authenticate(request.getUserId(), request.getPassword(),
+					request.getAuthenticationType(), request.getAppKey());
+			if ("SUCCESS".equalsIgnoreCase(response.getStatus())) {
+				return response;
+			}
+			userLoginDao.updateUser(request.getUserId());
+			return response;
+		}
+	}
 
-    /**
-     * Method to authenticate the user.
-     *
-     * @param userId
-     * @param password
-     * @param authenticationType
-     * @param appKey
-     * @return
-     */
-    @Override
-    public Response authenticate(String userId, String password, String authenticationType, String appKey) {
+	private Response processAuthenticatedUser(AuthenticateRequest request) {
+		
+		Response response = new Response();
+		response = authenticate(request.getUserId(), request.getPassword(),
+				request.getAuthenticationType(), request.getAppKey());
+		if ("SUCCESS".equalsIgnoreCase(response.getStatus())) {
+			return response;
+		}
+		userLoginDao.insertUser(request.getUserId());
+		response.setMessage("Invalid email address. Please Re-Enter");
+		return response;
+	}
 
-        String filterMatch = directoryServicefilterMatch;
-        String filterPath = directoryServicefilterPath;
+	@Override
+	public Response authenticate(String userId, String password,
+			String authenticationType, String appKey) {
 
-        //If Authentication Type is provided as AUTO. Do a domain check.
-        if (StringUtils.isNotEmpty(authenticationType) && authenticationType.equalsIgnoreCase(CommonConstant.AUTO) && !userId.contains(CommonConstant.WILEY_DOMAIN)) {
-            //Set ldap server setting.
-            setContext(ldapServiceUrl, ldapUser, ldapPassword);
-            filterMatch = ldapFilterMatch;
-            filterPath = ldapFilter;
-        }
-        //Set the LDAP Server Configurations to authenticate against ldap server.
-        else if (StringUtils.isNotEmpty(authenticationType) && authenticationType.equalsIgnoreCase(CommonConstant.LDAP)) {
-            setContext(ldapServiceUrl, ldapUser, ldapPassword);
-            filterMatch = ldapFilterMatch;
-            filterPath = ldapFilter;
-        } else {
-            setContext(directoyServiceUrl, directoryUser, directoryPassword);
-        }
+		String filterMatch = directoryServicefilterMatch;
+		String filterPath = directoryServicefilterPath;
 
-        //Apply the filter.
-        AndFilter filter = new AndFilter();
-        filter.and(new EqualsFilter(filterMatch, userId));
-        //Authenticate the user credentials.
-        boolean isAuthenticated = ldapTemplate
-                .authenticate(filterPath,
-                        filter.toString(), password);
-        if (isAuthenticated) {
-            //Call Roles Service and get the Roles
-            List<String> roles = getRoles(userId);
-            TokenRequest tokenRequest = new TokenRequest();
-            tokenRequest.setAppKey(appKey);
-            tokenRequest.setRoles(roles);
-            tokenRequest.setUserId(userId);
+		// If Authentication Type is provided as AUTO. Do a domain check.
+		if (StringUtils.isNotEmpty(authenticationType)
+				&& authenticationType.equalsIgnoreCase(CommonConstant.AUTO)
+				&& !userId.contains(CommonConstant.WILEY_DOMAIN)) {
+			// Set ldap server setting.
+			setContext(ldapServiceUrl, ldapUser, ldapPassword);
+			filterMatch = ldapFilterMatch;
+			filterPath = ldapFilter;
+		}
+		// Set the LDAP Server Configurations to authenticate against ldap
+		// server.
+		else if (StringUtils.isNotEmpty(authenticationType)
+				&& authenticationType.equalsIgnoreCase(CommonConstant.LDAP)) {
+			setContext(ldapServiceUrl, ldapUser, ldapPassword);
+			filterMatch = ldapFilterMatch;
+			filterPath = ldapFilter;
+		} else {
+			setContext(directoyServiceUrl, directoryUser, directoryPassword);
+		}
 
-            try {
-                response = new Response(CommonConstant.STATUS_CODE,
-                        tokenService.generateToken(tokenRequest), CommonConstant.SUCCESS_STATUS);
-            } catch (JoseException e) {
-                LOGGER.error("Exception Occurred while authenticating..", e);
-                response = new Response(CommonConstant.FAIL_CODE, "Authentication Fail",
-                        CommonConstant.FAILURE_STATUS);
-            }
+		// Apply the filter.
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter(filterMatch, userId));
+		// Authenticate the user credentials.
+		boolean isAuthenticated = ldapTemplate.authenticate(filterPath,
+				filter.toString(), password);
+		if (isAuthenticated) {
+			// Call Roles Service and get the Roles
+			List<String> roles = getRoles(userId);
+			TokenRequest tokenRequest = new TokenRequest();
+			tokenRequest.setAppKey(appKey);
+			tokenRequest.setRoles(roles);
+			tokenRequest.setUserId(userId);
 
-        }
-        return response;
-    }
+			try {
+				response = new Response(CommonConstant.STATUS_CODE,
+						tokenService.generateToken(tokenRequest),
+						CommonConstant.SUCCESS_STATUS);
+			} catch (JoseException e) {
+				LOGGER.error("Exception Occurred while authenticating..", e);
+				response = new Response(CommonConstant.FAIL_CODE,
+						"Authentication Fail", CommonConstant.FAILURE_STATUS);
+			}
 
-    /**
-     * Method to get user roles.
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<String> getRoles(String userId) {
-        //TODO: Invoke Actual Role Service here
-        //Invoke User Role Service and the get user role.
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders roleheaders = new HttpHeaders();
-        roleheaders.set("JsonStub-User-Key", "3a552133-3e2a-4fc8-9931-2d214a177688");
-        roleheaders.set("JsonStub-Project-Key",
-                "975a72f8-ed51-43cc-af1a-4dc10c24a127");
-        HttpEntity<String> roleentity = new HttpEntity<String>("parameters",
-                roleheaders);
-        ResponseEntity roleresponse = restTemplate.postForEntity("http://jsonstub.com/getRole", roleentity, String.class);
-        return new LinkedList<>();
-    }
+		}
+		return response;
+	}
 
+	/**
+	 * Method to get user roles.
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<String> getRoles(String userId) {
+		// TODO: Invoke Actual Role Service here
+		// Invoke User Role Service and the get user role.
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders roleheaders = new HttpHeaders();
+		roleheaders.set("JsonStub-User-Key",
+				"3a552133-3e2a-4fc8-9931-2d214a177688");
+		roleheaders.set("JsonStub-Project-Key",
+				"975a72f8-ed51-43cc-af1a-4dc10c24a127");
+		HttpEntity<String> roleentity = new HttpEntity<String>("parameters",
+				roleheaders);
+		ResponseEntity roleresponse = restTemplate.postForEntity(
+				"http://jsonstub.com/getRole", roleentity, String.class);
+		return new LinkedList<>();
+	}
 
-    /**
-     * Method to set the context object.
-     *
-     * @param serviceUrl
-     * @param user
-     * @param password
-     */
-    private void setContext(String serviceUrl, String user, String password) {
-        contextSource.setUrl(serviceUrl);
-        contextSource.setUserDn(user);
-        contextSource.setPassword(password);
-        contextSource.afterPropertiesSet();
-        ldapTemplate.setContextSource(contextSource);
-    }
+	/**
+	 * Method to set the context object.
+	 *
+	 * @param serviceUrl
+	 * @param user
+	 * @param password
+	 */
+	private void setContext(String serviceUrl, String user, String password) {
+		contextSource.setUrl(serviceUrl);
+		contextSource.setUserDn(user);
+		contextSource.setPassword(password);
+		contextSource.afterPropertiesSet();
+		ldapTemplate.setContextSource(contextSource);
+	}
+
 }

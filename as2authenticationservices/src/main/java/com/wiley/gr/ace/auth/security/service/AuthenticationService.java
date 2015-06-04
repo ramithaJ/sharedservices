@@ -11,7 +11,9 @@
  *******************************************************************************/
 package com.wiley.gr.ace.auth.security.service;
 
+import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
 import com.wiley.gr.ace.auth.security.model.Response;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,4 +27,7 @@ public interface AuthenticationService {
     Response authenticate(String username, String password, String authenticationType, String appKey);
 
     List<String> getRoles(String userId);
+    
+    Response userLogin(AuthenticateRequest request);
+    
 }
