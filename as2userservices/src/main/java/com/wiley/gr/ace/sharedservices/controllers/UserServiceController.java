@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
  * @author kkalyan
  */
 @RestController
-@RequestMapping("/user/profile")
+@RequestMapping("/v1/")
 public class UserServiceController {
 
     @Autowired
@@ -40,9 +40,9 @@ public class UserServiceController {
      *
      * @param userServiceRequest
      */
-    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity createUserService(@RequestBody UserServiceRequest userServiceRequest) {
+    public ResponseEntity createUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
         try {
             userService.createUserService(userServiceRequest);
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class UserServiceController {
      * @param userServiceRequest
      * @param userId
      */
-    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ErrorResponse> updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
         try {
@@ -74,7 +74,7 @@ public class UserServiceController {
      *
      * @param userId
      */
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity getUserService(@PathVariable("userId") String userId) {
         UserServiceRequest userServiceRequest = null;
@@ -92,7 +92,7 @@ public class UserServiceController {
      * @param userServiceRequest
      * @param userId
      */
-    @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
         try {
