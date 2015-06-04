@@ -38,8 +38,6 @@
     </properties>
 
     <dependencies>
-
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -213,6 +211,20 @@
         </dependency>
 
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>wiley-maven</id>
+            <name>wiley maven</name>
+            <url>http://build.wiley.com/nexus/content/repositories/central</url>
+        </repository>
+        <repository>
+            <id>wiley-maven-jdbc</id>
+            <name>wiley maven-jdbc</name>
+            <url>http://build.wiley.com/nexus/content/repositories/thirdparty</url>
+        </repository>
+    </repositories>
+    
     <build>
         <finalName>service</finalName>
         <plugins>
