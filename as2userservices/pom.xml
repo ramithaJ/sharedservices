@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
-    <groupId>shared</groupId>
-    <artifactId>shared</artifactId>
+    <groupId>usersharedservices</groupId>
+    <artifactId>usersharedservices</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
         <jdk.version>1.7</jdk.version>
@@ -34,7 +34,6 @@
         <log4j.version>1.2.17</log4j.version>
         <open.csv.version>2.3</open.csv.version>
         <es.version>1.1.2.RELEASE</es.version>
-        <tomcat.home>C:/ct/tools/apache-tomcat-7.0.57</tomcat.home>
     </properties>
 
     <dependencies>
@@ -224,9 +223,9 @@
             <url>http://build.wiley.com/nexus/content/repositories/thirdparty</url>
         </repository>
     </repositories>
-    
+
     <build>
-        <finalName>service</finalName>
+        <finalName>usersharedservices</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
