@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUserService(UserServiceRequest userServiceRequest) throws Exception {
-        userRepository.createUserRepository(userServiceRequest);
+    public void createUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {
+        userRepository.createUserRepository(userServiceRequest, userId);
     }
 
     public void updateUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {

@@ -13,12 +13,11 @@
  */
 package com.wiley.gr.ace.sharedservices.controllers;
 
-import com.wiley.gr.ace.sharedservices.input.ErrorDescription;
-import com.wiley.gr.ace.sharedservices.input.ErrorResponse;
+import com.wiley.gr.ace.sharedservices.input.ErrorPOJO;
+import com.wiley.gr.ace.sharedservices.input.Service;
 import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
-import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,13 +41,27 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/profile/{userId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity createUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+    public Service createUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+        Service service = new Service();
         try {
-            userService.createUserService(userServiceRequest);
+            if (StringUtils.isEmpty(userId)) {
+                ErrorPOJO error = new ErrorPOJO();
+                error.setCode(-101);
+                error.setMessage("UserID is empty (or) null");
+                service.setStatus("error");
+                service.setError(error);
+                return service;
+            }
+            userService.createUserService(userServiceRequest, userId);
         } catch (Exception e) {
-            return new ResponseEntity(new ErrorResponse("201", "CREATE", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+            ErrorPOJO error = new ErrorPOJO();
+            error.setCode(-101);
+            error.setMessage("Error while create user profile service");
+            service.setStatus("error");
+            service.setError(error);
+            return service;
         }
-        return new ResponseEntity("CREATED", null, HttpStatus.OK);
+        return service;
     }
 
 
@@ -60,13 +73,27 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/profile/{userId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ErrorResponse> updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+    public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+        Service service = new Service();
         try {
+            if (StringUtils.isEmpty(userId)) {
+                ErrorPOJO error = new ErrorPOJO();
+                error.setCode(-101);
+                error.setMessage("UserID is empty (or) null");
+                service.setStatus("error");
+                service.setError(error);
+                return service;
+            }
             userService.updateUserService(userServiceRequest, userId);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse("202", "UPDATE", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+            ErrorPOJO error = new ErrorPOJO();
+            error.setCode(-101);
+            error.setMessage("Error occurred while update user profile service");
+            service.setStatus("error");
+            service.setError(error);
+            return service;
         }
-        return new ResponseEntity("UPDATED", null, HttpStatus.OK);
+        return service;
     }
 
     /**
@@ -76,14 +103,29 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/profile/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity getUserService(@PathVariable("userId") String userId) {
+    public Service getUserService(@PathVariable("userId") String userId) {
+        Service service = new Service();
         UserServiceRequest userServiceRequest = null;
         try {
+            if (StringUtils.isEmpty(userId)) {
+                ErrorPOJO error = new ErrorPOJO();
+                error.setCode(-101);
+                error.setMessage("UserID is empty (or) null");
+                service.setStatus("error");
+                service.setError(error);
+                return service;
+            }
             userServiceRequest = userService.getUserService(userId);
         } catch (Exception e) {
-            return new ResponseEntity(new ErrorResponse("203", "GET", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+            ErrorPOJO error = new ErrorPOJO();
+            error.setCode(-101);
+            error.setMessage("Error occurred while get user profile service");
+            service.setStatus("error");
+            service.setError(error);
+            return service;
         }
-        return new ResponseEntity(userServiceRequest, null, HttpStatus.OK);
+        service.setPayload(userServiceRequest);
+        return service;
     }
 
     /**
@@ -94,13 +136,27 @@ public class UserServiceController {
      */
     @RequestMapping(value = "/profile/{userId}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+    public Service deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
+        Service service = new Service();
         try {
+            if (StringUtils.isEmpty(userId)) {
+                ErrorPOJO error = new ErrorPOJO();
+                error.setCode(-101);
+                error.setMessage("UserID is empty (or) null");
+                service.setStatus("error");
+                service.setError(error);
+                return service;
+            }
             userService.deleteUserService(userServiceRequest, userId);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse("204", "DELETE", new ErrorDescription(e.getMessage(), e.getMessage())), null, HttpStatus.BAD_REQUEST);
+            ErrorPOJO error = new ErrorPOJO();
+            error.setCode(-101);
+            error.setMessage("Error occurred while delete user profile service");
+            service.setStatus("error");
+            service.setError(error);
+            return service;
         }
-        return new ResponseEntity("DELETED", null, HttpStatus.OK);
+        return service;
     }
 
 }

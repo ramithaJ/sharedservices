@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
      *
      * @param userServiceRequest Input Json Request Info
      */
-    public void createUserRepository(UserServiceRequest userServiceRequest) throws Exception {
+    public void createUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception {
         //Get the session from sessionFactory pool.
         Session session = null;
         try {
@@ -54,12 +54,12 @@ public class UserRepositoryImpl implements UserRepository {
             //Begin the transaction.
             session.beginTransaction();
 
-            Users user = new Users();
+            Users user = (Users) getEntity("userId", userId, Users.class);
             LOGGER.info("Set User Profile...");
             user = UserServiceHelper.setUserProfileInformation(userServiceRequest, user);
 
             //Create AuthorProfile Object
-            AuthorProfile authorProfile = new AuthorProfile();
+            AuthorProfile authorProfile = user.getAuthorProfileByUserId();
             LOGGER.info("Set Author Profile...");
             authorProfile = UserServiceHelper.setAuthorProfile(userServiceRequest, authorProfile);
             //TODO:Save orcid & recieve emails is missing
@@ -76,7 +76,6 @@ public class UserRepositoryImpl implements UserRepository {
                 secondaryEmailAddr.setUsersByUserId(user);
             }
 
-            session.save(user);
 
             //Create user Address Object
             List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
@@ -91,7 +90,7 @@ public class UserRepositoryImpl implements UserRepository {
                     session.save(address);
                     UserAddressesId userAddressesId = new UserAddressesId();
                     userAddressesId.setAddressId(address.getAddressId());
-                    userAddressesId.setUserId(user.getUserId());
+                    userAddressesId.setUserId(Integer.parseInt(userId));
                     userAddresses.setId(userAddressesId);
                     userAddresses.setAddress(address);
                     userAddresses.setUsersByUserId(user);
@@ -245,8 +244,8 @@ public class UserRepositoryImpl implements UserRepository {
             //Set Author Profile to user
             authorProfile.setUsersByUserId(user);
 
-            //session.save(user);
-            session.save(authorProfile);
+            session.saveOrUpdate(user);
+            session.saveOrUpdate(authorProfile);
             if (null != secondaryEmailAddr) {
                 session.save(secondaryEmailAddr);
             }
@@ -429,6 +428,7 @@ public class UserRepositoryImpl implements UserRepository {
                 session.close();
             }
         }
+
     }
 
     /**
@@ -569,6 +569,7 @@ public class UserRepositoryImpl implements UserRepository {
                 session.close();
             }
         }
+
     }
 
     /**
