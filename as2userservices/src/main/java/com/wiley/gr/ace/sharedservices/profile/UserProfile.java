@@ -40,7 +40,7 @@ public class UserProfile implements Serializable {
     private List<Funder> funders;
     private List<WileyOpenAccess> wileyOpenAccesses;
     private List<Society> societies;
-    private List<Expertise> expertises;
+    private List<MyInterest> myInterests;
     private List<CoAuthor> coAuthors;
     private List<PreferredJournal> journals;
     private List<Alert> alerts;
@@ -197,12 +197,12 @@ public class UserProfile implements Serializable {
         this.societies = societies;
     }
 
-    public List<Expertise> getExpertises() {
-        return expertises;
+    public List<MyInterest> getMyInterests() {
+        return myInterests;
     }
 
-    public void setExpertises(List<Expertise> expertises) {
-        this.expertises = expertises;
+    public void setMyInterests(List<MyInterest> myInterests) {
+        this.myInterests = myInterests;
     }
 
     public List<CoAuthor> getCoAuthors() {
@@ -252,7 +252,7 @@ public class UserProfile implements Serializable {
                 ", funders=" + funders +
                 ", wileyOpenAccesses=" + wileyOpenAccesses +
                 ", societies=" + societies +
-                ", expertises=" + expertises +
+                ", myInterests=" + myInterests +
                 ", coAuthors=" + coAuthors +
                 ", journals=" + journals +
                 ", alerts=" + alerts +

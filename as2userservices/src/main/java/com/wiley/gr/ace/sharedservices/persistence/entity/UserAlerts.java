@@ -2,6 +2,8 @@ package com.wiley.gr.ace.sharedservices.persistence.entity;
 
 // Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -61,6 +63,7 @@ public class UserAlerts implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ALERT_CD", nullable = false, insertable = false, updatable = false)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 	public Alerts getAlerts() {
 		return this.alerts;
 	}

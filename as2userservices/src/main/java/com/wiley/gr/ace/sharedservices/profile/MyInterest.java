@@ -18,7 +18,7 @@ import java.io.Serializable;
 /**
  * @author kkalyan
  */
-public class Expertise implements Serializable {
+public class MyInterest implements Serializable {
 
     private String id;
 
@@ -52,7 +52,7 @@ public class Expertise implements Serializable {
 
     @Override
     public String toString() {
-        return "Expertise{" +
+        return "MyInterest{" +
                 "id='" + id + '\'' +
                 ", areaofInterestCd='" + areaofInterestCd + '\'' +
                 ", interestName='" + interestName + '\'' +

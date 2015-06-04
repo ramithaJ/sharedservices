@@ -162,19 +162,20 @@ public class UserRepositoryImpl implements UserRepository {
             }
 
             //Set Area of interest
-            List<Expertise> expertiseList = userServiceRequest.getUserProfile().getExpertises();
+            List<MyInterest> myInterestList = userServiceRequest.getUserProfile().getMyInterests();
             UserAreaOfInterest userAreaOfInterest = null;
-            AreaOfInterest areaOfInterest = null;
-            if (null != expertiseList && expertiseList.size() > 0) {
+
+            if (null != myInterestList && myInterestList.size() > 0) {
                 Set<UserAreaOfInterest> userAreaOfInterestHashSet = new HashSet<>();
-                LOGGER.info("Set Expertise...");
-                for (Expertise expertise : expertiseList) {
+                LOGGER.info("Set MyInterest...");
+                for (MyInterest myInterest : myInterestList) {
                     userAreaOfInterest = new UserAreaOfInterest();
-                    areaOfInterest = new AreaOfInterest();
-                    areaOfInterest = UserServiceHelper.setAreaOfInterest(areaOfInterest, expertise);
+                    AreaOfInterest areaOfInterest = new AreaOfInterest();
+                    areaOfInterest = UserServiceHelper.setAreaOfInterest(areaOfInterest, myInterest);
+                    session.save(areaOfInterest);
                     UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
                     userAreaOfInterestId.setUserId(user.getUserId());
-                    userAreaOfInterestId.setAreaOfInterestCd(expertise.getAreaofInterestCd());
+                    userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
                     userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
                     userAreaOfInterest.setAreaOfInterest(areaOfInterest);
                     userAreaOfInterest.setAuthorProfile(authorProfile);
@@ -198,7 +199,7 @@ public class UserRepositoryImpl implements UserRepository {
                     UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
                     userPreferredJournals = new UserPreferredJournals();
                     Journals journals = new Journals();
-                    journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalId());
+                    journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalTitle());
                     session.save(journals);
                     userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
                     userPreferredJournalsId.setUserId(user.getUserId());
@@ -209,6 +210,37 @@ public class UserRepositoryImpl implements UserRepository {
                 }
                 authorProfile.setUserPreferredJournalses(userPreferredJournalsSet);
             }
+
+            List<Alert> alertList = userServiceRequest.getUserProfile().getAlerts();
+            UserAlerts alerts = null;
+            if (null != alertList && alertList.size() > 0) {
+                Set<UserAlerts> userAlertsHashSet = new HashSet<>();
+                for (Alert alert : alertList) {
+                    List<AlertType> alertTypeList = alert.getAlertTypes();
+                    Alerts alertsObj = new Alerts();
+                    alertsObj.setAlertCd(alert.getAlertCd());
+                    alertsObj.setAlertName(alert.getAlertName());
+                    session.save(alertsObj);
+                    if (null != alertTypeList && alertTypeList.size() > 0) {
+                        int alertListSize = alertTypeList.size();
+                        for (int j = 0; j < alertListSize; j++) {
+                            AlertType alertType = alertTypeList.get(j);
+                            UserAlertsId userAlertsId = new UserAlertsId();
+                            userAlertsId.setUserId(user.getUserId());
+                            userAlertsId.setAlertCd(alert.getAlertCd());
+                            alerts = new UserAlerts();
+                            alerts.setId(userAlertsId);
+                            alerts.setEmailFlg(alertType.getEmail());
+                            alerts.setOnScreenFlg(alertType.getOnScreen());
+                            alerts.setAlerts(alertsObj);
+                            session.save(alerts);
+                            userAlertsHashSet.add(alerts);
+                        }
+                    }
+                }
+            }
+
+
             //Set Author Profile to user
             authorProfile.setUsersByUserId(user);
 
@@ -235,6 +267,9 @@ public class UserRepositoryImpl implements UserRepository {
             }
             if (null != userPreferredJournals) {
                 session.save(userPreferredJournals);
+            }
+            if (null != alerts) {
+                session.save(alerts);
             }
             session.flush();
             session.clear();
@@ -493,18 +528,18 @@ public class UserRepositoryImpl implements UserRepository {
                 userProfile.setSocieties(societies);
             }
 
-            List<Expertise> expertises = new LinkedList<>();
+            List<MyInterest> myInterests = new LinkedList<>();
             Set<UserAreaOfInterest> userAreaOfInterestSet = user.getAuthorProfileByUserId().getUserAreaOfInterests();
-            if (null != expertises && expertises.size() > 0) {
+            if (null != myInterests && myInterests.size() > 0) {
                 for (UserAreaOfInterest userAreaOfInterest : userAreaOfInterestSet) {
                     AreaOfInterest areaOfInterest = userAreaOfInterest.getAreaOfInterest();
-                    Expertise expertise = new Expertise();
-                    expertise.setId(areaOfInterest.getAreaOfInterestCd());
-                    expertise.setAreaofInterestCd(areaOfInterest.getAreaOfInterestCd());
-                    expertise.setInterestName(areaOfInterest.getInterestName());
-                    expertises.add(expertise);
+                    MyInterest myInterest = new MyInterest();
+                    myInterest.setId(areaOfInterest.getAreaOfInterestCd());
+                    myInterest.setAreaofInterestCd(areaOfInterest.getAreaOfInterestCd());
+                    myInterest.setInterestName(areaOfInterest.getInterestName());
+                    myInterests.add(myInterest);
                 }
-                userProfile.setExpertises(expertises);
+                userProfile.setMyInterests(myInterests);
             }
 
             List<PreferredJournal> journalsList = new LinkedList<>();

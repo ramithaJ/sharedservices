@@ -16,7 +16,7 @@ package com.wiley.gr.ace.sharedservices.helper;
 import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.profile.Affiliation;
-import com.wiley.gr.ace.sharedservices.profile.Expertise;
+import com.wiley.gr.ace.sharedservices.profile.MyInterest;
 import com.wiley.gr.ace.sharedservices.profile.Society;
 import org.apache.commons.lang.StringUtils;
 
@@ -245,15 +245,15 @@ public class UserServiceHelper {
      * Setter method for AreaOfInterest data.
      *
      * @param areaOfInterest Entity Object
-     * @param expertise      Request JSON Information
+     * @param myInterest      Request JSON Information
      * @return areaOfInterest entity object
      */
-    public static AreaOfInterest setAreaOfInterest(AreaOfInterest areaOfInterest, Expertise expertise) {
-        if (!StringUtils.isEmpty(expertise.getAreaofInterestCd())) {
-            areaOfInterest.setInterestName(expertise.getAreaofInterestCd());
+    public static AreaOfInterest setAreaOfInterest(AreaOfInterest areaOfInterest, MyInterest myInterest) {
+        if (!StringUtils.isEmpty(myInterest.getAreaofInterestCd())) {
+            areaOfInterest.setAreaOfInterestCd(myInterest.getAreaofInterestCd());
         }
-        if (!StringUtils.isEmpty(expertise.getInterestName())) {
-            areaOfInterest.setInterestName(expertise.getInterestName());
+        if (!StringUtils.isEmpty(myInterest.getInterestName())) {
+            areaOfInterest.setInterestName(myInterest.getInterestName());
         }
         areaOfInterest.setCreatedDate(getDate());
         areaOfInterest.setUpdatedDate(getDate());
