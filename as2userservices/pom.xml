@@ -1,91 +1,61 @@
-<!-- Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved. -->
-
-<!-- All material contained herein is proprietary to John Wiley & Sons -->
-<!-- and its third party suppliers, if any. The methods, techniques and -->
-<!-- technical concepts contained herein are considered trade secrets -->
-<!-- and confidential and may be protected by intellectual property laws. -->
-<!-- Reproduction or distribution of this material, in whole or in part, -->
-<!-- is strictly forbidden except by express prior written permission -->
-<!-- of John Wiley & Sons. -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>war</packaging>
     <groupId>usersharedservices</groupId>
     <artifactId>usersharedservices</artifactId>
-    <packaging>pom</packaging>
-    <version>2.0.0-SNAPSHOT</version>
-
-
+    <version>1.0-SNAPSHOT</version>
     <properties>
-        <spring.version>4.1.4.RELEASE</spring.version>
+        <jdk.version>1.7</jdk.version>
+        <jta.version>1.1</jta.version>
+        <jstl.version>1.2</jstl.version>
         <sl4j.version>1.7.10</sl4j.version>
-        <spring.boot>1.2.3.RELEASE</spring.boot>
-        <restlet.version>2.0.5</restlet.version>
+        <junit.version>4.11</junit.version>
+        <jsp.api.version>2.1</jsp.api.version>
+        <spring.version>4.1.4.RELEASE</spring.version>
+        <servlet.api.version>2.5</servlet.api.version>
+        <jackson.mapper.asl.version>1.9.13</jackson.mapper.asl.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.batch.version>3.0.3.RELEASE</spring.batch.version>
+        <javax.persistence.version>1.0.2</javax.persistence.version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <hibernate.version>4.3.8.Final</hibernate.version>
+        <log4j.version>1.2.17</log4j.version>
+        <open.csv.version>2.3</open.csv.version>
+        <es.version>1.1.2.RELEASE</es.version>
     </properties>
 
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.3.RELEASE</version>
-    </parent>
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.3.8.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
-        <dependency>
-            <groupId>c3p0</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
-        </dependency>
+
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc7</artifactId>
             <version>12.1.0.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -95,10 +65,10 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -106,20 +76,60 @@
             <artifactId>slf4j-api</artifactId>
             <version>${sl4j.version}</version>
         </dependency>
-        <!-- Begin: ORCID specific dependency -->
         <dependency>
-            <groupId>org.restlet</groupId>
-            <artifactId>org.restlet</artifactId>
-            <version>${restlet.version}</version>
-            <!-- <optional>true</optional> -->
-            <!-- <scope>provided</scope> -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${sl4j.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
-        <!-- End -->
+
+
+        <!-- Hibernate Dependencies -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.mapper.asl.version}</version>
+        </dependency>
+
+        <!-- Log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${open.csv.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+            <version>${es.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>
@@ -134,22 +144,44 @@
             <url>http://build.wiley.com/nexus/content/repositories/thirdparty</url>
         </repository>
     </repositories>
+
     <build>
         <finalName>usersharedservices</finalName>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <includes>
-                        <include>**/*Tests.java</include>
-                    </includes>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>false</downloadJavadocs>
+                    <wtpversion>2.0</wtpversion>
                 </configuration>
             </plugin>
 
@@ -163,25 +195,8 @@
                     <path>/${project.build.finalName}</path>
                 </configuration>
             </plugin>
-            <!-- PMD CPD plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
 
-                <executions>
-                    <execution>
-                        <id>check-pmd</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                            <goal>cpd-check</goal>
-
-                        </goals>
-                    </execution>
-                </executions>
-
-            </plugin>
-            <!-- PMD CPD plugin ends here -->
         </plugins>
     </build>
+
 </project>
