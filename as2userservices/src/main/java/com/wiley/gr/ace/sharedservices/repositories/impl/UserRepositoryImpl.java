@@ -602,7 +602,9 @@ public class UserRepositoryImpl implements UserRepository {
             userProfile.setRecieveEmailsFlag("TODO");
             userProfile.setProfileVisibleFlag(user.getAuthorProfileByUserId().getProfileVisibleFlg());
             userProfile.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
-            userProfile.setRecoveryEmailAddress(user.getAuthorProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            if (null != user.getAuthorProfileByUserId() && null != user.getAuthorProfileByUserId().getUserSecondaryEmailAddr()) {
+                userProfile.setRecoveryEmailAddress(user.getAuthorProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            }
 
             //Get Address and set to the response.
             List<Address> addressList = new LinkedList<>();

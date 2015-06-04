@@ -183,10 +183,10 @@ public class UserServiceHelper {
             affiliations.setStateOrProvinceName(affiliation.getStateCd());
         }
         if (!StringUtils.isEmpty(affiliation.getFromDate())) {
-            affiliations.setStartDt(new Date(affiliation.getFromDate()));
+            affiliations.setStartDt(convertStringToDate(affiliation.getFromDate()));
         }
         if (!StringUtils.isEmpty(affiliation.getToDate())) {
-            affiliations.setEndDt(new Date(affiliation.getToDate()));
+            affiliations.setEndDt(convertStringToDate(affiliation.getToDate()));
         }
 
         affiliations.setCratedDate(getDate());
