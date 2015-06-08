@@ -1,13 +1,14 @@
-package com.wiley.gr.ace.sharedservices.input;
+package com.wiley.gr.ace.sharedservices.payload;
 
 /**
  * Created by kkalyan on 6/3/2015.
  */
-public class ErrorPOJO {
+public class Error {
 
     private int code;
 
     private String message;
+
 
     /**
      * @return

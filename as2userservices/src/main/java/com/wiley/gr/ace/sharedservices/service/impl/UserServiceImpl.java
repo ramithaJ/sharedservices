@@ -13,8 +13,7 @@
  */
 package com.wiley.gr.ace.sharedservices.service.impl;
 
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,8 +13,9 @@
  */
 package com.wiley.gr.ace.sharedservices.repositories.impl;
 
+import com.wiley.gr.ace.sharedservices.common.CommonConstants;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.profile.Address;
 import com.wiley.gr.ace.sharedservices.profile.*;
@@ -26,6 +27,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.*;
 
@@ -34,10 +36,15 @@ import java.util.*;
  */
 public class UserRepositoryImpl implements UserRepository {
 
+    //Logger Instance
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    @Qualifier(value = "messageProperties")
+    private Properties messageProp;
 
 
     /**
@@ -54,7 +61,14 @@ public class UserRepositoryImpl implements UserRepository {
             //Begin the transaction.
             session.beginTransaction();
 
-            Users user = (Users) getEntity("userId", userId, Users.class);
+            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+
+            //Throw Error if user is not found.
+            if (null == user) {
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_102));
+            }
+
+
             LOGGER.info("Set User Profile...");
             user = UserServiceHelper.setUserProfileInformation(userServiceRequest, user);
 
@@ -62,8 +76,38 @@ public class UserRepositoryImpl implements UserRepository {
             AuthorProfile authorProfile = user.getAuthorProfileByUserId();
             LOGGER.info("Set Author Profile...");
             authorProfile = UserServiceHelper.setAuthorProfile(userServiceRequest, authorProfile);
-            //TODO:Save orcid & recieve emails is missing
 
+            //Set Orcid id information
+            Set<UserReferenceData> userReferenceDataSet = user.getUserReferenceDatasForUserId();
+            for (UserReferenceData userReferenceData : userReferenceDataSet) {
+                userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
+                userReferenceData.setUsersByUserId(user);
+                session.save(userReferenceData);
+            }
+
+
+            List<ProfileVisible> profileVisibleList = userServiceRequest.getUserProfile().getProfileVisible();
+            Set<UserProfileAttribVisible> userProfileAttribVisibleSet = new HashSet<>();
+            if (null != profileVisibleList && profileVisibleList.size() > 0) {
+                for (ProfileVisible profileVisible : profileVisibleList) {
+                    ProfileAttributeList profileAttributeList = new ProfileAttributeList();
+                    profileAttributeList=UserServiceHelper.setProfileAttributeList(profileAttributeList,profileVisible);
+                    session.save(profileAttributeList);
+                    UserProfileAttribVisibleId userProfileAttribVisibleId = new UserProfileAttribVisibleId();
+                    userProfileAttribVisibleId.setProfileAttribCd(profileVisible.getTitleCd());
+                    userProfileAttribVisibleId.setUserId(Integer.parseInt(userId));
+                    userProfileAttribVisibleId.setProfileVisibilityFlg('1');
+                    UserProfileAttribVisible userProfileAttribVisible = new UserProfileAttribVisible();
+                    userProfileAttribVisible.setAuthorProfile(authorProfile);
+                    userProfileAttribVisible.setId(userProfileAttribVisibleId);
+                    userProfileAttribVisible.setProfileAttributeList(profileAttributeList);
+                    session.save(userProfileAttribVisible);
+                    userProfileAttribVisibleSet.add(userProfileAttribVisible);
+                }
+
+
+                authorProfile.setUserProfileAttribVisibles(userProfileAttribVisibleSet);
+            }
 
             //Create User Secondary Email Address
             Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = new HashSet<>();
@@ -91,11 +135,11 @@ public class UserRepositoryImpl implements UserRepository {
                     UserAddressesId userAddressesId = new UserAddressesId();
                     userAddressesId.setAddressId(address.getAddressId());
                     userAddressesId.setUserId(Integer.parseInt(userId));
+                    userAddressesId.setAddType(addressProfile.getType());
                     userAddresses.setId(userAddressesId);
                     userAddresses.setAddress(address);
                     userAddresses.setUsersByUserId(user);
                     userAddressesSet.add(userAddresses);
-                    //TODO:Address type store
                 }
 
                 userAddresses.setUsersByUserId(user);
@@ -144,7 +188,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             }
 
-            //TODO:Set Wiley Open Access Account
+            //TODO:Set Wiley Open Access Account is not part of WP1 Scope.
 
             //Set Society Details
             List<Society> societyList = userServiceRequest.getUserProfile().getSocieties();
@@ -185,7 +229,7 @@ public class UserRepositoryImpl implements UserRepository {
                 authorProfile.setUserAreaOfInterests(userAreaOfInterestHashSet);
 
             }
-            //TODO:Coauthor only has delete option.
+
 
             //Set Preferred Journals
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
@@ -271,17 +315,25 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != alerts) {
                 session.save(alerts);
             }
+
+            //Flush the session.
             session.flush();
+            //Clear the session object.
             session.clear();
 
+            //Commit the transaction.
+            session.getTransaction().commit();
+
         } catch (Exception e) {
-            session.getTransaction().rollback();
+            //Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
             LOGGER.error("Exception Occurred during user profile creation...", e);
             throw e;
         } finally {
-            //Commit the transaction.
-            session.getTransaction().commit();
             if (null != session) {
+                //Close the session
                 session.close();
             }
         }
@@ -301,10 +353,15 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Updating User Profile..");
             if (null == userId) {
-                throw new Exception("User not found");
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
             }
 
-            Users user = (Users) getEntity("userId", userId, Users.class);
+            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+
+            //Throw Error if user is not found.
+            if (null == user) {
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_102));
+            }
 
             session = sessionFactory.openSession();
             //Begin the transaction.
@@ -320,13 +377,18 @@ public class UserRepositoryImpl implements UserRepository {
 
             //Get User Secondary Email Address
             Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = new HashSet<>();
-            UserSecondaryEmailAddr secondaryEmailAddr = null;
-            secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
-            if (null != secondaryEmailAddr) {
-                LOGGER.info("Set Secondary Email Addr...");
-                userSecondaryEmailAddrSet.add(secondaryEmailAddr);
-                //Set the secondary email address to the user object
-                secondaryEmailAddr.setUsersByUserId(user);
+            Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
+            if (null != secondaryEmailAddrs && secondaryEmailAddrs.size() > 0) {
+                for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrs) {
+                    secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
+                    if (null != secondaryEmailAddr) {
+                        LOGGER.info("Set Secondary Email Addr...");
+                        userSecondaryEmailAddrSet.add(secondaryEmailAddr);
+                        //Set the secondary email address to the user object
+                        secondaryEmailAddr.setUsersByUserId(user);
+                    }
+                    session.update(secondaryEmailAddr);
+                }
             }
 
             //Update user Address Object
@@ -393,7 +455,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
                 for (PreferredJournal preferredJournal : preferredJournalList) {
                     Journals journals = null;
-                    journals = (Journals) getEntity("journalId", preferredJournal.getJournalId(), Journals.class);
+                    journals = (Journals) getEntity("journalId", preferredJournal.getId(), Journals.class);
                     journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalTitle());
                     session.update(journals);
                 }
@@ -411,20 +473,20 @@ public class UserRepositoryImpl implements UserRepository {
             authorProfile.setUsersByUserId(user);
             session.update(user);
             session.update(authorProfile);
-            if (null != secondaryEmailAddr) {
-                session.update(secondaryEmailAddr);
-            }
-
-
             session.flush();
             session.clear();
 
 
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during user profile creation...", e);
+            //Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
+            LOGGER.error("Exception Occurred during user profile updating...", e);
             throw e;
         } finally {
             if (null != session) {
+                //Close the session
                 session.close();
             }
         }
@@ -443,10 +505,16 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Updating User Profile..");
             if (null == userId) {
-                throw new Exception("User not found");
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
             }
 
-            Users user = (Users) getEntity("userId", userId, Users.class);
+            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+
+            //Throw Error if user is not found.
+            if (null == user) {
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_102));
+            }
+
 
             session = sessionFactory.openSession();
             //Begin the transaction.
@@ -454,32 +522,16 @@ public class UserRepositoryImpl implements UserRepository {
 
 
             user = UserServiceHelper.setUserProfileInformation(userServiceRequest, user);
-            //Create AuthorProfile Object
-            AuthorProfile authorProfile = user.getAuthorProfileByUserId();
-            LOGGER.info("Update Author Profile...");
-            authorProfile = UserServiceHelper.setAuthorProfile(userServiceRequest, authorProfile);
-
-
-            //Get User Secondary Email Address
-            Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = new HashSet<>();
-            UserSecondaryEmailAddr secondaryEmailAddr = null;
-            secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
-            if (null != secondaryEmailAddr) {
-                LOGGER.info("Set Secondary Email Addr...");
-                userSecondaryEmailAddrSet.add(secondaryEmailAddr);
-                //Set the secondary email address to the user object
-                secondaryEmailAddr.setUsersByUserId(user);
-            }
 
             //Update user Address Object
             List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
             if (null != addressList && addressList.size() > 0) {
                 for (Address address : addressList) {
-                    com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = null;
                     if (null != address.getId()) {
-                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntity("addressId", address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
-                        addressObj = UserServiceHelper.setAddress(addressObj, address);
-                        session.delete(addressObj);
+                        com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntity("addressId", address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                        if (null != addressObj) {
+                            session.delete(addressObj);
+                        }
                     }
                 }
             }
@@ -488,11 +540,11 @@ public class UserRepositoryImpl implements UserRepository {
             List<Affiliation> affiliationList = userServiceRequest.getUserProfile().getAffiliations();
             if (null != affiliationList && affiliationList.size() > 0) {
                 for (Affiliation affiliation : affiliationList) {
-                    UserAffiliations userAffiliations = null;
                     if (null != affiliation.getId()) {
-                        userAffiliations = (UserAffiliations) getEntity("affiliationId", affiliation.getId(), UserAffiliations.class);
-                        userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
-                        session.delete(userAffiliations);
+                        UserAffiliations userAffiliations = (UserAffiliations) getEntity(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
+                        if (null != userAffiliations) {
+                            session.delete(userAffiliations);
+                        }
                     }
                 }
             }
@@ -510,10 +562,10 @@ public class UserRepositoryImpl implements UserRepository {
             List<Society> societyList = userServiceRequest.getUserProfile().getSocieties();
             if (null != societyList && societyList.size() > 0) {
                 for (Society society : societyList) {
-                    UserSocietyDetails userSocietyDetails = null;
-                    userSocietyDetails = (UserSocietyDetails) getEntity("societyId", society.getId(), UserSocietyDetails.class);
-                    userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
-                    session.delete(userSocietyDetails);
+                    UserSocietyDetails userSocietyDetails = (UserSocietyDetails) getEntity(CommonConstants.SOCIETY_ID, society.getId(), UserSocietyDetails.class);
+                    if (null != userSocietyDetails) {
+                        session.delete(userSocietyDetails);
+                    }
                 }
             }
 
@@ -521,10 +573,10 @@ public class UserRepositoryImpl implements UserRepository {
             List<MyInterest> myInterestList = userServiceRequest.getUserProfile().getMyInterests();
             if (null != myInterestList && myInterestList.size() > 0) {
                 for (MyInterest myInterest : myInterestList) {
-                    AreaOfInterest areaOfInterest = null;
-                    areaOfInterest = (AreaOfInterest) getEntity("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class);
-                    areaOfInterest = UserServiceHelper.setAreaOfInterest(areaOfInterest, myInterest);
-                    session.delete(areaOfInterest);
+                    AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class);
+                    if (null != areaOfInterest) {
+                        session.delete(areaOfInterest);
+                    }
                 }
             }
 
@@ -534,10 +586,10 @@ public class UserRepositoryImpl implements UserRepository {
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
                 for (PreferredJournal preferredJournal : preferredJournalList) {
-                    Journals journals = null;
-                    journals = (Journals) getEntity("journalId", preferredJournal.getJournalId(), Journals.class);
-                    journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalTitle());
-                    session.delete(journals);
+                    Journals journals = (Journals) getEntity(CommonConstants.JOURNAL_ID, preferredJournal.getJournalId(), Journals.class);
+                    if (null != journals) {
+                        session.delete(journals);
+                    }
                 }
             }
 
@@ -549,23 +601,20 @@ public class UserRepositoryImpl implements UserRepository {
                 }
             }
 
-            //Set Author Profile to user
-            authorProfile.setUsersByUserId(user);
-            session.delete(authorProfile);
-            if (null != secondaryEmailAddr) {
-                session.delete(secondaryEmailAddr);
-            }
-
-
             session.flush();
             session.clear();
 
 
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during user profile creation...", e);
+            //Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
+            LOGGER.error("Exception Occurred during user profile deletion...", e);
             throw e;
         } finally {
             if (null != session) {
+                //Close the session
                 session.close();
             }
         }
@@ -586,9 +635,14 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Updating User Profile..");
             if (null == userId) {
-                throw new Exception("User not found");
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
             }
-            Users user = (Users) getEntity("userId", userId, Users.class);
+            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+            //Throw Error if user is not found.
+            if (null == user) {
+                throw new Exception(messageProp.getProperty(CommonConstants.ERROR_CODE_102));
+            }
+
             UserProfile userProfile = new UserProfile();
             userProfile.setTitleCd(user.getAuthorProfileByUserId().getTitleCd());
             userProfile.setFirstName(user.getFirstName());
@@ -734,10 +788,15 @@ public class UserRepositoryImpl implements UserRepository {
             userResponse.setUserProfile(userProfile);
 
         } catch (Exception e) {
+            //Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
             LOGGER.error("Exception Occurred during user profile creation...", e);
             throw e;
         } finally {
             if (null != session) {
+                //Close the session
                 session.close();
             }
         }

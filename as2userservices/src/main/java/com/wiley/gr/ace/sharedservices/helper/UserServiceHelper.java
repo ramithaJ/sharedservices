@@ -13,10 +13,13 @@
  */
 package com.wiley.gr.ace.sharedservices.helper;
 
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
+import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.payload.*;
+import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.profile.Affiliation;
 import com.wiley.gr.ace.sharedservices.profile.MyInterest;
+import com.wiley.gr.ace.sharedservices.profile.ProfileVisible;
 import com.wiley.gr.ace.sharedservices.profile.Society;
 import org.apache.commons.lang.StringUtils;
 
@@ -80,6 +83,10 @@ public class UserServiceHelper {
         if (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') {
             authorProfile.setProfileVisibleFlg(userServiceRequest.getUserProfile().getProfileVisibleFlag());
         }
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
+            authorProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
+        }
+
         authorProfile.setCreatedDate(getDate());
         authorProfile.setUpdatedDate(getDate());
         return authorProfile;
@@ -245,7 +252,7 @@ public class UserServiceHelper {
      * Setter method for AreaOfInterest data.
      *
      * @param areaOfInterest Entity Object
-     * @param myInterest      Request JSON Information
+     * @param myInterest     Request JSON Information
      * @return areaOfInterest entity object
      */
     public static AreaOfInterest setAreaOfInterest(AreaOfInterest areaOfInterest, MyInterest myInterest) {
@@ -303,6 +310,36 @@ public class UserServiceHelper {
     }
 
     /**
+     * Method to set user reference data
+     *
+     * @param userReferenceData  Entity Object
+     * @param userServiceRequest Request JSON Information
+     * @return
+     */
+    public static UserReferenceData setUserReference(UserReferenceData userReferenceData, UserServiceRequest userServiceRequest) {
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
+            userReferenceData.setOrcidId(userServiceRequest.getUserProfile().getOrcidId());
+        }
+        userReferenceData.setCreatedDate(getDate());
+        userReferenceData.setUpdatedDate(getDate());
+        return userReferenceData;
+    }
+
+    /**
+     * Method to set ProfileAttributeList
+     * @param profileAttributeList
+     * @param profileVisible
+     * @return
+     */
+    public static ProfileAttributeList setProfileAttributeList(ProfileAttributeList profileAttributeList, ProfileVisible profileVisible) {
+        profileAttributeList.setProfileAttribCd(profileVisible.getTitleCd());
+        profileAttributeList.setDisplayName(profileVisible.getTitleValue());
+        profileAttributeList.setCreatedDate(getDate());
+        profileAttributeList.setUpdatedDate(getDate());
+        return profileAttributeList;
+    }
+
+    /**
      * To get the date.
      *
      * @return
@@ -313,18 +350,37 @@ public class UserServiceHelper {
 
     /**
      * Method to convert String date to Date obj.
-     * @param date
+     *
+     * @param date Date
      * @return
      */
     private static Date convertStringToDate(String date) {
         Date convertedDate = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
             convertedDate = sdf.parse(date);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return convertedDate;
+    }
+
+    /**
+     * Method to set code, message & status to Service.
+     *
+     * @param code    Code
+     * @param message Message
+     * @param status  Status
+     * @return
+     */
+    public static Service setServiceMessage(String code, String message, String status) {
+        Service service = new Service();
+        com.wiley.gr.ace.sharedservices.payload.Error error = new Error();
+        error.setCode(Integer.parseInt(code));
+        error.setMessage(message);
+        service.setStatus(status);
+        service.setError(error);
+        return service;
     }
 
 }

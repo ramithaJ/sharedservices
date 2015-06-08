@@ -38,7 +38,6 @@ public class UserProfile implements Serializable {
     private List<Address> addresses;
     private List<Affiliation> affiliations;
     private List<Funder> funders;
-    private List<WileyOpenAccess> wileyOpenAccesses;
     private List<Society> societies;
     private List<MyInterest> myInterests;
     private List<CoAuthor> coAuthors;
@@ -181,14 +180,6 @@ public class UserProfile implements Serializable {
         this.funders = funders;
     }
 
-    public List<WileyOpenAccess> getWileyOpenAccesses() {
-        return wileyOpenAccesses;
-    }
-
-    public void setWileyOpenAccesses(List<WileyOpenAccess> wileyOpenAccesses) {
-        this.wileyOpenAccesses = wileyOpenAccesses;
-    }
-
     public List<Society> getSocieties() {
         return societies;
     }
@@ -230,32 +221,5 @@ public class UserProfile implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "UserProfile{" +
-                "titleCd='" + titleCd + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", suffixCd='" + suffixCd + '\'' +
-                ", alternativeName='" + alternativeName + '\'' +
-                ", industryCd='" + industryCd + '\'' +
-                ", jobCategoryCd='" + jobCategoryCd + '\'' +
-                ", orcidId='" + orcidId + '\'' +
-                ", recieveEmailsFlag='" + recieveEmailsFlag + '\'' +
-                ", profileVisibleFlag='" + profileVisibleFlag + '\'' +
-                ", primaryEmailAddress='" + primaryEmailAddress + '\'' +
-                ", recoveryEmailAddress='" + recoveryEmailAddress + '\'' +
-                ", profileVisible=" + profileVisible +
-                ", addresses=" + addresses +
-                ", affiliations=" + affiliations +
-                ", funders=" + funders +
-                ", wileyOpenAccesses=" + wileyOpenAccesses +
-                ", societies=" + societies +
-                ", myInterests=" + myInterests +
-                ", coAuthors=" + coAuthors +
-                ", journals=" + journals +
-                ", alerts=" + alerts +
-                '}';
-    }
+
 }
