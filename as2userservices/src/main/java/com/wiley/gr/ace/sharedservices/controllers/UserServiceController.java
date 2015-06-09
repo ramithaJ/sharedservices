@@ -14,6 +14,7 @@
 package com.wiley.gr.ace.sharedservices.controllers;
 
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
 import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.payload.Service;
@@ -59,7 +60,7 @@ public class UserServiceController {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.createUserService(userServiceRequest, userId);
-        } catch (Exception e) {
+        } catch (SharedServiceException e) {
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();
@@ -80,7 +81,7 @@ public class UserServiceController {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.updateUserService(userServiceRequest, userId);
-        } catch (Exception e) {
+        } catch (SharedServiceException e) {
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();
@@ -101,7 +102,7 @@ public class UserServiceController {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userServiceRequest = userService.getUserService(userId);
-        } catch (Exception e) {
+        } catch (SharedServiceException e) {
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         service.setPayload(userServiceRequest);
@@ -122,7 +123,7 @@ public class UserServiceController {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.deleteUserService(userServiceRequest, userId);
-        } catch (Exception e) {
+        } catch (SharedServiceException e) {
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();

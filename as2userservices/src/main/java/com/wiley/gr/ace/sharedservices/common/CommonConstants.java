@@ -12,6 +12,7 @@ public interface CommonConstants {
     String ERROR = "ERROR";
     String REQUEST_PATH = "/profile/{userId}";
     String DATE_FORMAT = "MM-dd-yyyy";
+    String ADDRESS_ID = "addressId";
 
     //Error Codes
     String ERROR_CODE_101 = "101";
