@@ -1,5 +1,15 @@
 /**
- * 
+ * ****************************************************************************
+ * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
+ * <p/>
+ * All material contained herein is proprietary to John Wiley & Sons
+ * and its third party suppliers, if any. The methods, techniques and
+ * technical concepts contained herein are considered trade secrets
+ * and confidential and may be protected by intellectual property laws.
+ * Reproduction or distribution of this material, in whole or in part,
+ * is strictly forbidden except by express prior written permission
+ * of John Wiley & Sons.
+ * *****************************************************************************
  */
 package com.wiley.gr.ace.auth.security.dao;
 
@@ -13,6 +23,7 @@ import org.hibernate.Transaction;
  *
  */
 public class UserLoginDAOImpl implements UserLoginDAO {
+	
 	
 	
 	@Override
@@ -35,7 +46,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
 	
 
 	@Override
-	public boolean insertUser(String userId) {
+	public boolean insertUser(String userId, String appKey) {
 		
 		Session session = null;
 		Transaction transaction = null;
@@ -44,8 +55,9 @@ public class UserLoginDAOImpl implements UserLoginDAO {
 			session = HibernateConnection.getSessionFactory().openSession();
 			transaction =session.beginTransaction();
 			lockedAccountDetails.setUserId(userId);
-			lockedAccountDetails.setLoginAttemptTime(new Date());
+			lockedAccountDetails.setAppKey(appKey);
 			lockedAccountDetails.setInvalidLoginCount(1);
+			lockedAccountDetails.setLoginAttemptTime(new Date());
 			lockedAccountDetails.setCreatedDate(new Date());
 			session.save(lockedAccountDetails);
 			transaction.commit();
@@ -105,11 +117,28 @@ public class UserLoginDAOImpl implements UserLoginDAO {
 		return true;
 	}
 
-	public static void main(String[] args) {
-		
-		UserLoginDAOImpl userLoginDAOImpl = new UserLoginDAOImpl();
-		LockedAccountDetails lockedAccountDetails = userLoginDAOImpl.userAccountDetails("shiva@gmail.com");
-		System.err.println(lockedAccountDetails.getLoginAttemptTime());
+
+
+	@Override
+	public boolean updateTimeStamp(String userId) {
+
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateConnection.getSessionFactory().openSession();
+			transaction =session.beginTransaction();
+			LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session.get(LockedAccountDetails.class, userId);
+			lockedAccountDetails.setLockedTime(new Date());
+			lockedAccountDetails.setUpdatedDate(new Date());
+			session.update(lockedAccountDetails);
+			transaction.commit();
+		}finally{
+			if (session != null) {
+                session.flush();
+                session.close();
+            }
+		}
+		return true;
 	}
 
 }

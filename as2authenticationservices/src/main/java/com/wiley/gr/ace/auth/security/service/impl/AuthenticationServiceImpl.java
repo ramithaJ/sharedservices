@@ -16,6 +16,7 @@ package com.wiley.gr.ace.auth.security.service.impl;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.jose4j.lang.JoseException;
@@ -32,14 +33,17 @@ import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.web.client.RestTemplate;
 
+import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 import com.wiley.gr.ace.auth.security.dao.LockedAccountDetails;
 import com.wiley.gr.ace.auth.security.dao.UserLoginDAO;
-import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
 import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.model.SecurityRequest;
+import com.wiley.gr.ace.auth.security.model.SecurityResponse;
 import com.wiley.gr.ace.auth.security.model.TokenRequest;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 import com.wiley.gr.ace.auth.security.service.TokenService;
+import com.wiley.gr.ace.auth.security.utils.StubInvoker;
 
 /**
  * Created by sripads on 5/16/2015.
@@ -48,8 +52,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AuthenticationServiceImpl.class);
-
-	protected Response response = null;
 
 	@Autowired(required = true)
 	private LdapTemplate ldapTemplate;
@@ -99,6 +101,95 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Value("${ldap.service.filter.match}")
 	private String ldapFilterMatch;
 
+	@Value("${as.lock.attempts}")
+	private int lockAttempts;
+
+	@Value("${as.unlock.time}")
+	private int unlockTime;
+
+	@Value("${as.lock.url}")
+	private String lockUser;
+
+	@Value("${as.unlock.url}")
+	private String unlockUser;
+
+	/**
+	 * Method to validate user before authenticate the user. It takes the
+	 * AuthenticateRequest object as input.
+	 * 
+	 * @return Respose object
+	 */
+	@Override
+	public Response userLogin(AuthenticateRequest request) {
+
+		// get the user details from the table by using userId.
+		LockedAccountDetails lockedAccountDetails = userLoginDao
+				.userAccountDetails(request.getUserId());
+		Response response = new Response();
+		// if record is not there in table.
+		if (null == lockedAccountDetails) {
+			return processAuthenticatedUser(request);
+		}
+		// if record is there in table, check the time stamp and find whether
+		// time is elapsed or not.
+		Date loginAttemptTime = new Date(lockedAccountDetails
+				.getLoginAttemptTime().getTime());
+		// if time elapsed we will unlock the user, remove the record in table
+		// and proceed for authentication.
+		long minutes = TimeUnit.MILLISECONDS.toMinutes((new Date().getTime() - loginAttemptTime.getTime())); 
+		if (unlockTime < minutes) {
+			SecurityRequest requestEntityClass = new SecurityRequest();
+			requestEntityClass.setUserId(request.getUserId());
+			if (null != lockedAccountDetails.getLockedTime()) {
+				StubInvoker.restServiceInvoker(unlockUser, requestEntityClass,
+						SecurityResponse.class);
+			}
+			userLoginDao.removeUser(request.getUserId());
+			return processAuthenticatedUser(request);
+		}
+		// if time not elapsed we will check the login failure count.
+		// if count is 3 then we will lock the user and update the time stamp in
+		// table.
+		// if not we will proceed for authentication. if authentication fail we
+		// will update the count in table.
+		if (lockAttempts == lockedAccountDetails.getInvalidLoginCount()) {
+			// lock user esb service
+			SecurityRequest requestEntityClass = new SecurityRequest();
+			requestEntityClass.setUserId(request.getUserId());
+			StubInvoker.restServiceInvoker(lockUser, requestEntityClass,
+					SecurityResponse.class);
+			// update the locked time in the table
+			userLoginDao.updateTimeStamp(request.getUserId());
+			response.setMessage("Your account is locked. Please try after sometime.");
+			return response;
+		} else {
+
+			response = authenticate(request.getUserId(), request.getPassword(),
+					request.getAuthenticationType(), request.getAppKey());
+			if (null == response) {
+				userLoginDao.updateUser(request.getUserId());
+			}
+			return response;
+		}
+	}
+
+	/**
+	 * Method to authenticate the user. It takes the AuthenticateRequest object
+	 * as input.
+	 * 
+	 * @return Response object
+	 */
+	private Response processAuthenticatedUser(AuthenticateRequest request) {
+
+		Response response = new Response();
+		response = authenticate(request.getUserId(), request.getPassword(),
+				request.getAuthenticationType(), request.getAppKey());
+		if (null == response) {
+			userLoginDao.insertUser(request.getUserId(), request.getAppKey());
+		}
+		return response;
+	}
+
 	/**
 	 * Method to authenticate the user.
 	 *
@@ -108,63 +199,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @param appKey
 	 * @return
 	 */
-
-	@Override
-	public Response userLogin(AuthenticateRequest request) {
-		
-		LockedAccountDetails lockedAccountDetails = userLoginDao.userAccountDetails(request.getUserId());
-		Response response = new Response();
-		
-		if (null == lockedAccountDetails) {
-			return processAuthenticatedUser(request);
-		}
-
-		Date loginAttemptTime = new Date(lockedAccountDetails
-				.getLoginAttemptTime().getTime());
-
-		if ((new Date().getTime() - loginAttemptTime.getTime()) >= 300) { //300 should be moved to property file
-			//if block {
-			//check the locked time is set, if yes then call ESB to unlock
-			//}
-			
-			userLoginDao.removeUser(request.getUserId());
-			return processAuthenticatedUser(request);
-		}
-
-		if (lockedAccountDetails.getInvalidLoginCount() >= 3) {
-			// lock user esb service
-			//update the locked time in the table
-			response.setMessage("Your account is locked. Please try after sometime.");
-			return response;
-		}else{
-			
-			response = authenticate(request.getUserId(), request.getPassword(),
-					request.getAuthenticationType(), request.getAppKey());
-			if ("SUCCESS".equalsIgnoreCase(response.getStatus())) {
-				return response;
-			}
-			userLoginDao.updateUser(request.getUserId());
-			return response;
-		}
-	}
-
-	private Response processAuthenticatedUser(AuthenticateRequest request) {
-		
-		Response response = new Response();
-		response = authenticate(request.getUserId(), request.getPassword(),
-				request.getAuthenticationType(), request.getAppKey());
-		if ("SUCCESS".equalsIgnoreCase(response.getStatus())) {
-			return response;
-		}
-		userLoginDao.insertUser(request.getUserId());
-		response.setMessage("Invalid email address. Please Re-Enter");
-		return response;
-	}
-
 	@Override
 	public Response authenticate(String userId, String password,
 			String authenticationType, String appKey) {
 
+		Response response = null;
 		String filterMatch = directoryServicefilterMatch;
 		String filterPath = directoryServicefilterPath;
 
@@ -206,10 +245,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				response = new Response(CommonConstant.STATUS_CODE,
 						tokenService.generateToken(tokenRequest),
 						CommonConstant.SUCCESS_STATUS);
+				return response;
 			} catch (JoseException e) {
 				LOGGER.error("Exception Occurred while authenticating..", e);
 				response = new Response(CommonConstant.FAIL_CODE,
 						"Authentication Fail", CommonConstant.FAILURE_STATUS);
+				return response;
 			}
 
 		}

@@ -11,12 +11,12 @@
  *******************************************************************************/
 package com.wiley.gr.ace.auth.security.service;
 
-import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
-import com.wiley.gr.ace.auth.security.model.Response;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
+import com.wiley.gr.ace.auth.security.model.Response;
 
 /**
  * Created by sripads on 5/16/2015.
