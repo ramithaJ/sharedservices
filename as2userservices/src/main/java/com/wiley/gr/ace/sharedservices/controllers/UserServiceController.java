@@ -59,8 +59,10 @@ public class UserServiceController {
             if (StringUtils.isEmpty(userId)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
+            LOGGER.debug("Create User Service:", userId);
             userService.createUserService(userServiceRequest, userId);
         } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Create User Service",e);
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();
@@ -81,7 +83,9 @@ public class UserServiceController {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.updateUserService(userServiceRequest, userId);
+            LOGGER.debug("Update User Service:", userId);
         } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Update User Service",e);
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();
@@ -101,8 +105,10 @@ public class UserServiceController {
             if (StringUtils.isEmpty(userId)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
+            LOGGER.debug("Get User Service:", userId);
             userServiceRequest = userService.getUserService(userId);
         } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Get User Service",e);
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         service.setPayload(userServiceRequest);
@@ -122,8 +128,10 @@ public class UserServiceController {
             if (StringUtils.isEmpty(userId)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
+            LOGGER.debug("Delete User Service:", userId);
             userService.deleteUserService(userServiceRequest, userId);
         } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Delete User Service",e);
             return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();

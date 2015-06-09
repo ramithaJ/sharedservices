@@ -301,7 +301,6 @@ public class UserRepositoryImpl implements UserRepository {
                 session.save(secondaryEmailAddr);
             }
             if (null != userAddresses) {
-                //session.save(address);
                 session.save(userAddresses);
             }
             if (null != affiliations) {
@@ -740,7 +739,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             List<MyInterest> myInterests = new LinkedList<>();
             Set<UserAreaOfInterest> userAreaOfInterestSet = user.getAuthorProfileByUserId().getUserAreaOfInterests();
-            if (null != myInterests && myInterests.size() > 0) {
+            if (null != userAreaOfInterestSet && userAreaOfInterestSet.size() > 0) {
                 for (UserAreaOfInterest userAreaOfInterest : userAreaOfInterestSet) {
                     AreaOfInterest areaOfInterest = userAreaOfInterest.getAreaOfInterest();
                     MyInterest myInterest = UserServiceHelper.getMyInterest(areaOfInterest);

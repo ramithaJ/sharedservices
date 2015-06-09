@@ -179,8 +179,14 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(affiliation.getInstitutionCd())) {
             affiliations.setInstitutionCd(affiliation.getInstitutionCd());
         }
+        if (!StringUtils.isEmpty(affiliation.getInstitutionName())) {
+            affiliations.setInstitutionCd(affiliation.getInstitutionName());
+        }
         if (!StringUtils.isEmpty(affiliation.getDepartmentCd())) {
             affiliations.setDepartmentCd(affiliation.getDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(affiliation.getDepartmentName())) {
+            affiliations.setDepartmentCd(affiliation.getDepartmentName());
         }
         if (!StringUtils.isEmpty(affiliation.getCity())) {
             affiliations.setTownOrCityName(affiliation.getCity());
@@ -544,6 +550,12 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(userAffiliations.getStateOrProvinceName())) {
             affiliation.setCountryCd(userAffiliations.getStateOrProvinceName());
         }
+        if (null != userAffiliations.getStartDt()) {
+            affiliation.setFromDate("" + userAffiliations.getStartDt());
+        }
+        if (null != userAffiliations.getEndDt()) {
+            affiliation.setToDate("" + userAffiliations.getEndDt());
+        }
         return affiliation;
     }
 
@@ -558,6 +570,9 @@ public class UserServiceHelper {
         if (null != userSocietyDetails.getSocietyId() && userSocietyDetails.getSocietyId() > 0) {
             society.setId("" + userSocietyDetails.getSocietyId());
         }
+        if (!StringUtils.isEmpty(userSocietyDetails.getSocietyName())) {
+            society.setMembershipNumber(userSocietyDetails.getSocietyName());
+        }
         if (!StringUtils.isEmpty(userSocietyDetails.getMembershipNo())) {
             society.setMembershipNumber(userSocietyDetails.getMembershipNo());
         }
@@ -566,6 +581,12 @@ public class UserServiceHelper {
         }
         if (!StringUtils.isEmpty(userSocietyDetails.getSocietyCd())) {
             society.setSocietyCd(userSocietyDetails.getSocietyCd());
+        }
+        if (null != userSocietyDetails.getStartDt()) {
+            society.setFromDate("" + userSocietyDetails.getStartDt());
+        }
+        if (null != userSocietyDetails.getEndDt()) {
+            society.setToDate("" + userSocietyDetails.getEndDt());
         }
         return society;
     }
@@ -596,11 +617,11 @@ public class UserServiceHelper {
         return preferredJournal;
     }
 
-    public static Alert getAlert(Alerts userAlert){
+    public static Alert getAlert(Alerts userAlert) {
         Alert alert = new Alert();
         alert.setId(userAlert.getAlertCd());
         alert.setAlertName(userAlert.getAlertName());
-        return  alert;
+        return alert;
     }
 
 }
