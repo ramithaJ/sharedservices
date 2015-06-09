@@ -13,16 +13,22 @@
  */
 package com.wiley.gr.ace.sharedservices.controllers;
 
-import com.wiley.gr.ace.sharedservices.input.ErrorPOJO;
-import com.wiley.gr.ace.sharedservices.input.Service;
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
+import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
+import com.wiley.gr.ace.sharedservices.payload.Error;
+import com.wiley.gr.ace.sharedservices.payload.Service;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Properties;
 
 /**
  * @author kkalyan
@@ -31,37 +37,33 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/")
 public class UserServiceController {
 
+    //Logger Instance
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceController.class);
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    @Qualifier(value = "messageProperties")
+    private Properties messageProp;
 
     /**
      * Method to Create User Build Profile.
      *
      * @param userServiceRequest
      */
-    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Service createUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
-        Service service = new Service();
+    public Service createUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
         try {
             if (StringUtils.isEmpty(userId)) {
-                ErrorPOJO error = new ErrorPOJO();
-                error.setCode(-101);
-                error.setMessage("UserID is empty (or) null");
-                service.setStatus("error");
-                service.setError(error);
-                return service;
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.createUserService(userServiceRequest, userId);
-        } catch (Exception e) {
-            ErrorPOJO error = new ErrorPOJO();
-            error.setCode(-101);
-            error.setMessage("Error while create user profile service");
-            service.setStatus("error");
-            service.setError(error);
-            return service;
+        } catch (SharedServiceException e) {
+            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
-        return service;
+        return new Service();
     }
 
 
@@ -71,29 +73,18 @@ public class UserServiceController {
      * @param userServiceRequest
      * @param userId
      */
-    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
-        Service service = new Service();
+    public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
         try {
             if (StringUtils.isEmpty(userId)) {
-                ErrorPOJO error = new ErrorPOJO();
-                error.setCode(-101);
-                error.setMessage("UserID is empty (or) null");
-                service.setStatus("error");
-                service.setError(error);
-                return service;
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.updateUserService(userServiceRequest, userId);
-        } catch (Exception e) {
-            ErrorPOJO error = new ErrorPOJO();
-            error.setCode(-101);
-            error.setMessage("Error occurred while update user profile service");
-            service.setStatus("error");
-            service.setError(error);
-            return service;
+        } catch (SharedServiceException e) {
+            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
-        return service;
+        return new Service();
     }
 
     /**
@@ -101,28 +92,18 @@ public class UserServiceController {
      *
      * @param userId
      */
-    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Service getUserService(@PathVariable("userId") String userId) {
+    public Service getUserService(@PathVariable(CommonConstants.USER_ID) String userId) {
         Service service = new Service();
         UserServiceRequest userServiceRequest = null;
         try {
             if (StringUtils.isEmpty(userId)) {
-                ErrorPOJO error = new ErrorPOJO();
-                error.setCode(-101);
-                error.setMessage("UserID is empty (or) null");
-                service.setStatus("error");
-                service.setError(error);
-                return service;
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userServiceRequest = userService.getUserService(userId);
-        } catch (Exception e) {
-            ErrorPOJO error = new ErrorPOJO();
-            error.setCode(-101);
-            error.setMessage("Error occurred while get user profile service");
-            service.setStatus("error");
-            service.setError(error);
-            return service;
+        } catch (SharedServiceException e) {
+            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
         service.setPayload(userServiceRequest);
         return service;
@@ -134,29 +115,18 @@ public class UserServiceController {
      * @param userServiceRequest
      * @param userId
      */
-    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Service deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable("userId") String userId) {
-        Service service = new Service();
+    public Service deleteUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
         try {
             if (StringUtils.isEmpty(userId)) {
-                ErrorPOJO error = new ErrorPOJO();
-                error.setCode(-101);
-                error.setMessage("UserID is empty (or) null");
-                service.setStatus("error");
-                service.setError(error);
-                return service;
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, messageProp.getProperty(CommonConstants.ERROR_CODE_101), CommonConstants.ERROR);
             }
             userService.deleteUserService(userServiceRequest, userId);
-        } catch (Exception e) {
-            ErrorPOJO error = new ErrorPOJO();
-            error.setCode(-101);
-            error.setMessage("Error occurred while delete user profile service");
-            service.setStatus("error");
-            service.setError(error);
-            return service;
+        } catch (SharedServiceException e) {
+            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, e.getMessage(), CommonConstants.ERROR);
         }
-        return service;
+        return new Service();
     }
 
 }

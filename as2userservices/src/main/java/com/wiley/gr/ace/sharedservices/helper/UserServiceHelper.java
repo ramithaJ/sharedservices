@@ -13,15 +13,17 @@
  */
 package com.wiley.gr.ace.sharedservices.helper;
 
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
+import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.payload.*;
+import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
-import com.wiley.gr.ace.sharedservices.profile.Affiliation;
-import com.wiley.gr.ace.sharedservices.profile.MyInterest;
-import com.wiley.gr.ace.sharedservices.profile.Society;
+import com.wiley.gr.ace.sharedservices.persistence.entity.Address;
+import com.wiley.gr.ace.sharedservices.profile.*;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author kkalyan
@@ -80,6 +82,10 @@ public class UserServiceHelper {
         if (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') {
             authorProfile.setProfileVisibleFlg(userServiceRequest.getUserProfile().getProfileVisibleFlag());
         }
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
+            authorProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
+        }
+
         authorProfile.setCreatedDate(getDate());
         authorProfile.setUpdatedDate(getDate());
         return authorProfile;
@@ -245,7 +251,7 @@ public class UserServiceHelper {
      * Setter method for AreaOfInterest data.
      *
      * @param areaOfInterest Entity Object
-     * @param myInterest      Request JSON Information
+     * @param myInterest     Request JSON Information
      * @return areaOfInterest entity object
      */
     public static AreaOfInterest setAreaOfInterest(AreaOfInterest areaOfInterest, MyInterest myInterest) {
@@ -303,6 +309,38 @@ public class UserServiceHelper {
     }
 
     /**
+     * Method to set user reference data
+     *
+     * @param userReferenceData  Entity Object
+     * @param userServiceRequest Request JSON Information
+     * @return
+     */
+    public static UserReferenceData setUserReference(UserReferenceData userReferenceData, UserServiceRequest userServiceRequest) {
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
+            userReferenceData.setOrcidId(userServiceRequest.getUserProfile().getOrcidId());
+            userReferenceData.setCreatedDate(getDate());
+            userReferenceData.setUpdatedDate(getDate());
+        }
+
+        return userReferenceData;
+    }
+
+    /**
+     * Method to set ProfileAttributeList
+     *
+     * @param profileAttributeList
+     * @param profileVisible
+     * @return
+     */
+    public static ProfileAttributeList setProfileAttributeList(ProfileAttributeList profileAttributeList, ProfileVisible profileVisible) {
+        profileAttributeList.setProfileAttribCd(profileVisible.getTitleCd());
+        profileAttributeList.setDisplayName(profileVisible.getTitleValue());
+        profileAttributeList.setCreatedDate(getDate());
+        profileAttributeList.setUpdatedDate(getDate());
+        return profileAttributeList;
+    }
+
+    /**
      * To get the date.
      *
      * @return
@@ -313,18 +351,256 @@ public class UserServiceHelper {
 
     /**
      * Method to convert String date to Date obj.
-     * @param date
+     *
+     * @param date Date
      * @return
      */
     private static Date convertStringToDate(String date) {
         Date convertedDate = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
             convertedDate = sdf.parse(date);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return convertedDate;
+    }
+
+    /**
+     * Method to set code, message & status to Service.
+     *
+     * @param code    Code
+     * @param message Message
+     * @param status  Status
+     * @return
+     */
+    public static Service setServiceMessage(String code, String message, String status) {
+        Service service = new Service();
+        com.wiley.gr.ace.sharedservices.payload.Error error = new Error();
+        error.setCode(Integer.parseInt(code));
+        error.setMessage(message);
+        service.setStatus(status);
+        service.setError(error);
+        return service;
+    }
+
+    /**
+     * Method to set the user profile information and return back.
+     *
+     * @param user
+     * @return
+     */
+    public static UserProfile getUserProfileInfo(Users user) {
+        UserProfile userProfile = new UserProfile();
+        if (null != user.getAuthorProfileByUserId()) {
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getTitleCd())) {
+                userProfile.setTitleCd(user.getAuthorProfileByUserId().getTitleCd());
+            }
+            if (!StringUtils.isEmpty(user.getFirstName())) {
+                userProfile.setFirstName(user.getFirstName());
+            }
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getMiddleName())) {
+                userProfile.setMiddleName(user.getAuthorProfileByUserId().getMiddleName());
+            }
+            if (!StringUtils.isEmpty(user.getLastName())) {
+                userProfile.setLastName(user.getLastName());
+            }
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getSuffixCd())) {
+                userProfile.setSuffixCd(user.getAuthorProfileByUserId().getSuffixCd());
+            }
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getAlternativeName())) {
+                userProfile.setAlternativeName(user.getAuthorProfileByUserId().getAlternativeName());
+            }
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getIndustryCd())) {
+                userProfile.setIndustryCd(user.getAuthorProfileByUserId().getIndustryCd());
+            }
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getJobCategoryCd())) {
+                userProfile.setJobCategoryCd(user.getAuthorProfileByUserId().getJobCategoryCd());
+            }
+
+            Set<UserReferenceData> userReferenceDatas = user.getUserReferenceDatasForUserId();
+            for (UserReferenceData userReferenceData : userReferenceDatas) {
+                userProfile.setOrcidId(userReferenceData.getOrcidId());
+            }
+            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getOptInPromoteFlg())) {
+                userProfile.setRecieveEmailsFlag(user.getAuthorProfileByUserId().getOptInPromoteFlg());
+            }
+            if (user.getAuthorProfileByUserId().getProfileVisibleFlg() != null) {
+                userProfile.setProfileVisibleFlag(user.getAuthorProfileByUserId().getProfileVisibleFlg());
+            }
+            if (!StringUtils.isEmpty(user.getPrimaryEmailAddr())) {
+                userProfile.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
+            }
+            if (null != user.getAuthorProfileByUserId() && null != user.getAuthorProfileByUserId().getUserSecondaryEmailAddr()) {
+                userProfile.setRecoveryEmailAddress(user.getAuthorProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            }
+        }
+        return userProfile;
+    }
+
+    /**
+     * Method to get address info and set back to pojo.
+     *
+     * @param addressEntity
+     * @return
+     */
+    public static com.wiley.gr.ace.sharedservices.profile.Address getAddressInfo(Address addressEntity) {
+        com.wiley.gr.ace.sharedservices.profile.Address address = new com.wiley.gr.ace.sharedservices.profile.Address();
+        if (null != addressEntity.getAddressId() && addressEntity.getAddressId() > 0) {
+            address.setId("" + addressEntity.getAddressId());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getTitleCd())) {
+            address.setTitleCd(addressEntity.getTitleCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getFirstName())) {
+            address.setFirstName(addressEntity.getFirstName());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getLastName())) {
+            address.setLastName(addressEntity.getLastName());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getSuffixCd())) {
+            address.setSuffixCd(addressEntity.getSuffixCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getInstitutionCd())) {
+            address.setInstitutionCd(addressEntity.getInstitutionCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getInstitutionName())) {
+            address.setInstitutionName(addressEntity.getInstitutionName());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getDepartmentCd())) {
+            address.setDepartmentCd(addressEntity.getDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getDepartmentName())) {
+            address.setDepartmentName(addressEntity.getDepartmentName());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getAddressLine1())) {
+            address.setAddress_01(addressEntity.getAddressLine1());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getAddressLine2())) {
+            address.setAddress_02(addressEntity.getAddressLine2());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getCity())) {
+            address.setCity(addressEntity.getCity());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getState())) {
+            address.setStateCd(addressEntity.getState());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getCountryCd())) {
+            address.setCountryCd(addressEntity.getCountryCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getPostalcode())) {
+            address.setPostalCd(addressEntity.getPostalcode());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getPhone())) {
+            address.setPhoneNo(addressEntity.getPhone());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getFax())) {
+            address.setFaxNo(addressEntity.getFax());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getInstitutionCd())) {
+            address.setInstitutionCd(addressEntity.getInstitutionCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getInstitutionName())) {
+            address.setInstitutionName(addressEntity.getInstitutionName());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getDepartmentCd())) {
+            address.setDepartmentCd(addressEntity.getDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getDepartmentName())) {
+            address.setDepartmentName(addressEntity.getDepartmentName());
+        }
+        if (!StringUtils.isEmpty(addressEntity.getSuffixCd())) {
+            address.setSuffixCd(addressEntity.getSuffixCd());
+        }
+        return address;
+    }
+
+    /**
+     * Method to get Affiliations and set it to pojo.
+     *
+     * @param userAffiliations
+     * @return
+     */
+    public static Affiliation getAffiliation(UserAffiliations userAffiliations) {
+        Affiliation affiliation = new Affiliation();
+        if (null != userAffiliations.getAffiliationId() && userAffiliations.getAffiliationId() > 0) {
+            affiliation.setId("" + userAffiliations.getAffiliationId());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getInstitutionCd())) {
+            affiliation.setInstitutionCd(userAffiliations.getInstitutionCd());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getInstitutionName())) {
+            affiliation.setInstitutionName(userAffiliations.getInstitutionName());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getDepartmentCd())) {
+            affiliation.setDepartmentCd(userAffiliations.getDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getDepartmentName())) {
+            affiliation.setDepartmentName(userAffiliations.getDepartmentName());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getTownOrCityName())) {
+            affiliation.setCity(userAffiliations.getTownOrCityName());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getStateOrProvinceName())) {
+            affiliation.setCountryCd(userAffiliations.getStateOrProvinceName());
+        }
+        return affiliation;
+    }
+
+    /**
+     * Method to get Society info and set it to pojo.
+     *
+     * @param userSocietyDetails
+     * @return
+     */
+    public static Society getSociety(UserSocietyDetails userSocietyDetails) {
+        Society society = new Society();
+        if (null != userSocietyDetails.getSocietyId() && userSocietyDetails.getSocietyId() > 0) {
+            society.setId("" + userSocietyDetails.getSocietyId());
+        }
+        if (!StringUtils.isEmpty(userSocietyDetails.getMembershipNo())) {
+            society.setMembershipNumber(userSocietyDetails.getMembershipNo());
+        }
+        if (!StringUtils.isEmpty(userSocietyDetails.getPromoCode())) {
+            society.setPromotionCode(userSocietyDetails.getPromoCode());
+        }
+        if (!StringUtils.isEmpty(userSocietyDetails.getSocietyCd())) {
+            society.setSocietyCd(userSocietyDetails.getSocietyCd());
+        }
+        return society;
+    }
+
+    /**
+     * Method to get interests and set it to pojo.
+     *
+     * @param areaOfInterest
+     * @return
+     */
+    public static MyInterest getMyInterest(AreaOfInterest areaOfInterest) {
+        MyInterest myInterest = new MyInterest();
+        if (!StringUtils.isEmpty(areaOfInterest.getAreaOfInterestCd())) {
+            myInterest.setId(areaOfInterest.getAreaOfInterestCd());
+            myInterest.setAreaofInterestCd(areaOfInterest.getAreaOfInterestCd());
+        }
+        if (!StringUtils.isEmpty(areaOfInterest.getInterestName())) {
+            myInterest.setInterestName(areaOfInterest.getInterestName());
+        }
+        return myInterest;
+    }
+
+    public static PreferredJournal getPreferredJournal(Journals journal) {
+        PreferredJournal preferredJournal = new PreferredJournal();
+        preferredJournal.setId("" + journal.getJournalId());
+        preferredJournal.setJournalTitle(journal.getJouTitle());
+        //preferredJournal.setJournalId(journal.getJournalId());
+        return preferredJournal;
+    }
+
+    public static Alert getAlert(Alerts userAlert){
+        Alert alert = new Alert();
+        alert.setId(userAlert.getAlertCd());
+        alert.setAlertName(userAlert.getAlertName());
+        return  alert;
     }
 
 }

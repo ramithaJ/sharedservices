@@ -37,6 +37,7 @@ public class Address implements Serializable {
     private String postalCd;
     private String phoneNo;
     private String faxNo;
+    private String type;
 
     public String getTitleCd() {
         return titleCd;
@@ -174,6 +175,14 @@ public class Address implements Serializable {
         this.departmentName = departmentName;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Address{" +
@@ -185,6 +194,7 @@ public class Address implements Serializable {
                 ", institutionCd='" + institutionCd + '\'' +
                 ", institutionName='" + institutionName + '\'' +
                 ", departmentCd='" + departmentCd + '\'' +
+                ", departmentName='" + departmentName + '\'' +
                 ", address_01='" + address_01 + '\'' +
                 ", address_02='" + address_02 + '\'' +
                 ", countryCd='" + countryCd + '\'' +
@@ -193,6 +203,7 @@ public class Address implements Serializable {
                 ", postalCd='" + postalCd + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
                 ", faxNo='" + faxNo + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

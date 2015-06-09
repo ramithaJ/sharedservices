@@ -13,8 +13,8 @@
  */
 package com.wiley.gr.ace.sharedservices.service.impl;
 
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
+import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +27,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {
+    public void createUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         userRepository.createUserRepository(userServiceRequest, userId);
     }
 
-    public void updateUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {
+    public void updateUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         userRepository.updateUserRepository(userServiceRequest, userId);
     }
 
-    public void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws Exception {
+    public void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         userRepository.deleteUserRepository(userServiceRequest, userId);
     }
 
-    public UserServiceRequest getUserService(String userId) throws Exception {
+    public UserServiceRequest getUserService(String userId) throws SharedServiceException {
         return userRepository.getUserRepository(userId);
     }
 }

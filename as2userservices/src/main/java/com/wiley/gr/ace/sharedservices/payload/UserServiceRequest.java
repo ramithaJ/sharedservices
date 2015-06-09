@@ -11,7 +11,7 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.sharedservices.input;
+package com.wiley.gr.ace.sharedservices.payload;
 
 import com.wiley.gr.ace.sharedservices.profile.UserProfile;
 

@@ -13,20 +13,20 @@
  */
 package com.wiley.gr.ace.sharedservices.service;
 
-import com.wiley.gr.ace.sharedservices.input.UserServiceRequest;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
+import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 
 /**
  * @author kkalyan
  */
 public interface UserService {
 
-    void createUserService(UserServiceRequest userServiceRequest, String userId) throws Exception;
+    void createUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void updateUserService(UserServiceRequest userServiceRequest, String userId) throws Exception;
+    void updateUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws Exception;
+    void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    UserServiceRequest getUserService(String userId) throws Exception;
+    UserServiceRequest getUserService(String userId) throws SharedServiceException;
 
 }

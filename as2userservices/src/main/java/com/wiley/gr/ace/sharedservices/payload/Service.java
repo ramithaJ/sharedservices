@@ -1,4 +1,4 @@
-package com.wiley.gr.ace.sharedservices.input;
+package com.wiley.gr.ace.sharedservices.payload;
 
 /**
  * Created by kkalyan on 6/3/2015.
@@ -9,7 +9,7 @@ public class Service {
 
     private Object payload;
 
-    private ErrorPOJO error;
+    private Error error;
 
     public Service(String status) {
         this.status = status;
@@ -50,14 +50,14 @@ public class Service {
     /**
      * @return
      */
-    public ErrorPOJO getError() {
+    public Error getError() {
         return error;
     }
 
     /**
      * @param error
      */
-    public void setError(ErrorPOJO error) {
+    public void setError(Error error) {
         this.error = error;
     }
 }

@@ -21,7 +21,6 @@ import java.io.Serializable;
 public class ProfileVisible implements Serializable {
 
     private String id;
-
     private String titleCd;
     private String titleValue;
 
