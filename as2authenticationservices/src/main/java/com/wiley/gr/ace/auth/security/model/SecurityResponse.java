@@ -11,18 +11,19 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.auth.security.dao;
+package com.wiley.gr.ace.auth.security.model;
 
+public class SecurityResponse {
 
-public interface UserLoginDAO {
+	private String status;
 
-	LockedAccountDetails userAccountDetails(String userId);
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	
-	boolean insertUser(String userId, String appKey);
 	
-	boolean removeUser(String userId);
-	
-	boolean updateUser(String userId);
-	
-	boolean updateTimeStamp(String userId);
 }
