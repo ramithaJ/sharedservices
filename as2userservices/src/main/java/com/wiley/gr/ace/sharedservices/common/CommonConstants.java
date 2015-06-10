@@ -9,6 +9,9 @@ public interface CommonConstants {
     String SOCIETY_ID = "societyId";
     String AREA_OF_INTEREST_CD = "areaOfInterestCd";
     String JOURNAL_ID = "journalId";
+    String RESFUNDER_ID = "resfunderid";
+    String ALERT_CD = "alertCd";
+    String AUTH_COAUTH_ID = "authCoauthId";
     String ERROR = "ERROR";
     String REQUEST_PATH = "/profile/{userId}";
     String DATE_FORMAT = "MM-dd-yyyy";

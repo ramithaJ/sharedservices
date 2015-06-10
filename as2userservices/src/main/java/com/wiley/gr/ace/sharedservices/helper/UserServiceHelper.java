@@ -47,7 +47,7 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
             user.setPrimaryEmailAddr(userServiceRequest.getUserProfile().getPrimaryEmailAddress());
         }
-        user.setCreatedDate(getDate());
+
         user.setUpdatedDate(getDate());
         return user;
     }
@@ -85,8 +85,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
             authorProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
         }
-
-        authorProfile.setCreatedDate(getDate());
         authorProfile.setUpdatedDate(getDate());
         return authorProfile;
     }
@@ -102,7 +100,6 @@ public class UserServiceHelper {
     public static UserSecondaryEmailAddr setUserSecondaryEmailAddr(UserServiceRequest userServiceRequest, UserSecondaryEmailAddr secondaryEmailAddr, Users user) {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecoveryEmailAddress())) {
             secondaryEmailAddr.setSecondaryEmailAddr(userServiceRequest.getUserProfile().getRecoveryEmailAddress());
-            secondaryEmailAddr.setCreatedDate(getDate());
             secondaryEmailAddr.setUpdatedDate(getDate());
             secondaryEmailAddr.setUsersByUserId(user);
             return secondaryEmailAddr;
@@ -162,8 +159,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(addressProfile.getFaxNo())) {
             address.setFax(addressProfile.getFaxNo());
         }
-
-        address.setCreatedDate(getDate());
         address.setUpdatedDate(getDate());
         return address;
     }
@@ -180,13 +175,13 @@ public class UserServiceHelper {
             affiliations.setInstitutionCd(affiliation.getInstitutionCd());
         }
         if (!StringUtils.isEmpty(affiliation.getInstitutionName())) {
-            affiliations.setInstitutionCd(affiliation.getInstitutionName());
+            affiliations.setInstitutionName(affiliation.getInstitutionName());
         }
         if (!StringUtils.isEmpty(affiliation.getDepartmentCd())) {
             affiliations.setDepartmentCd(affiliation.getDepartmentCd());
         }
         if (!StringUtils.isEmpty(affiliation.getDepartmentName())) {
-            affiliations.setDepartmentCd(affiliation.getDepartmentName());
+            affiliations.setDepartmentName(affiliation.getDepartmentName());
         }
         if (!StringUtils.isEmpty(affiliation.getCity())) {
             affiliations.setTownOrCityName(affiliation.getCity());
@@ -200,8 +195,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(affiliation.getToDate())) {
             affiliations.setEndDt(convertStringToDate(affiliation.getToDate()));
         }
-
-        affiliations.setCratedDate(getDate());
         affiliations.setUpdatedDate(getDate());
         return affiliations;
     }
@@ -217,7 +210,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(grantNum)) {
             grant.setGrantNum(grantNum);
         }
-        grant.setCreatedDate(getDate());
         grant.setUpdatedDate(getDate());
         return grant;
     }
@@ -248,7 +240,7 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(society.getToDate())) {
             userSocietyDetails.setEndDt(convertStringToDate(society.getToDate()));
         }
-        userSocietyDetails.setCreatedDate(getDate());
+
         userSocietyDetails.setUpdatedDate(getDate());
         return userSocietyDetails;
     }
@@ -267,7 +259,7 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(myInterest.getInterestName())) {
             areaOfInterest.setInterestName(myInterest.getInterestName());
         }
-        areaOfInterest.setCreatedDate(getDate());
+
         areaOfInterest.setUpdatedDate(getDate());
         return areaOfInterest;
     }
@@ -281,7 +273,7 @@ public class UserServiceHelper {
      */
     public static UserAreaOfInterest setUserAreaOfInterest(UserAreaOfInterest userAreaOfInterest, AreaOfInterest areaOfInterest) {
         userAreaOfInterest.setAreaOfInterest(areaOfInterest);
-        userAreaOfInterest.setCreatedDate(getDate());
+
         userAreaOfInterest.setUpdatedDate(getDate());
         return userAreaOfInterest;
     }
@@ -297,7 +289,7 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(journalTitle)) {
             journals.setJouTitle(journalTitle);
         }
-        journals.setCreatedDate(getDate());
+
         journals.setUpdatedDate(getDate());
         return journals;
     }
@@ -324,7 +316,6 @@ public class UserServiceHelper {
     public static UserReferenceData setUserReference(UserReferenceData userReferenceData, UserServiceRequest userServiceRequest) {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
             userReferenceData.setOrcidId(userServiceRequest.getUserProfile().getOrcidId());
-            userReferenceData.setCreatedDate(getDate());
             userReferenceData.setUpdatedDate(getDate());
         }
 
@@ -341,7 +332,7 @@ public class UserServiceHelper {
     public static ProfileAttributeList setProfileAttributeList(ProfileAttributeList profileAttributeList, ProfileVisible profileVisible) {
         profileAttributeList.setProfileAttribCd(profileVisible.getTitleCd());
         profileAttributeList.setDisplayName(profileVisible.getTitleValue());
-        profileAttributeList.setCreatedDate(getDate());
+
         profileAttributeList.setUpdatedDate(getDate());
         return profileAttributeList;
     }
@@ -351,7 +342,7 @@ public class UserServiceHelper {
      *
      * @return
      */
-    private static Date getDate() {
+    public static Date getDate() {
         return new Date();
     }
 
@@ -361,7 +352,7 @@ public class UserServiceHelper {
      * @param date Date
      * @return
      */
-    private static Date convertStringToDate(String date) {
+    public static Date convertStringToDate(String date) {
         Date convertedDate = null;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DATE_FORMAT);

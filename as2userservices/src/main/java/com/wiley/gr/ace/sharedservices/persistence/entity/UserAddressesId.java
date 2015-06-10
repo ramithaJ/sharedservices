@@ -38,7 +38,7 @@ public class UserAddressesId implements java.io.Serializable {
 
 	@Column(name = "USER_ADDRESS_ID", precision = 22, scale = 0)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_ADDRESSES_SEQ")
-	@SequenceGenerator(name="USER_ADDRESSES_SEQ",sequenceName="AS2APPUSER.USER_ADDRESSES_SEQ",allocationSize=1)
+	@SequenceGenerator(name="USER_ADDRESSES_SEQ",sequenceName="USER_ADDRESSES_SEQ",allocationSize=1)
 	public Integer getUserAddressId() {
 		return this.userAddressId;
 	}

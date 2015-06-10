@@ -59,7 +59,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Creating User Profile..");
 
-            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+            Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
 
             //Throw Error if user is not found.
             if (null == user) {
@@ -72,11 +72,13 @@ public class UserRepositoryImpl implements UserRepository {
 
             LOGGER.info("Set User Profile...");
             user = UserServiceHelper.setUserProfileInformation(userServiceRequest, user);
+            user.setCreatedDate(UserServiceHelper.getDate());
 
             //Create AuthorProfile Object
             AuthorProfile authorProfile = user.getAuthorProfileByUserId();
             LOGGER.info("Set Author Profile...");
             authorProfile = UserServiceHelper.setAuthorProfile(userServiceRequest, authorProfile);
+            authorProfile.setCreatedDate(UserServiceHelper.getDate());
 
             //Set Orcid id information
             UserReferenceDataId userReferenceDataId = new UserReferenceDataId();
@@ -85,6 +87,7 @@ public class UserRepositoryImpl implements UserRepository {
             userReferenceDataId.setEcid(authorProfile.getMiddleName());
             UserReferenceData userReferenceData = new UserReferenceData();
             userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
+            userReferenceData.setCreatedDate(UserServiceHelper.getDate());
             userReferenceData.setId(userReferenceDataId);
             userReferenceData.setUsersByUserId(user);
             session.save(userReferenceData);
@@ -96,6 +99,7 @@ public class UserRepositoryImpl implements UserRepository {
                 for (ProfileVisible profileVisible : profileVisibleList) {
                     ProfileAttributeList profileAttributeList = new ProfileAttributeList();
                     profileAttributeList = UserServiceHelper.setProfileAttributeList(profileAttributeList, profileVisible);
+                    profileAttributeList.setCreatedDate(UserServiceHelper.getDate());
                     session.save(profileAttributeList);
                     UserProfileAttribVisibleId userProfileAttribVisibleId = new UserProfileAttribVisibleId();
                     userProfileAttribVisibleId.setProfileAttribCd(profileVisible.getTitleCd());
@@ -119,6 +123,7 @@ public class UserRepositoryImpl implements UserRepository {
             secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
             if (null != secondaryEmailAddr) {
                 LOGGER.info("Set Secondary Email Addr...");
+                secondaryEmailAddr.setCreatedDate(UserServiceHelper.getDate());
                 userSecondaryEmailAddrSet.add(secondaryEmailAddr);
                 //Set the secondary email address to the user object
                 secondaryEmailAddr.setUsersByUserId(user);
@@ -135,6 +140,7 @@ public class UserRepositoryImpl implements UserRepository {
                     userAddresses = new UserAddresses();
                     com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
                     address = UserServiceHelper.setAddress(address, addressProfile);
+                    address.setCreatedDate(UserServiceHelper.getDate());
                     session.save(address);
                     UserAddressesId userAddressesId = new UserAddressesId();
                     userAddressesId.setAddressId(address.getAddressId());
@@ -161,6 +167,7 @@ public class UserRepositoryImpl implements UserRepository {
                 for (Affiliation affiliation : affiliationList) {
                     affiliations = new UserAffiliations();
                     affiliations = UserServiceHelper.setUserAffiliations(affiliations, affiliation);
+                    affiliations.setCratedDate(UserServiceHelper.getDate());
                     affiliations.setAuthorProfile(authorProfile);
                     userAffiliationsSet.add(affiliations);
                 }
@@ -184,6 +191,7 @@ public class UserRepositoryImpl implements UserRepository {
                     for (int i = 0; i < grantListSize; i++) {
                         userFunderGrants = new UserFunderGrants();
                         userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, ((GrantNumber) grantList.get(i)).getGrantNumber());
+                        userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
                         userFunderGrants.setAuthorProfile(authorProfile);
                         userFunderGrants.setResearchFunders(researchFunders);
                         //researchFunders.getUserFunderGrantses().add(userFunderGrants);
@@ -206,6 +214,7 @@ public class UserRepositoryImpl implements UserRepository {
                 for (Society society : societyList) {
                     userSocietyDetails = new UserSocietyDetails();
                     userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
+                    userSocietyDetails.setCreatedDate(UserServiceHelper.getDate());
                     userSocietyDetails.setAuthorProfile(authorProfile);
                     societyDetailsSet.add(userSocietyDetails);
                 }
@@ -223,11 +232,13 @@ public class UserRepositoryImpl implements UserRepository {
                     userAreaOfInterest = new UserAreaOfInterest();
                     AreaOfInterest areaOfInterest = new AreaOfInterest();
                     areaOfInterest = UserServiceHelper.setAreaOfInterest(areaOfInterest, myInterest);
+                    areaOfInterest.setCreatedDate(UserServiceHelper.getDate());
                     session.save(areaOfInterest);
                     UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
                     userAreaOfInterestId.setUserId(user.getUserId());
                     userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
                     userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
+                    userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
                     userAreaOfInterest.setAreaOfInterest(areaOfInterest);
                     userAreaOfInterest.setAuthorProfile(authorProfile);
                     userAreaOfInterest.setId(userAreaOfInterestId);
@@ -251,6 +262,7 @@ public class UserRepositoryImpl implements UserRepository {
                     userPreferredJournals = new UserPreferredJournals();
                     Journals journals = new Journals();
                     journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalTitle());
+                    journals.setCreatedDate(UserServiceHelper.getDate());
                     session.save(journals);
                     userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
                     userPreferredJournalsId.setUserId(user.getUserId());
@@ -362,7 +374,7 @@ public class UserRepositoryImpl implements UserRepository {
                 throw new SharedServiceException(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
             }
 
-            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+            Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
 
             //Throw Error if user is not found.
             if (null == user) {
@@ -436,7 +448,7 @@ public class UserRepositoryImpl implements UserRepository {
                 for (Address address : addressList) {
                     com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = null;
                     if (null != address.getId()) {
-                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntity("addressId", address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById("addressId", address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
                         addressObj = UserServiceHelper.setAddress(addressObj, address);
                         session.update(addressObj);
                     }
@@ -449,7 +461,7 @@ public class UserRepositoryImpl implements UserRepository {
                 for (Affiliation affiliation : affiliationList) {
                     UserAffiliations userAffiliations = null;
                     if (null != affiliation.getId()) {
-                        userAffiliations = (UserAffiliations) getEntity("affiliationId", affiliation.getId(), UserAffiliations.class);
+                        userAffiliations = (UserAffiliations) getEntityById("affiliationId", affiliation.getId(), UserAffiliations.class);
                         userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
                         session.update(userAffiliations);
                     }
@@ -470,7 +482,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != societyList && societyList.size() > 0) {
                 for (Society society : societyList) {
                     UserSocietyDetails userSocietyDetails = null;
-                    userSocietyDetails = (UserSocietyDetails) getEntity("societyId", society.getId(), UserSocietyDetails.class);
+                    userSocietyDetails = (UserSocietyDetails) getEntityById("societyId", society.getId(), UserSocietyDetails.class);
                     userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
                     session.update(userSocietyDetails);
                 }
@@ -481,7 +493,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != myInterestList && myInterestList.size() > 0) {
                 for (MyInterest myInterest : myInterestList) {
                     AreaOfInterest areaOfInterest = null;
-                    areaOfInterest = (AreaOfInterest) getEntity("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class);
+                    areaOfInterest = (AreaOfInterest) getEntityById("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class);
                     areaOfInterest = UserServiceHelper.setAreaOfInterest(areaOfInterest, myInterest);
                     session.update(areaOfInterest);
                 }
@@ -494,7 +506,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
                 for (PreferredJournal preferredJournal : preferredJournalList) {
                     Journals journals = null;
-                    journals = (Journals) getEntity(CommonConstants.JOURNAL_ID, preferredJournal.getId(), Journals.class);
+                    journals = (Journals) getEntityById(CommonConstants.JOURNAL_ID, preferredJournal.getId(), Journals.class);
                     journals = UserServiceHelper.setJournals(journals, preferredJournal.getJournalTitle());
                     session.update(journals);
                 }
@@ -547,40 +559,41 @@ public class UserRepositoryImpl implements UserRepository {
                 throw new SharedServiceException(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
             }
 
-            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+            Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
 
             //Throw Error if user is not found.
             if (null == user) {
                 throw new SharedServiceException(messageProp.getProperty(CommonConstants.ERROR_CODE_102));
             }
 
-
+            //Open Session.
             session = sessionFactory.openSession();
             //Begin the transaction.
             session.beginTransaction();
 
 
-            user = UserServiceHelper.setUserProfileInformation(userServiceRequest, user);
-
-            //Update user Address Object
+            //Delete user Address Object
             List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
             if (null != addressList && addressList.size() > 0) {
                 for (Address address : addressList) {
                     if (null != address.getId()) {
-                        com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntity(CommonConstants.ADDRESS_ID, address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
-                        if (null != addressObj) {
-                            session.delete(addressObj);
+                        com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById(CommonConstants.ADDRESS_ID, address.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                        Set<UserAddresses> userAddressesSet = addressObj.getUserAddresseses();
+                        for (UserAddresses userAddresses : userAddressesSet) {
+                            if (null != userAddresses) {
+                                session.delete(userAddresses);
+                            }
                         }
                     }
                 }
             }
 
-            //Update Affiliations
+            //Delete Affiliations
             List<Affiliation> affiliationList = userServiceRequest.getUserProfile().getAffiliations();
             if (null != affiliationList && affiliationList.size() > 0) {
                 for (Affiliation affiliation : affiliationList) {
                     if (null != affiliation.getId()) {
-                        UserAffiliations userAffiliations = (UserAffiliations) getEntity(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
+                        UserAffiliations userAffiliations = (UserAffiliations) getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
                         if (null != userAffiliations) {
                             session.delete(userAffiliations);
                         }
@@ -588,62 +601,81 @@ public class UserRepositoryImpl implements UserRepository {
                 }
             }
 
-            //TODO:Update Funders
+            //Delete Funders
             List<Funder> funders = userServiceRequest.getUserProfile().getFunders();
             if (null != funders && funders.size() > 0) {
                 for (Funder funder : funders) {
-
+                    ResearchFunders researchFunders = (ResearchFunders) getEntityById(CommonConstants.RESFUNDER_ID, funder.getId(), ResearchFunders.class);
+                    Set<UserFunderGrants> userFunderGrantsSet = researchFunders.getUserFunderGrantses();
+                    for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                        session.delete(userFunderGrants);
+                    }
 
                 }
             }
 
-            //Update Societies
+            //Delete Societies
             List<Society> societyList = userServiceRequest.getUserProfile().getSocieties();
             if (null != societyList && societyList.size() > 0) {
                 for (Society society : societyList) {
-                    UserSocietyDetails userSocietyDetails = (UserSocietyDetails) getEntity(CommonConstants.SOCIETY_ID, society.getId(), UserSocietyDetails.class);
+                    UserSocietyDetails userSocietyDetails = (UserSocietyDetails) getEntityById(CommonConstants.SOCIETY_ID, society.getId(), UserSocietyDetails.class);
                     if (null != userSocietyDetails) {
                         session.delete(userSocietyDetails);
                     }
                 }
             }
 
-            //Update My Interests
+            //Delete My Interests
             List<MyInterest> myInterestList = userServiceRequest.getUserProfile().getMyInterests();
             if (null != myInterestList && myInterestList.size() > 0) {
                 for (MyInterest myInterest : myInterestList) {
-                    AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class);
-                    if (null != areaOfInterest) {
-                        session.delete(areaOfInterest);
+                    AreaOfInterest userAreaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getId(), AreaOfInterest.class, false);
+                    Set<UserAreaOfInterest> userAreaOfInterestSet = userAreaOfInterest.getUserAreaOfInterests();
+                    for (UserAreaOfInterest userInterestArea : userAreaOfInterestSet) {
+                        session.delete(userInterestArea);
                     }
                 }
             }
 
-            //TODO:Coauthor update option.
+            //Delete Coauthor
+            List<CoAuthor> coAuthorList = userServiceRequest.getUserProfile().getCoAuthors();
+            if (null != coAuthorList && coAuthorList.size() > 0) {
+                for (CoAuthor coAuthor : coAuthorList) {
+                    AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntity(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class, false);
+                    session.delete(authCoauthDetails);
+                }
+            }
 
-            //Update Preferred Journals
+            //Delete Preferred Journals
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
                 for (PreferredJournal preferredJournal : preferredJournalList) {
-                    Journals journals = (Journals) getEntity(CommonConstants.JOURNAL_ID, preferredJournal.getJournalId(), Journals.class);
-                    if (null != journals) {
-                        session.delete(journals);
+                    Journals journals = (Journals) getEntityById(CommonConstants.JOURNAL_ID, preferredJournal.getId(), Journals.class);
+                    Set<UserPreferredJournals> userPreferredJournalsSet = journals.getUserPreferredJournalses();
+                    for (UserPreferredJournals userPreferredJournals : userPreferredJournalsSet) {
+                        if (null != userPreferredJournals) {
+                            session.delete(userPreferredJournals);
+                        }
                     }
                 }
             }
 
-            //TODO:Update Alerts
+            //Delete Alerts
             List<Alert> alertList = userServiceRequest.getUserProfile().getAlerts();
             if (null != alertList && alertList.size() > 0) {
                 for (Alert alert : alertList) {
+                    Alerts alerts = (Alerts) getEntityById(CommonConstants.ALERT_CD, alert.getId(), Alerts.class);
+                    Set<UserAlerts> userAlertsSet = alerts.getUserAlertses();
+                    for (UserAlerts userAlerts : userAlertsSet) {
+                        session.delete(userAlerts);
+                    }
 
                 }
             }
 
             session.flush();
             session.clear();
-
-
+            session.getTransaction().commit();
         } catch (Exception e) {
             //Rollback the session if any exception occurs.
             if (null != session) {
@@ -676,7 +708,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (null == userId) {
                 throw new SharedServiceException(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
             }
-            Users user = (Users) getEntity(CommonConstants.USER_ID, userId, Users.class);
+            Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
             //Throw Error if user is not found.
             if (null == user) {
                 throw new SharedServiceException(messageProp.getProperty(CommonConstants.ERROR_CODE_102));
@@ -684,6 +716,10 @@ public class UserRepositoryImpl implements UserRepository {
 
             //Set to response pojo
             UserProfile userProfile = UserServiceHelper.getUserProfileInfo(user);
+
+            session = sessionFactory.openSession();
+            //Begin the transaction.
+            session.beginTransaction();
 
 
             //Get Address and set to the response.
@@ -798,7 +834,20 @@ public class UserRepositoryImpl implements UserRepository {
      * @param <T>
      * @return
      */
-    private <T> Object getEntity(String columnName, String primaryId, Class<T> entityClass) throws SharedServiceException {
+    private <T> Object getEntityById(String columnName, String primaryId, Class<T> entityClass) throws SharedServiceException {
+        return getEntity(columnName, primaryId, entityClass, true);
+    }
+
+    /**
+     * Class to get Entity Object from the DB primary id.
+     *
+     * @param columnName
+     * @param primaryId
+     * @param entityClass
+     * @param <T>
+     * @return
+     */
+    private <T> Object getEntity(String columnName, String primaryId, Class<T> entityClass, Boolean typeCast) throws SharedServiceException {
         //Get the session from sessionFactory pool.
         Session session = null;
         Object classObj = null;
@@ -809,7 +858,11 @@ public class UserRepositoryImpl implements UserRepository {
             session.beginTransaction();
             //Get the user role object.
             Criteria criteria = session.createCriteria(entityClass);
-            criteria.add(Restrictions.eq(columnName, Integer.valueOf(primaryId).intValue()));
+            if (typeCast) {
+                criteria.add(Restrictions.eq(columnName, Integer.parseInt(primaryId)));
+            } else {
+                criteria.add(Restrictions.eq(columnName, primaryId));
+            }
             classObj = criteria.uniqueResult();
             session.flush();
             session.clear();

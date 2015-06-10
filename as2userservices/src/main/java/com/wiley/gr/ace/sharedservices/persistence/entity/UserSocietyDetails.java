@@ -55,7 +55,7 @@ public class UserSocietyDetails implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="SOCIETY_SEQ")
-	@SequenceGenerator(name="SOCIETY_SEQ",sequenceName="AS2APPUSER.SOCIETY_SEQ",allocationSize=1)
+	@SequenceGenerator(name="SOCIETY_SEQ",sequenceName="SOCIETY_SEQ",allocationSize=1)
 	@Column(name = "SOCIETY_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getSocietyId() {
 		return this.societyId;

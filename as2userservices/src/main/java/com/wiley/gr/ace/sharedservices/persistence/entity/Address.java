@@ -78,7 +78,7 @@ public class Address implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ADDRESS_SEQUENCE")
-	@SequenceGenerator(name="ADDRESS_SEQUENCE",sequenceName="AS2APPUSER.ADDRESS_SEQUENCE",allocationSize=1)
+	@SequenceGenerator(name="ADDRESS_SEQUENCE",sequenceName="ADDRESS_SEQUENCE",allocationSize=1)
 	@Column(name = "ADDRESS_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getAddressId() {
 		return this.addressId;

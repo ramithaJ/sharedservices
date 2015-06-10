@@ -47,7 +47,7 @@ public class ResearchFunders implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="RESEARCH_FUNDER_SEQ")
-	@SequenceGenerator(name="RESEARCH_FUNDER_SEQ",sequenceName="AS2APPUSER.RESEARCH_FUNDER_SEQ",allocationSize=1)
+	@SequenceGenerator(name="RESEARCH_FUNDER_SEQ",sequenceName="RESEARCH_FUNDER_SEQ",allocationSize=1)
 	@Column(name = "RESFUNDERID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getResfunderid() {
 		return this.resfunderid;

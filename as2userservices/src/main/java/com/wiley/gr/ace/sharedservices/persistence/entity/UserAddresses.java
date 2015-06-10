@@ -35,7 +35,7 @@ public class UserAddresses implements java.io.Serializable {
 
 	@EmbeddedId
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_ADDRESSES_SEQ")
-	@SequenceGenerator(name="USER_ADDRESSES_SEQ",sequenceName="AS2APPUSER.USER_ADDRESSES_SEQ",allocationSize=1)
+	@SequenceGenerator(name="USER_ADDRESSES_SEQ",sequenceName="USER_ADDRESSES_SEQ",allocationSize=1)
 	@AttributeOverrides({
 			@AttributeOverride(name = "userAddressId", column = @Column(name = "USER_ADDRESS_ID", precision = 22, scale = 0)),
 			@AttributeOverride(name = "userId", column = @Column(name = "USER_ID", precision = 22, scale = 0)),
