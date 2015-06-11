@@ -301,7 +301,7 @@ public class Users implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_SEQ")
-    @SequenceGenerator(name="USER_SEQ",sequenceName="AS2APPUSER.USER_SEQ",allocationSize=1)
+    @SequenceGenerator(name="USER_SEQ",sequenceName="USER_SEQ",allocationSize=1)
 	@Column(name = "USER_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getUserId() {
 		return this.userId;

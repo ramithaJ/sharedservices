@@ -2,8 +2,7 @@ package com.wiley.gr.ace.sharedservices.persistence.entity;
 
 // Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -38,6 +37,8 @@ public class UserAddressesId implements java.io.Serializable {
 	}
 
 	@Column(name = "USER_ADDRESS_ID", precision = 22, scale = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_ADDRESSES_SEQ")
+	@SequenceGenerator(name="USER_ADDRESSES_SEQ",sequenceName="USER_ADDRESSES_SEQ",allocationSize=1)
 	public Integer getUserAddressId() {
 		return this.userAddressId;
 	}

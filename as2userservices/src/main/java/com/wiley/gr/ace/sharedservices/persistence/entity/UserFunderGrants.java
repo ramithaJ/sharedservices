@@ -46,7 +46,7 @@ public class UserFunderGrants implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_FUNDER_GRANTS_SEQ")
-	@SequenceGenerator(name="USER_FUNDER_GRANTS_SEQ",sequenceName="AS2APPUSER.USER_FUNDER_GRANTS_SEQ",allocationSize=1)
+	@SequenceGenerator(name="USER_FUNDER_GRANTS_SEQ",sequenceName="USER_FUNDER_GRANTS_SEQ",allocationSize=1)
 	@Column(name = "USER_FUNDER_GRANT_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getUserFunderGrantId() {
 		return this.userFunderGrantId;

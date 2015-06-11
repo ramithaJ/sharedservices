@@ -46,7 +46,7 @@ public class UserSecondaryEmailAddr implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_SECONDARY_EMAIL_ADDR_SEQ")
-	@SequenceGenerator(name="USER_SECONDARY_EMAIL_ADDR_SEQ",sequenceName="AS2APPUSER.USER_SECONDARY_EMAIL_ADDR_SEQ",allocationSize=1)
+	@SequenceGenerator(name="USER_SECONDARY_EMAIL_ADDR_SEQ",sequenceName="USER_SECONDARY_EMAIL_ADDR_SEQ",allocationSize=1)
 	@Column(name = "USER_SECONDARY_EMAIL_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getUserSecondaryEmailId() {
 		return this.userSecondaryEmailId;

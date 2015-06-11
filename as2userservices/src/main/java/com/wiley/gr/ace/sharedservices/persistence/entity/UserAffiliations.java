@@ -58,7 +58,7 @@ public class UserAffiliations implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="AFFILIATION_SEQ")
-	@SequenceGenerator(name="AFFILIATION_SEQ",sequenceName="AS2APPUSER.AFFILIATION_SEQ",allocationSize=1)
+	@SequenceGenerator(name="AFFILIATION_SEQ",sequenceName="AFFILIATION_SEQ",allocationSize=1)
 	@Column(name = "AFFILIATION_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getAffiliationId() {
 		return this.affiliationId;

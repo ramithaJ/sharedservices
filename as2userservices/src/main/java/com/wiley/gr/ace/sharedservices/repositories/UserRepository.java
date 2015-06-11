@@ -13,6 +13,7 @@
  */
 package com.wiley.gr.ace.sharedservices.repositories;
 
+import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 
 /**
@@ -20,12 +21,12 @@ import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
  */
 public interface UserRepository {
 
-    void createUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception;
+    void createUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception;
+    void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) throws Exception;
+    void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    UserServiceRequest getUserRepository(String userId) throws Exception;
+    UserServiceRequest getUserRepository(String userId) throws SharedServiceException;
 
 }

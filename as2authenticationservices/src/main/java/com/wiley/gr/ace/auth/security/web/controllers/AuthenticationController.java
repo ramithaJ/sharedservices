@@ -15,7 +15,8 @@ package com.wiley.gr.ace.auth.security.web.controllers;
 
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,82 +25,89 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
 import com.wiley.gr.ace.auth.security.model.Response;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 
-@RestController
+@Controller
 @RequestMapping("/")
 public class AuthenticationController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AuthenticationController.class);
 
-    @Autowired
-    @Qualifier(value = "messageProperties")
-    private Properties messageProp;
+	@Autowired
+	@Qualifier(value = "messageProperties")
+	private Properties messageProp;
 
-    @Autowired(required = true)
-    private AuthenticationService authenticationService;
+	@Autowired(required = true)
+	private AuthenticationService authenticationService;
 
+	// Variable to hold the header name of the token.
+	public static String AUTH_HEADER_NAME = "X-AS2-AUTH-TOKEN";
 
-    //Variable to hold the header name of the token.
-    public static String AUTH_HEADER_NAME = "X-AS2-AUTH-TOKEN";
+	/**
+	 * Method to authenticate the user against Wiley AD (or) LDAP server based
+	 * on the input authentication type parameter. If the authentication type
+	 * parameter is passed as "AUTO" it will pick the corresponding
+	 * authentication server details based on domain name in the userId value.
+	 *
+	 * @param request
+	 *            Request Object which will contain userId, Password,
+	 *            ApplicationKey & Authentication Type
+	 * @return
+	 */
+	@RequestMapping(value = CommonConstant.AUTHENTICATE_SERVICE_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<Response> authenticateUser(
+			@Valid @RequestBody AuthenticateRequest request) {
+		LOGGER.info("Authenticating User...");
+		Response authResponse = null;
+		try {
 
-    /**
-     * Method to authenticate the user against Wiley AD (or) LDAP server based on the input authentication type parameter. If the authentication type parameter is passed as "AUTO" it will pick the corresponding authentication server details based on domain name in the userId value.
-     *
-     * @param request Request Object which will contain userId, Password, ApplicationKey & Authentication Type
-     * @return
-     */
-    @RequestMapping(value = CommonConstant.AUTHENTICATE_SERVICE_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+			// Validate the input request.
+			if (null == request) {
+				return new ResponseEntity<>(new Response(
+						messageProp.getProperty(CommonConstant.AUTH_001)),
+						null, HttpStatus.UNAUTHORIZED);
+			}
 
-    public
-    @ResponseBody
-    ResponseEntity<Response> authenticateUser(
-            @RequestBody AuthenticateRequest request) {
-        LOGGER.info("Authenticating User...");
-        Response authResponse = null;
-        try {
+			authResponse = authenticationService.userLogin(request);
+			if (null == authResponse
+					|| authResponse.getStatus().equalsIgnoreCase(
+							String.valueOf(Response.STATUS.FAILURE))) {
 
-            //Validate the input request.
-            if (null == request) {
-                return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_001)), null, HttpStatus.UNAUTHORIZED);
-            }
-            LOGGER.info("Authentication Request..." + request.toString());
-            if (StringUtils.isBlank(request.getUserId())) {
-                return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_002)), null, HttpStatus.UNAUTHORIZED);
-            }
+				LOGGER.info("Authentication Response..." + authResponse);
 
-            if (StringUtils.isBlank(request.getPassword())) {
-                return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_003)), null, HttpStatus.UNAUTHORIZED);
-            }
-
-            if (StringUtils.isBlank(request.getAppKey())) {
-                return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_004)), null, HttpStatus.UNAUTHORIZED);
-            }
-
-            authResponse = authenticationService.userLogin(request);
-            if (null != authResponse && authResponse.getStatus().equalsIgnoreCase(String.valueOf(Response.STATUS.FAILURE))) {
-                LOGGER.info("Authentication Response..." + authResponse);
-                return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_005)), null, HttpStatus.UNAUTHORIZED);
-            }
-            //Set the token in the response headers.
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set(AUTH_HEADER_NAME, authResponse.getMessage());
-            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<>(new Response(messageProp.getProperty(CommonConstant.AUTH_006)), responseHeaders, HttpStatus.OK);
-        } catch (Exception e) {
-            LOGGER.error("Exception Occurred during user authentication...", e);
-            return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION), null, HttpStatus.UNAUTHORIZED);
-        }
-    }
-
+				return new ResponseEntity<>(new Response(
+						CommonConstant.FAIL_CODE,
+						messageProp.getProperty(CommonConstant.AUTH_005),
+						String.valueOf(Response.STATUS.FAILURE)), null,
+						HttpStatus.UNAUTHORIZED);
+			}
+			// Set the token in the response headers.
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set(AUTH_HEADER_NAME, authResponse.getMessage());
+			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+			// return new ResponseEntity<>(new
+			// Response(messageProp.getProperty(CommonConstant.AUTH_006)),
+			// responseHeaders, HttpStatus.OK);
+			return new ResponseEntity<>(new Response(
+					CommonConstant.STATUS_CODE,
+					messageProp.getProperty(CommonConstant.AUTH_006),
+					String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
+					HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.error("Exception Occurred during user authentication...", e);
+			return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
+					null, HttpStatus.UNAUTHORIZED);
+		}
+	}
 
 }
