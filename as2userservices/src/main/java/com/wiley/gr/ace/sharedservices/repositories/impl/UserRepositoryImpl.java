@@ -21,6 +21,7 @@ import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.profile.Address;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -81,16 +82,18 @@ public class UserRepositoryImpl implements UserRepository {
             authorProfile.setCreatedDate(UserServiceHelper.getDate());
 
             //Set Orcid id information
-            UserReferenceDataId userReferenceDataId = new UserReferenceDataId();
-            userReferenceDataId.setUserId(user.getUserId());
-            //TODO: Check how to get ecid. Temp fixed.
-            userReferenceDataId.setEcid(authorProfile.getMiddleName());
-            UserReferenceData userReferenceData = new UserReferenceData();
-            userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
-            userReferenceData.setCreatedDate(UserServiceHelper.getDate());
-            userReferenceData.setId(userReferenceDataId);
-            userReferenceData.setUsersByUserId(user);
-            session.save(userReferenceData);
+            if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
+                UserReferenceDataId userReferenceDataId = new UserReferenceDataId();
+                userReferenceDataId.setUserId(user.getUserId());
+                //TODO: Check how to get ecid. Temp fixed.
+                userReferenceDataId.setEcid(authorProfile.getMiddleName());
+                UserReferenceData userReferenceData = new UserReferenceData();
+                userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
+                userReferenceData.setCreatedDate(UserServiceHelper.getDate());
+                userReferenceData.setId(userReferenceDataId);
+                userReferenceData.setUsersByUserId(user);
+                session.save(userReferenceData);
+            }
 
 
             List<ProfileVisible> profileVisibleList = userServiceRequest.getUserProfile().getProfileVisible();
@@ -248,6 +251,19 @@ public class UserRepositoryImpl implements UserRepository {
 
             }
 
+            //Set CoAuthor Details.
+            List<CoAuthor> coAuthorList = userServiceRequest.getUserProfile().getCoAuthors();
+            if (null != coAuthorList && coAuthorList.size() > 0) {
+                Set<AuthCoauthDetails> authCoauthDetailsSet = new HashSet<>();
+                for (CoAuthor coAuthor : coAuthorList) {
+                    AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
+                    authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
+                    authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
+                    authCoauthDetailsSet.add(authCoauthDetails);
+                }
+                authorProfile.setAuthCoauthDetailsesForCoauthUserId(authCoauthDetailsSet);
+            }
+
 
             //Set Preferred Journals
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
@@ -333,6 +349,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != alerts) {
                 session.save(alerts);
             }
+
 
             //Flush the session.
             session.flush();

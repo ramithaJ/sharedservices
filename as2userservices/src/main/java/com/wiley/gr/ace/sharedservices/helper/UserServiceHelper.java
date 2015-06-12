@@ -323,6 +323,42 @@ public class UserServiceHelper {
     }
 
     /**
+     * Method to set coauthor details.
+     *
+     * @param authCoauthDetails
+     * @param coAuthor
+     * @return
+     */
+    public static AuthCoauthDetails setAuthCoauthDetails(AuthCoauthDetails authCoauthDetails, CoAuthor coAuthor) {
+        if (!StringUtils.isEmpty(coAuthor.getFirstName())) {
+            authCoauthDetails.setCoauthFirstName(coAuthor.getFirstName());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getLastName())) {
+            authCoauthDetails.setCoauthLastName(coAuthor.getLastName());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getPhone())) {
+            authCoauthDetails.setCoauthPhone(coAuthor.getPhone());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getEmail())) {
+            authCoauthDetails.setCoauthEmailAddr(coAuthor.getEmail());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getDepartmentCd())) {
+            authCoauthDetails.setCoauthDepartmentCd(coAuthor.getDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getDepartmentName())) {
+            authCoauthDetails.setCoauthDeptName(coAuthor.getDepartmentName());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getInstitutionCd())) {
+            authCoauthDetails.setCoauthInstitutionCd(coAuthor.getInstitutionCd());
+        }
+        if (!StringUtils.isEmpty(coAuthor.getInstitutionName())) {
+            authCoauthDetails.setCoauthInstitutionName(coAuthor.getInstitutionName());
+        }
+        authCoauthDetails.setUpdatedDate(getDate());
+        return authCoauthDetails;
+    }
+
+    /**
      * Method to set ProfileAttributeList
      *
      * @param profileAttributeList

@@ -63,6 +63,8 @@ public class AuthCoauthDetails implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="AUTH_COAUTH_DETAILS_SEQ")
+	@SequenceGenerator(name="AUTH_COAUTH_DETAILS_SEQ",sequenceName="AUTH_COAUTH_DETAILS_SEQ",allocationSize=1)
 	@Column(name = "AUTH_COAUTH_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public Integer getAuthCoauthId() {
 		return this.authCoauthId;

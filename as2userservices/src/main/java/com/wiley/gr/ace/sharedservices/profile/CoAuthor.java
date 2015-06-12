@@ -27,7 +27,9 @@ public class CoAuthor implements Serializable {
     private String email;
     private String phone;
     private String institutionCd;
+    private String institutionName;
     private String departmentCd;
+    private String departmentName;
 
     public String getTitleCd() {
         return titleCd;
@@ -93,16 +95,35 @@ public class CoAuthor implements Serializable {
         this.id = id;
     }
 
+    public String getInstitutionName() {
+        return institutionName;
+    }
+
+    public void setInstitutionName(String institutionName) {
+        this.institutionName = institutionName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
     @Override
     public String toString() {
         return "CoAuthor{" +
-                "titleCd='" + titleCd + '\'' +
+                "id='" + id + '\'' +
+                ", titleCd='" + titleCd + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", institutionCd='" + institutionCd + '\'' +
+                ", institutionName='" + institutionName + '\'' +
                 ", departmentCd='" + departmentCd + '\'' +
+                ", departmentName='" + departmentName + '\'' +
                 '}';
     }
 }

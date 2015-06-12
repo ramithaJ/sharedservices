@@ -348,6 +348,7 @@ public class AuthorProfile implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "authorProfileByCoauthUserId")
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 	public Set<AuthCoauthDetails> getAuthCoauthDetailsesForCoauthUserId() {
 		return this.authCoauthDetailsesForCoauthUserId;
 	}
