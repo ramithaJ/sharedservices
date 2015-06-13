@@ -15,13 +15,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.wiley.gr.ace.authorservices.persistence.connection.HibernateConnection;
+import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDAO;
+import com.wiley.gr.ace.authorservices.persistence.services.impl.TemplateManagementDAOImpl;
 
 @Configuration
 public class PersistenceBeanConfig {
-    
-    @Bean(name = "HibernateConnection")
-    public HibernateConnection hibernateConnection() {
-        return new HibernateConnection();
-    }
-    
+
+	@Bean(name = "HibernateConnection")
+	public HibernateConnection hibernateConnection() {
+		return new HibernateConnection();
+	}
+
+	@Bean(name = "TemplateManagementDAO")
+	public TemplateManagementDAO templateManagementDAO() {
+		return new TemplateManagementDAOImpl();
+	}
+
 }

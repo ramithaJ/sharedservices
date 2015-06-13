@@ -28,7 +28,15 @@
 		<property name="hibernate.c3p0.idle_test_period">3000</property>
 		<property name="hibernate.c3p0.max_statements">50</property>
 		<property name="hibernate.c3p0.timeout">1800</property>
-		
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.Notification" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.Schedule" />
+		<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.Template" />
 
 	</session-factory>
 </hibernate-configuration>
