@@ -80,7 +80,8 @@ public class AuthenticationController {
 			}
 
 			authResponse = authenticationService.userLogin(request);
-
+			LOGGER.info("authResponse value"+authResponse);
+			LOGGER.info("authResponse value"+authResponse.getMessage());
 			if (null == authResponse
 					|| authResponse.getStatus().equalsIgnoreCase(
 							String.valueOf(Response.STATUS.FAILURE))) {
@@ -96,6 +97,7 @@ public class AuthenticationController {
 			// Set the token in the response headers.
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set(AUTH_HEADER_NAME, authResponse.getMessage());
+			LOGGER.info("response Header");
 			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 			// return new ResponseEntity<>(new
 			// Response(messageProp.getProperty(CommonConstant.AUTH_006)),
