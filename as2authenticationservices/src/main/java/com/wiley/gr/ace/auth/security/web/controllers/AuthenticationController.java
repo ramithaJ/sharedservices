@@ -89,7 +89,7 @@ public class AuthenticationController {
 						CommonConstant.FAIL_CODE,
 						messageProp.getProperty(CommonConstant.AUTH_007),
 						String.valueOf(Response.STATUS.LOCKED)), null,
-						HttpStatus.UNAUTHORIZED);
+						HttpStatus.OK);
 			}
 			
 			if (null == authResponse
