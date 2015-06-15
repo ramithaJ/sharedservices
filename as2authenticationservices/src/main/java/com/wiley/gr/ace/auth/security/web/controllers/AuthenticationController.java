@@ -80,7 +80,18 @@ public class AuthenticationController {
 			}
 
 			authResponse = authenticationService.userLogin(request);
-
+			
+			if(null != authResponse
+					&& authResponse.getStatus().equalsIgnoreCase(
+					String.valueOf(Response.STATUS.LOCKED))) {
+				
+				return new ResponseEntity<>(new Response(
+						CommonConstant.FAIL_CODE,
+						messageProp.getProperty(CommonConstant.AUTH_007),
+						String.valueOf(Response.STATUS.FAILURE)), null,
+						HttpStatus.UNAUTHORIZED);
+			}
+			
 			if (null == authResponse
 					|| authResponse.getStatus().equalsIgnoreCase(
 							String.valueOf(Response.STATUS.FAILURE))) {
@@ -97,12 +108,10 @@ public class AuthenticationController {
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set(AUTH_HEADER_NAME, authResponse.getMessage());
 			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-			// return new ResponseEntity<>(new
-			// Response(messageProp.getProperty(CommonConstant.AUTH_006)),
-			// responseHeaders, HttpStatus.OK);
+
 			return new ResponseEntity<>(new Response(
 					CommonConstant.STATUS_CODE,
-					authResponse.getMessage(),
+					messageProp.getProperty(CommonConstant.AUTH_006),
 					String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
 					HttpStatus.OK);
 		} catch (Exception e) {

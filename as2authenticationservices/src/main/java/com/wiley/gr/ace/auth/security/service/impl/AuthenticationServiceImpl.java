@@ -167,8 +167,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 					SecurityResponse.class);
 			// update the locked time in the table
 			userLoginDao.updateTimeStamp(request.getUserId());
-			response.setMessage("Your account is locked. Please try after sometime.");
-			return response;
+			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
+			
 		} else {
 
 			response = authenticate(request.getUserId(), request.getPassword(),
@@ -176,8 +176,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			if (null == response) {
 				userLoginDao.updateUser(request.getUserId());
 			}
-			return response;
 		}
+		return response;
 	}
 
 	/**
