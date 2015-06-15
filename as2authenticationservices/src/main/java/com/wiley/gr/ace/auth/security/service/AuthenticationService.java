@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
 import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.model.User;
 
 /**
  * Created by sripads on 5/16/2015.
@@ -29,5 +30,7 @@ public interface AuthenticationService {
     List<String> getRoles(String userId);
     
     Response userLogin(AuthenticateRequest request);
+    
+    <T> User searchUser(String userId);
     
 }

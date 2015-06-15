@@ -65,6 +65,8 @@ public interface CommonConstant {
     public static String DOT = ".";
 
     public static String AUTHENTICATE_SERVICE_URL = "/auth/authenticate";
+    
+    public static String SEARCH_USER_URL = "/user";
 
     public static String TOKEN_SERVICE_URL = "/token";
 

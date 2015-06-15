@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
 import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.model.User;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 
 @Controller
@@ -79,10 +80,11 @@ public class AuthenticationController {
 			}
 
 			authResponse = authenticationService.userLogin(request);
+
 			if (null == authResponse
 					|| authResponse.getStatus().equalsIgnoreCase(
 							String.valueOf(Response.STATUS.FAILURE))) {
-
+				
 				LOGGER.info("Authentication Response..." + authResponse);
 
 				return new ResponseEntity<>(new Response(
@@ -100,7 +102,7 @@ public class AuthenticationController {
 			// responseHeaders, HttpStatus.OK);
 			return new ResponseEntity<>(new Response(
 					CommonConstant.STATUS_CODE,
-					messageProp.getProperty(CommonConstant.AUTH_006),
+					authResponse.getMessage(),
 					String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
 					HttpStatus.OK);
 		} catch (Exception e) {
@@ -108,6 +110,14 @@ public class AuthenticationController {
 			return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
 					null, HttpStatus.UNAUTHORIZED);
 		}
+	}
+	
+	@RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody User searchUser(
+			@Valid @RequestBody AuthenticateRequest request) {
+				
+		return authenticationService.searchUser(request.getUserId());
+		
 	}
 
 }

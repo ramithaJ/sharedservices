@@ -13,15 +13,24 @@ package com.wiley.gr.ace.auth.security.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
 public class AuthenticateRequest implements Serializable {
 
+	@NotNull @NotBlank @Email
     private String userId;
+    @NotNull @NotBlank
     private String password;
+    @NotNull @NotBlank
     private String authenticationType;
+    @NotNull @NotBlank
     private String appKey;
 
     public String getUserId() {

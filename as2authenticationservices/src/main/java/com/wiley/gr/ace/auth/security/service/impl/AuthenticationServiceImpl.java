@@ -13,10 +13,13 @@
  */
 package com.wiley.gr.ace.auth.security.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.naming.directory.Attributes;
 
 import org.apache.commons.lang.StringUtils;
 import org.jose4j.lang.JoseException;
@@ -27,6 +30,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.AndFilter;
@@ -41,6 +46,7 @@ import com.wiley.gr.ace.auth.security.model.Response;
 import com.wiley.gr.ace.auth.security.model.SecurityRequest;
 import com.wiley.gr.ace.auth.security.model.SecurityResponse;
 import com.wiley.gr.ace.auth.security.model.TokenRequest;
+import com.wiley.gr.ace.auth.security.model.User;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 import com.wiley.gr.ace.auth.security.service.TokenService;
 import com.wiley.gr.ace.auth.security.utils.StubInvoker;
@@ -136,7 +142,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				.getLoginAttemptTime().getTime());
 		// if time elapsed we will unlock the user, remove the record in table
 		// and proceed for authentication.
-		long minutes = TimeUnit.MILLISECONDS.toMinutes((new Date().getTime() - loginAttemptTime.getTime())); 
+		long minutes = TimeUnit.MILLISECONDS
+				.toMinutes((new Date().getTime() - loginAttemptTime.getTime()));
 		if (unlockTime < minutes) {
 			SecurityRequest requestEntityClass = new SecurityRequest();
 			requestEntityClass.setUserId(request.getUserId());
@@ -293,6 +300,43 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		contextSource.setPassword(password);
 		contextSource.afterPropertiesSet();
 		ldapTemplate.setContextSource(contextSource);
+	}
+
+	@Override
+	public <T> User searchUser(String userId) {
+
+		LOGGER.info("Inside searchUser method");
+		setContext(directoyServiceUrl, directoryUser, directoryPassword);
+		String filterMatch = directoryServicefilterMatch;
+		String filterPath = directoryServicefilterPath;
+
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter(filterMatch, userId));
+		List<T> list = new ArrayList<T>();
+		list = ldapTemplate.search(filterPath, filter.encode(),
+				new AttributesMapper() {
+					public Object mapFromAttributes(Attributes attrs)
+							throws NamingException {
+						List list = new ArrayList();
+						list.add(attrs.get("sn"));
+						list.add(attrs.get("cn"));
+						return list;
+					}
+				});
+		if (null == list) {
+			LOGGER.error("List is empty / no records found ");
+			return new User();
+		}
+		String[] string = list.get(0).toString().split(",");
+		String first = string[1].substring(5);
+		String lastName = string[0].substring(5);
+		String firstName = first.substring(0,
+				first.length() - lastName.length() - 2);
+		User user = new User();
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		return user;
+
 	}
 
 }
