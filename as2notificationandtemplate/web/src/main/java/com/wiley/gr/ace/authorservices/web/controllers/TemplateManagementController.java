@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.authorservices.model.ErrorPOJO;
 import com.wiley.gr.ace.authorservices.model.Service;
+import com.wiley.gr.ace.authorservices.model.TemplateDetails;
 import com.wiley.gr.ace.authorservices.model.TemplateVO;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
@@ -113,4 +115,27 @@ public class TemplateManagementController {
 		}
 		return service;
 	}
+
+	@RequestMapping(value = "/{applicationId}/{templateId}/render", method = RequestMethod.POST)
+	public @ResponseBody Service renderTemplate(
+			@PathVariable("templateId") String templateId,
+			@PathVariable("applicationId") String applicationId,
+			@RequestBody TemplateDetails templateDetails) {
+		TemplateVO template = null;
+		Service service = new Service();
+		try {
+			template = templateManagementService.renderTemplate(applicationId,
+					templateId, templateDetails);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (!StringUtils.isEmpty(template)) {
+			service = new Service();
+			service.setStatus("SUCCCESS");
+			service.setPayload(template);
+		}
+		return service;
+
+	}
+
 }

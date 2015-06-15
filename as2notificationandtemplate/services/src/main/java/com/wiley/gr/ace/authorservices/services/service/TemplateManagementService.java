@@ -1,5 +1,6 @@
 package com.wiley.gr.ace.authorservices.services.service;
 
+import com.wiley.gr.ace.authorservices.model.TemplateDetails;
 import com.wiley.gr.ace.authorservices.model.TemplateVO;
 
 public interface TemplateManagementService {
@@ -14,4 +15,7 @@ public interface TemplateManagementService {
 	boolean deleteTemplate(String templateId, String applicationId);
 
 	TemplateVO searchTemplate(String applicationId, String tagL1, String tagL2);
+
+	TemplateVO renderTemplate(String applicationId, String templateId,
+			TemplateDetails templateDetails) throws Exception;
 }
