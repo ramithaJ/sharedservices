@@ -14,10 +14,17 @@ public interface CommonConstants {
     String AUTH_COAUTH_ID = "authCoauthId";
     String ERROR = "ERROR";
     String REQUEST_PATH = "/profile/{userId}";
+    String CREATE_USER_REQUEST_PATH = "/profile";
     String DATE_FORMAT = "MM-dd-yyyy";
     String ADDRESS_ID = "addressId";
 
     //Error Codes
     String ERROR_CODE_101 = "101";
     String ERROR_CODE_102 = "102";
+    String ERROR_CODE_103 = "103";
+    String ERROR_CODE_104 = "104";
+    String ERROR_CODE_105 = "105";
+    String ERROR_CODE_106 = "106";
+    String ERROR_CODE_107 = "107";
+
 }
