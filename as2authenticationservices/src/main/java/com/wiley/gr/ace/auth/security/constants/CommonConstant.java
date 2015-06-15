@@ -29,6 +29,8 @@ public interface CommonConstant {
     public static String AUTH_005 = "AUTH_005";
 
     public static String AUTH_006 = "AUTH_006";
+    
+    public static String AUTH_007 = "AUTH_007";
 
     public static String TOK_001 = "TOK_001";
 
