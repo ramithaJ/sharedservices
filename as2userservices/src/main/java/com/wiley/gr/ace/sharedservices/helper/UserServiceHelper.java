@@ -636,6 +636,11 @@ public class UserServiceHelper {
         return myInterest;
     }
 
+    /**
+     * Get PreferredJournals
+     * @param journal
+     * @return
+     */
     public static PreferredJournal getPreferredJournal(Journals journal) {
         PreferredJournal preferredJournal = new PreferredJournal();
         preferredJournal.setId("" + journal.getJournalId());
@@ -644,6 +649,11 @@ public class UserServiceHelper {
         return preferredJournal;
     }
 
+    /**
+     * Get Alerts
+     * @param userAlert
+     * @return
+     */
     public static Alert getAlert(Alerts userAlert) {
         Alert alert = new Alert();
         alert.setId(userAlert.getAlertCd());

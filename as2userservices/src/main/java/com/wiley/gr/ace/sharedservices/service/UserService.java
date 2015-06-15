@@ -14,6 +14,7 @@
 package com.wiley.gr.ace.sharedservices.service;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.payload.CreateUserServiceRequest;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 
 /**
@@ -21,7 +22,9 @@ import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
  */
 public interface UserService {
 
-    void createUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    void createUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+
+    String createUserService(CreateUserServiceRequest createUserServiceRequest) throws SharedServiceException;
 
     void updateUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 

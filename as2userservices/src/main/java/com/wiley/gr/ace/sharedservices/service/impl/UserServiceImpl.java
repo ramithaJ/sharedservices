@@ -14,6 +14,7 @@
 package com.wiley.gr.ace.sharedservices.service.impl;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.payload.CreateUserServiceRequest;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.service.UserService;
@@ -27,10 +28,32 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.createUserRepository(userServiceRequest, userId);
+    /**
+     * Service method to create user profile
+     * @param userServiceRequest
+     * @param userId
+     * @throws SharedServiceException
+     */
+    public void createUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+        userRepository.createUserProfileRepository(userServiceRequest, userId);
     }
 
+    /**
+     * Service method to create user
+     * @param createUserServiceRequest
+     * @return
+     * @throws SharedServiceException
+     */
+    public String createUserService(CreateUserServiceRequest createUserServiceRequest) throws SharedServiceException {
+        return userRepository.createUserRepository(createUserServiceRequest);
+    }
+
+    /**
+     * Service method to update user profile
+     * @param userServiceRequest
+     * @param userId
+     * @throws SharedServiceException
+     */
     public void updateUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         userRepository.updateUserRepository(userServiceRequest, userId);
     }
