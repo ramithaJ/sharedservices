@@ -78,6 +78,6 @@ public class Response {
                 '}';
     }
 
-    public static enum STATUS {ERROR, SUCCESS, FAILURE;}
+    public static enum STATUS {ERROR, SUCCESS, FAILURE, LOCKED;}
 }
 
