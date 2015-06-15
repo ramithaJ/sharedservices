@@ -26,10 +26,12 @@ public interface UserRepository {
 
     void createUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    void updateUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    void deleteUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    UserServiceRequest getUserRepository(String userId) throws SharedServiceException;
+    void deleteUserRepository(String userId) throws SharedServiceException;
+
+    UserServiceRequest getUserProfileRepository(String userId) throws SharedServiceException;
 
 }

@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     /**
-     * Service method to create user profile
+     * Service method to create user profile.
+     *
      * @param userServiceRequest
      * @param userId
      * @throws SharedServiceException
@@ -39,7 +40,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method to create user
+     * Service method to create user.
+     *
      * @param createUserServiceRequest
      * @return
      * @throws SharedServiceException
@@ -49,20 +51,44 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method to update user profile
+     * Service method to update user profile.
+     *
      * @param userServiceRequest
      * @param userId
      * @throws SharedServiceException
      */
-    public void updateUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.updateUserRepository(userServiceRequest, userId);
+    public void updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+        userRepository.updateUserProfileRepository(userServiceRequest, userId);
     }
 
-    public void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.deleteUserRepository(userServiceRequest, userId);
+    /**
+     * Service method to user profile attributes.
+     *
+     * @param userServiceRequest
+     * @param userId
+     * @throws SharedServiceException
+     */
+    public void deleteUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+        userRepository.deleteUserProfileRepository(userServiceRequest, userId);
     }
 
-    public UserServiceRequest getUserService(String userId) throws SharedServiceException {
-        return userRepository.getUserRepository(userId);
+    /**
+     * Service method to get user profile.
+     *
+     * @param userId
+     * @return
+     * @throws SharedServiceException
+     */
+    public UserServiceRequest getUserProfileService(String userId) throws SharedServiceException {
+        return userRepository.getUserProfileRepository(userId);
+    }
+
+    /**
+     * Service method to delete user
+     * @param userId
+     * @throws SharedServiceException
+     */
+    public void deleteUserService(String userId) throws SharedServiceException {
+        userRepository.deleteUserRepository(userId);
     }
 }

@@ -26,10 +26,12 @@ public interface UserService {
 
     String createUserService(CreateUserServiceRequest createUserServiceRequest) throws SharedServiceException;
 
-    void updateUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    void updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    void deleteUserService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    void deleteUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
-    UserServiceRequest getUserService(String userId) throws SharedServiceException;
+    void deleteUserService(String userId) throws SharedServiceException;
+
+    UserServiceRequest getUserProfileService(String userId) throws SharedServiceException;
 
 }

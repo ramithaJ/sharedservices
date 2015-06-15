@@ -462,7 +462,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @param userServiceRequest
      * @param userId
      */
-    public void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+    public void updateUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         //Get the session from sessionFactory pool.
         Session session = null;
         try {
@@ -655,12 +655,62 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     /**
+     * Method to delete user object.
+     *
+     * @param userId
+     * @throws SharedServiceException
+     */
+    public void deleteUserRepository(String userId) throws SharedServiceException {
+        //Get the session from sessionFactory pool.
+        Session session = null;
+        try {
+            LOGGER.info("Deleting User Profile..");
+            if (null == userId) {
+                throw new SharedServiceException(messageProp.getProperty(CommonConstants.ERROR_CODE_101));
+            }
+
+            Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
+
+            //Open Session.
+            session = sessionFactory.openSession();
+            //Begin the transaction.
+            session.beginTransaction();
+
+            AuthorProfile authorProfile = user.getAuthorProfileByUserId();
+
+            session.delete(authorProfile);
+            session.delete(user);
+
+            LOGGER.info("Flush...");
+            session.flush();
+            LOGGER.info("Clear...");
+            session.clear();
+            LOGGER.info("Commit...");
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            //Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
+            LOGGER.error("Exception Occurred during user profile deletion...", e);
+            throw new SharedServiceException("Error :" + e.toString());
+        } finally {
+            if (null != session) {
+                //Close the session
+                session.close();
+            }
+        }
+
+    }
+
+    /**
      * Method to delete user build profile in DB.
      *
      * @param userServiceRequest
      * @param userId
      */
-    public void deleteUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+    public void deleteUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         //Get the session from sessionFactory pool.
         Session session = null;
         try {
@@ -820,7 +870,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      * @throws Exception
      */
-    public UserServiceRequest getUserRepository(String userId) throws SharedServiceException {
+    public UserServiceRequest getUserProfileRepository(String userId) throws SharedServiceException {
         //Get the session from sessionFactory pool.
         Session session = null;
         UserServiceRequest userResponse = new UserServiceRequest();
