@@ -14,4 +14,6 @@ public class TemplateDetails {
            this.fieldList = fieldList;
     }
 
+
+	
 }
