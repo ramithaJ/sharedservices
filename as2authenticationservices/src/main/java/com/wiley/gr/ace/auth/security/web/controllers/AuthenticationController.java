@@ -76,7 +76,7 @@ public class AuthenticationController {
 			if (null == request) {
 				return new ResponseEntity<>(new Response(
 						messageProp.getProperty(CommonConstant.AUTH_001)),
-						null, HttpStatus.UNAUTHORIZED);
+						null, HttpStatus.OK);
 			}
 
 			authResponse = authenticationService.userLogin(request);
@@ -102,7 +102,7 @@ public class AuthenticationController {
 						CommonConstant.FAIL_CODE,
 						messageProp.getProperty(CommonConstant.AUTH_005),
 						String.valueOf(Response.STATUS.FAILURE)), null,
-						HttpStatus.UNAUTHORIZED);
+						HttpStatus.OK);
 			}
 			// Set the token in the response headers.
 			HttpHeaders responseHeaders = new HttpHeaders();
@@ -117,7 +117,7 @@ public class AuthenticationController {
 		} catch (Exception e) {
 			LOGGER.error("Exception Occurred during user authentication...", e);
 			return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
-					null, HttpStatus.UNAUTHORIZED);
+					null, HttpStatus.OK);
 		}
 	}
 	
