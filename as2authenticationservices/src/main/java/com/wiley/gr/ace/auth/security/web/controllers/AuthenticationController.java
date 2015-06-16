@@ -86,9 +86,9 @@ public class AuthenticationController {
 					String.valueOf(Response.STATUS.LOCKED))) {
 				
 				return new ResponseEntity<>(new Response(
-						CommonConstant.FAIL_CODE,
+						CommonConstant.LOCKED_CODE,
 						messageProp.getProperty(CommonConstant.AUTH_007),
-						String.valueOf(Response.STATUS.LOCKED)), null,
+						authResponse.getStatus()), null,
 						HttpStatus.OK);
 			}
 			

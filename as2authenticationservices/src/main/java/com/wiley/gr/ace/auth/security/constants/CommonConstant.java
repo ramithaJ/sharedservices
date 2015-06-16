@@ -85,6 +85,8 @@ public interface CommonConstant {
     public static String STATUS_CODE = "200";
 
     public static String FAIL_CODE = "201";
+    
+    public static String LOCKED_CODE = "202";
 
     public static String SUCCESS_STATUS = "SUCCESS";
 
