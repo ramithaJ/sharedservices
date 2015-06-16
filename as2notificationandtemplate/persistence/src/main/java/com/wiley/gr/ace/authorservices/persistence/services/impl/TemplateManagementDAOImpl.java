@@ -22,7 +22,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		try {
 			if (!StringUtils.isEmpty(applicationId)) {
 				session = getSessionFactory().openSession();
-				String hql = "from Template t where t.app_id=:applicationId";
+				String hql = "from Template t where t.appId=:applicationId";
 				templateEntityList = session.createQuery(hql)
 						.setString("applicationId", applicationId).list();
 			}
@@ -42,14 +42,15 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		Template template = null;
 		if (!StringUtils.isEmpty(templateId)
 				&& !StringUtils.isEmpty(applicationId)) {
-			try {
+
 				session = getSessionFactory().openSession();
-				String hql = "from Template t where t.id=:templateId and t.app_id=:applicationId";
+				String hql = "from Template t where t.id=:templateId and t.appId=:applicationId";
+				try{
 				template = (Template) session.createQuery(hql)
 						.setString("templateId", templateId)
 						.setString("applicationId", applicationId).list()
 						.get(0);
-
+		
 			} finally {
 				if (session != null) {
 					session.flush();
@@ -86,10 +87,10 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		Session session = null;
 		try {
 			session = getSessionFactory().openSession();
-			session.beginTransaction();
 			int result = 0;
 			String hql;
 			for (Map.Entry<String, Object> entry : templateMap.entrySet()) {
+				session.beginTransaction();
 				String key = entry.getKey();
 				if (key.equalsIgnoreCase("appid"))
 					key = "app_id";
@@ -101,18 +102,20 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 					key = "created_on";
 				if (key.equalsIgnoreCase("lastmodifiedon"))
 					key = "last_modified_on";
-				hql = "update Template set "
+				try{
+				hql = "update Template t set "
 						+ key
-						+ " = :value where id=:templateId and app_id = :applicationId";
+						+ " = :value where t.id=:templateId and t.appId = :applicationId";
 				result = session.createQuery(hql)
 						.setString("value", entry.getValue().toString())
 						.setString("templateId", templateId)
 						.setString("applicationId", applicationId)
 						.executeUpdate();
-				try {
+				
 					session.getTransaction().commit();
 				} catch (Exception e) {
 					e.printStackTrace();
+					session.clear();
 				}
 			}
 
@@ -136,7 +139,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		try {
 			session = getSessionFactory().openSession();
 			Transaction txn = session.beginTransaction();
-			String hql = "delete from Template where id=:templateId and app_id=:applicationId";
+			String hql = "delete from Template t where t.id=:templateId and t.appId=:applicationId";
 			int result = session.createQuery(hql)
 					.setString("templateId", templateId)
 					.setString("applicationId", applicationId).executeUpdate();
@@ -161,7 +164,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		Template template = null;
 		try {
 			session = getSessionFactory().openSession();
-			String hql = "from Template where app_id=:applicationId and tagl1 = :tagL1 and tagl2 = :tagL2";
+			String hql = "from Template t where t.appId=:applicationId and t.tagl1 = :tagL1 and t.tagl2 = :tagL2";
 			template = (Template) session.createQuery(hql)
 					.setString("applicationId", applicationId)
 					.setString("tagL1", tagL1).setString("tagL2", tagL2).list()
