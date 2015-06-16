@@ -60,11 +60,13 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public TemplateVO getTemplate(String templateId, String applicationId)
 			throws IOException, SQLException {
-		// TODO: null check for the parameters and get the template in an object
-		// and return
+		if(!StringUtils.isEmpty(templateId)&&!StringUtils.isEmpty(applicationId)){
 
 		return getTemplateVO(templateManagementDAO.getTemplate(templateId,
 				applicationId));
+		}
+		else
+			return null;
 
 	}
 
@@ -146,6 +148,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public TemplateVO renderTemplate(String applicationId, String templateId,
 			TemplateDetails templateDetails) throws Exception {
+		if(!StringUtils.isEmpty(templateId)&&!StringUtils.isEmpty(applicationId)){
 		Template templateEntity = null;
 		templateEntity = templateManagementDAO.getTemplate(templateId,
 				applicationId);
@@ -167,6 +170,9 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 		template.setBody(sw.toString());
 
 		return template;
+		}
+		else 
+			return null;
 	}
 
 	private static String clobStringConversion(Clob clb) throws IOException,

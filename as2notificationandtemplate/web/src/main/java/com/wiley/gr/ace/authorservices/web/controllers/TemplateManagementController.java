@@ -44,14 +44,14 @@ public class TemplateManagementController {
 				service.setPayload(tags);
 			} else {
 				ErrorPOJO error = new ErrorPOJO();
-				error.setCode(206);
+				error.setCode(201);
 				error.setMessage("No tags found for the required criteria");
 				service.setStatus("FAILURE");
 				service.setError(error);
 			}
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(205);
+			error.setCode(202);
 			error.setMessage("Error Fetching Template");
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -75,12 +75,15 @@ public class TemplateManagementController {
 					service.setStatus("SUCCESS");
 					service.setPayload(template);
 				} else {
+					ErrorPOJO error = new ErrorPOJO();
+					error.setCode(203);
+					error.setMessage("No tags found for the required criteria");
 					service.setStatus("FAILURE");
-					// TODO: enter error code and message
+					service.setError(error);
 				}
 			} catch (Exception e) {
 				ErrorPOJO error = new ErrorPOJO();
-				error.setCode(205);
+				error.setCode(204);
 				error.setMessage("Error Fetching Template");
 				service.setStatus("ERROR");
 				service.setError(error);
@@ -108,8 +111,11 @@ public class TemplateManagementController {
 		}
 
 		else {
+			ErrorPOJO error = new ErrorPOJO();
+			error.setCode(206);
+			error.setMessage("No tags found for the required criteria");
 			service.setStatus("FAILURE");
-			service.setPayload(isCreated);
+			service.setError(error);
 
 		}
 		return service;
@@ -127,7 +133,7 @@ public class TemplateManagementController {
 					applicationId, templateObj);
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(205);
+			error.setCode(207);
 			error.setMessage("Error Fetching Template");
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -137,9 +143,11 @@ public class TemplateManagementController {
 		}
 
 		else {
+			ErrorPOJO error = new ErrorPOJO();
+			error.setCode(208);
+			error.setMessage("No tags found for the required criteria");
 			service.setStatus("FAILURE");
-			// TODO: Error Code and message
-
+			service.setError(error);
 		}
 		return service;
 	}
@@ -153,7 +161,7 @@ public class TemplateManagementController {
 			isDeleted = templateManagementService.deleteTemplate(templateId);
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(205);
+			error.setCode(209);
 			error.setMessage("Error Fetching Template");
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -164,9 +172,11 @@ public class TemplateManagementController {
 		}
 
 		else {
+			ErrorPOJO error = new ErrorPOJO();
+			error.setCode(210);
+			error.setMessage("No tags found for the required criteria");
 			service.setStatus("FAILURE");
-			service.setPayload(isDeleted);
-
+			service.setError(error);
 		}
 		return service;
 	}
@@ -185,9 +195,16 @@ public class TemplateManagementController {
 				service.setStatus("SUCCESS");
 				service.setPayload(template);
 			}
+			else{
+				ErrorPOJO error = new ErrorPOJO();
+				error.setCode(211);
+				error.setMessage("No tags found for the required criteria");
+				service.setStatus("FAILURE");
+				service.setError(error);
+			}
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(205);
+			error.setCode(212);
 			error.setMessage("Error Fetching Template");
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -203,16 +220,24 @@ public class TemplateManagementController {
 		TemplateVO template = null;
 		Service service = new Service();
 		try {
+			if (!StringUtils.isEmpty(templateId)&&!StringUtils.isEmpty(applicationId)){
 			template = templateManagementService.renderTemplate(applicationId,
 					templateId, templateDetails);
+			}else{
+				ErrorPOJO error = new ErrorPOJO();
+				error.setCode(213);
+				error.setMessage("No tags found for the required criteria");
+				service.setStatus("FAILURE");
+				service.setError(error);
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorPOJO error = new ErrorPOJO();
+			error.setCode(214);
+			error.setMessage("Error Fetching Template");
+			service.setStatus("ERROR");
+			service.setError(error);
 		}
-		if (!StringUtils.isEmpty(template)) {
-			service = new Service();
-			service.setStatus("SUCCCESS");
-			service.setPayload(template);
-		}
+
 		return service;
 
 	}

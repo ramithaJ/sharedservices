@@ -15,7 +15,6 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 
 	@Override
 	public List<Template> getTemplateTags(String applicationId) {
-
 		Session session = null;
 		List<Template> templateEntityList = null;
 		try {
@@ -32,11 +31,12 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 			}
 		}
 		return templateEntityList;
+
 	}
 
 	@Override
 	public Template getTemplate(String templateId, String applicationId) {
-		// TODO Auto-generated method stub
+
 		Session session = null;
 		Template template = null;
 		if (!StringUtils.isEmpty(templateId)
