@@ -1,11 +1,13 @@
 package com.wiley.gr.ace.authorservices.persistence.entity;
 
-// Generated May 29, 2015 5:33:29 PM by Hibernate Tools 3.4.0.CR1
+// Generated Jun 16, 2015 3:29:29 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,6 +26,7 @@ public class Schedule implements java.io.Serializable {
 	private String modifiedBy;
 	private Date createdOn;
 	private Date lastModifiedOn;
+	private ScheduleTemplate scheduleTemplate;
 
 	public Schedule() {
 	}
@@ -34,7 +37,7 @@ public class Schedule implements java.io.Serializable {
 
 	public Schedule(String id, String appId, String description,
 			String createdBy, String modifiedBy, Date createdOn,
-			Date lastModifiedOn) {
+			Date lastModifiedOn, ScheduleTemplate scheduleTemplate) {
 		this.id = id;
 		this.appId = appId;
 		this.description = description;
@@ -42,6 +45,7 @@ public class Schedule implements java.io.Serializable {
 		this.modifiedBy = modifiedBy;
 		this.createdOn = createdOn;
 		this.lastModifiedOn = lastModifiedOn;
+		this.scheduleTemplate = scheduleTemplate;
 	}
 
 	@Id
@@ -108,6 +112,15 @@ public class Schedule implements java.io.Serializable {
 
 	public void setLastModifiedOn(Date lastModifiedOn) {
 		this.lastModifiedOn = lastModifiedOn;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "schedule")
+	public ScheduleTemplate getScheduleTemplate() {
+		return this.scheduleTemplate;
+	}
+
+	public void setScheduleTemplate(ScheduleTemplate scheduleTemplate) {
+		this.scheduleTemplate = scheduleTemplate;
 	}
 
 }
