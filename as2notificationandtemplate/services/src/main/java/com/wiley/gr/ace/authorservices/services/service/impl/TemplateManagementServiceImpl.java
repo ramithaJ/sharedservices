@@ -47,7 +47,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 					tag1.add(t.getTagl1());
 					tag2.add(t.getTagl2());
 				}
-				
+
 				tags = new Tags();
 				tags.setTag1List(tag1);
 				tags.setTag2List(tag2);
@@ -61,6 +61,8 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public TemplateVO getTemplate(String templateId, String applicationId)
 			throws IOException, SQLException {
+		// TODO: null check for the parameters and get the template in an object
+		// and return
 
 		return getTemplateVO(templateManagementDAO.getTemplate(templateId,
 				applicationId));

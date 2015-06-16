@@ -67,19 +67,26 @@ public class TemplateManagementController {
 			@PathVariable("applicationId") String applicationId) {
 		Service service = new Service();
 		TemplateVO template = null;
-		try {
-			template = templateManagementService.getTemplate(templateId,
-					applicationId);
-			if (!StringUtils.isEmpty(template)) {
-				service.setStatus("SUCCESS");
-				service.setPayload(template);
+		if (!StringUtils.isEmpty(templateId)
+				&& !StringUtils.isEmpty(applicationId)) {
+			try {
+				template = templateManagementService.getTemplate(templateId,
+						applicationId);
+
+				if (!StringUtils.isEmpty(template)) {
+					service.setStatus("SUCCESS");
+					service.setPayload(template);
+				} else {
+					service.setStatus("FAILURE");
+					// TODO: enter error code and message
+				}
+			} catch (Exception e) {
+				ErrorPOJO error = new ErrorPOJO();
+				error.setCode(205);
+				error.setMessage("Error Fetching Template");
+				service.setStatus("ERROR");
+				service.setError(error);
 			}
-		} catch (Exception e) {
-			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(205);
-			error.setMessage("Error Fetching Template");
-			service.setStatus("ERROR");
-			service.setError(error);
 		}
 		return service;
 	}
