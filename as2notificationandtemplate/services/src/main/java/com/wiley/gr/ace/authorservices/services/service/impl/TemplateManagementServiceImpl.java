@@ -14,6 +14,7 @@ import javax.sql.rowset.serial.SerialClob;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.model.Tags;
 import com.wiley.gr.ace.authorservices.model.TemplateDetails;
@@ -26,26 +27,33 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 
 	@Autowired(required = true)
 	private TemplateManagementDAO templateManagementDAO;
-	
+
 	@Override
 	public Tags getTemplateTags(String applicationId) throws Exception {
 
-		List<String> tag1=new ArrayList();
-		List<String> tag2=new ArrayList();
-		List<Template> templateEntityList;
+		List<String> tag1 = new ArrayList<String>();
+		List<String> tag2 = new ArrayList<String>();
+		List<Template> templateEntityList = null;
 		Tags tags = null;
-		List<TemplateVO> templateList=new ArrayList();
-		templateEntityList = templateManagementDAO.getTemplateTags(applicationId);
-		for(Template te : templateEntityList){
-			templateList.add(getTemplateVO(te));
+		List<TemplateVO> templateList = new ArrayList<TemplateVO>();
+		if (!StringUtils.isEmpty(applicationId)) {
+			templateEntityList = templateManagementDAO
+					.getTemplateTags(applicationId);
+			if (!StringUtils.isEmpty(templateEntityList)) {
+				for (Template te : templateEntityList) {
+					templateList.add(getTemplateVO(te));
+				}
+				for (TemplateVO t : templateList) {
+					tag1.add(t.getTagl1());
+					tag2.add(t.getTagl2());
+				}
+				
+				tags = new Tags();
+				tags.setTag1List(tag1);
+				tags.setTag2List(tag2);
+			}
+
 		}
-		for(TemplateVO t : templateList ){
-			tag1.add(t.getTagl1());
-			tag2.add(t.getTagl2());
-		}
-		tags = new Tags();
-		tags.setTag1List(tag1);
-		tags.setTag2List(tag2);
 		return tags;
 
 	}
@@ -62,23 +70,26 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public boolean insertTemplate(TemplateVO template) throws Exception {
 		Template templateEntity = new Template();
-			templateEntity.setAppId(template.getAppId());
-			templateEntity.setBody(new SerialClob( template.getBody().toCharArray()));
-			templateEntity.setCreatedBy(template.getCreatedBy());
-			templateEntity.setCreatedOn(template.getCreatedOn());
-			templateEntity.setDescription(template.getDescription());
-			templateEntity.setId(template.getId());
-			templateEntity.setLastModifiedOn(template.getLastModifiedOn());
-			templateEntity.setModifiedBy(template.getModifiedBy());
-			templateEntity.setTagl1(template.getTagl1());
-			templateEntity.setTagl2(template.getTagl2());
-			return templateManagementDAO.insertTemplate(templateEntity);
+		templateEntity.setAppId(template.getAppId());
+		templateEntity
+				.setBody(new SerialClob(template.getBody().toCharArray()));
+		templateEntity.setCreatedBy(template.getCreatedBy());
+		templateEntity.setCreatedOn(template.getCreatedOn());
+		templateEntity.setDescription(template.getDescription());
+		templateEntity.setId(template.getId());
+		templateEntity.setLastModifiedOn(template.getLastModifiedOn());
+		templateEntity.setModifiedBy(template.getModifiedBy());
+		templateEntity.setTagl1(template.getTagl1());
+		templateEntity.setTagl2(template.getTagl2());
+		return templateManagementDAO.insertTemplate(templateEntity);
 	}
 
 	@Override
-	public boolean updateTemplate(String templateId,String applicationId, Map<String,Object> templateMap) {
-		
-		return templateManagementDAO.updateTemplate(templateId, applicationId, templateMap);
+	public boolean updateTemplate(String templateId, String applicationId,
+			Map<String, Object> templateMap) {
+
+		return templateManagementDAO.updateTemplate(templateId, applicationId,
+				templateMap);
 	}
 
 	@Override
@@ -153,7 +164,4 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 		return str.toString();
 	}
 
-	
-	}
-
-
+}
