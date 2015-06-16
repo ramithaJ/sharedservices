@@ -1,15 +1,18 @@
 package com.wiley.gr.ace.authorservices.persistence.services;
 
+import java.util.List;
+import java.util.Map;
+
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 
 public interface TemplateManagementDAO {
-	void getTags();
+	List<Template> getTemplateTags(String applicationId);
 
 	Template getTemplate(String templateId, String applicationId);
 
-	boolean insertId(String id);
+	boolean insertTemplate(Template template);
 
-	boolean updateId(String id);
+	boolean updateTemplate(String templateId,String applicationId,Map<String,Object> templateMap);
 
 	boolean deleteTemplate(String templateId, String applicationId);
 
