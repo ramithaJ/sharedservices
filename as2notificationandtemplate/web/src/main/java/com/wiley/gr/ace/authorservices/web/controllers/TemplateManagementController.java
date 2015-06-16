@@ -3,8 +3,6 @@
  */
 package com.wiley.gr.ace.authorservices.web.controllers;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -61,7 +59,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/get/{applicationId}/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId) {
@@ -91,8 +89,8 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/createTemplate", method = RequestMethod.PUT)
-	public @ResponseBody Service insertTemplate(@RequestBody TemplateVO template) {
+	@RequestMapping(value = "/create", method = RequestMethod.PUT)
+	public @ResponseBody Service createTemplate(@RequestBody TemplateVO template) {
 		Service service = new Service();
 		boolean isCreated = false;
 		try {
@@ -117,16 +115,16 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/update/{applicationId}/{templateId}", method = RequestMethod.POST)
 	public @ResponseBody Service updateTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,
-			@RequestBody Map<String, Object> templateMap) {
+			@RequestBody TemplateVO templateObj) {
 		Service service = new Service();
 		boolean isUpdated = false;
 		try {
 			isUpdated = templateManagementService.updateTemplate(templateId,
-					applicationId, templateMap);
+					applicationId, templateObj);
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(205);
@@ -136,26 +134,23 @@ public class TemplateManagementController {
 		}
 		if (isUpdated) {
 			service.setStatus("SUCCESS");
-			service.setPayload(isUpdated);
 		}
 
 		else {
 			service.setStatus("FAILURE");
-			service.setPayload(isUpdated);
+			// TODO: Error Code and message
 
 		}
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/{templateId}", method = RequestMethod.DELETE)
 	public @ResponseBody Service deleteTemplateId(
-			@PathVariable("templateId") String templateId,
-			@PathVariable("applicationId") String applicationId) {
+			@PathVariable("templateId") String templateId) {
 		Service service = new Service();
 		boolean isDeleted = false;
 		try {
-			isDeleted = templateManagementService.deleteTemplate(templateId,
-					applicationId);
+			isDeleted = templateManagementService.deleteTemplate(templateId);
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(205);
@@ -176,7 +171,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/search/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service searchTemplate(
 			@PathVariable("applicationId") String applicationId,
 			@RequestParam(value = "tagL1") String tagL1,

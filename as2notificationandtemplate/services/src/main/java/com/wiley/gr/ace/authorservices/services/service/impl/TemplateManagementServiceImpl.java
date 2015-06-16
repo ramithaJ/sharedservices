@@ -7,7 +7,6 @@ import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.rowset.serial.SerialClob;
 
@@ -83,20 +82,40 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 		templateEntity.setModifiedBy(template.getModifiedBy());
 		templateEntity.setTagl1(template.getTagl1());
 		templateEntity.setTagl2(template.getTagl2());
-		return templateManagementDAO.insertTemplate(templateEntity);
+		return templateManagementDAO.saveOrUpdateTemplate(templateEntity);
 	}
 
 	@Override
 	public boolean updateTemplate(String templateId, String applicationId,
-			Map<String, Object> templateMap) {
+			TemplateVO templateObj) throws Exception {
 
-		return templateManagementDAO.updateTemplate(templateId, applicationId,
-				templateMap);
+		boolean updateStatus = false;
+		Template templateEntity = null;
+		templateEntity = templateManagementDAO.getTemplate(templateId,
+				applicationId);
+
+		if (!StringUtils.isEmpty(templateObj)) {
+			if (!StringUtils.isEmpty(templateObj.getAppId()))
+				templateEntity.setAppId(templateObj.getAppId());
+			if (!StringUtils.isEmpty(templateObj.getBody()))
+				templateEntity.setBody(new SerialClob(templateObj.getBody()
+						.toCharArray()));
+			if (!StringUtils.isEmpty(templateObj.getDescription()))
+				templateEntity.setDescription(templateObj.getDescription());
+			if (!StringUtils.isEmpty(templateObj.getTagl1()))
+				templateEntity.setTagl1(templateObj.getTagl1());
+			if (!StringUtils.isEmpty(templateObj.getTagl2()))
+				templateEntity.setTagl2(templateObj.getTagl2());
+		}
+
+		updateStatus = templateManagementDAO
+				.saveOrUpdateTemplate(templateEntity);
+		return updateStatus;
 	}
 
 	@Override
-	public boolean deleteTemplate(String templateId, String applicationId) {
-		return templateManagementDAO.deleteTemplate(templateId, applicationId);
+	public boolean deleteTemplate(String templateId) {
+		return templateManagementDAO.deleteTemplate(templateId);
 	}
 
 	@Override

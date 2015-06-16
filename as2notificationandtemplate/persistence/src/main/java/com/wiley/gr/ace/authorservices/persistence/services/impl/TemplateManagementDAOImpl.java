@@ -3,7 +3,6 @@ package com.wiley.gr.ace.authorservices.persistence.services.impl;
 import static com.wiley.gr.ace.authorservices.persistence.connection.HibernateConnection.getSessionFactory;
 
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -43,14 +42,14 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		if (!StringUtils.isEmpty(templateId)
 				&& !StringUtils.isEmpty(applicationId)) {
 
-				session = getSessionFactory().openSession();
-				String hql = "from Template t where t.id=:templateId and t.appId=:applicationId";
-				try{
+			session = getSessionFactory().openSession();
+			String hql = "from Template t where t.id=:templateId and t.appId=:applicationId";
+			try {
 				template = (Template) session.createQuery(hql)
 						.setString("templateId", templateId)
 						.setString("applicationId", applicationId).list()
 						.get(0);
-		
+
 			} finally {
 				if (session != null) {
 					session.flush();
@@ -62,12 +61,12 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	}
 
 	@Override
-	public boolean insertTemplate(Template template) {
+	public boolean saveOrUpdateTemplate(Template template) {
 		Session session = null;
 		try {
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
-			session.persist(template);
+			session.saveOrUpdate(template);
 			session.getTransaction().commit();
 			return true;
 
@@ -81,79 +80,57 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		}
 	}
 
+	/*
+	 * @Override public boolean updateTemplate(String templateId, String
+	 * applicationId, Map<String, Object> templateMap) { Session session = null;
+	 * try { session = getSessionFactory().openSession(); int result = 0; String
+	 * hql; for (Map.Entry<String, Object> entry : templateMap.entrySet()) {
+	 * session.beginTransaction(); String key = entry.getKey(); if
+	 * (key.equalsIgnoreCase("appid")) key = "app_id"; if
+	 * (key.equalsIgnoreCase("createdby")) key = "created_by"; if
+	 * (key.equalsIgnoreCase("modifiedby")) key = "modified_by"; if
+	 * (key.equalsIgnoreCase("createdon")) key = "created_on"; if
+	 * (key.equalsIgnoreCase("lastmodifiedon")) key = "last_modified_on"; try{
+	 * hql = "update Template t set " + key +
+	 * " = :value where t.id=:templateId and t.appId = :applicationId"; result =
+	 * session.createQuery(hql) .setString("value", entry.getValue().toString())
+	 * .setString("templateId", templateId) .setString("applicationId",
+	 * applicationId) .executeUpdate();
+	 * 
+	 * session.getTransaction().commit(); } catch (Exception e) {
+	 * e.printStackTrace(); session.clear(); } }
+	 * 
+	 * System.err.println(result); if (result > 0) return true; else return
+	 * false; } finally { if (session != null) session.flush(); session.close();
+	 * }
+	 * 
+	 * }
+	 */
+
 	@Override
-	public boolean updateTemplate(String templateId, String applicationId,
-			Map<String, Object> templateMap) {
+	public boolean deleteTemplate(String templateId) {
 		Session session = null;
-		try {
-			session = getSessionFactory().openSession();
-			int result = 0;
-			String hql;
-			for (Map.Entry<String, Object> entry : templateMap.entrySet()) {
-				session.beginTransaction();
-				String key = entry.getKey();
-				if (key.equalsIgnoreCase("appid"))
-					key = "app_id";
-				if (key.equalsIgnoreCase("createdby"))
-					key = "created_by";
-				if (key.equalsIgnoreCase("modifiedby"))
-					key = "modified_by";
-				if (key.equalsIgnoreCase("createdon"))
-					key = "created_on";
-				if (key.equalsIgnoreCase("lastmodifiedon"))
-					key = "last_modified_on";
-				try{
-				hql = "update Template t set "
-						+ key
-						+ " = :value where t.id=:templateId and t.appId = :applicationId";
-				result = session.createQuery(hql)
-						.setString("value", entry.getValue().toString())
-						.setString("templateId", templateId)
-						.setString("applicationId", applicationId)
-						.executeUpdate();
-				
-					session.getTransaction().commit();
-				} catch (Exception e) {
-					e.printStackTrace();
-					session.clear();
+		boolean deleteStatus = false;
+		if (!StringUtils.isEmpty(templateId)) {
+			Template template = new Template();
+			template.setId(templateId);
+			try {
+				session = getSessionFactory().openSession();
+				Transaction txn = session.beginTransaction();
+				session.delete(template);
+				txn.commit();
+				deleteStatus = true;
+			} catch (Exception e) {
+				deleteStatus = false;
+			} finally {
+				if (session != null) {
+					session.flush();
+					session.close();
 				}
 			}
-
-			System.err.println(result);
-			if (result > 0)
-				return true;
-			else
-				return false;
-		} finally {
-			if (session != null)
-				session.flush();
-			session.close();
 		}
 
-	}
-
-	@Override
-	public boolean deleteTemplate(String templateId, String applicationId) {
-		// TODO Auto-generated method stub
-		Session session = null;
-		try {
-			session = getSessionFactory().openSession();
-			Transaction txn = session.beginTransaction();
-			String hql = "delete from Template t where t.id=:templateId and t.appId=:applicationId";
-			int result = session.createQuery(hql)
-					.setString("templateId", templateId)
-					.setString("applicationId", applicationId).executeUpdate();
-			txn.commit();
-			if (result > 0)
-				return true;
-			else
-				return false;
-		} finally {
-			if (session != null) {
-				session.flush();
-				session.close();
-			}
-		}
+		return deleteStatus;
 	}
 
 	@Override
