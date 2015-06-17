@@ -23,8 +23,7 @@
     <bean id="contextSource"
           class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
         <constructor-arg value="${directory.service.url}"/>
-        <property name="userDn" value="${directory.service.user}"/>
-        <property name="password" value="${directory.service.password}"/>
+        
     </bean>
 
 	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
