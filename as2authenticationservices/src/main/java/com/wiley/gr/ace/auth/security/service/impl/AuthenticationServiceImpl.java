@@ -118,6 +118,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Value("${as.unlock.url}")
 	private String unlockUser;
+	
+	@Value("${as.AuthenticationType}")
+	private String authenticationType;
 
 	/**
 	 * Method to validate user before authenticate the user. It takes the
@@ -128,6 +131,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Override
 	public Response userLogin(AuthenticateRequest request) {
 
+		// for AD users no need to check Pre-conditions of login.
+		if (authenticationType
+				.equalsIgnoreCase(request.getAuthenticationType())) {
+			return authenticate(request.getUserId(), request.getPassword(),
+					request.getAuthenticationType(), request.getAppKey());
+		}
 		// get the user details from the table by using userId.
 		LockedAccountDetails lockedAccountDetails = userLoginDao
 				.userAccountDetails(request.getUserId());
@@ -168,7 +177,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			// update the locked time in the table
 			userLoginDao.updateTimeStamp(request.getUserId());
 			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
-			
+
 		} else {
 
 			response = authenticate(request.getUserId(), request.getPassword(),
@@ -231,7 +240,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			filterMatch = ldapFilterMatch;
 			filterPath = ldapFilter;
 		} else {
-			setContext(directoyServiceUrl, directoryUser, directoryPassword);
+			setContext(directoyServiceUrl, userId, password);
 		}
 
 		// Apply the filter.
