@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
 import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.model.TokenRequest;
 import com.wiley.gr.ace.auth.security.model.User;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 
@@ -123,7 +124,7 @@ public class AuthenticationController {
 	
 	@RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody User searchUser(
-			@Valid @RequestBody AuthenticateRequest request) {
+			@Valid @RequestBody TokenRequest request) {
 				
 		return authenticationService.searchUser(request.getUserId());
 		

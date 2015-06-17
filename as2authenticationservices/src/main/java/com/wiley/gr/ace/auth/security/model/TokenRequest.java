@@ -13,11 +13,20 @@ package com.wiley.gr.ace.auth.security.model;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * Created by kkalyan on 5/20/2015.
  */
+@JsonInclude(Include.NON_NULL)
 public class TokenRequest {
 
+	@NotNull @NotBlank
     private String userId;
 
     private List<String> roles;
