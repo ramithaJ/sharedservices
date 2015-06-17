@@ -81,22 +81,21 @@ public class AuthenticationController {
 			}
 
 			authResponse = authenticationService.userLogin(request);
-			
-			if(null != authResponse
+
+			if (null != authResponse
 					&& authResponse.getStatus().equalsIgnoreCase(
-					String.valueOf(Response.STATUS.LOCKED))) {
-				
+							String.valueOf(Response.STATUS.LOCKED))) {
+
 				return new ResponseEntity<>(new Response(
 						CommonConstant.LOCKED_CODE,
 						messageProp.getProperty(CommonConstant.AUTH_007),
-						authResponse.getStatus()), null,
-						HttpStatus.OK);
+						authResponse.getStatus()), null, HttpStatus.OK);
 			}
-			
+
 			if (null == authResponse
 					|| authResponse.getStatus().equalsIgnoreCase(
 							String.valueOf(Response.STATUS.FAILURE))) {
-				
+
 				LOGGER.info("Authentication Response..." + authResponse);
 
 				return new ResponseEntity<>(new Response(
@@ -121,13 +120,13 @@ public class AuthenticationController {
 					null, HttpStatus.OK);
 		}
 	}
-	
+
 	@RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody User searchUser(
 			@Valid @RequestBody TokenRequest request) {
-				
+
 		return authenticationService.searchUser(request.getUserId());
-		
+
 	}
 
 }

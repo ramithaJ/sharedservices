@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
@@ -80,12 +81,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Value("${directory.service.url}")
 	private String directoyServiceUrl;
 
-	@Value("${directory.service.user}")
-	private String directoryUser;
-
-	@Value("${directory.service.password}")
-	private String directoryPassword;
-
 	@Value("${directory.service.filter}")
 	private String directoryFilter;
 
@@ -94,12 +89,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Value("${ldap.service.url}")
 	private String ldapServiceUrl;
-
-	@Value("${ldap.service.user}")
-	private String ldapUser;
-
-	@Value("${ldap.service.password}")
-	private String ldapPassword;
 
 	@Value("${ldap.service.filter}")
 	private String ldapFilter;
@@ -118,7 +107,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Value("${as.unlock.url}")
 	private String unlockUser;
-	
+
 	@Value("${as.AuthenticationType}")
 	private String authenticationType;
 
@@ -228,7 +217,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				&& authenticationType.equalsIgnoreCase(CommonConstant.AUTO)
 				&& !userId.contains(CommonConstant.WILEY_DOMAIN)) {
 			// Set ldap server setting.
-			setContext(ldapServiceUrl, ldapUser, ldapPassword);
+			setContext(ldapServiceUrl, userId, password);
 			filterMatch = ldapFilterMatch;
 			filterPath = ldapFilter;
 		}
@@ -236,7 +225,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// server.
 		else if (StringUtils.isNotEmpty(authenticationType)
 				&& authenticationType.equalsIgnoreCase(CommonConstant.LDAP)) {
-			setContext(ldapServiceUrl, ldapUser, ldapPassword);
+			setContext(ldapServiceUrl, userId, password);
 			filterMatch = ldapFilterMatch;
 			filterPath = ldapFilter;
 		} else {
@@ -247,8 +236,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter(filterMatch, userId));
 		// Authenticate the user credentials.
-		boolean isAuthenticated = ldapTemplate.authenticate(filterPath,
-				filter.toString(), password);
+
+		boolean isAuthenticated = false;
+		try {
+			isAuthenticated = ldapTemplate.authenticate(filterPath,
+					filter.toString(), password);
+		} catch (AuthenticationException e) {
+			return response;
+		}
 		if (isAuthenticated) {
 			// Call Roles Service and get the Roles
 			List<String> roles = getRoles(userId);
@@ -305,8 +300,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private void setContext(String serviceUrl, String user, String password) {
 		contextSource.setUrl(serviceUrl);
-		contextSource.setUserDn(user);
-		contextSource.setPassword(password);
+		if (null != user) {
+			contextSource.setUserDn(user);
+		}
+		if (null != password) {
+			contextSource.setPassword(password);
+		}
 		contextSource.afterPropertiesSet();
 		ldapTemplate.setContextSource(contextSource);
 	}
@@ -315,7 +314,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	public <T> User searchUser(String userId) {
 
 		LOGGER.info("Inside searchUser method");
-		setContext(directoyServiceUrl, directoryUser, directoryPassword);
+		setContext(directoyServiceUrl, null, null);
 		String filterMatch = directoryServicefilterMatch;
 		String filterPath = directoryServicefilterPath;
 
@@ -345,7 +344,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		return user;
-
 	}
 
 }
