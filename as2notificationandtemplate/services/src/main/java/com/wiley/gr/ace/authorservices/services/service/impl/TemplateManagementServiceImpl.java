@@ -72,6 +72,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 
 	@Override
 	public boolean insertTemplate(TemplateVO template) throws Exception {
+		if(!StringUtils.isEmpty(template)){
 		Template templateEntity = new Template();
 		templateEntity.setAppId(template.getAppId());
 		templateEntity
@@ -85,6 +86,9 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 		templateEntity.setTagl1(template.getTagl1());
 		templateEntity.setTagl2(template.getTagl2());
 		return templateManagementDAO.saveOrUpdateTemplate(templateEntity);
+		}
+		else 
+			return false;
 	}
 
 	@Override

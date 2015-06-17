@@ -65,8 +65,7 @@ public class TemplateManagementController {
 			@PathVariable("applicationId") String applicationId) {
 		Service service = new Service();
 		TemplateVO template = null;
-		if (!StringUtils.isEmpty(templateId)
-				&& !StringUtils.isEmpty(applicationId)) {
+		
 			try {
 				template = templateManagementService.getTemplate(templateId,
 						applicationId);
@@ -88,7 +87,7 @@ public class TemplateManagementController {
 				service.setStatus("ERROR");
 				service.setError(error);
 			}
-		}
+		
 		return service;
 	}
 
@@ -220,9 +219,12 @@ public class TemplateManagementController {
 		TemplateVO template = null;
 		Service service = new Service();
 		try {
-			if (!StringUtils.isEmpty(templateId)&&!StringUtils.isEmpty(applicationId)){
+			
 			template = templateManagementService.renderTemplate(applicationId,
 					templateId, templateDetails);
+			if (!StringUtils.isEmpty(template)){
+				service.setStatus("SUCCESS");
+				service.setPayload(template);
 			}else{
 				ErrorPOJO error = new ErrorPOJO();
 				error.setCode(213);
