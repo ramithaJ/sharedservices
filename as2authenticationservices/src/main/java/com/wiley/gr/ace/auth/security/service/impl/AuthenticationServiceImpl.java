@@ -89,6 +89,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Value("${ldap.service.url}")
 	private String ldapServiceUrl;
+	
+	@Value("${ldap.service.url}")
+	private String ldapUser;
+	
+	@Value("${ldap.service.password}")
+	private String ldapPassword;
 
 	@Value("${ldap.service.filter}")
 	private String ldapFilter;
@@ -217,7 +223,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				&& authenticationType.equalsIgnoreCase(CommonConstant.AUTO)
 				&& !userId.contains(CommonConstant.WILEY_DOMAIN)) {
 			// Set ldap server setting.
-			setContext(ldapServiceUrl, userId, password);
+			setContext(ldapServiceUrl, ldapUser, ldapPassword);
 			filterMatch = ldapFilterMatch;
 			filterPath = ldapFilter;
 		}
@@ -225,7 +231,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// server.
 		else if (StringUtils.isNotEmpty(authenticationType)
 				&& authenticationType.equalsIgnoreCase(CommonConstant.LDAP)) {
-			setContext(ldapServiceUrl, userId, password);
+			setContext(ldapServiceUrl, ldapUser, ldapPassword);
 			filterMatch = ldapFilterMatch;
 			filterPath = ldapFilter;
 		} else {
