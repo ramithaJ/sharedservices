@@ -90,7 +90,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Value("${ldap.service.url}")
 	private String ldapServiceUrl;
 	
-	@Value("${ldap.service.url}")
+	@Value("${ldap.service.user}")
 	private String ldapUser;
 	
 	@Value("${ldap.service.password}")
