@@ -15,7 +15,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.wiley.gr.ace.authorservices.persistence.connection.HibernateConnection;
+import com.wiley.gr.ace.authorservices.persistence.services.NotificationManagementDAO;
 import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDAO;
+import com.wiley.gr.ace.authorservices.persistence.services.impl.NotificationManagementDAOImpl;
 import com.wiley.gr.ace.authorservices.persistence.services.impl.TemplateManagementDAOImpl;
 
 @Configuration
@@ -30,5 +32,8 @@ public class PersistenceBeanConfig {
 	public TemplateManagementDAO templateManagementDAO() {
 		return new TemplateManagementDAOImpl();
 	}
-
+	@Bean(name = "NotificationManagementDAO")
+	public NotificationManagementDAO notificationManagementDAO(){
+		return new NotificationManagementDAOImpl();
+	}
 }
