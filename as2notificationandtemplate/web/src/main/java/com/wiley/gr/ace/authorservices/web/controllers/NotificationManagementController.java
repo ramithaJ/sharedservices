@@ -227,4 +227,36 @@ public class NotificationManagementController {
 		}
 		return service;	
 	}
+	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Service getNotificationHistory(@PathVariable("applicationId") String applicationId,
+			@RequestParam(value = "from") String from,
+			@RequestParam(value = "to") String to,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "offset") String offset,
+			@RequestParam(value = "limit") String limit,
+			@RequestParam(value = "unreadFlag") String unreadFlag){
+				Service service = new Service();
+				List<NotificationVO> notificationHistory = null;
+				try{
+					notificationHistory = notificationManagementService.getNotificationHistory(applicationId,from,to,type,offset,limit,unreadFlag);
+				if(!StringUtils.isEmpty(notificationHistory)){
+					service.setStatus("SUCCESS");
+					service.setPayload(notificationHistory);
+				}
+				else{
+					ErrorPOJO error = new ErrorPOJO();
+					error.setCode(315);
+					error.setMessage("No records found for the required criteria");
+					service.setStatus("ERROR");
+					service.setError(error);
+				}
+				}catch(Exception e){
+				ErrorPOJO error = new ErrorPOJO();
+				error.setCode(316);
+				error.setMessage("Error Fetching Notification History");
+				service.setStatus("ERROR");
+				service.setError(error);
+				}
+				return service;
+		}
 }
