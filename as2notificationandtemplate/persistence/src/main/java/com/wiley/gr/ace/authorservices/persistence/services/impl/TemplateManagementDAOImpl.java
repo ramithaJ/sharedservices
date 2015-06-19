@@ -70,7 +70,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 			session.getTransaction().commit();
 			return true;
 
-		} catch (Exception e) {
+		}catch (Exception e) {
 			return false;
 		} finally {
 			if (session != null) {

@@ -3,6 +3,7 @@ package com.wiley.gr.ace.authorservices.persistence.services;
 import java.util.List;
 
 import com.wiley.gr.ace.authorservices.persistence.entity.Notification;
+import com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients;
 import com.wiley.gr.ace.authorservices.persistence.entity.Schedule;
 import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
@@ -15,4 +16,6 @@ public interface NotificationManagementDAO {
 	boolean saveOrUpdateSchedule(Schedule schedule,ScheduleTemplate scheduleTemplate) throws Exception;
 	Notification getNotification(String applicationId, String notificationId) throws Exception;
 	boolean setNotificationFlag(String applicationId, String notificationId) throws Exception;
+	List<Notification> getNotificationList(String applicationId) throws Exception; 
+	NotificationRecipients getNotificationRecipients(String notificationId) throws Exception;
 }

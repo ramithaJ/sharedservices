@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.persistence.entity.Notification;
+import com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients;
 import com.wiley.gr.ace.authorservices.persistence.entity.Schedule;
 import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
@@ -178,4 +179,37 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return isSet;
 	}
 
+	@Override
+	public List<Notification> getNotificationList(String applicationId)
+			throws Exception {
+		List<Notification> notificationList = null;
+		Session session = null;
+		if(!StringUtils.isEmpty(applicationId)){
+			try{
+				session = getSessionFactory().openSession();
+				String hql = "from Notification n where n.appId = :applicationId";
+				notificationList = session.createQuery(hql).setString("applicationId",applicationId).list();
+				
+			}
+			finally{
+				if(!StringUtils.isEmpty(session)){
+				session.flush();
+				session.close();
+			}
+		}
+	}
+		return notificationList;
+	}
+
+	@Override
+	public NotificationRecipients getNotificationRecipients(
+			String notificationId) throws Exception {
+		NotificationRecipients notificationRecipients = null;
+		if(!StringUtils.isEmpty(notificationId)){
+			Session session = getSessionFactory().openSession();
+			String hql = "from NotificationRecepients nr where nr.notificationId = :notificationId";
+			notificationRecipients = (NotificationRecipients) session.createQuery(hql).setString("notificationId", notificationId).list().get(0);
+		}
+		return notificationRecipients;
+	}
 }

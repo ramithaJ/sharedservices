@@ -14,4 +14,5 @@ public interface NotificationManagementService {
 	List<ScheduleVO> templateLookup( String applicationId, String templateId, String type) throws Exception;
 	NotificationVO getNotification(String applicationId, String notificationId) throws Exception;
 	boolean setNotificationFlag(String applicationId, String notificationId) throws Exception;
+	List<NotificationVO> getNotificationHistory(String applicationId, String from, String to, String type, String offset, String limit, String unreadFlag) throws Exception;
 }

@@ -234,7 +234,7 @@ public class NotificationManagementServiceImpl implements
 	public NotificationVO getNotification(String applicationId,
 			String notificationId) throws Exception {
 		NotificationVO notification = null;
-		if(!StringUtils.isEmpty(applicationId)&&!StringUtils.isEmpty(applicationId))
+		if(!StringUtils.isEmpty(applicationId)&&!StringUtils.isEmpty(notificationId))
 			notification = getNotificationVO(notificationManagementDAO.getNotification(applicationId, notificationId));
 		return notification;
 	}
@@ -246,6 +246,57 @@ public class NotificationManagementServiceImpl implements
 		if(!StringUtils.isEmpty(applicationId)&&!StringUtils.isEmpty(applicationId))
 			isSet=notificationManagementDAO.setNotificationFlag(applicationId, notificationId);
 			return isSet;
+	}
+
+	@Override
+	public List<NotificationVO> getNotificationHistory(String applicationId,
+			String from, String to, String type, String offset, String limit,
+			String unreadFlag) throws Exception {
+		List<NotificationVO> notificationList = null;
+		NotificationRecipientsVO notificationRecipients = null;
+		if(!StringUtils.isEmpty(applicationId)){
+			List<Notification> notificationEntityList = notificationManagementDAO.getNotificationList(applicationId);
+					notificationList = new ArrayList<NotificationVO>();
+					for(Notification ne : notificationEntityList)
+					notificationList.add(getNotificationVO(ne));
+					if(!StringUtils.isEmpty(from)){
+						for(NotificationVO n : notificationList){
+							if(!from.equalsIgnoreCase(n.getSenderId()))
+							notificationList.remove(n);
+						}
+						
+					} 
+					if(!StringUtils.isEmpty(to)){
+						for(NotificationVO n : notificationList){
+							notificationRecipients = getNotificationRecipientsVO(notificationManagementDAO.getNotificationRecipients(n.getId()));
+							if(!to.equalsIgnoreCase(notificationRecipients.getUserId()))
+							notificationList.remove(n);
+						}
+					}
+					if(!StringUtils.isEmpty(type)){
+						for(NotificationVO n : notificationList){
+							if(!type.equalsIgnoreCase(n.getType()))
+							notificationList.remove(n);
+						}
+					}
+					if(!StringUtils.isEmpty(unreadFlag)){
+						for(NotificationVO n : notificationList){
+							if(!unreadFlag.equalsIgnoreCase(n.getUnread().toString()))
+							notificationList.remove(n);
+						}
+					}
+					if(!StringUtils.isEmpty(offset)&&!StringUtils.isEmpty(limit)){
+							int index = Integer.parseInt(offset);
+							int range = Integer.parseInt(limit);
+							List<NotificationVO> tempList = new ArrayList<NotificationVO>();
+							for(int i=index;i < range; i++)
+								tempList.add(notificationList.get(i));
+							notificationList.retainAll(tempList);
+						
+						} 
+					
+		}
+					return notificationList;
 	}
 
 }
