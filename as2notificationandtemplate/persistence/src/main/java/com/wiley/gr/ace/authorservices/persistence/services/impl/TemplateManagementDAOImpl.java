@@ -137,7 +137,6 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	@Override
 	public Template searchTemplate(String applicationId, String tagL1,
 			String tagL2) {
-		// TODO Auto-generated method stub
 		Session session = null;
 		Template template = null;
 		try {

@@ -47,8 +47,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
 			session.saveOrUpdate(schedule);
-			session.getTransaction().commit();
-			session.beginTransaction();
 			session.saveOrUpdate(scheduleTemplate);
 			session.getTransaction().commit();
 			return true;
@@ -228,5 +226,18 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 					.setString("notificationId", notificationId).list().get(0);
 		}
 		return notificationRecipients;
+	}
+
+	@Override
+	public boolean createNotificationHistory(String applicationId,
+			String templateId, String senderEmail, String recipientEmail,
+			String content, String type) throws Exception {
+		Notification notification = new Notification();
+		NotificationRecipients notificationRecipients = new NotificationRecipients();
+		
+		notificationRecipients.setEmail(recipientEmail);
+		notification.setAppId(applicationId);
+		
+		return false;
 	}
 }

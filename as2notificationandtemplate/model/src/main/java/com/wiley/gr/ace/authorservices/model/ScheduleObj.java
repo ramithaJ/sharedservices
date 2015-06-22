@@ -2,7 +2,7 @@ package com.wiley.gr.ace.authorservices.model;
 
 import java.util.Date;
 
-public class ScheduleVO {
+public class ScheduleObj {
 	
 	private String id;
 	private String appId;
@@ -11,7 +11,7 @@ public class ScheduleVO {
 	private String modifiedBy;
 	private Date createdOn;
 	private Date lastModifiedOn;
-	private ScheduleTemplateVO scheduleTemplate;
+	private ScheduleTemplateObj scheduleTemplate;
 
 	public String getId() {
 		return id;
@@ -55,10 +55,10 @@ public class ScheduleVO {
 	public void setLastModifiedOn(Date lastModifiedOn) {
 		this.lastModifiedOn = lastModifiedOn;
 	}
-	public ScheduleTemplateVO getScheduleTemplate() {
+	public ScheduleTemplateObj getScheduleTemplate() {
 		return scheduleTemplate;
 	}
-	public void setScheduleTemplate(ScheduleTemplateVO scheduleTemplate) {
+	public void setScheduleTemplate(ScheduleTemplateObj scheduleTemplate) {
 		this.scheduleTemplate = scheduleTemplate;
 	}
 

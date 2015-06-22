@@ -2,7 +2,7 @@ package com.wiley.gr.ace.authorservices.model;
 
 import java.util.Date;
 
-public class TemplateVO {
+public class TemplateObj {
 	private String id;
 	private String appId;
 	private String description;

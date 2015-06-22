@@ -18,7 +18,7 @@ import com.wiley.gr.ace.authorservices.model.ErrorPOJO;
 import com.wiley.gr.ace.authorservices.model.Service;
 import com.wiley.gr.ace.authorservices.model.Tags;
 import com.wiley.gr.ace.authorservices.model.TemplateDetails;
-import com.wiley.gr.ace.authorservices.model.TemplateVO;
+import com.wiley.gr.ace.authorservices.model.TemplateObj;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
 /**
@@ -64,7 +64,7 @@ public class TemplateManagementController {
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId) {
 		Service service = new Service();
-		TemplateVO template = null;
+		TemplateObj template = null;
 
 		try {
 			template = templateManagementService.getTemplate(templateId,
@@ -92,7 +92,8 @@ public class TemplateManagementController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.PUT)
-	public @ResponseBody Service createTemplate(@RequestBody TemplateVO template) {
+	public @ResponseBody Service createTemplate(
+			@RequestBody TemplateObj template) {
 		Service service = new Service();
 		boolean isCreated = false;
 		try {
@@ -107,9 +108,7 @@ public class TemplateManagementController {
 		if (isCreated) {
 			service.setStatus("SUCCESS");
 			service.setPayload(isCreated);
-		}
-
-		else {
+		} else {
 			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(206);
 			error.setMessage("No tags found for the required criteria");
@@ -124,7 +123,7 @@ public class TemplateManagementController {
 	public @ResponseBody Service updateTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,
-			@RequestBody TemplateVO templateObj) {
+			@RequestBody TemplateObj templateObj) {
 		Service service = new Service();
 		boolean isUpdated = false;
 		try {
@@ -188,7 +187,7 @@ public class TemplateManagementController {
 			@RequestParam(value = "tagL1") String tagL1,
 			@RequestParam(value = "tagL2") String tagL2) {
 		Service service = new Service();
-		TemplateVO template = null;
+		TemplateObj template = null;
 		try {
 			template = templateManagementService.searchTemplate(applicationId,
 					tagL1, tagL2);
@@ -217,7 +216,7 @@ public class TemplateManagementController {
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,
 			@RequestBody TemplateDetails templateDetails) {
-		TemplateVO template = null;
+		TemplateObj template = null;
 		Service service = new Service();
 		try {
 

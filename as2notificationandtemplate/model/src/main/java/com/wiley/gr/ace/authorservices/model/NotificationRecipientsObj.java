@@ -1,9 +1,9 @@
 package com.wiley.gr.ace.authorservices.model;
 
 
-public class NotificationRecipientsVO {
+public class NotificationRecipientsObj {
 	private String notificationId;
-	private NotificationVO notification;
+	private NotificationObj notification;
 	private String userId;
 	private String email;
 	public String getNotificationId() {
@@ -12,10 +12,10 @@ public class NotificationRecipientsVO {
 	public void setNotificationId(String notificationId) {
 		this.notificationId = notificationId;
 	}
-	public NotificationVO getNotification() {
+	public NotificationObj getNotification() {
 		return notification;
 	}
-	public void setNotification(NotificationVO notification) {
+	public void setNotification(NotificationObj notification) {
 		this.notification = notification;
 	}
 	public String getUserId() {

@@ -1,7 +1,7 @@
 package com.wiley.gr.ace.authorservices.model;
 
 
-public class ScheduleTemplateVO {
+public class ScheduleTemplateObj {
 	private String scheduleId;
 	private String templateByOnscreenTmplId;
 	private String templateByEmailTmplId;

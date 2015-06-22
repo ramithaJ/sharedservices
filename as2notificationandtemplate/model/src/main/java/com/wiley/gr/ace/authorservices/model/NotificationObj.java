@@ -3,9 +3,9 @@ package com.wiley.gr.ace.authorservices.model;
 import java.sql.Clob;
 import java.util.Date;
 
-public class NotificationVO {
+public class NotificationObj {
 	private String id;
-	private TemplateVO template;
+	private TemplateObj template;
 	private String appId;
 	private String senderId;
 	private String senderEmail;
@@ -13,17 +13,17 @@ public class NotificationVO {
 	private String type;
 	private Date sentOn;
 	private Character unread;
-	private NotificationRecipientsVO notificationRecipients;
+	private NotificationRecipientsObj notificationRecipients;
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public TemplateVO getTemplate() {
+	public TemplateObj getTemplate() {
 		return template;
 	}
-	public void setTemplate(TemplateVO template) {
+	public void setTemplate(TemplateObj template) {
 		this.template = template;
 	}
 	public String getAppId() {
@@ -68,11 +68,11 @@ public class NotificationVO {
 	public void setUnread(Character unread) {
 		this.unread = unread;
 	}
-	public NotificationRecipientsVO getNotificationRecipients() {
+	public NotificationRecipientsObj getNotificationRecipients() {
 		return notificationRecipients;
 	}
 	public void setNotificationRecipients(
-			NotificationRecipientsVO notificationRecipients) {
+			NotificationRecipientsObj notificationRecipients) {
 		this.notificationRecipients = notificationRecipients;
 	}
 }

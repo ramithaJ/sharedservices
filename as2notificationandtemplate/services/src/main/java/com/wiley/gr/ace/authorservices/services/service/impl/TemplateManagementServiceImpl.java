@@ -12,12 +12,13 @@ import javax.sql.rowset.serial.SerialClob;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.model.Tags;
 import com.wiley.gr.ace.authorservices.model.TemplateDetails;
-import com.wiley.gr.ace.authorservices.model.TemplateVO;
+import com.wiley.gr.ace.authorservices.model.TemplateObj;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDAO;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
@@ -34,17 +35,13 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 		List<String> tag2 = new ArrayList<String>();
 		List<Template> templateEntityList = null;
 		Tags tags = null;
-		List<TemplateVO> templateList = new ArrayList<TemplateVO>();
 		if (!StringUtils.isEmpty(applicationId)) {
 			templateEntityList = templateManagementDAO
 					.getTemplateTags(applicationId);
 			if (!StringUtils.isEmpty(templateEntityList)) {
 				for (Template te : templateEntityList) {
-					templateList.add(getTemplateVO(te));
-				}
-				for (TemplateVO t : templateList) {
-					tag1.add(t.getTagl1());
-					tag2.add(t.getTagl2());
+					tag1.add(te.getTagl1());
+					tag2.add(te.getTagl2());
 				}
 
 				tags = new Tags();
@@ -58,7 +55,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	@Override
-	public TemplateVO getTemplate(String templateId, String applicationId)
+	public TemplateObj getTemplate(String templateId, String applicationId)
 			throws IOException, SQLException {
 		if (!StringUtils.isEmpty(templateId)
 				&& !StringUtils.isEmpty(applicationId)) {
@@ -71,7 +68,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	@Override
-	public boolean insertTemplate(TemplateVO template) throws Exception {
+	public boolean insertTemplate(TemplateObj template) throws Exception {
 		if (!StringUtils.isEmpty(template)) {
 			Template templateEntity = new Template();
 			templateEntity.setAppId(template.getAppId());
@@ -92,7 +89,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 
 	@Override
 	public boolean updateTemplate(String templateId, String applicationId,
-			TemplateVO templateObj) throws Exception {
+			TemplateObj templateObj) throws Exception {
 
 		boolean updateStatus = false;
 		Template templateEntity = null;
@@ -124,17 +121,19 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	@Override
-	public TemplateVO searchTemplate(String applicationId, String tagL1,
+	public TemplateObj searchTemplate(String applicationId, String tagL1,
 			String tagL2) throws IOException, SQLException {
 
-		return getTemplateVO(templateManagementDAO.searchTemplate(
-				applicationId, tagL1, tagL2));
+		ModelMapper modelMapper = new ModelMapper();
+		Template templateEntity = templateManagementDAO.searchTemplate(applicationId, tagL1, tagL2);
+		TemplateObj templateObj = modelMapper.map(templateEntity, TemplateObj.class);
+		return templateObj;
 
 	}
 
-	private TemplateVO getTemplateVO(Template templateEntity)
+	private TemplateObj getTemplateVO(Template templateEntity)
 			throws IOException, SQLException {
-		TemplateVO template = new TemplateVO();
+		TemplateObj template = new TemplateObj();
 		template.setAppId(templateEntity.getAppId());
 		template.setBody(clobStringConversion(templateEntity.getBody()));
 		template.setCreatedBy(templateEntity.getCreatedBy());
@@ -149,14 +148,14 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	@Override
-	public TemplateVO renderTemplate(String applicationId, String templateId,
+	public TemplateObj renderTemplate(String applicationId, String templateId,
 			TemplateDetails templateDetails) throws Exception {
 		if (!StringUtils.isEmpty(templateId)
 				&& !StringUtils.isEmpty(applicationId)) {
 			Template templateEntity = null;
 			templateEntity = templateManagementDAO.getTemplate(templateId,
 					applicationId);
-			TemplateVO template = getTemplateVO(templateManagementDAO
+			TemplateObj template = getTemplateVO(templateManagementDAO
 					.getTemplate(templateId, applicationId));
 
 			VelocityContext vCtx = new VelocityContext();
