@@ -21,4 +21,6 @@ public interface NotificationManagementService {
 	List<NotificationObj> getNotificationHistory(String applicationId, String from, String to, String type, String offset, String limit, String unreadFlag) throws Exception;
 	void sendOnscreenNotification(String applicationId, String templateId, NotificationDetails notificationDetails) throws Exception;
 	void sendEmailNotification(String applicationId, String templateId, NotificationDetails notificationDetails) throws AddressException,MessagingException,Exception;
+	void resendEmailNotification(String applicationId, String notificationId) throws AddressException,
+			MessagingException, Exception;
 }
