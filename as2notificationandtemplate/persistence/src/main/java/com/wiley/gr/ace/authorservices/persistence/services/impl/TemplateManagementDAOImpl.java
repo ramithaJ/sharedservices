@@ -14,7 +14,7 @@ import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDA
 public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 
 	@Override
-	public List<Template> getTemplateTags(String applicationId) {
+	public List<Template> getTemplateTags(String applicationId) throws Exception {
 		Session session = null;
 		List<Template> templateEntityList = null;
 		try {
@@ -35,7 +35,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	}
 
 	@Override
-	public Template getTemplate(String templateId, String applicationId) {
+	public Template getTemplate(String templateId, String applicationId)  throws Exception{
 
 		Session session = null;
 		Template template = null;
@@ -61,7 +61,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	}
 
 	@Override
-	public boolean saveOrUpdateTemplate(Template template) {
+	public boolean saveOrUpdateTemplate(Template template) throws Exception {
 		Session session = null;
 		try {
 			session = getSessionFactory().openSession();
@@ -80,35 +80,9 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		}
 	}
 
-	/*
-	 * @Override public boolean updateTemplate(String templateId, String
-	 * applicationId, Map<String, Object> templateMap) { Session session = null;
-	 * try { session = getSessionFactory().openSession(); int result = 0; String
-	 * hql; for (Map.Entry<String, Object> entry : templateMap.entrySet()) {
-	 * session.beginTransaction(); String key = entry.getKey(); if
-	 * (key.equalsIgnoreCase("appid")) key = "app_id"; if
-	 * (key.equalsIgnoreCase("createdby")) key = "created_by"; if
-	 * (key.equalsIgnoreCase("modifiedby")) key = "modified_by"; if
-	 * (key.equalsIgnoreCase("createdon")) key = "created_on"; if
-	 * (key.equalsIgnoreCase("lastmodifiedon")) key = "last_modified_on"; try{
-	 * hql = "update Template t set " + key +
-	 * " = :value where t.id=:templateId and t.appId = :applicationId"; result =
-	 * session.createQuery(hql) .setString("value", entry.getValue().toString())
-	 * .setString("templateId", templateId) .setString("applicationId",
-	 * applicationId) .executeUpdate();
-	 * 
-	 * session.getTransaction().commit(); } catch (Exception e) {
-	 * e.printStackTrace(); session.clear(); } }
-	 * 
-	 * System.err.println(result); if (result > 0) return true; else return
-	 * false; } finally { if (session != null) session.flush(); session.close();
-	 * }
-	 * 
-	 * }
-	 */
 
 	@Override
-	public boolean deleteTemplate(String applicationId, String templateId) {
+	public boolean deleteTemplate(String applicationId, String templateId) throws Exception {
 		Session session = null;
 		boolean deleteStatus = false;
 		if (!StringUtils.isEmpty(templateId)) {
@@ -136,7 +110,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 
 	@Override
 	public Template searchTemplate(String applicationId, String tagL1,
-			String tagL2) {
+			String tagL2) throws Exception {
 		Session session = null;
 		Template template = null;
 		try {

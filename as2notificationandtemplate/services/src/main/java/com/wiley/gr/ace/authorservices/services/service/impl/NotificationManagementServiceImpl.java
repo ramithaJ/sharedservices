@@ -204,20 +204,6 @@ public class NotificationManagementServiceImpl implements
 		return template;
 	}
 
-	/*
-	 * private Template getTemplateEntity(TemplateObj template) throws Exception
-	 * { Template templateEntity = new Template();
-	 * templateEntity.setId(template.getId());
-	 * templateEntity.setAppId(template.getAppId()); templateEntity .setBody(new
-	 * SerialClob(template.getBody().toCharArray()));
-	 * templateEntity.setCreatedBy(template.getCreatedBy());
-	 * templateEntity.setCreatedOn(template.getCreatedOn());
-	 * templateEntity.setDescription(template.getDescription());
-	 * templateEntity.setLastModifiedOn(template.getLastModifiedOn());
-	 * templateEntity.setModifiedBy(template.getModifiedBy());
-	 * templateEntity.setTagl1(template.getTagl1());
-	 * templateEntity.setTagl2(template.getTagl2()); return templateEntity; }
-	 */
 
 	private static String clobStringConversion(Clob clb) throws Exception {
 		if (clb == null)

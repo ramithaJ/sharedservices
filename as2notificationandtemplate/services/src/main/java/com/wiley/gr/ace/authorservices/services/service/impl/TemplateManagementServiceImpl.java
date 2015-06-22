@@ -56,19 +56,21 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 
 	@Override
 	public TemplateObj getTemplate(String templateId, String applicationId)
-			throws IOException, SQLException {
+			throws Exception {
+		TemplateObj template = null;
 		if (!StringUtils.isEmpty(templateId)
 				&& !StringUtils.isEmpty(applicationId)) {
 
-			return getTemplateVO(templateManagementDAO.getTemplate(templateId,
+			template = getTemplateVO(templateManagementDAO.getTemplate(templateId,
 					applicationId));
-		} else
-			return null;
+		} 
+			return template;
 
 	}
 
 	@Override
 	public boolean insertTemplate(TemplateObj template) throws Exception {
+		boolean isInserted = false;
 		if (!StringUtils.isEmpty(template)) {
 			Template templateEntity = new Template();
 			templateEntity.setAppId(template.getAppId());
@@ -82,9 +84,9 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 			templateEntity.setModifiedBy(template.getModifiedBy());
 			templateEntity.setTagl1(template.getTagl1());
 			templateEntity.setTagl2(template.getTagl2());
-			return templateManagementDAO.saveOrUpdateTemplate(templateEntity);
-		} else
-			return false;
+			isInserted = templateManagementDAO.saveOrUpdateTemplate(templateEntity);
+		} 
+			return isInserted;
 	}
 
 	@Override
@@ -116,13 +118,13 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	@Override
-	public boolean deleteTemplate(String applicationId, String templateId) {
+	public boolean deleteTemplate(String applicationId, String templateId) throws Exception{
 		return templateManagementDAO.deleteTemplate(applicationId, templateId);
 	}
 
 	@Override
 	public TemplateObj searchTemplate(String applicationId, String tagL1,
-			String tagL2) throws IOException, SQLException {
+			String tagL2) throws Exception {
 
 		ModelMapper modelMapper = new ModelMapper();
 		Template templateEntity = templateManagementDAO.searchTemplate(applicationId, tagL1, tagL2);
@@ -132,7 +134,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	private TemplateObj getTemplateVO(Template templateEntity)
-			throws IOException, SQLException {
+			throws Exception {
 		TemplateObj template = new TemplateObj();
 		template.setAppId(templateEntity.getAppId());
 		template.setBody(clobStringConversion(templateEntity.getBody()));
@@ -178,8 +180,8 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 			return null;
 	}
 
-	private static String clobStringConversion(Clob clb) throws IOException,
-			SQLException {
+	private static String clobStringConversion(Clob clb) throws Exception
+			 {
 		if (clb == null)
 			return "";
 

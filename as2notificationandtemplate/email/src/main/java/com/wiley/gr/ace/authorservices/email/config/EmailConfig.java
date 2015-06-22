@@ -15,15 +15,11 @@ public class EmailConfig {
 	@Bean
 	public JavaMailSenderImpl javaMailSenderImpl(){
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost("localhost");
-		mailSender.setPort(2525);
-		//Set gmail email id
-		mailSender.setUsername("test.virtu.2015@gmail.com");
-		//Set gmail email password
-		mailSender.setPassword("abefcdgh");
+		mailSender.setHost("smtpgate.wiley.com");
+		mailSender.setPort(25);
 		Properties prop = mailSender.getJavaMailProperties();
 		prop.put("mail.transport.protocol", "smtp");
-		prop.put("mail.smtp.auth", "true");
+		prop.put("mail.smtp.auth", "false");
 		prop.put("mail.smtp.starttls.enable", "true");
 		prop.put("mail.debug", "true");
 		return mailSender;

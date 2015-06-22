@@ -14,7 +14,7 @@ public interface TemplateManagementService {
 	boolean updateTemplate(String templateId, String applicationId,
 			TemplateObj templateObj) throws Exception;
 
-	boolean deleteTemplate(String applicationId, String templateId);
+	boolean deleteTemplate(String applicationId, String templateId) throws Exception;
 
 	Tags getTemplateTags(String applicationId) throws Exception;
 

@@ -283,7 +283,7 @@ public class NotificationManagementController {
 
 		final Service service = new Service();
 		try {
-			if ("onscreen".equalsIgnoreCase(templateType)) {
+			if ("email".equalsIgnoreCase(templateType)) {
 				notificationManagementService.sendEmailNotification(
 						applicationId, templateId, notificationDetails);
 			}
@@ -293,4 +293,5 @@ public class NotificationManagementController {
 
 		return null;
 	}
+
 }

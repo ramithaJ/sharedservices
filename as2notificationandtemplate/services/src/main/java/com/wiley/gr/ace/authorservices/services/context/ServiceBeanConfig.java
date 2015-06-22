@@ -14,28 +14,21 @@ package com.wiley.gr.ace.authorservices.services.context;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.wiley.gr.ace.authorservices.services.service.MailSendingUtilityService;
 import com.wiley.gr.ace.authorservices.services.service.NotificationManagementService;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
-import com.wiley.gr.ace.authorservices.services.service.impl.MailSendingUtilityServiceImpl;
 import com.wiley.gr.ace.authorservices.services.service.impl.NotificationManagementServiceImpl;
 import com.wiley.gr.ace.authorservices.services.service.impl.TemplateManagementServiceImpl;
 
 @Configuration
 public class ServiceBeanConfig {
 
-	@Bean(name = "MailSendingUtilityService")
-	public MailSendingUtilityService mailSendingUtilityService() {
-		return new MailSendingUtilityServiceImpl();
-	}
-
 	@Bean(name = "TemplateManagementService")
 	public TemplateManagementService templateManagementService() {
 		return new TemplateManagementServiceImpl();
 	}
-	
+
 	@Bean(name = "NotificationManagementService")
-	public NotificationManagementService notificationManagementService(){
+	public NotificationManagementService notificationManagementService() {
 		return new NotificationManagementServiceImpl();
 	}
 }
