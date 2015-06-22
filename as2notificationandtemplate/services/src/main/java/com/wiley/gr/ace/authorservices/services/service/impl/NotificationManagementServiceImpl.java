@@ -325,7 +325,20 @@ public class NotificationManagementServiceImpl implements
 				notificationDetails.getTo(), templateObj.getDescription(),
 				templateObj.getBody());
 	}
+	
+	@Override
+	public void resendEmailNotification(String applicationId, String notificationId) throws AddressException,
+			MessagingException, Exception {
+		
+		NotificationRecipients notificationRecipients = notificationManagementDAO.getNotificationRecipients(notificationId);
+		Notification notification = notificationManagementDAO.getNotification(applicationId, notificationId);
+		Template template = notification.getTemplate();
+		TemplateObj templateObj = getTemplateVO(template);
 
+		mailSenderService.sendEmail(notification.getSenderEmail(),
+				notificationRecipients.getUserId(),templateObj.getDescription(),
+				templateObj.getBody());
+	}
 	@Override
 	public void sendOnscreenNotification(String applicationId,
 			String templateId, NotificationDetails notificationDetails)

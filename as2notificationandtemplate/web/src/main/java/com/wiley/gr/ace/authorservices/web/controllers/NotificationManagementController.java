@@ -291,12 +291,34 @@ public class NotificationManagementController {
 		} catch (Exception e) {
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
-			err.setCode(304);
+			err.setCode(317);
 			err.setMessage("Mail sending failed");
 			service.setError(err);
 		}
 
 		return service;
 	}
+	@RequestMapping(value = "/{applicationId}/resend/{notificationId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Service resendNotification(
+			@PathVariable("applicationId") final String applicationId,
+			@PathVariable("notificationId") final String notificationId) {
+
+		final Service service = new Service();
+		try {
+
+				notificationManagementService.resendEmailNotification(
+						applicationId, notificationId);
+			service.setStatus("SUCCESS");
+		} catch (Exception e) {
+			service.setStatus("ERROR");
+			ErrorPOJO err = new ErrorPOJO();
+			err.setCode(318);
+			err.setMessage("Mail sending failed");
+			service.setError(err);
+		}
+
+		return service;
+	}
+
 
 }
