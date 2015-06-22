@@ -1,10 +1,8 @@
 package com.wiley.gr.ace.authorservices.services.service.impl;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.Clob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
