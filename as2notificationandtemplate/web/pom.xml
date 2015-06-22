@@ -30,8 +30,8 @@
 		</dependency>
 	</dependencies>
 
-	<artifactId>notification-web</artifactId>
+	<artifactId>notification-template</artifactId>
 	<packaging>war</packaging>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 </project>
