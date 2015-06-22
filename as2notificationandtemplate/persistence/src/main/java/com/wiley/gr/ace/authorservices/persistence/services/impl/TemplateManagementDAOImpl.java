@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.authorservices.persistence.services.impl;
 
-import static com.wiley.gr.ace.authorservices.persistence.connection.HibernateConnection.getSessionFactory;
+import static com.wiley.gr.ace.authorservices.persistence.connection.NotificationTemplateHibernateConnection.getSessionFactory;
 
 import java.util.List;
 

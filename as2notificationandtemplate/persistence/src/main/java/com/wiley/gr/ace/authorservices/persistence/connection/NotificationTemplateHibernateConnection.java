@@ -17,10 +17,10 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HibernateConnection {
+public class NotificationTemplateHibernateConnection {
     
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(HibernateConnection.class);
+            .getLogger(NotificationTemplateHibernateConnection.class);
     private static final SessionFactory sessionFactory = buildSessionFactory();
     
     private static SessionFactory buildSessionFactory() {

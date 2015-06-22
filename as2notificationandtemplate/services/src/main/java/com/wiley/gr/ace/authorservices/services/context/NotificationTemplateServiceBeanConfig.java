@@ -20,7 +20,7 @@ import com.wiley.gr.ace.authorservices.services.service.impl.NotificationManagem
 import com.wiley.gr.ace.authorservices.services.service.impl.TemplateManagementServiceImpl;
 
 @Configuration
-public class ServiceBeanConfig {
+public class NotificationTemplateServiceBeanConfig {
 
 	@Bean(name = "TemplateManagementService")
 	public TemplateManagementService templateManagementService() {
