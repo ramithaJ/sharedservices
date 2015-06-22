@@ -286,12 +286,17 @@ public class NotificationManagementController {
 			if ("email".equalsIgnoreCase(templateType)) {
 				notificationManagementService.sendEmailNotification(
 						applicationId, templateId, notificationDetails);
+				service.setStatus("SUCCESS");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			service.setStatus("ERROR");
+			ErrorPOJO err = new ErrorPOJO();
+			err.setCode(304);
+			err.setMessage("Mail sending failed");
+			service.setError(err);
 		}
 
-		return null;
+		return service;
 	}
 
 }
