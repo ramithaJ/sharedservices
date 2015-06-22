@@ -59,35 +59,35 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/get/{applicationId}/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}/{templateId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId) {
 		Service service = new Service();
 		TemplateVO template = null;
-		
-			try {
-				template = templateManagementService.getTemplate(templateId,
-						applicationId);
 
-				if (!StringUtils.isEmpty(template)) {
-					service.setStatus("SUCCESS");
-					service.setPayload(template);
-				} else {
-					ErrorPOJO error = new ErrorPOJO();
-					error.setCode(203);
-					error.setMessage("No tags found for the required criteria");
-					service.setStatus("FAILURE");
-					service.setError(error);
-				}
-			} catch (Exception e) {
+		try {
+			template = templateManagementService.getTemplate(templateId,
+					applicationId);
+
+			if (!StringUtils.isEmpty(template)) {
+				service.setStatus("SUCCESS");
+				service.setPayload(template);
+			} else {
 				ErrorPOJO error = new ErrorPOJO();
-				error.setCode(204);
-				error.setMessage("Error Fetching Template");
-				service.setStatus("ERROR");
+				error.setCode(203);
+				error.setMessage("No tags found for the required criteria");
+				service.setStatus("FAILURE");
 				service.setError(error);
 			}
-		
+		} catch (Exception e) {
+			ErrorPOJO error = new ErrorPOJO();
+			error.setCode(204);
+			error.setMessage("Error Fetching Template");
+			service.setStatus("ERROR");
+			service.setError(error);
+		}
+
 		return service;
 	}
 
@@ -120,7 +120,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/update/{applicationId}/{templateId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{applicationId}/{templateId}/update", method = RequestMethod.POST)
 	public @ResponseBody Service updateTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,
@@ -151,13 +151,15 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/delete/{templateId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{applicationId}/{templateId}/delete", method = RequestMethod.DELETE)
 	public @ResponseBody Service deleteTemplateId(
+			@PathVariable("templateId") String applicationId,
 			@PathVariable("templateId") String templateId) {
 		Service service = new Service();
 		boolean isDeleted = false;
 		try {
-			isDeleted = templateManagementService.deleteTemplate(templateId);
+			isDeleted = templateManagementService.deleteTemplate(applicationId,
+					templateId);
 		} catch (Exception e) {
 			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(209);
@@ -180,7 +182,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/search/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service searchTemplate(
 			@PathVariable("applicationId") String applicationId,
 			@RequestParam(value = "tagL1") String tagL1,
@@ -193,8 +195,7 @@ public class TemplateManagementController {
 			if (!StringUtils.isEmpty(template)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(template);
-			}
-			else{
+			} else {
 				ErrorPOJO error = new ErrorPOJO();
 				error.setCode(211);
 				error.setMessage("No tags found for the required criteria");
@@ -219,13 +220,13 @@ public class TemplateManagementController {
 		TemplateVO template = null;
 		Service service = new Service();
 		try {
-			
+
 			template = templateManagementService.renderTemplate(applicationId,
 					templateId, templateDetails);
-			if (!StringUtils.isEmpty(template)){
+			if (!StringUtils.isEmpty(template)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(template);
-			}else{
+			} else {
 				ErrorPOJO error = new ErrorPOJO();
 				error.setCode(213);
 				error.setMessage("No tags found for the required criteria");

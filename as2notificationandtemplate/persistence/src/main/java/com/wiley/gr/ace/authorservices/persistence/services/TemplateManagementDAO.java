@@ -11,9 +11,10 @@ public interface TemplateManagementDAO {
 
 	boolean saveOrUpdateTemplate(Template template);
 
-	//boolean updateTemplate(String templateId,String applicationId,Map<String,Object> templateMap);
+	// boolean updateTemplate(String templateId,String
+	// applicationId,Map<String,Object> templateMap);
 
-	boolean deleteTemplate(String templateId);
+	boolean deleteTemplate(String applicationId, String templateId);
 
 	Template searchTemplate(String applicationId, String tagL1, String tagL2);
 }

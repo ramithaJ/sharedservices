@@ -24,7 +24,7 @@ import com.wiley.gr.ace.authorservices.services.service.NotificationManagementSe
 public class NotificationManagementController {
 	@Autowired(required=true)
 	NotificationManagementService notificationManagementService;
-	@RequestMapping(value = "get/{applicationId}/{scheduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/get/{applicationId}/{scheduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public  @ResponseBody Service getSchedule(@PathVariable("applicationId") String applicationId, 
 			@PathVariable("scheduleId") String scheduleId){
 		Service service = new Service();
@@ -57,7 +57,7 @@ public class NotificationManagementController {
 	public Service updateNotification(){
 		return new Service();		
 	}
-	@RequestMapping(value = "delete/{applicationId}/{scheduleId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/{applicationId}/{scheduleId}", method = RequestMethod.DELETE)
 	public @ResponseBody Service deleteSchedule(@PathVariable("applicationId") String applicationId, 
 			@PathVariable("scheduleId") String scheduleId){
 		Service service = new Service();
@@ -143,7 +143,7 @@ public class NotificationManagementController {
 		}
 		return service;
 	}
-	@RequestMapping(value = "{applicationId}/schedule/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}/schedule/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service templateLookup(@PathVariable String applicationId,@PathVariable String templateId,
 			@RequestParam(value = "type") String type){
 		Service service = new Service();
@@ -172,8 +172,8 @@ public class NotificationManagementController {
 		}
 		return service;
 	}
-	@RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Service getNotificationHistory(@PathVariable("applicationId") String applicationId,
+	@RequestMapping(value = "/{applicationId}/{notificationId}/getNotification", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Service getNotification(@PathVariable("applicationId") String applicationId,
 			@PathVariable("notificationId") String notificationId){
 		Service service = new Service();
 		NotificationVO notification = null;
@@ -199,7 +199,7 @@ public class NotificationManagementController {
 		}
 		return service;
 	}
-	@RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}/{notificationId}/updateNotification", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service setNotificationFlag(@PathVariable("applicationId") String applicationId,
 			@PathVariable("notificationId") String notificationId){
 		Service service = new Service();
@@ -227,7 +227,7 @@ public class NotificationManagementController {
 		}
 		return service;	
 	}
-	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}/getNotificationHistory", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getNotificationHistory(@PathVariable("applicationId") String applicationId,
 			@RequestParam(value = "from") String from,
 			@RequestParam(value = "to") String to,

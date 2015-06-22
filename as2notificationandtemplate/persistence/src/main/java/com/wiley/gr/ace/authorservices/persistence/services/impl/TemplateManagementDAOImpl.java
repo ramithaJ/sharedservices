@@ -70,7 +70,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 			session.getTransaction().commit();
 			return true;
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return false;
 		} finally {
 			if (session != null) {
@@ -108,12 +108,13 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	 */
 
 	@Override
-	public boolean deleteTemplate(String templateId) {
+	public boolean deleteTemplate(String applicationId, String templateId) {
 		Session session = null;
 		boolean deleteStatus = false;
 		if (!StringUtils.isEmpty(templateId)) {
 			Template template = new Template();
 			template.setId(templateId);
+			template.setAppId(applicationId);
 			try {
 				session = getSessionFactory().openSession();
 				Transaction txn = session.beginTransaction();

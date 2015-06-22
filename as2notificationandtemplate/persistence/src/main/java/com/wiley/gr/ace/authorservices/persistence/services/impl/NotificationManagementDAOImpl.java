@@ -23,15 +23,14 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		Schedule schedule = null;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(applicationId)) {
-			try{
+			try {
 				session = getSessionFactory().openSession();
-			String hql = "from Schedule s where s.appId = :applicationId and s.id = :scheduleId";
-			schedule = (Schedule) session.createQuery(hql)
-					.setString("applicationId", applicationId)
-					.setString("scheduleId", scheduleId).list().get(0);
-			}
-			finally{
-				if(!StringUtils.isEmpty(session)){
+				String hql = "from Schedule s where s.appId = :applicationId and s.id = :scheduleId";
+				schedule = (Schedule) session.createQuery(hql)
+						.setString("applicationId", applicationId)
+						.setString("scheduleId", scheduleId).list().get(0);
+			} finally {
+				if (!StringUtils.isEmpty(session)) {
 					session.flush();
 					session.close();
 				}
@@ -41,8 +40,9 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	}
 
 	@Override
-	public boolean saveOrUpdateSchedule(Schedule schedule,ScheduleTemplate scheduleTemplate) throws Exception {
-			Session session = null;
+	public boolean saveOrUpdateSchedule(Schedule schedule,
+			ScheduleTemplate scheduleTemplate) throws Exception {
+		Session session = null;
 		try {
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
@@ -70,18 +70,26 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		Session session = null;
 		boolean isDeleted = false;
 		Schedule schedule = new Schedule();
+		ScheduleTemplate scheduleTemplate = new ScheduleTemplate();
+		scheduleTemplate.setScheduleId(scheduleId);
 		schedule.setId(scheduleId);
 		schedule.setAppId(applicationId);
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(applicationId)) {
 			try {
 				session = getSessionFactory().openSession();
-				session.beginTransaction(); 
+				session.beginTransaction();
+				session.delete(scheduleTemplate);
 				session.delete(schedule);
 				session.getTransaction().commit();
 				isDeleted = true;
 			} catch (Exception e) {
 				isDeleted = false;
+			} finally {
+				if (session != null) {
+					session.flush();
+					session.close();
+				}
 			}
 		}
 		return isDeleted;
@@ -94,33 +102,36 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		List<Schedule> scheduleList = null;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(templateId)
-				&& ("onscreen".equalsIgnoreCase(type)||"email".equalsIgnoreCase(type))) {
-			try{
-			session = getSessionFactory().openSession();
-			String hql="from Schedule s where s.appId = :applicationId";
-			scheduleList = session.createQuery(hql).setString("applicationId", applicationId).list();
-			for(Schedule s : scheduleList){
-				hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
-				ScheduleTemplate scheduleTemplate = 
-						(ScheduleTemplate) session.createQuery(hql).setString("scheduleId", s.getId()).list().get(0);
-				Template template=null;
-				if("onscreen".equalsIgnoreCase(type)){
-					template = scheduleTemplate.getTemplateByOnscreenTmpl();
-					if(!templateId.equalsIgnoreCase(template.getId()))
-						scheduleList.remove(s);
+				&& ("onscreen".equalsIgnoreCase(type) || "email"
+						.equalsIgnoreCase(type))) {
+			try {
+				session = getSessionFactory().openSession();
+				String hql = "from Schedule s where s.appId = :applicationId";
+				scheduleList = session.createQuery(hql)
+						.setString("applicationId", applicationId).list();
+				for (Schedule s : scheduleList) {
+					hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
+					ScheduleTemplate scheduleTemplate = (ScheduleTemplate) session
+							.createQuery(hql)
+							.setString("scheduleId", s.getId()).list().get(0);
+					Template template = null;
+					if ("onscreen".equalsIgnoreCase(type)) {
+						template = scheduleTemplate.getTemplateByOnscreenTmpl();
+						if (!templateId.equalsIgnoreCase(template.getId()))
+							scheduleList.remove(s);
+					} else if ("email".equalsIgnoreCase(type)) {
+						template = scheduleTemplate.getTemplateByOnscreenTmpl();
+						if (!templateId.equalsIgnoreCase(template.getId()))
+							scheduleList.remove(s);
+					}
 				}
-				else if("email".equalsIgnoreCase(type)){
-					template = scheduleTemplate.getTemplateByOnscreenTmpl();
-					if(!templateId.equalsIgnoreCase(template.getId()))
-						scheduleList.remove(s);
-				}	
+			} catch (Exception e) {
+				scheduleList = null;
 			}
-			}catch(Exception e){
-				scheduleList=null;
-			}
-			}
+		}
 		return scheduleList;
 	}
+
 	@Override
 	public Template getTemplate(String templateId) throws Exception {
 
@@ -148,10 +159,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	public Notification getNotification(String applicationId,
 			String notificationId) throws Exception {
 		Notification notification = null;
-		if(!StringUtils.isEmpty(applicationId)&&!StringUtils.isEmpty(notificationId)){
+		if (!StringUtils.isEmpty(applicationId)
+				&& !StringUtils.isEmpty(notificationId)) {
 			Session session = getSessionFactory().openSession();
 			String hql = "from Notification n where n.id = :notificationId and n.appId = :applicationId";
-			notification = (Notification) session.createQuery(hql).setString("notificationId", notificationId)
+			notification = (Notification) session.createQuery(hql)
+					.setString("notificationId", notificationId)
 					.setString("applicationId", applicationId).list().get(0);
 		}
 		return notification;
@@ -161,20 +174,22 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	public boolean setNotificationFlag(String applicationId,
 			String notificationId) throws Exception {
 		boolean isSet = false;
-		if(!StringUtils.isEmpty(applicationId)&&!StringUtils.isEmpty(notificationId)){
-			Notification notification = getNotification(applicationId, notificationId);
-			if(notification.getUnread().equals('y')){
-				try{
+		if (!StringUtils.isEmpty(applicationId)
+				&& !StringUtils.isEmpty(notificationId)) {
+			Notification notification = getNotification(applicationId,
+					notificationId);
+			if (notification.getUnread().equals('y')) {
+				try {
 					Session session = getSessionFactory().openSession();
 					session.beginTransaction();
-				notification.setUnread('n');
-				session.save(notification);
-				session.getTransaction().commit();
-				isSet = true;
-			}catch(Exception e){
-				isSet = false;
-			}
+					notification.setUnread('n');
+					session.save(notification);
+					session.getTransaction().commit();
+					isSet = true;
+				} catch (Exception e) {
+					isSet = false;
 				}
+			}
 		}
 		return isSet;
 	}
@@ -184,20 +199,20 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			throws Exception {
 		List<Notification> notificationList = null;
 		Session session = null;
-		if(!StringUtils.isEmpty(applicationId)){
-			try{
+		if (!StringUtils.isEmpty(applicationId)) {
+			try {
 				session = getSessionFactory().openSession();
 				String hql = "from Notification n where n.appId = :applicationId";
-				notificationList = session.createQuery(hql).setString("applicationId",applicationId).list();
-				
-			}
-			finally{
-				if(!StringUtils.isEmpty(session)){
-				session.flush();
-				session.close();
+				notificationList = session.createQuery(hql)
+						.setString("applicationId", applicationId).list();
+
+			} finally {
+				if (!StringUtils.isEmpty(session)) {
+					session.flush();
+					session.close();
+				}
 			}
 		}
-	}
 		return notificationList;
 	}
 
@@ -205,10 +220,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	public NotificationRecipients getNotificationRecipients(
 			String notificationId) throws Exception {
 		NotificationRecipients notificationRecipients = null;
-		if(!StringUtils.isEmpty(notificationId)){
+		if (!StringUtils.isEmpty(notificationId)) {
 			Session session = getSessionFactory().openSession();
 			String hql = "from NotificationRecepients nr where nr.notificationId = :notificationId";
-			notificationRecipients = (NotificationRecipients) session.createQuery(hql).setString("notificationId", notificationId).list().get(0);
+			notificationRecipients = (NotificationRecipients) session
+					.createQuery(hql)
+					.setString("notificationId", notificationId).list().get(0);
 		}
 		return notificationRecipients;
 	}

@@ -60,34 +60,33 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public TemplateVO getTemplate(String templateId, String applicationId)
 			throws IOException, SQLException {
-		if(!StringUtils.isEmpty(templateId)&&!StringUtils.isEmpty(applicationId)){
+		if (!StringUtils.isEmpty(templateId)
+				&& !StringUtils.isEmpty(applicationId)) {
 
-		return getTemplateVO(templateManagementDAO.getTemplate(templateId,
-				applicationId));
-		}
-		else
+			return getTemplateVO(templateManagementDAO.getTemplate(templateId,
+					applicationId));
+		} else
 			return null;
 
 	}
 
 	@Override
 	public boolean insertTemplate(TemplateVO template) throws Exception {
-		if(!StringUtils.isEmpty(template)){
-		Template templateEntity = new Template();
-		templateEntity.setAppId(template.getAppId());
-		templateEntity
-				.setBody(new SerialClob(template.getBody().toCharArray()));
-		templateEntity.setCreatedBy(template.getCreatedBy());
-		templateEntity.setCreatedOn(template.getCreatedOn());
-		templateEntity.setDescription(template.getDescription());
-		templateEntity.setId(template.getId());
-		templateEntity.setLastModifiedOn(template.getLastModifiedOn());
-		templateEntity.setModifiedBy(template.getModifiedBy());
-		templateEntity.setTagl1(template.getTagl1());
-		templateEntity.setTagl2(template.getTagl2());
-		return templateManagementDAO.saveOrUpdateTemplate(templateEntity);
-		}
-		else 
+		if (!StringUtils.isEmpty(template)) {
+			Template templateEntity = new Template();
+			templateEntity.setAppId(template.getAppId());
+			templateEntity.setBody(new SerialClob(template.getBody()
+					.toCharArray()));
+			templateEntity.setCreatedBy(template.getCreatedBy());
+			templateEntity.setCreatedOn(template.getCreatedOn());
+			templateEntity.setDescription(template.getDescription());
+			templateEntity.setId(template.getId());
+			templateEntity.setLastModifiedOn(template.getLastModifiedOn());
+			templateEntity.setModifiedBy(template.getModifiedBy());
+			templateEntity.setTagl1(template.getTagl1());
+			templateEntity.setTagl2(template.getTagl2());
+			return templateManagementDAO.saveOrUpdateTemplate(templateEntity);
+		} else
 			return false;
 	}
 
@@ -120,8 +119,8 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 
 	@Override
-	public boolean deleteTemplate(String templateId) {
-		return templateManagementDAO.deleteTemplate(templateId);
+	public boolean deleteTemplate(String applicationId, String templateId) {
+		return templateManagementDAO.deleteTemplate(applicationId, templateId);
 	}
 
 	@Override
@@ -152,30 +151,31 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public TemplateVO renderTemplate(String applicationId, String templateId,
 			TemplateDetails templateDetails) throws Exception {
-		if(!StringUtils.isEmpty(templateId)&&!StringUtils.isEmpty(applicationId)){
-		Template templateEntity = null;
-		templateEntity = templateManagementDAO.getTemplate(templateId,
-				applicationId);
-		TemplateVO template = getTemplateVO(templateManagementDAO.getTemplate(
-				templateId, applicationId));
+		if (!StringUtils.isEmpty(templateId)
+				&& !StringUtils.isEmpty(applicationId)) {
+			Template templateEntity = null;
+			templateEntity = templateManagementDAO.getTemplate(templateId,
+					applicationId);
+			TemplateVO template = getTemplateVO(templateManagementDAO
+					.getTemplate(templateId, applicationId));
 
-		VelocityContext vCtx = new VelocityContext();
+			VelocityContext vCtx = new VelocityContext();
 
-		for (int i = 0; i < templateDetails.getFieldList().size(); i++) {
-			String tempFieldIdentifier = "field" + String.valueOf(i);
-			vCtx.put(tempFieldIdentifier, templateDetails.getFieldList().get(i));
-		}
+			for (int i = 0; i < templateDetails.getFieldList().size(); i++) {
+				String tempFieldIdentifier = "field" + String.valueOf(i);
+				vCtx.put(tempFieldIdentifier, templateDetails.getFieldList()
+						.get(i));
+			}
 
-		StringWriter sw = new StringWriter();
-		String templateStr = clobStringConversion(templateEntity.getBody());
+			StringWriter sw = new StringWriter();
+			String templateStr = clobStringConversion(templateEntity.getBody());
 
-		Velocity.evaluate(vCtx, sw, "template", templateStr);
+			Velocity.evaluate(vCtx, sw, "template", templateStr);
 
-		template.setBody(sw.toString());
+			template.setBody(sw.toString());
 
-		return template;
-		}
-		else 
+			return template;
+		} else
 			return null;
 	}
 
