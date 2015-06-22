@@ -291,7 +291,7 @@ public class NotificationManagementController {
 		} catch (Exception e) {
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
-			err.setCode(304);
+			err.setCode(317);
 			err.setMessage("Mail sending failed");
 			service.setError(err);
 		}
@@ -308,12 +308,16 @@ public class NotificationManagementController {
 
 				notificationManagementService.resendEmailNotification(
 						applicationId, notificationId);
-			
+			service.setStatus("SUCCESS");
 		} catch (Exception e) {
-			e.printStackTrace();
+			service.setStatus("ERROR");
+			ErrorPOJO err = new ErrorPOJO();
+			err.setCode(318);
+			err.setMessage("Mail sending failed");
+			service.setError(err);
 		}
 
-		return null;
+		return service;
 	}
 
 
