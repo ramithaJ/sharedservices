@@ -59,7 +59,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId) {
@@ -119,7 +119,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.POST)
 	public @ResponseBody Service updateTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,
@@ -150,7 +150,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}/delete", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.DELETE)
 	public @ResponseBody Service deleteTemplateId(
 			@PathVariable("templateId") String applicationId,
 			@PathVariable("templateId") String templateId) {
@@ -181,7 +181,7 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service searchTemplate(
 			@PathVariable("applicationId") String applicationId,
 			@RequestParam(value = "tagL1") String tagL1,
