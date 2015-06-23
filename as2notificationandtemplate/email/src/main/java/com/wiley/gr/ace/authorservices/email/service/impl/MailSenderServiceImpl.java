@@ -23,7 +23,6 @@ public class MailSenderServiceImpl implements MailSenderService {
 		 MimeMessage message = mailSender.createMimeMessage();
 		 
 		 MimeMessageHelper mailMsg = new MimeMessageHelper(message);
-		 
 		 mailMsg.setFrom(from);
 		 mailMsg.setTo(to);
 		 mailMsg.setSubject(subject);

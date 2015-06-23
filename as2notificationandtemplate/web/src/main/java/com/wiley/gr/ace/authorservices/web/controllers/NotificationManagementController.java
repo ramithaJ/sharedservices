@@ -30,7 +30,8 @@ public class NotificationManagementController {
 	public @ResponseBody Service getSchedule(
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("scheduleId") final String scheduleId) {
-		final Service service = new Service();
+		System.err.println("--------------------------");
+		Service service = new Service();
 		ScheduleObj schedule = null;
 		try {
 			schedule = notificationManagementService.getSchedule(applicationId,
@@ -59,7 +60,7 @@ public class NotificationManagementController {
 	public @ResponseBody Service deleteSchedule(
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("scheduleId") final String scheduleId) {
-		final Service service = new Service();
+		Service service = new Service();
 		boolean isDeleted = false;
 		try {
 			isDeleted = notificationManagementService.deleteSchedule(
@@ -91,7 +92,7 @@ public class NotificationManagementController {
 			@PathVariable("scheduleId") final String scheduleId,
 			@PathVariable("applicationId") final String applicationId,
 			@RequestBody final ScheduleObj scheduleObj) {
-		final Service service = new Service();
+		Service service = new Service();
 		boolean isUpdated = false;
 		try {
 			isUpdated = notificationManagementService.updateSchedule(
@@ -120,7 +121,7 @@ public class NotificationManagementController {
 	@RequestMapping(value = "schedule/create", method = RequestMethod.PUT)
 	public @ResponseBody Service createSchedule(
 			@RequestBody final ScheduleObj schedule) {
-		final Service service = new Service();
+		Service service = new Service();
 		boolean isCreated = false;
 		try {
 			isCreated = notificationManagementService.insertSchedule(schedule);
@@ -152,7 +153,7 @@ public class NotificationManagementController {
 			@PathVariable final String applicationId,
 			@PathVariable final String templateId,
 			@RequestParam(value = "type") final String type) {
-		final Service service = new Service();
+		Service service = new Service();
 		try {
 			final List<ScheduleObj> scheduleList = notificationManagementService
 					.templateLookup(applicationId, templateId, type);
@@ -183,7 +184,7 @@ public class NotificationManagementController {
 	public @ResponseBody Service getNotification(
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("notificationId") final String notificationId) {
-		final Service service = new Service();
+		Service service = new Service();
 		NotificationObj notification = null;
 		try {
 			notification = notificationManagementService.getNotification(
@@ -212,7 +213,7 @@ public class NotificationManagementController {
 	public @ResponseBody Service setNotificationFlag(
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("notificationId") final String notificationId) {
-		final Service service = new Service();
+		Service service = new Service();
 		boolean isSet = false;
 		try {
 			isSet = notificationManagementService.setNotificationFlag(
@@ -248,7 +249,7 @@ public class NotificationManagementController {
 			@RequestParam(value = "offset") final String offset,
 			@RequestParam(value = "limit") final String limit,
 			@RequestParam(value = "unreadFlag") final String unreadFlag) {
-		final Service service = new Service();
+		Service service = new Service();
 		List<NotificationObj> notificationHistory = null;
 		try {
 			notificationHistory = notificationManagementService
@@ -280,8 +281,7 @@ public class NotificationManagementController {
 			@RequestParam("tmpl") final String templateId,
 			@RequestParam("type") final String templateType,
 			@RequestBody final NotificationDetails notificationDetails) {
-
-		final Service service = new Service();
+		Service service = new Service();
 		try {
 			if ("email".equalsIgnoreCase(templateType)) {
 				notificationManagementService.sendEmailNotification(
@@ -303,7 +303,7 @@ public class NotificationManagementController {
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("notificationId") final String notificationId) {
 
-		final Service service = new Service();
+		Service service = new Service();
 		try {
 
 				notificationManagementService.resendEmailNotification(

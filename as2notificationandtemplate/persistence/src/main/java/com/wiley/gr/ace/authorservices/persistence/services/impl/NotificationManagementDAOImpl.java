@@ -176,7 +176,8 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				&& !StringUtils.isEmpty(notificationId)) {
 			Notification notification = getNotification(applicationId,
 					notificationId);
-			if (notification.getUnread().equals('y')) {
+			String unread = notification.getUnread().toString();
+			if (unread.equalsIgnoreCase("y")) {
 				try {
 					Session session = getSessionFactory().openSession();
 					session.beginTransaction();
