@@ -13,8 +13,8 @@
 	<modelVersion>4.0.0</modelVersion>
 <parent>
         <groupId>com.wiley.gr.ace</groupId>
-        <artifactId>notification-template</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <artifactId>as2-notification-template</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
 </parent>
 
 	<artifactId>notification-model</artifactId>

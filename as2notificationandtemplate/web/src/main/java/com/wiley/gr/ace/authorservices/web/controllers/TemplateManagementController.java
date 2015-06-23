@@ -151,7 +151,7 @@ public class TemplateManagementController {
 	}
 
 	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.DELETE)
-	public @ResponseBody Service deleteTemplateId(
+	public @ResponseBody Service deleteTemplate(
 			@PathVariable("templateId") String applicationId,
 			@PathVariable("templateId") String templateId) {
 		Service service = new Service();
