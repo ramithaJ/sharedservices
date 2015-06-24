@@ -19,41 +19,27 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 /**
- * @author kpshiva
+ * @author Virtusa
  *
  */
 public class UserLoginDAOImpl implements UserLoginDAO {
-	
-	
-	
-	@Override
-	public LockedAccountDetails userAccountDetails(String userId) {
 
-		Session session = null;
-		LockedAccountDetails lockedAccountDetails = null;
-		try{
-			session = HibernateConnection.getSessionFactory().openSession();
-			lockedAccountDetails = (LockedAccountDetails) session.get(LockedAccountDetails.class, userId);
-		}finally{
-			if (session != null) {
-                session.flush();
-                session.close();
-            }
-		}
-		return lockedAccountDetails;
-	}	
-	
-	
-
+	/**
+	 * This method inserts the user
+	 *
+	 * @param userId
+	 * @param appKey
+	 * @return boolean
+	 */
 	@Override
-	public boolean insertUser(String userId, String appKey) {
-		
+	public boolean insertUser(final String userId, final String appKey) {
+
 		Session session = null;
 		Transaction transaction = null;
-		LockedAccountDetails lockedAccountDetails = new LockedAccountDetails();
-		try{
+		final LockedAccountDetails lockedAccountDetails = new LockedAccountDetails();
+		try {
 			session = HibernateConnection.getSessionFactory().openSession();
-			transaction =session.beginTransaction();
+			transaction = session.beginTransaction();
 			lockedAccountDetails.setUserId(userId);
 			lockedAccountDetails.setAppKey(appKey);
 			lockedAccountDetails.setInvalidLoginCount(1);
@@ -61,84 +47,127 @@ public class UserLoginDAOImpl implements UserLoginDAO {
 			lockedAccountDetails.setCreatedDate(new Date());
 			session.save(lockedAccountDetails);
 			transaction.commit();
-		}finally{
+		} finally {
 			if (session != null) {
-                session.flush();
-                session.close();
-            }
+				session.flush();
+				session.close();
+			}
 		}
+
 		return true;
-		
 	}
 
-
+	/**
+	 * This method removes the user
+	 *
+	 * @param userId
+	 * @return boolean
+	 */
 	@Override
-	public boolean removeUser(String userId) {
+	public boolean removeUser(final String userId) {
 
 		Session session = null;
 		Transaction transaction = null;
-		try{
+		try {
 			session = HibernateConnection.getSessionFactory().openSession();
-			transaction =session.beginTransaction();
-			LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session.get(LockedAccountDetails.class, userId);
+			transaction = session.beginTransaction();
+			final LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session
+					.get(LockedAccountDetails.class, userId);
 			session.delete(lockedAccountDetails);
 			transaction.commit();
-		}finally{
+		} finally {
 			if (session != null) {
-                session.flush();
-                session.close();
-            }
+				session.flush();
+				session.close();
+			}
 		}
+
 		return true;
 	}
 
-
+	/**
+	 * This method updates the time stamp
+	 *
+	 * @param userId
+	 * @return boolean
+	 */
 	@Override
-	public boolean updateUser(String userId) {
+	public boolean updateTimeStamp(final String userId) {
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = HibernateConnection.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+			final LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session
+					.get(LockedAccountDetails.class, userId);
+			lockedAccountDetails.setLockedTime(new Date());
+			lockedAccountDetails.setUpdatedDate(new Date());
+			session.update(lockedAccountDetails);
+			transaction.commit();
+		} finally {
+			if (session != null) {
+				session.flush();
+				session.close();
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * This method update the user
+	 *
+	 * @param userId
+	 * @return boolean
+	 */
+	@Override
+	public boolean updateUser(final String userId) {
 
 		Session session = null;
 		Transaction transaction = null;
-		try{
+		try {
 			session = HibernateConnection.getSessionFactory().openSession();
-			transaction =session.beginTransaction();
-			LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session.get(LockedAccountDetails.class, userId);
+			transaction = session.beginTransaction();
+			final LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session
+					.get(LockedAccountDetails.class, userId);
 			int count = lockedAccountDetails.getInvalidLoginCount();
 			lockedAccountDetails.setInvalidLoginCount(++count);
 			lockedAccountDetails.setLoginAttemptTime(new Date());
 			lockedAccountDetails.setUpdatedDate(new Date());
 			session.update(lockedAccountDetails);
 			transaction.commit();
-		}finally{
+		} finally {
 			if (session != null) {
-                session.flush();
-                session.close();
-            }
+				session.flush();
+				session.close();
+			}
 		}
+
 		return true;
 	}
 
-
-
+	/**
+	 * This method returns the user account details
+	 *
+	 * @param userId
+	 * @return LockedAccountDetails
+	 */
 	@Override
-	public boolean updateTimeStamp(String userId) {
+	public LockedAccountDetails userAccountDetails(final String userId) {
 
 		Session session = null;
-		Transaction transaction = null;
-		try{
+		LockedAccountDetails lockedAccountDetails = null;
+		try {
 			session = HibernateConnection.getSessionFactory().openSession();
-			transaction =session.beginTransaction();
-			LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session.get(LockedAccountDetails.class, userId);
-			lockedAccountDetails.setLockedTime(new Date());
-			lockedAccountDetails.setUpdatedDate(new Date());
-			session.update(lockedAccountDetails);
-			transaction.commit();
-		}finally{
+			lockedAccountDetails = (LockedAccountDetails) session.get(
+					LockedAccountDetails.class, userId);
+		} finally {
 			if (session != null) {
-                session.flush();
-                session.close();
-            }
+				session.flush();
+				session.close();
+			}
 		}
-		return true;
-	}
 
+		return lockedAccountDetails;
+	}
 }

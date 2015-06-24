@@ -11,20 +11,52 @@
  *******************************************************************************/
 package com.wiley.gr.ace.auth.security.service;
 
-import com.wiley.gr.ace.auth.security.model.TokenRequest;
+import java.io.IOException;
+
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.lang.JoseException;
 
-import java.io.IOException;
+import com.wiley.gr.ace.auth.security.model.TokenRequest;
 
 /**
- * Created by kkalyan on 5/18/2015.
+ * @author Virtusa
+ *
  */
 public interface TokenService {
 
-    String generateToken(TokenRequest tokenRequest) throws JoseException;
+	/**
+	 * This method generates the Token
+	 *
+	 * @param tokenRequest
+	 * @return String
+	 * @throws JoseException
+	 *             String
+	 */
+	String generateToken(TokenRequest tokenRequest) throws JoseException;
 
-    boolean validateToken(String token) throws InvalidJwtException, JoseException, IOException;
+	/**
+	 * This method refresh the Token
+	 *
+	 * @param token
+	 * @return String
+	 * @throws IOException
+	 * @throws JoseException
+	 * @throws InvalidJwtException
+	 *             String
+	 */
+	String refreshToken(String token) throws IOException, JoseException,
+			InvalidJwtException;
 
-    String refreshToken(String token) throws IOException, JoseException, InvalidJwtException;
+	/**
+	 * This method validates the Token
+	 *
+	 * @param token
+	 * @return boolean
+	 * @throws InvalidJwtException
+	 * @throws JoseException
+	 * @throws IOException
+	 *             boolean
+	 */
+	boolean validateToken(String token) throws InvalidJwtException,
+			JoseException, IOException;
 }

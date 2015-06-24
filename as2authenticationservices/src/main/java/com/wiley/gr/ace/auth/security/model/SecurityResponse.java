@@ -13,17 +13,32 @@
  */
 package com.wiley.gr.ace.auth.security.model;
 
+/**
+ * @author Virtusa
+ *
+ */
 public class SecurityResponse {
 
+	/**
+	 * This field holds the value of status
+	 */
 	private String status;
 
+	/**
+	 * This method gets Status
+	 *
+	 * @return String
+	 */
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
-	public void setStatus(String status) {
+	/**
+	 * This method sets Status
+	 *
+	 * @param status
+	 */
+	public void setStatus(final String status) {
 		this.status = status;
 	}
-	
-	
 }

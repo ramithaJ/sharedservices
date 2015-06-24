@@ -20,17 +20,45 @@ import com.wiley.gr.ace.auth.security.model.Response;
 import com.wiley.gr.ace.auth.security.model.User;
 
 /**
- * Created by sripads on 5/16/2015.
+ * @author Virtusa
+ *
  */
 @Service(value = "authenticationService")
 public interface AuthenticationService {
 
-    Response authenticate(String username, String password, String authenticationType, String appKey);
+	/**
+	 * This method authenticates the user
+	 *
+	 * @param username
+	 * @param password
+	 * @param authenticationType
+	 * @param appKey
+	 * @return Response
+	 */
+	Response authenticate(String username, String password,
+			String authenticationType, String appKey);
 
-    List<String> getRoles(String userId);
-    
-    Response userLogin(AuthenticateRequest request);
-    
-    <T> User searchUser(String userId);
-    
+	/**
+	 * This method gets the list of Roles
+	 *
+	 * @param userId
+	 * @return List<String>
+	 */
+	List<String> getRoles(String userId);
+
+	/**
+	 * This method searchs User
+	 *
+	 * @param userId
+	 * @return User
+	 */
+	<T> User searchUser(String userId);
+
+	/**
+	 * This method checks user Login
+	 *
+	 * @param request
+	 * @return Response
+	 */
+	Response userLogin(AuthenticateRequest request);
 }
