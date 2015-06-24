@@ -18,6 +18,7 @@ import com.wiley.gr.ace.sharedservices.payload.*;
 import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.persistence.entity.Address;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -59,7 +60,7 @@ public class UserServiceHelper {
      * @param authorProfile      Entity Object
      * @return authorProfile entity
      */
-    public static AuthorProfile setAuthorProfile(UserServiceRequest userServiceRequest, AuthorProfile authorProfile) {
+    public static UserProfile setAuthorProfile(UserServiceRequest userServiceRequest, UserProfile authorProfile) {
 
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd())) {
             authorProfile.setTitleCd(userServiceRequest.getUserProfile().getTitleCd());
@@ -222,12 +223,7 @@ public class UserServiceHelper {
      * @return userSocietyDetails entity object
      */
     public static UserSocietyDetails setUserSocietyDetails(UserSocietyDetails userSocietyDetails, Society society) {
-        if (!StringUtils.isEmpty(society.getSocietyCd())) {
-            userSocietyDetails.setSocietyCd(society.getSocietyCd());
-        }
-        if (!StringUtils.isEmpty(society.getSocietyName())) {
-            userSocietyDetails.setSocietyName(society.getSocietyName());
-        }
+
         if (!StringUtils.isEmpty(society.getMembershipNumber())) {
             userSocietyDetails.setMembershipNo(society.getMembershipNumber());
         }
@@ -359,18 +355,18 @@ public class UserServiceHelper {
     }
 
     /**
-     * Method to set ProfileAttributeList
+     * Method to set User Profile Attributes.
      *
      * @param profileAttributeList
-     * @param profileVisible
+     * @param authorProfile
+     * @param userProfileAttribVisible
      * @return
      */
-    public static ProfileAttributeList setProfileAttributeList(ProfileAttributeList profileAttributeList, ProfileVisible profileVisible) {
-        profileAttributeList.setProfileAttribCd(profileVisible.getTitleCd());
-        profileAttributeList.setDisplayName(profileVisible.getTitleValue());
-
-        profileAttributeList.setUpdatedDate(getDate());
-        return profileAttributeList;
+    public static UserProfileAttribVisible setProfileAttributeList(ProfileAttributeList profileAttributeList, UserProfile authorProfile, UserProfileAttribVisible userProfileAttribVisible) {
+        userProfileAttribVisible.setProfileAttributeList(profileAttributeList);
+        userProfileAttribVisible.setUserProfile(authorProfile);
+        userProfileAttribVisible.setUpdatedDate(getDate());
+        return userProfileAttribVisible;
     }
 
     /**
@@ -423,49 +419,49 @@ public class UserServiceHelper {
      * @param user
      * @return
      */
-    public static UserProfile getUserProfileInfo(Users user) {
-        UserProfile userProfile = new UserProfile();
-        if (null != user.getAuthorProfileByUserId()) {
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getTitleCd())) {
-                userProfile.setTitleCd(user.getAuthorProfileByUserId().getTitleCd());
+    public static com.wiley.gr.ace.sharedservices.profile.UserProfile getUserProfileInfo(Users user) {
+        com.wiley.gr.ace.sharedservices.profile.UserProfile userProfile = new com.wiley.gr.ace.sharedservices.profile.UserProfile();
+        if (null != user.getUserProfileByUserId()) {
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getTitleCd())) {
+                userProfile.setTitleCd(user.getUserProfileByUserId().getTitleCd());
             }
             if (!StringUtils.isEmpty(user.getFirstName())) {
                 userProfile.setFirstName(user.getFirstName());
             }
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getMiddleName())) {
-                userProfile.setMiddleName(user.getAuthorProfileByUserId().getMiddleName());
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getMiddleName())) {
+                userProfile.setMiddleName(user.getUserProfileByUserId().getMiddleName());
             }
             if (!StringUtils.isEmpty(user.getLastName())) {
                 userProfile.setLastName(user.getLastName());
             }
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getSuffixCd())) {
-                userProfile.setSuffixCd(user.getAuthorProfileByUserId().getSuffixCd());
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getSuffixCd())) {
+                userProfile.setSuffixCd(user.getUserProfileByUserId().getSuffixCd());
             }
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getAlternativeName())) {
-                userProfile.setAlternativeName(user.getAuthorProfileByUserId().getAlternativeName());
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getAlternativeName())) {
+                userProfile.setAlternativeName(user.getUserProfileByUserId().getAlternativeName());
             }
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getIndustryCd())) {
-                userProfile.setIndustryCd(user.getAuthorProfileByUserId().getIndustryCd());
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getIndustryCd())) {
+                userProfile.setIndustryCd(user.getUserProfileByUserId().getIndustryCd());
             }
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getJobCategoryCd())) {
-                userProfile.setJobCategoryCd(user.getAuthorProfileByUserId().getJobCategoryCd());
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getJobCategoryCd())) {
+                userProfile.setJobCategoryCd(user.getUserProfileByUserId().getJobCategoryCd());
             }
 
-            Set<UserReferenceData> userReferenceDatas = user.getUserReferenceDatasForUserId();
-            for (UserReferenceData userReferenceData : userReferenceDatas) {
+            UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
+            if (!StringUtils.isEmpty(userReferenceData.getOrcidId())) {
                 userProfile.setOrcidId(userReferenceData.getOrcidId());
             }
-            if (!StringUtils.isEmpty(user.getAuthorProfileByUserId().getOptInPromoteFlg())) {
-                userProfile.setRecieveEmailsFlag(user.getAuthorProfileByUserId().getOptInPromoteFlg());
+            if (!StringUtils.isEmpty(user.getUserProfileByUserId().getOptInPromoteFlg())) {
+                userProfile.setRecieveEmailsFlag(user.getUserProfileByUserId().getOptInPromoteFlg());
             }
-            if (user.getAuthorProfileByUserId().getProfileVisibleFlg() != null) {
-                userProfile.setProfileVisibleFlag(user.getAuthorProfileByUserId().getProfileVisibleFlg());
+            if (user.getUserProfileByUserId().getProfileVisibleFlg() != null) {
+                userProfile.setProfileVisibleFlag(user.getUserProfileByUserId().getProfileVisibleFlg());
             }
             if (!StringUtils.isEmpty(user.getPrimaryEmailAddr())) {
                 userProfile.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
             }
-            if (null != user.getAuthorProfileByUserId() && null != user.getAuthorProfileByUserId().getUserSecondaryEmailAddr()) {
-                userProfile.setRecoveryEmailAddress(user.getAuthorProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            if (null != user.getUserProfileByUserId() && null != user.getUserProfileByUserId().getUserSecondaryEmailAddr()) {
+                userProfile.setRecoveryEmailAddress(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
             }
         }
         return userProfile;
@@ -594,11 +590,11 @@ public class UserServiceHelper {
      */
     public static Society getSociety(UserSocietyDetails userSocietyDetails) {
         Society society = new Society();
-        if (null != userSocietyDetails.getSocietyId() && userSocietyDetails.getSocietyId() > 0) {
-            society.setId("" + userSocietyDetails.getSocietyId());
+        if (null != userSocietyDetails.getSocieties().getSocietyId() && userSocietyDetails.getSocieties().getSocietyId() > 0) {
+            society.setId("" + userSocietyDetails.getSocieties().getSocietyId());
         }
-        if (!StringUtils.isEmpty(userSocietyDetails.getSocietyName())) {
-            society.setMembershipNumber(userSocietyDetails.getSocietyName());
+        if (!StringUtils.isEmpty(userSocietyDetails.getSocieties().getSocietyName())) {
+            society.setMembershipNumber(userSocietyDetails.getSocieties().getSocietyName());
         }
         if (!StringUtils.isEmpty(userSocietyDetails.getMembershipNo())) {
             society.setMembershipNumber(userSocietyDetails.getMembershipNo());
@@ -606,8 +602,8 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(userSocietyDetails.getPromoCode())) {
             society.setPromotionCode(userSocietyDetails.getPromoCode());
         }
-        if (!StringUtils.isEmpty(userSocietyDetails.getSocietyCd())) {
-            society.setSocietyCd(userSocietyDetails.getSocietyCd());
+        if (!StringUtils.isEmpty(userSocietyDetails.getSocieties().getSocietyCd())) {
+            society.setSocietyCd(userSocietyDetails.getSocieties().getSocietyCd());
         }
         if (null != userSocietyDetails.getStartDt()) {
             society.setFromDate("" + userSocietyDetails.getStartDt());
@@ -638,6 +634,7 @@ public class UserServiceHelper {
 
     /**
      * Get PreferredJournals
+     *
      * @param journal
      * @return
      */
@@ -651,6 +648,7 @@ public class UserServiceHelper {
 
     /**
      * Get Alerts
+     *
      * @param userAlert
      * @return
      */

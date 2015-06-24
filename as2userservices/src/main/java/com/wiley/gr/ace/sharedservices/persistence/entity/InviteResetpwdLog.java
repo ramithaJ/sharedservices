@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
-
-// Generated May 27, 2015 4:45:01 PM by Hibernate Tools 3.4.0.CR1
+// default package
+// Generated Jun 23, 2015 4:17:36 PM by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +20,7 @@ public class InviteResetpwdLog implements java.io.Serializable {
 	private String emailAddress;
 	private String userType;
 	private String status;
+	private String type;
 
 	public InviteResetpwdLog() {
 	}
@@ -30,13 +31,14 @@ public class InviteResetpwdLog implements java.io.Serializable {
 	}
 
 	public InviteResetpwdLog(String guid, String firstName, String lastName,
-			String emailAddress, String userType, String status) {
+			String emailAddress, String userType, String status, String type) {
 		this.guid = guid;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 		this.userType = userType;
 		this.status = status;
+		this.type = type;
 	}
 
 	@Id
@@ -49,7 +51,7 @@ public class InviteResetpwdLog implements java.io.Serializable {
 		this.guid = guid;
 	}
 
-	@Column(name = "FIRST_NAME", length = 200)
+	@Column(name = "FIRST_NAME", length = 100)
 	public String getFirstName() {
 		return this.firstName;
 	}
@@ -58,7 +60,7 @@ public class InviteResetpwdLog implements java.io.Serializable {
 		this.firstName = firstName;
 	}
 
-	@Column(name = "LAST_NAME", length = 200)
+	@Column(name = "LAST_NAME", length = 100)
 	public String getLastName() {
 		return this.lastName;
 	}
@@ -67,7 +69,7 @@ public class InviteResetpwdLog implements java.io.Serializable {
 		this.lastName = lastName;
 	}
 
-	@Column(name = "EMAIL_ADDRESS", nullable = false, length = 256)
+	@Column(name = "EMAIL_ADDRESS", nullable = false, length = 100)
 	public String getEmailAddress() {
 		return this.emailAddress;
 	}
@@ -92,6 +94,15 @@ public class InviteResetpwdLog implements java.io.Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	@Column(name = "TYPE", length = 50)
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

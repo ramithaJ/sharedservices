@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
-
-// Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
+// default package
+// Generated Jun 23, 2015 4:17:36 PM by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

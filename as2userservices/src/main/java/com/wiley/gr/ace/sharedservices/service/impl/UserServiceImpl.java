@@ -14,7 +14,6 @@
 package com.wiley.gr.ace.sharedservices.service.impl;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
-import com.wiley.gr.ace.sharedservices.payload.CreateUserServiceRequest;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.service.UserService;
@@ -28,26 +27,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    /**
-     * Service method to create user profile.
-     *
-     * @param userServiceRequest
-     * @param userId
-     * @throws SharedServiceException
-     */
-    public void createUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.createUserProfileRepository(userServiceRequest, userId);
-    }
 
     /**
      * Service method to create user.
      *
-     * @param createUserServiceRequest
+     * @param userServiceRequest
      * @return
      * @throws SharedServiceException
      */
-    public String createUserService(CreateUserServiceRequest createUserServiceRequest) throws SharedServiceException {
-        return userRepository.createUserRepository(createUserServiceRequest);
+    public String createUserService(UserServiceRequest userServiceRequest) throws SharedServiceException {
+        return userRepository.createUserRepository(userServiceRequest);
     }
 
     /**
@@ -58,18 +47,7 @@ public class UserServiceImpl implements UserService {
      * @throws SharedServiceException
      */
     public void updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.updateUserProfileRepository(userServiceRequest, userId);
-    }
-
-    /**
-     * Service method to user profile attributes.
-     *
-     * @param userServiceRequest
-     * @param userId
-     * @throws SharedServiceException
-     */
-    public void deleteUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.deleteUserProfileRepository(userServiceRequest, userId);
+        userRepository.updateUserRepository(userServiceRequest, userId);
     }
 
     /**
@@ -80,7 +58,7 @@ public class UserServiceImpl implements UserService {
      * @throws SharedServiceException
      */
     public UserServiceRequest getUserProfileService(String userId) throws SharedServiceException {
-        return userRepository.getUserProfileRepository(userId);
+        return userRepository.getUserRepository(userId);
     }
 
     /**
