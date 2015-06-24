@@ -17,12 +17,24 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * The Class NotificationTemplateHibernateConnection.
+ */
 public class NotificationTemplateHibernateConnection {
     
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(NotificationTemplateHibernateConnection.class);
+    
+    /** The Constant sessionFactory. */
     private static final SessionFactory sessionFactory = buildSessionFactory();
     
+    /**
+     * Builds the session factory.
+     *
+     * @return the session factory
+     */
     private static SessionFactory buildSessionFactory() {
         try {
             Configuration configuration = new Configuration().configure();
@@ -37,10 +49,18 @@ public class NotificationTemplateHibernateConnection {
         }
     }
     
+    /**
+     * Gets the session factory.
+     *
+     * @return the session factory
+     */
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
     
+    /**
+     * Shut down session factory.
+     */
     public static void shutDownSessionFactory() {
         getSessionFactory().close();
     }

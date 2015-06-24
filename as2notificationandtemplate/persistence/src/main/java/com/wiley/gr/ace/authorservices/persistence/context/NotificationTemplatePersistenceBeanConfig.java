@@ -20,18 +20,38 @@ import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDA
 import com.wiley.gr.ace.authorservices.persistence.services.impl.NotificationManagementDAOImpl;
 import com.wiley.gr.ace.authorservices.persistence.services.impl.TemplateManagementDAOImpl;
 
+
+/**
+ * The Class NotificationTemplatePersistenceBeanConfig.
+ */
 @Configuration
 public class NotificationTemplatePersistenceBeanConfig {
 
+	/**
+	 * Notification template hibernate connection.
+	 *
+	 * @return the notification template hibernate connection
+	 */
 	@Bean(name = "NotificationTemplateHibernateConnection")
 	public NotificationTemplateHibernateConnection notificationTemplateHibernateConnection() {
 		return new NotificationTemplateHibernateConnection();
 	}
 
+	/**
+	 * Template management dao.
+	 *
+	 * @return the template management dao
+	 */
 	@Bean(name = "TemplateManagementDAO")
 	public TemplateManagementDAO templateManagementDAO() {
 		return new TemplateManagementDAOImpl();
 	}
+	
+	/**
+	 * Notification management dao.
+	 *
+	 * @return the notification management dao
+	 */
 	@Bean(name = "NotificationManagementDAO")
 	public NotificationManagementDAO notificationManagementDAO(){
 		return new NotificationManagementDAOImpl();

@@ -27,17 +27,33 @@ import com.wiley.gr.ace.authorservices.persistence.services.NotificationManageme
 import com.wiley.gr.ace.authorservices.services.service.NotificationManagementService;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NotificationManagementServiceImpl.
+ */
 public class NotificationManagementServiceImpl implements
 		NotificationManagementService {
+	
+	/** The notification management dao. */
 	@Autowired(required = true)
 	NotificationManagementDAO notificationManagementDAO;
 
+	/** The template management service. */
 	@Autowired(required = true)
 	TemplateManagementService templateManagementService;
 
+	/** The mail sender service. */
 	@Autowired(required = true)
 	MailSenderService mailSenderService;
 
+	/**
+	 * Gets the schedule.
+	 *
+	 * @param applicationId the application id
+	 * @param scheduleId the schedule id
+	 * @return the schedule
+	 * @throws Exception the exception
+	 */
 	@Override
 	public ScheduleObj getSchedule(String applicationId, String scheduleId)
 			throws Exception {
@@ -49,6 +65,13 @@ public class NotificationManagementServiceImpl implements
 		return null;
 	}
 
+	/**
+	 * Insert schedule.
+	 *
+	 * @param schedule the schedule
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean insertSchedule(ScheduleObj schedule) throws Exception {
 		if (!StringUtils.isEmpty(schedule)) {
@@ -69,10 +92,18 @@ public class NotificationManagementServiceImpl implements
 			return false;
 	}
 
+	/**
+	 * Update schedule.
+	 *
+	 * @param applicationId the application id
+	 * @param scheduleId the schedule id
+	 * @param scheduleObj the schedule obj
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean updateSchedule(String applicationId, String scheduleId,
 			ScheduleObj scheduleObj) throws Exception {
-		boolean updateStatus = false;
 		Schedule scheduleEntity = null;
 		ScheduleTemplate scheduleTemplate = null;
 		scheduleEntity = notificationManagementDAO.getSchedule(applicationId,
@@ -92,11 +123,19 @@ public class NotificationManagementServiceImpl implements
 				scheduleEntity.setDescription(scheduleObj.getDescription());
 		}
 
-		updateStatus = notificationManagementDAO.saveOrUpdateSchedule(
+		return notificationManagementDAO.saveOrUpdateSchedule(
 				scheduleEntity, scheduleTemplate);
-		return updateStatus;
+		
 	}
 
+	/**
+	 * Delete schedule.
+	 *
+	 * @param applicationId the application id
+	 * @param scheduleId the schedule id
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean deleteSchedule(String applicationId, String scheduleId)
 			throws Exception {
@@ -108,6 +147,14 @@ public class NotificationManagementServiceImpl implements
 			return false;
 	}
 
+	/**
+	 * Gets the schedule template entity.
+	 *
+	 * @param scheduleTemplateObj the schedule template obj
+	 * @param scheduleId the schedule id
+	 * @return the schedule template entity
+	 * @throws Exception the exception
+	 */
 	private ScheduleTemplate getScheduleTemplateEntity(
 			ScheduleTemplateObj scheduleTemplateObj, String scheduleId)
 			throws Exception {
@@ -133,6 +180,13 @@ public class NotificationManagementServiceImpl implements
 		return scheduleTemplate;
 	}
 
+	/**
+	 * Gets the schedule vo.
+	 *
+	 * @param scheduleEntity the schedule entity
+	 * @return the schedule vo
+	 * @throws Exception the exception
+	 */
 	private ScheduleObj getScheduleVO(Schedule scheduleEntity) throws Exception {
 		ScheduleObj schedule = new ScheduleObj();
 		schedule.setId(scheduleEntity.getId());
@@ -147,6 +201,13 @@ public class NotificationManagementServiceImpl implements
 		return schedule;
 	}
 
+	/**
+	 * Gets the schedule template vo.
+	 *
+	 * @param scheduleTemplateEntity the schedule template entity
+	 * @return the schedule template vo
+	 * @throws Exception the exception
+	 */
 	private ScheduleTemplateObj getScheduleTemplateVO(
 			ScheduleTemplate scheduleTemplateEntity) throws Exception {
 		ScheduleTemplateObj scheduleTemplate = new ScheduleTemplateObj();
@@ -159,6 +220,13 @@ public class NotificationManagementServiceImpl implements
 		return scheduleTemplate;
 	}
 
+	/**
+	 * Gets the notification vo.
+	 *
+	 * @param NotificationEntity the notification entity
+	 * @return the notification vo
+	 * @throws Exception the exception
+	 */
 	private NotificationObj getNotificationVO(Notification NotificationEntity)
 			throws Exception {
 		NotificationObj notification = new NotificationObj();
@@ -178,6 +246,13 @@ public class NotificationManagementServiceImpl implements
 
 	}
 
+	/**
+	 * Gets the notification recipients vo.
+	 *
+	 * @param notoficationRecipients the notofication recipients
+	 * @return the notification recipients vo
+	 * @throws Exception the exception
+	 */
 	private NotificationRecipientsObj getNotificationRecipientsVO(
 			NotificationRecipients notoficationRecipients) throws Exception {
 		NotificationRecipientsObj notificationRecipients = new NotificationRecipientsObj();
@@ -188,6 +263,13 @@ public class NotificationManagementServiceImpl implements
 		return notificationRecipients;
 	}
 
+	/**
+	 * Gets the template vo.
+	 *
+	 * @param templateEntity the template entity
+	 * @return the template vo
+	 * @throws Exception the exception
+	 */
 	private TemplateObj getTemplateVO(Template templateEntity) throws Exception {
 		TemplateObj template = new TemplateObj();
 
@@ -205,21 +287,38 @@ public class NotificationManagementServiceImpl implements
 	}
 
 
+	/**
+	 * Clob string conversion.
+	 *
+	 * @param clb the clb
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	private static String clobStringConversion(Clob clb) throws Exception {
 		if (clb == null)
 			return "";
 
-		StringBuffer str = new StringBuffer();
+		StringBuilder str = new StringBuilder();
 		String strng;
 
 		BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
 
 		while ((strng = bufferRead.readLine()) != null)
 			str.append(strng);
-
+		bufferRead.close();
 		return str.toString();
+		
 	}
 
+	/**
+	 * Template lookup.
+	 *
+	 * @param applicationId the application id
+	 * @param templateId the template id
+	 * @param type the type
+	 * @return the list
+	 * @throws Exception the exception
+	 */
 	@Override
 	public List<ScheduleObj> templateLookup(String applicationId,
 			String templateId, String type) throws Exception {
@@ -236,6 +335,14 @@ public class NotificationManagementServiceImpl implements
 		return scheduleList;
 	}
 
+	/**
+	 * Gets the notification.
+	 *
+	 * @param applicationId the application id
+	 * @param notificationId the notification id
+	 * @return the notification
+	 * @throws Exception the exception
+	 */
 	@Override
 	public NotificationObj getNotification(String applicationId,
 			String notificationId) throws Exception {
@@ -247,17 +354,38 @@ public class NotificationManagementServiceImpl implements
 		return notification;
 	}
 
+	/**
+	 * Sets the notification flag.
+	 *
+	 * @param applicationId the application id
+	 * @param notificationId the notification id
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean setNotificationFlag(String applicationId,
 			String notificationId) throws Exception {
 		boolean isSet = false;
 		if (!StringUtils.isEmpty(applicationId)
-				&& !StringUtils.isEmpty(applicationId))
+				&& !StringUtils.isEmpty(notificationId))
 			isSet = notificationManagementDAO.setNotificationFlag(
 					applicationId, notificationId);
 		return isSet;
 	}
 
+	/**
+	 * Gets the notification history.
+	 *
+	 * @param applicationId the application id
+	 * @param from the from
+	 * @param to the to
+	 * @param type the type
+	 * @param offset the offset
+	 * @param limit the limit
+	 * @param unreadFlag the unread flag
+	 * @return the notification history
+	 * @throws Exception the exception
+	 */
 	@Override
 	public List<NotificationObj> getNotificationHistory(String applicationId,
 			String from, String to, String type, String offset, String limit,
@@ -313,6 +441,16 @@ public class NotificationManagementServiceImpl implements
 	
 	
 
+	/**
+	 * Send email notification.
+	 *
+	 * @param applicationId the application id
+	 * @param templateId the template id
+	 * @param notificationDetails the notification details
+	 * @throws AddressException the address exception
+	 * @throws MessagingException the messaging exception
+	 * @throws Exception the exception
+	 */
 	@Override
 	public void sendEmailNotification(String applicationId, String templateId,
 			NotificationDetails notificationDetails) throws AddressException,
@@ -326,6 +464,16 @@ public class NotificationManagementServiceImpl implements
 				templateObj.getBody());
 	}
 	
+	
+	/**
+	 * Resend email notification.
+	 *
+	 * @param applicationId the application id
+	 * @param notificationId the notification id
+	 * @throws AddressException the address exception
+	 * @throws MessagingException the messaging exception
+	 * @throws Exception the exception
+	 */
 	@Override
 	public void resendEmailNotification(String applicationId, String notificationId) throws AddressException,
 			MessagingException, Exception {
@@ -339,6 +487,15 @@ public class NotificationManagementServiceImpl implements
 				notificationRecipients.getUserId(),templateObj.getDescription(),
 				templateObj.getBody());
 	}
+	
+	/**
+	 * Send onscreen notification.
+	 *
+	 * @param applicationId the application id
+	 * @param templateId the template id
+	 * @param notificationDetails the notification details
+	 * @throws Exception the exception
+	 */
 	@Override
 	public void sendOnscreenNotification(String applicationId,
 			String templateId, NotificationDetails notificationDetails)

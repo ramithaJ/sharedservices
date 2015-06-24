@@ -14,8 +14,20 @@ import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 import com.wiley.gr.ace.authorservices.persistence.services.NotificationManagementDAO;
 
+
+/**
+ * The Class NotificationManagementDAOImpl.
+ */
 public class NotificationManagementDAOImpl implements NotificationManagementDAO {
 
+	/**
+	 * Gets the schedule.
+	 *
+	 * @param applicationId the application id
+	 * @param scheduleId the schedule id
+	 * @return the schedule
+	 * @throws Exception the exception
+	 */
 	@Override
 	public Schedule getSchedule(String applicationId, String scheduleId)
 			throws Exception {
@@ -39,6 +51,14 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return schedule;
 	}
 
+	/**
+	 * Save or update schedule.
+	 *
+	 * @param schedule the schedule
+	 * @param scheduleTemplate the schedule template
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean saveOrUpdateSchedule(Schedule schedule,
 			ScheduleTemplate scheduleTemplate) throws Exception {
@@ -62,6 +82,14 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		}
 	}
 
+	/**
+	 * Delete schedule.
+	 *
+	 * @param applicationId the application id
+	 * @param scheduleId the schedule id
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean deleteSchedule(String applicationId, String scheduleId)
 			throws Exception {
@@ -93,6 +121,15 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return isDeleted;
 	}
 
+	/**
+	 * Template lookup.
+	 *
+	 * @param applicationId the application id
+	 * @param templateId the template id
+	 * @param type the type
+	 * @return the list
+	 * @throws Exception the exception
+	 */
 	@Override
 	public List<Schedule> templateLookup(String applicationId,
 			String templateId, String type) throws Exception {
@@ -125,11 +162,24 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				}
 			} catch (Exception e) {
 				scheduleList = null;
+			}finally {
+				if (session != null) {
+					session.flush();
+					session.close();
+				}
 			}
 		}
 		return scheduleList;
 	}
 
+	/**
+	 * Save or update schedule.
+	 *
+	 * @param schedule the schedule
+	 * @param scheduleTemplate the schedule template
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public Template getTemplate(String templateId) throws Exception {
 
@@ -153,6 +203,14 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return template;
 	}
 
+	/**
+	 * Gets the notification.
+	 *
+	 * @param applicationId the application id
+	 * @param notificationId the notification id
+	 * @return the notification
+	 * @throws Exception the exception
+	 */
 	@Override
 	public Notification getNotification(String applicationId,
 			String notificationId) throws Exception {
@@ -168,31 +226,56 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return notification;
 	}
 
+	/**
+	 * Sets the notification flag.
+	 *
+	 * @param applicationId the application id
+	 * @param notificationId the notification id
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean setNotificationFlag(String applicationId,
 			String notificationId) throws Exception {
 		boolean isSet = false;
+		Session session = null;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(notificationId)) {
 			Notification notification = getNotification(applicationId,
 					notificationId);
 			String unread = notification.getUnread().toString();
-			if (unread.equalsIgnoreCase("y")) {
+			if (!unread.equalsIgnoreCase("n")) {
 				try {
-					Session session = getSessionFactory().openSession();
+	
+					session = getSessionFactory().openSession();
 					session.beginTransaction();
 					notification.setUnread('n');
-					session.save(notification);
+					session.saveOrUpdate(notification);
 					session.getTransaction().commit();
 					isSet = true;
+
 				} catch (Exception e) {
 					isSet = false;
+				}finally{
+					if (session != null) {
+						session.flush();
+						session.close();
+					}
 				}
+				
 			}
+
 		}
 		return isSet;
 	}
 
+	/**
+	 * Gets the notification list.
+	 *
+	 * @param applicationId the application id
+	 * @return the notification list
+	 * @throws Exception the exception
+	 */
 	@Override
 	public List<Notification> getNotificationList(String applicationId)
 			throws Exception {
@@ -215,6 +298,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return notificationList;
 	}
 
+	/**
+	 * Gets the notification recipients.
+	 *
+	 * @param notificationId the notification id
+	 * @return the notification recipients
+	 * @throws Exception the exception
+	 */
 	@Override
 	public NotificationRecipients getNotificationRecipients(
 			String notificationId) throws Exception {
@@ -229,16 +319,28 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		return notificationRecipients;
 	}
 
+	/**
+	 * Creates the notification history.
+	 *
+	 * @param applicationId the application id
+	 * @param templateId the template id
+	 * @param senderEmail the sender email
+	 * @param recipientEmail the recipient email
+	 * @param content the content
+	 * @param type the type
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	@Override
 	public boolean createNotificationHistory(String applicationId,
 			String templateId, String senderEmail, String recipientEmail,
 			String content, String type) throws Exception {
 		Notification notification = new Notification();
 		NotificationRecipients notificationRecipients = new NotificationRecipients();
-		
+
 		notificationRecipients.setEmail(recipientEmail);
 		notification.setAppId(applicationId);
-		
+
 		return false;
 	}
 }
