@@ -19,8 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.naming.directory.Attributes;
-
 import org.apache.commons.lang.StringUtils;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
@@ -29,9 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ldap.AuthenticationException;
-import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -53,153 +49,130 @@ import com.wiley.gr.ace.auth.security.service.TokenService;
 import com.wiley.gr.ace.auth.security.utils.StubInvoker;
 
 /**
- * Created by sripads on 5/16/2015.
+ * @author Virtusa
+ *
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+	/**
+	 * This field holds the value of LOGGER
+	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AuthenticationServiceImpl.class);
 
+	/**
+	 * This field holds the value of ldapTemplate
+	 */
 	@Autowired(required = true)
 	private LdapTemplate ldapTemplate;
 
+	/**
+	 * This field holds the value of tokenService
+	 */
 	@Autowired(required = true)
 	private TokenService tokenService;
 
+	/**
+	 * This field holds the value of contextSource
+	 */
 	@Autowired(required = true)
 	private LdapContextSource contextSource;
 
+	/**
+	 * This field holds the value of userLoginDao
+	 */
 	@Autowired(required = true)
 	private UserLoginDAO userLoginDao;
 
+	/**
+	 * This field holds the value of directoryServicefilterPath
+	 */
 	@Value("${directory.service.filter}")
 	private String directoryServicefilterPath;
 
+	/**
+	 * This field holds the value of directoryServicefilterMatch
+	 */
 	@Value("${directory.service.filter.match}")
 	private String directoryServicefilterMatch;
 
+	/**
+	 * This field holds the value of directoyServiceUrl
+	 */
 	@Value("${directory.service.url}")
 	private String directoyServiceUrl;
 
+	/**
+	 * This field holds the value of directoryFilter
+	 */
 	@Value("${directory.service.filter}")
 	private String directoryFilter;
 
+	/**
+	 * This field holds the value of directoryFilterMatch
+	 */
 	@Value("${directory.service.filter.match}")
 	private String directoryFilterMatch;
 
+	/**
+	 * This field holds the value of ldapServiceUrl
+	 */
 	@Value("${ldap.service.url}")
 	private String ldapServiceUrl;
-	
+
+	/**
+	 * This field holds the value of ldapUser
+	 */
 	@Value("${ldap.service.user}")
 	private String ldapUser;
-	
+
+	/**
+	 * This field holds the value of ldapPassword
+	 */
 	@Value("${ldap.service.password}")
 	private String ldapPassword;
 
+	/**
+	 * This field holds the value of ldapFilter
+	 */
 	@Value("${ldap.service.filter}")
 	private String ldapFilter;
 
+	/**
+	 * This field holds the value of ldapFilterMatch
+	 */
 	@Value("${ldap.service.filter.match}")
 	private String ldapFilterMatch;
 
+	/**
+	 * This field holds the value of lockAttempts
+	 */
 	@Value("${as.lock.attempts}")
 	private int lockAttempts;
 
+	/**
+	 * This field holds the value of unlockTime
+	 */
 	@Value("${as.unlock.time}")
 	private int unlockTime;
 
+	/**
+	 * This field holds the value of lockUser
+	 */
 	@Value("${as.lock.url}")
 	private String lockUser;
 
+	/**
+	 * This field holds the value of unlockUser
+	 */
 	@Value("${as.unlock.url}")
 	private String unlockUser;
 
+	/**
+	 * This field holds the value of authenticationType
+	 */
 	@Value("${as.AuthenticationType}")
 	private String authenticationType;
-
-	/**
-	 * Method to validate user before authenticate the user. It takes the
-	 * AuthenticateRequest object as input.
-	 * 
-	 * @return Respose object
-	 */
-	@Override
-	public Response userLogin(AuthenticateRequest request) {
-
-		// for AD users no need to check Pre-conditions of login.
-		if (authenticationType
-				.equalsIgnoreCase(request.getAuthenticationType())) {
-			return authenticate(request.getUserId(), request.getPassword(),
-					request.getAuthenticationType(), request.getAppKey());
-		}
-		// get the user details from the table by using userId.
-		LockedAccountDetails lockedAccountDetails = userLoginDao
-				.userAccountDetails(request.getUserId());
-		Response response = new Response();
-		// if record is not there in table.
-		if (null == lockedAccountDetails) {
-			return processAuthenticatedUser(request);
-		}
-		// if record is there in table, check the time stamp and find whether
-		// time is elapsed or not.
-		Date loginAttemptTime = new Date(lockedAccountDetails
-				.getLoginAttemptTime().getTime());
-		// if time elapsed we will unlock the user, remove the record in table
-		// and proceed for authentication.
-		long minutes = TimeUnit.MILLISECONDS
-				.toMinutes((new Date().getTime() - loginAttemptTime.getTime()));
-		if (unlockTime < minutes) {
-			SecurityRequest requestEntityClass = new SecurityRequest();
-			requestEntityClass.setUserId(request.getUserId());
-			if (null != lockedAccountDetails.getLockedTime()) {
-				StubInvoker.restServiceInvoker(unlockUser, requestEntityClass,
-						SecurityResponse.class);
-			}
-			userLoginDao.removeUser(request.getUserId());
-			return processAuthenticatedUser(request);
-		}
-		// if time not elapsed we will check the login failure count.
-		// if count is 3 then we will lock the user and update the time stamp in
-		// table.
-		// if not we will proceed for authentication. if authentication fail we
-		// will update the count in table.
-		if (lockAttempts == lockedAccountDetails.getInvalidLoginCount()) {
-			// lock user esb service
-			SecurityRequest requestEntityClass = new SecurityRequest();
-			requestEntityClass.setUserId(request.getUserId());
-			StubInvoker.restServiceInvoker(lockUser, requestEntityClass,
-					SecurityResponse.class);
-			// update the locked time in the table
-			userLoginDao.updateTimeStamp(request.getUserId());
-			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
-
-		} else {
-
-			response = authenticate(request.getUserId(), request.getPassword(),
-					request.getAuthenticationType(), request.getAppKey());
-			if (null == response) {
-				userLoginDao.updateUser(request.getUserId());
-			}
-		}
-		return response;
-	}
-
-	/**
-	 * Method to authenticate the user. It takes the AuthenticateRequest object
-	 * as input.
-	 * 
-	 * @return Response object
-	 */
-	private Response processAuthenticatedUser(AuthenticateRequest request) {
-
-		Response response = new Response();
-		response = authenticate(request.getUserId(), request.getPassword(),
-				request.getAuthenticationType(), request.getAppKey());
-		if (null == response) {
-			userLoginDao.insertUser(request.getUserId(), request.getAppKey());
-		}
-		return response;
-	}
 
 	/**
 	 * Method to authenticate the user.
@@ -208,69 +181,75 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @param password
 	 * @param authenticationType
 	 * @param appKey
-	 * @return
+	 * @return Response
 	 */
 	@Override
-	public Response authenticate(String userId, String password,
-			String authenticationType, String appKey) {
+	public Response authenticate(final String userId, final String password,
+			final String authenticationType, final String appKey) {
 
 		Response response = null;
-		String filterMatch = directoryServicefilterMatch;
-		String filterPath = directoryServicefilterPath;
+		String filterPath = null;
+		final AndFilter filter = new AndFilter();
 
 		// If Authentication Type is provided as AUTO. Do a domain check.
 		if (StringUtils.isNotEmpty(authenticationType)
 				&& authenticationType.equalsIgnoreCase(CommonConstant.AUTO)
 				&& !userId.contains(CommonConstant.WILEY_DOMAIN)) {
 			// Set ldap server setting.
-			setContext(ldapServiceUrl, ldapUser, ldapPassword);
-			filterMatch = ldapFilterMatch;
-			filterPath = ldapFilter;
+			this.setContext(this.ldapServiceUrl, this.ldapUser,
+					this.ldapPassword);
+			// Apply the filter.
+			filter.and(new EqualsFilter(this.ldapFilterMatch, userId));
+			filterPath = this.ldapFilter;
 		}
 		// Set the LDAP Server Configurations to authenticate against ldap
 		// server.
 		else if (StringUtils.isNotEmpty(authenticationType)
 				&& authenticationType.equalsIgnoreCase(CommonConstant.LDAP)) {
-			setContext(ldapServiceUrl, ldapUser, ldapPassword);
-			filterMatch = ldapFilterMatch;
-			filterPath = ldapFilter;
+			this.setContext(this.ldapServiceUrl, this.ldapUser,
+					this.ldapPassword);
+			// Apply the filter.
+			filter.and(new EqualsFilter(this.ldapFilterMatch, userId));
+			filterPath = this.ldapFilter;
 		} else {
-			setContext(directoyServiceUrl, userId, password);
+			this.setContext(this.directoyServiceUrl, userId, password);
+			// Apply the filter.
+			filter.and(new EqualsFilter(this.directoryServicefilterMatch,
+					userId));
+			filterPath = this.directoryServicefilterPath;
 		}
 
-		// Apply the filter.
-		AndFilter filter = new AndFilter();
-		filter.and(new EqualsFilter(filterMatch, userId));
 		// Authenticate the user credentials.
 
 		boolean isAuthenticated = false;
 		try {
-			isAuthenticated = ldapTemplate.authenticate(filterPath,
+			isAuthenticated = this.ldapTemplate.authenticate(filterPath,
 					filter.toString(), password);
-		} catch (AuthenticationException e) {
+		} catch (final AuthenticationException e) {
 			return response;
 		}
 		if (isAuthenticated) {
 			// Call Roles Service and get the Roles
-			List<String> roles = getRoles(userId);
-			TokenRequest tokenRequest = new TokenRequest();
+			final List<String> roles = this.getRoles(userId);
+			final TokenRequest tokenRequest = new TokenRequest();
 			tokenRequest.setAppKey(appKey);
 			tokenRequest.setRoles(roles);
 			tokenRequest.setUserId(userId);
 
 			try {
 				response = new Response(CommonConstant.STATUS_CODE,
-						tokenService.generateToken(tokenRequest),
+						this.tokenService.generateToken(tokenRequest),
 						CommonConstant.SUCCESS_STATUS);
 				return response;
-			} catch (JoseException e) {
-				LOGGER.error("Exception Occurred while authenticating..", e);
+			} catch (final JoseException e) {
+				AuthenticationServiceImpl.LOGGER.error(
+						"Exception Occurred while authenticating..", e);
 				response = new Response(CommonConstant.FAIL_CODE,
 						"Authentication Fail", CommonConstant.FAILURE_STATUS);
 				return response;
 			}
-
 		}
+
 		return response;
 	}
 
@@ -278,23 +257,83 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * Method to get user roles.
 	 *
 	 * @param userId
-	 * @return
+	 * @return List<String>
 	 */
 	@Override
-	public List<String> getRoles(String userId) {
+	public List<String> getRoles(final String userId) {
 		// TODO: Invoke Actual Role Service here
 		// Invoke User Role Service and the get user role.
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders roleheaders = new HttpHeaders();
+		final RestTemplate restTemplate = new RestTemplate();
+		final HttpHeaders roleheaders = new HttpHeaders();
 		roleheaders.set("JsonStub-User-Key",
 				"3a552133-3e2a-4fc8-9931-2d214a177688");
 		roleheaders.set("JsonStub-Project-Key",
 				"975a72f8-ed51-43cc-af1a-4dc10c24a127");
-		HttpEntity<String> roleentity = new HttpEntity<String>("parameters",
-				roleheaders);
-		ResponseEntity roleresponse = restTemplate.postForEntity(
-				"http://jsonstub.com/getRole", roleentity, String.class);
+		final HttpEntity<String> roleentity = new HttpEntity<String>(
+				"parameters", roleheaders);
+		restTemplate.postForEntity("http://jsonstub.com/getRole", roleentity,
+				String.class);
 		return new LinkedList<>();
+	}
+
+	/**
+	 * Method to authenticate the user. It takes the AuthenticateRequest object
+	 * as input.
+	 *
+	 * @param request
+	 * @return Response
+	 */
+	private Response processAuthenticatedUser(final AuthenticateRequest request) {
+
+		Response response = new Response();
+		response = this.authenticate(request.getUserId(),
+				request.getPassword(), request.getAuthenticationType(),
+				request.getAppKey());
+		if (null == response) {
+			this.userLoginDao.insertUser(request.getUserId(),
+					request.getAppKey());
+		}
+		return response;
+	}
+
+	/**
+	 * This method searches User
+	 *
+	 * @param userId
+	 * @return <T>
+	 */
+	@Override
+	public <T> User searchUser(final String userId) {
+
+		AuthenticationServiceImpl.LOGGER.info("Inside searchUser method");
+		this.setContext(this.directoyServiceUrl, null, null);
+		final String filterMatch = this.directoryServicefilterMatch;
+		final String filterPath = this.directoryServicefilterPath;
+
+		final AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter(filterMatch, userId));
+		List<T> list = new ArrayList<T>();
+		list = this.ldapTemplate.search(filterPath, filter.encode(),
+				(AttributesMapper) attrs -> {
+					final List list1 = new ArrayList();
+					list1.add(attrs.get("sn"));
+					list1.add(attrs.get("cn"));
+					return list1;
+				});
+		if (null == list) {
+			AuthenticationServiceImpl.LOGGER
+			.error("List is empty / no records found ");
+			return new User();
+		}
+		final String[] string = list.get(0).toString().split(",");
+		final String first = string[1].substring(5);
+		final String lastName = string[0].substring(5);
+		final String firstName = first.substring(0,
+				first.length() - lastName.length() - 2);
+		final User user = new User();
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		return user;
 	}
 
 	/**
@@ -304,52 +343,85 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @param user
 	 * @param password
 	 */
-	private void setContext(String serviceUrl, String user, String password) {
-		contextSource.setUrl(serviceUrl);
+	private void setContext(final String serviceUrl, final String user,
+			final String password) {
+		this.contextSource.setUrl(serviceUrl);
 		if (null != user) {
-			contextSource.setUserDn(user);
+			this.contextSource.setUserDn(user);
 		}
 		if (null != password) {
-			contextSource.setPassword(password);
+			this.contextSource.setPassword(password);
 		}
-		contextSource.afterPropertiesSet();
-		ldapTemplate.setContextSource(contextSource);
+		this.contextSource.afterPropertiesSet();
+		this.ldapTemplate.setContextSource(this.contextSource);
 	}
 
+	/**
+	 * Method to validate user before authenticate the user. It takes the
+	 * AuthenticateRequest object as input.
+	 *
+	 * @param request
+	 * @return Response
+	 */
 	@Override
-	public <T> User searchUser(String userId) {
+	public Response userLogin(final AuthenticateRequest request) {
 
-		LOGGER.info("Inside searchUser method");
-		setContext(directoyServiceUrl, null, null);
-		String filterMatch = directoryServicefilterMatch;
-		String filterPath = directoryServicefilterPath;
-
-		AndFilter filter = new AndFilter();
-		filter.and(new EqualsFilter(filterMatch, userId));
-		List<T> list = new ArrayList<T>();
-		list = ldapTemplate.search(filterPath, filter.encode(),
-				new AttributesMapper() {
-					public Object mapFromAttributes(Attributes attrs)
-							throws NamingException {
-						List list = new ArrayList();
-						list.add(attrs.get("sn"));
-						list.add(attrs.get("cn"));
-						return list;
-					}
-				});
-		if (null == list) {
-			LOGGER.error("List is empty / no records found ");
-			return new User();
+		// for AD users no need to check Pre-conditions of login.
+		if (this.authenticationType.equalsIgnoreCase(request
+				.getAuthenticationType())) {
+			return this.authenticate(request.getUserId(),
+					request.getPassword(), request.getAuthenticationType(),
+					request.getAppKey());
 		}
-		String[] string = list.get(0).toString().split(",");
-		String first = string[1].substring(5);
-		String lastName = string[0].substring(5);
-		String firstName = first.substring(0,
-				first.length() - lastName.length() - 2);
-		User user = new User();
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		return user;
-	}
+		// get the user details from the table by using userId.
+		final LockedAccountDetails lockedAccountDetails = this.userLoginDao
+				.userAccountDetails(request.getUserId());
+		Response response = new Response();
+		// if record is not there in table.
+		if (null == lockedAccountDetails) {
+			return this.processAuthenticatedUser(request);
+		}
+		// if record is there in table, check the time stamp and find whether
+		// time is elapsed or not.
+		final Date loginAttemptTime = new Date(lockedAccountDetails
+				.getLoginAttemptTime().getTime());
+		// if time elapsed we will unlock the user, remove the record in table
+		// and proceed for authentication.
+		final long minutes = TimeUnit.MILLISECONDS.toMinutes(new Date()
+		.getTime() - loginAttemptTime.getTime());
+		if (this.unlockTime < minutes) {
+			final SecurityRequest requestEntityClass = new SecurityRequest();
+			requestEntityClass.setUserId(request.getUserId());
+			if (null != lockedAccountDetails.getLockedTime()) {
+				StubInvoker.restServiceInvoker(this.unlockUser,
+						requestEntityClass, SecurityResponse.class);
+			}
+			this.userLoginDao.removeUser(request.getUserId());
+			return this.processAuthenticatedUser(request);
+		}
+		// if time not elapsed we will check the login failure count.
+		// if count is 3 then we will lock the user and update the time stamp in
+		// table.
+		// if not we will proceed for authentication. if authentication fail we
+		// will update the count in table.
+		if (this.lockAttempts == lockedAccountDetails.getInvalidLoginCount()) {
+			// lock user esb service
+			final SecurityRequest requestEntityClass = new SecurityRequest();
+			requestEntityClass.setUserId(request.getUserId());
+			StubInvoker.restServiceInvoker(this.lockUser, requestEntityClass,
+					SecurityResponse.class);
+			// update the locked time in the table
+			this.userLoginDao.updateTimeStamp(request.getUserId());
+			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
+		} else {
+			response = this.authenticate(request.getUserId(),
+					request.getPassword(), request.getAuthenticationType(),
+					request.getAppKey());
+			if (null == response) {
+				this.userLoginDao.updateUser(request.getUserId());
+			}
+		}
 
+		return response;
+	}
 }

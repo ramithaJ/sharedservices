@@ -14,87 +14,128 @@
 package com.wiley.gr.ace.auth.security.constants;
 
 /**
- * Created by kkalyan on 5/20/2015.
+ * @author Virtusa
+ *
  */
 public interface CommonConstant {
 
-    public static String AUTH_001 = "AUTH_001";
+	/**
+	 * This field holds the value of SUBJECT
+	 */
+	static String SUBJECT = "token.subject";
 
-    public static String AUTH_002 = "AUTH_002";
+	/**
+	 * This field holds the value of AUDIENCE
+	 */
+	static String AUDIENCE = "token.audience";
 
-    public static String AUTH_003 = "AUTH_003";
+	/**
+	 * This field holds the value of EXPIRATION_TIME
+	 */
+	static String EXPIRATION_TIME = "token.expiration.time";
 
-    public static String AUTH_004 = "AUTH_004";
+	/**
+	 * This field holds the value of CLAIM_KEY
+	 */
+	static String CLAIM_KEY = "token.claim.key";
 
-    public static String AUTH_005 = "AUTH_005";
+	/**
+	 * This field holds the value of TIME_BEFORE
+	 */
+	static String TIME_BEFORE = "token.time.before";
 
-    public static String AUTH_006 = "AUTH_006";
-    
-    public static String AUTH_007 = "AUTH_007";
+	/**
+	 * This field holds the value of KEY_ID
+	 */
+	static String KEY_ID = "token.key.id";
 
-    public static String TOK_001 = "TOK_001";
+	/**
+	 * This field holds the value of ALGORITHM
+	 */
+	static String ALGORITHM = "token.algorithm";
 
-    public static String TOK_002 = "TOK_002";
+	/**
+	 * This field holds the value of DOT
+	 */
+	static String DOT = ".";
 
-    public static String TOK_003 = "TOK_003";
+	/**
+	 * This field holds the value of AUTHENTICATE_SERVICE_URL
+	 */
+	static String AUTHENTICATE_SERVICE_URL = "/auth/authenticate";
 
-    public static String TOK_004 = "TOK_004";
+	/**
+	 * This field holds the value of SEARCH_USER_URL
+	 */
+	static String SEARCH_USER_URL = "/user";
 
-    public static String TOK_005 = "TOK_005";
+	/**
+	 * This field holds the value of TOKEN_SERVICE_URL
+	 */
+	static String TOKEN_SERVICE_URL = "/token";
 
-    public static String TOK_006 = "TOK_006";
+	/**
+	 * This field holds the value of TOKEN_REFRESH_SERVICE_URL
+	 */
+	static String TOKEN_REFRESH_SERVICE_URL = "/token/refresh";
 
-    public static String TOK_007 = "TOK_007";
+	/**
+	 * This field holds the value of EXCEPTION
+	 */
+	static String EXCEPTION = "Exception Occurred While Processing the Request";
 
-    public static String TOK_008 = "TOK_008";
+	/**
+	 * This field holds the value of ISS
+	 */
+	static String ISS = "iss";
 
-    public static String TOK_009 = "TOK_009";
+	/**
+	 * This field holds the value of ROLES
+	 */
+	static String ROLES = "roles";
 
-    public static String SUBJECT = "token.subject";
+	/**
+	 * This field holds the value of USER_ID
+	 */
+	static String USER_ID = "userid";
 
-    public static String AUDIENCE = "token.audience";
+	/**
+	 * This field holds the value of STATUS_CODE
+	 */
+	static String STATUS_CODE = "200";
 
-    public static String EXPIRATION_TIME = "token.expiration.time";
+	/**
+	 * This field holds the value of FAIL_CODE
+	 */
+	static String FAIL_CODE = "201";
 
-    public static String CLAIM_KEY = "token.claim.key";
+	/**
+	 * This field holds the value of LOCKED_CODE
+	 */
+	static String LOCKED_CODE = "202";
 
-    public static String TIME_BEFORE = "token.time.before";
+	/**
+	 * This field holds the value of SUCCESS_STATUS
+	 */
+	static String SUCCESS_STATUS = "SUCCESS";
 
-    public static String KEY_ID = "token.key.id";
+	/**
+	 * This field holds the value of FAILURE_STATUS
+	 */
+	static String FAILURE_STATUS = "FAILURE";
 
-    public static String ALGORITHM = "token.algorithm";
+	/**
+	 * This field holds the value of LDAP
+	 */
+	static String LDAP = "LDAP";
 
-    public static String DOT = ".";
+	/**
+	 * This field holds the value of AUTO
+	 */
+	static String AUTO = "AUTO";
 
-    public static String AUTHENTICATE_SERVICE_URL = "/auth/authenticate";
-    
-    public static String SEARCH_USER_URL = "/user";
-
-    public static String TOKEN_SERVICE_URL = "/token";
-
-    public static String TOKEN_REFRESH_SERVICE_URL = "/token/refresh";
-
-    public static String EXCEPTION = "Exception Occurred While Processing the Request";
-
-    public static String ISS = "iss";
-
-    public static String ROLES = "roles";
-
-    public static String USER_ID = "userid";
-
-    public static String STATUS_CODE = "200";
-
-    public static String FAIL_CODE = "201";
-    
-    public static String LOCKED_CODE = "202";
-
-    public static String SUCCESS_STATUS = "SUCCESS";
-
-    public static String FAILURE_STATUS = "FAILURE";
-
-    public static String LDAP = "LDAP";
-
-    public static String AUTO = "AUTO";
-
-    public static String WILEY_DOMAIN="wiley.com";
+	/**
+	 * This field holds the value of WILEY_DOMAIN
+	 */
+	static String WILEY_DOMAIN = "wiley.com";
 }

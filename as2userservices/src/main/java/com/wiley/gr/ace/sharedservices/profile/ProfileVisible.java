@@ -22,7 +22,7 @@ public class ProfileVisible implements Serializable {
 
     private String id;
     private String titleCd;
-    private String titleValue;
+    private char titleValue;
 
     public String getTitleCd() {
         return titleCd;
@@ -32,11 +32,11 @@ public class ProfileVisible implements Serializable {
         this.titleCd = titleCd;
     }
 
-    public String getTitleValue() {
+    public char getTitleValue() {
         return titleValue;
     }
 
-    public void setTitleValue(String titleValue) {
+    public void setTitleValue(char titleValue) {
         this.titleValue = titleValue;
     }
 

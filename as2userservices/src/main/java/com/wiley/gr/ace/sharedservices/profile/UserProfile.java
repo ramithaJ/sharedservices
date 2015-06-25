@@ -31,6 +31,8 @@ public class UserProfile implements Serializable {
     private String jobCategoryCd;
     private String orcidId;
     private String recieveEmailsFlag;
+    private String ecid;
+    private String password;
     private char profileVisibleFlag;
     private String primaryEmailAddress;
     private String recoveryEmailAddress;
@@ -220,6 +222,19 @@ public class UserProfile implements Serializable {
         this.alerts = alerts;
     }
 
+    public String getEcid() {
+        return ecid;
+    }
 
+    public void setEcid(String ecid) {
+        this.ecid = ecid;
+    }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

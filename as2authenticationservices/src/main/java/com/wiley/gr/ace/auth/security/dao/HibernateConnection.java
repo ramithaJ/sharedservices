@@ -17,12 +17,28 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Virtusa
+ *
+ */
 public class HibernateConnection {
     
+    /**
+     * This field holds the value of LOGGER
+     */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(HibernateConnection.class);
+    
+    /**
+     * This field holds the value of sessionFactory
+     */
     private static final SessionFactory sessionFactory = buildSessionFactory();
     
+    /**
+     * This method buildSessionFactory builds the sessionfactory object
+     * 
+     * @return SessionFactory
+     */
     private static SessionFactory buildSessionFactory() {
         try {
             Configuration configuration = new Configuration().configure();
@@ -37,10 +53,20 @@ public class HibernateConnection {
         }
     }
     
+    /**
+     * This method returns the sessionFactory object
+     * 
+     * @return SessionFactory
+     */
     public static SessionFactory getSessionFactory() {
-        return sessionFactory;
+       
+    	return sessionFactory;
     }
     
+    /**
+     * This method is responsible for closing the sessionfactory
+     * 
+     */
     public static void shutDownSessionFactory() {
         getSessionFactory().close();
     }

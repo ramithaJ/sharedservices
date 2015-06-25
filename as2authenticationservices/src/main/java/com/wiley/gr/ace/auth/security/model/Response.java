@@ -15,69 +15,137 @@ package com.wiley.gr.ace.auth.security.model;
 
 import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 
+/**
+ * @author Virtusa
+ *
+ */
 public class Response {
 
-    private String code;
-    private String message;
-    private String status;
-    
-    public Response(){
-    	
-    }
+	public static enum STATUS {
+		ERROR, SUCCESS, FAILURE, LOCKED;
+	}
 
-    public Response(String code, String message, String status) {
-        this.code = code;
-        this.message = message;
-        this.status = status;
-    }
+	/**
+	 * This field holds the value of code
+	 */
+	private String code;
 
-    public Response(String message, String status) {
-        this.code = CommonConstant.STATUS_CODE;
-        this.message = message;
-        this.status = status;
-    }
+	/**
+	 * This field holds the value of message
+	 */
+	private String message;
 
-    public Response(String message) {
-        this.code = CommonConstant.STATUS_CODE;
-        this.message = message;
-        this.status = CommonConstant.SUCCESS_STATUS;
-    }
+	/**
+	 * This field holds the value of status
+	 */
+	private String status;
 
+	/**
+	 * Default constructor
+	 */
+	public Response() {
 
-    public String getCode() {
-        return code;
-    }
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param message
+	 */
+	public Response(final String message) {
+		this.code = CommonConstant.STATUS_CODE;
+		this.message = message;
+		this.status = CommonConstant.SUCCESS_STATUS;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param message
+	 * @param status
+	 */
+	public Response(final String message, final String status) {
+		this.code = CommonConstant.STATUS_CODE;
+		this.message = message;
+		this.status = status;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param code
+	 * @param message
+	 * @param status
+	 */
+	public Response(final String code, final String message, final String status) {
+		this.code = code;
+		this.message = message;
+		this.status = status;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	/**
+	 * This method gets Code
+	 *
+	 * @return String
+	 */
+	public String getCode() {
+		return this.code;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	/**
+	 * This method gets Message
+	 *
+	 * @return String
+	 */
+	public String getMessage() {
+		return this.message;
+	}
 
+	/**
+	 * This method gets Status
+	 *
+	 * @return String
+	 */
+	public String getStatus() {
+		return this.status;
+	}
 
-    @Override
-    public String toString() {
-        return "AuthenticateResponse{" +
-                "code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
+	/**
+	 * This method sets Code
+	 *
+	 * @param code
+	 */
+	public void setCode(final String code) {
+		this.code = code;
+	}
 
-    public static enum STATUS {ERROR, SUCCESS, FAILURE, LOCKED;}
+	/**
+	 * This method sets Message
+	 *
+	 * @param message
+	 */
+	public void setMessage(final String message) {
+		this.message = message;
+	}
+
+	/**
+	 * This method sets Status
+	 *
+	 * @param status
+	 */
+	public void setStatus(final String status) {
+		this.status = status;
+	}
+
+	/**
+	 * This method toString
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString() {
+		return "AuthenticateResponse{" + "code='" + this.code + '\''
+				+ ", message='" + this.message + '\'' + ", status='"
+				+ this.status + '\'' + '}';
+	}
 }
-

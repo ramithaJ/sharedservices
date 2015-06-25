@@ -22,16 +22,12 @@ import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
  */
 public interface UserRepository {
 
-    String createUserRepository(CreateUserServiceRequest createUserServiceRequest) throws SharedServiceException;
+    String createUserRepository(UserServiceRequest userServiceRequest) throws SharedServiceException;
 
-    void createUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
-
-    void updateUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
-
-    void deleteUserProfileRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    UserServiceRequest getUserRepository(String userId) throws SharedServiceException;
 
     void deleteUserRepository(String userId) throws SharedServiceException;
 
-    UserServiceRequest getUserProfileRepository(String userId) throws SharedServiceException;
+    void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
 }

@@ -21,57 +21,129 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * @author Virtusa
+ *
+ */
 @JsonInclude(Include.NON_NULL)
 public class AuthenticateRequest implements Serializable {
 
-	@NotNull @NotBlank @Email
-    private String userId;
-    @NotNull @NotBlank
-    private String password;
-    @NotNull @NotBlank
-    private String authenticationType;
-    @NotNull @NotBlank
-    private String appKey;
+	/**
+	 * This field holds the value of serialVersionUID
+	 */
+	private static final long serialVersionUID = 1131477618234873529L;
 
-    public String getUserId() {
-        return userId;
-    }
+	/**
+	 * This field holds the value of userId
+	 */
+	@NotNull
+	@NotBlank
+	@Email
+	private String userId;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	/**
+	 * This field holds the value of password
+	 */
+	@NotNull
+	@NotBlank
+	private String password;
 
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * This field holds the value of authenticationType
+	 */
+	@NotNull
+	@NotBlank
+	private String authenticationType;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	/**
+	 * This field holds the value of appKey
+	 */
+	@NotNull
+	@NotBlank
+	private String appKey;
 
-    public String getAuthenticationType() {
-        return authenticationType;
-    }
+	/**
+	 * This method gets App Key
+	 *
+	 * @return String
+	 */
+	public String getAppKey() {
+		return this.appKey;
+	}
 
-    public void setAuthenticationType(String authenticationType) {
-        this.authenticationType = authenticationType;
-    }
+	/**
+	 * This method gets Authentication Type
+	 *
+	 * @return String
+	 */
+	public String getAuthenticationType() {
+		return this.authenticationType;
+	}
 
-    public String getAppKey() {
-        return appKey;
-    }
+	/**
+	 * This method gets Password
+	 *
+	 * @return String
+	 */
+	public String getPassword() {
+		return this.password;
+	}
 
-    public void setAppKey(String appKey) {
-        this.appKey = appKey;
-    }
+	/**
+	 * This method gets UserId
+	 *
+	 * @return String
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
 
-    @Override
-    public String toString() {
-        return "AuthenticateRequest{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", authenticationType='" + authenticationType + '\'' +
-                ", appKey='" + appKey + '\'' +
-                '}';
-    }
+	/**
+	 * This method sets App Key
+	 *
+	 * @param appKey
+	 */
+	public void setAppKey(final String appKey) {
+		this.appKey = appKey;
+	}
+
+	/**
+	 * This method sets Authentication Type
+	 *
+	 * @param authenticationType
+	 */
+	public void setAuthenticationType(final String authenticationType) {
+		this.authenticationType = authenticationType;
+	}
+
+	/**
+	 * This method sets Password
+	 *
+	 * @param password
+	 */
+	public void setPassword(final String password) {
+		this.password = password;
+	}
+
+	/**
+	 * This method sets UserId
+	 *
+	 * @param userId
+	 */
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * This method toString
+	 *
+	 * @return
+	 */
+	@Override
+	public String toString() {
+		return "AuthenticateRequest{" + "userId='" + this.userId + '\''
+				+ ", password='" + this.password + '\''
+				+ ", authenticationType='" + this.authenticationType + '\''
+				+ ", appKey='" + this.appKey + '\'' + '}';
+	}
 }
