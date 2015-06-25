@@ -73,7 +73,7 @@ public class UserAlerts implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ALERT_CD", nullable = false, insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public Alerts getAlerts() {
 		return this.alerts;
 	}

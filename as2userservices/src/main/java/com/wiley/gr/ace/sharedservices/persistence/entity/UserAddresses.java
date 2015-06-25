@@ -78,7 +78,7 @@ public class UserAddresses implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ADDRESS_ID")
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public Address getAddress() {
 		return this.address;
 	}

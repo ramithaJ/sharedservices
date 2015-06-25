@@ -66,7 +66,7 @@ public class UserSocietyDetails implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SOCIETY_ID", nullable = false)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     public Societies getSocieties() {
         return this.societies;
     }

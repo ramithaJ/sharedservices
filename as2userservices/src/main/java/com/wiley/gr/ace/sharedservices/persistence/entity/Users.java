@@ -690,7 +690,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usersByUserId")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public Set<UserAddresses> getUserAddressesesForUserId() {
 		return this.userAddressesesForUserId;
 	}
@@ -1086,7 +1086,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usersByUserId")
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public UserProfile getUserProfileByUserId() {
 		return this.userProfileByUserId;
 	}

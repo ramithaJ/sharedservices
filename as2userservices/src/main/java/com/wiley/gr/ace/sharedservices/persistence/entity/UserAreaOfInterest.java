@@ -67,7 +67,7 @@ public class UserAreaOfInterest implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "AREA_OF_INTEREST_CD", nullable = false, insertable = false, updatable = false)
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public AreaOfInterest getAreaOfInterest() {
 		return this.areaOfInterest;
 	}
