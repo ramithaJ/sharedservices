@@ -3,6 +3,9 @@ package com.wiley.gr.ace.authorservices.persistence.entity;
 
 
 import java.util.Date;
+
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,16 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+
+
+
+
+
+
 
 
 /**
@@ -226,6 +239,8 @@ public class Schedule implements java.io.Serializable {
 	 * @return the schedule template
 	 */
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "schedule")
+	@Cascade(CascadeType.PERSIST)
+	
 	public ScheduleTemplate getScheduleTemplate() {
 		return this.scheduleTemplate;
 	}

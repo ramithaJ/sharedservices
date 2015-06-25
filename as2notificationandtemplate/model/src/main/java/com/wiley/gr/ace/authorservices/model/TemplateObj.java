@@ -1,11 +1,14 @@
 package com.wiley.gr.ace.authorservices.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class TemplateObj.
  */
+@JsonInclude(Include.NON_NULL)
 public class TemplateObj {
 	
 	/** The id. */
@@ -33,10 +36,10 @@ public class TemplateObj {
 	private String modifiedBy;
 	
 	/** The created on. */
-	private Date createdOn;
+	private String createdOn;
 	
 	/** The last modified on. */
-	private Date lastModifiedOn;
+	private String lastModifiedOn;
 
 	/**
 	 * Gets the id.
@@ -165,6 +168,42 @@ public class TemplateObj {
 	}
 
 	/**
+	 * Gets the created on.
+	 *
+	 * @return the created on
+	 */
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	/**
+	 * Sets the created on.
+	 *
+	 * @param createdOn the new created on
+	 */
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	/**
+	 * Gets the last modified on.
+	 *
+	 * @return the last modified on
+	 */
+	public String getLastModifiedOn() {
+		return lastModifiedOn;
+	}
+
+	/**
+	 * Sets the last modified on.
+	 *
+	 * @param lastModifiedOn the new last modified on
+	 */
+	public void setLastModifiedOn(String lastModifiedOn) {
+		this.lastModifiedOn = lastModifiedOn;
+	}
+
+	/**
 	 * Gets the modified by.
 	 *
 	 * @return the modified by
@@ -182,39 +221,5 @@ public class TemplateObj {
 		this.modifiedBy = modifiedBy;
 	}
 
-	/**
-	 * Gets the created on.
-	 *
-	 * @return the created on
-	 */
-	public Date getCreatedOn() {
-		return new Date(createdOn.getTime());
-	}
 
-	/**
-	 * Sets the created on.
-	 *
-	 * @param createdOn the new created on
-	 */
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = new Date(createdOn.getTime());
-	}
-
-	/**
-	 * Gets the last modified on.
-	 *
-	 * @return the last modified on
-	 */
-	public Date getLastModifiedOn() {
-		return new Date(lastModifiedOn.getTime());
-	}
-
-	/**
-	 * Sets the last modified on.
-	 *
-	 * @param lastModifiedOn the new last modified on
-	 */
-	public void setLastModifiedOn(Date lastModifiedOn) {
-		this.lastModifiedOn = new Date(lastModifiedOn.getTime());
-	}
 }

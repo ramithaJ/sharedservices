@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.wiley.gr.ace.authorservices.persistence.services.impl;
 
 import static com.wiley.gr.ace.authorservices.persistence.connection.NotificationTemplateHibernateConnection.getSessionFactory;
@@ -41,7 +44,8 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				schedule = (Schedule) session.createQuery(hql)
 						.setString("applicationId", applicationId)
 						.setString("scheduleId", scheduleId).list().get(0);
-			} finally {
+			
+			}finally {
 				if (!StringUtils.isEmpty(session)) {
 					session.flush();
 					session.close();
@@ -60,14 +64,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	 * @throws Exception the exception
 	 */
 	@Override
-	public boolean saveOrUpdateSchedule(Schedule schedule,
-			ScheduleTemplate scheduleTemplate) throws Exception {
+	public boolean saveOrUpdateSchedule(Schedule schedule) throws Exception {
 		Session session = null;
 		try {
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
 			session.saveOrUpdate(schedule);
-			session.saveOrUpdate(scheduleTemplate);
 			session.getTransaction().commit();
 			return true;
 
@@ -96,8 +98,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		Session session = null;
 		boolean isDeleted = false;
 		Schedule schedule = new Schedule();
-		ScheduleTemplate scheduleTemplate = new ScheduleTemplate();
-		scheduleTemplate.setScheduleId(scheduleId);
 		schedule.setId(scheduleId);
 		schedule.setAppId(applicationId);
 		if (!StringUtils.isEmpty(applicationId)
@@ -105,7 +105,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			try {
 				session = getSessionFactory().openSession();
 				session.beginTransaction();
-				session.delete(scheduleTemplate);
 				session.delete(schedule);
 				session.getTransaction().commit();
 				isDeleted = true;
@@ -177,23 +176,25 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	 *
 	 * @param schedule the schedule
 	 * @param scheduleTemplate the schedule template
+	 * @param applicationId the application id
 	 * @return true, if successful
 	 * @throws Exception the exception
 	 */
 	@Override
-	public Template getTemplate(String templateId) throws Exception {
+	public Template getTemplate(String templateId,String applicationId) throws Exception {
 
 		Session session = null;
 		Template template = null;
 		if (!StringUtils.isEmpty(templateId)) {
 
 			session = getSessionFactory().openSession();
-			String hql = "from Template t where t.id=:templateId";
+			String hql = "from Template t where t.id=:templateId and t.appId = :applicationId";
 			try {
 				template = (Template) session.createQuery(hql)
-						.setString("templateId", templateId).list().get(0);
+						.setString("templateId", templateId).setString("applicationId",applicationId).list().get(0);
 
-			} finally {
+			}
+			finally {
 				if (session != null) {
 					session.flush();
 					session.close();
@@ -215,13 +216,21 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	public Notification getNotification(String applicationId,
 			String notificationId) throws Exception {
 		Notification notification = null;
+		Session session = null;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(notificationId)) {
-			Session session = getSessionFactory().openSession();
+			try{
+			session = getSessionFactory().openSession();
 			String hql = "from Notification n where n.id = :notificationId and n.appId = :applicationId";
 			notification = (Notification) session.createQuery(hql)
 					.setString("notificationId", notificationId)
 					.setString("applicationId", applicationId).list().get(0);
+			}finally {
+				if (session != null) {
+					session.flush();
+					session.close();
+				}
+			}
 		}
 		return notification;
 	}
@@ -246,7 +255,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			String unread = notification.getUnread().toString();
 			if (!unread.equalsIgnoreCase("n")) {
 				try {
-	
+					
 					session = getSessionFactory().openSession();
 					session.beginTransaction();
 					notification.setUnread('n');
@@ -257,7 +266,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				} catch (Exception e) {
 					isSet = false;
 				}finally{
-					if (session != null) {
+					if (!StringUtils.isEmpty(session)) {
 						session.flush();
 						session.close();
 					}
@@ -309,13 +318,21 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	public NotificationRecipients getNotificationRecipients(
 			String notificationId) throws Exception {
 		NotificationRecipients notificationRecipients = null;
+		Session session = null;
 		if (!StringUtils.isEmpty(notificationId)) {
-			Session session = getSessionFactory().openSession();
-			String hql = "from NotificationRecepients nr where nr.notificationId = :notificationId";
+			try{
+			session = getSessionFactory().openSession();
+			String hql = "from NotificationRecipients nr where nr.notificationId = :notificationId";
 			notificationRecipients = (NotificationRecipients) session
 					.createQuery(hql)
 					.setString("notificationId", notificationId).list().get(0);
-		}
+			}finally {
+				if (!StringUtils.isEmpty(session)) {
+					session.flush();
+					session.close();
+				}
+			}
+			}
 		return notificationRecipients;
 	}
 
@@ -342,5 +359,34 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 		notification.setAppId(applicationId);
 
 		return false;
+	}
+	/**
+	 * Gets the schedule template entity.
+	 *
+	 * @param scheduleId the schedule id
+	 * @return the schedule template entity
+	 * @throws Exception the exception
+	 */
+	@Override
+	public ScheduleTemplate getScheduleTemplateEntity(
+			String scheduleId) throws Exception {
+		ScheduleTemplate scheduleTemplate = null;
+		Session session = null;
+		if (!StringUtils.isEmpty(scheduleId)) {
+			try{
+			session = getSessionFactory().openSession(); 
+			String hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
+			scheduleTemplate = (ScheduleTemplate) session
+					.createQuery(hql)
+					.setString("scheduleId", scheduleId).list().get(0);
+			}finally {
+				if (!StringUtils.isEmpty(session)) {
+					session.flush();
+					session.close();
+				}
+			}
+		}
+		return scheduleTemplate;
+		
 	}
 }

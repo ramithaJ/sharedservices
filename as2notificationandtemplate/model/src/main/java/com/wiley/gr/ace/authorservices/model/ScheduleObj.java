@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.authorservices.model;
 
-import java.util.Date;
+
 
 
 /**
@@ -24,10 +24,10 @@ public class ScheduleObj {
 	private String modifiedBy;
 	
 	/** The created on. */
-	private Date createdOn;
+	private String createdOn;
 	
 	/** The last modified on. */
-	private Date lastModifiedOn;
+	private String lastModifiedOn;
 	
 	/** The schedule template. */
 	private ScheduleTemplateObj scheduleTemplate;
@@ -127,37 +127,37 @@ public class ScheduleObj {
 	 *
 	 * @return the created on
 	 */
-	public Date getCreatedOn() {
-		return new Date(createdOn.getTime());
+	public String getCreatedOn() {
+		return createdOn;
 	}
-	
+
 	/**
 	 * Sets the created on.
 	 *
 	 * @param createdOn the new created on
 	 */
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = new Date(createdOn.getTime());
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
 	}
-	
+
 	/**
 	 * Gets the last modified on.
 	 *
 	 * @return the last modified on
 	 */
-	public Date getLastModifiedOn() {
-		return new Date(lastModifiedOn.getTime());
+	public String getLastModifiedOn() {
+		return lastModifiedOn;
 	}
-	
+
 	/**
 	 * Sets the last modified on.
 	 *
 	 * @param lastModifiedOn the new last modified on
 	 */
-	public void setLastModifiedOn(Date lastModifiedOn) {
-		this.lastModifiedOn = new Date(lastModifiedOn.getTime());
+	public void setLastModifiedOn(String lastModifiedOn) {
+		this.lastModifiedOn = lastModifiedOn;
 	}
-	
+
 	/**
 	 * Gets the schedule template.
 	 *
@@ -166,7 +166,7 @@ public class ScheduleObj {
 	public ScheduleTemplateObj getScheduleTemplate() {
 		return scheduleTemplate;
 	}
-	
+
 	/**
 	 * Sets the schedule template.
 	 *
@@ -175,5 +175,7 @@ public class ScheduleObj {
 	public void setScheduleTemplate(ScheduleTemplateObj scheduleTemplate) {
 		this.scheduleTemplate = scheduleTemplate;
 	}
+
+
 
 }

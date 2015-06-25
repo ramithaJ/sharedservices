@@ -114,7 +114,7 @@ public class NotificationManagementController {
 	 * @param scheduleObj the schedule obj
 	 * @return the service
 	 */
-	@RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.PUT)
 	public @ResponseBody Service updateSchedule(
 			@PathVariable("scheduleId") final String scheduleId,
 			@PathVariable("applicationId") final String applicationId,
@@ -151,7 +151,7 @@ public class NotificationManagementController {
 	 * @param schedule the schedule
 	 * @return the service
 	 */
-	@RequestMapping(value = "schedule/create", method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody Service createSchedule(
 			@RequestBody final ScheduleObj schedule) {
 		Service service = new Service();
@@ -171,7 +171,7 @@ public class NotificationManagementController {
 		}
 
 		else {
-			final ErrorPOJO error = new ErrorPOJO();
+			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(308);
 			error.setMessage("No records found for the required criteria");
 			service.setStatus("FAILURE");
@@ -270,7 +270,6 @@ public class NotificationManagementController {
 			@PathVariable("notificationId") final String notificationId) {
 		Service service = new Service();
 		boolean isSet = false;
-		System.err.println("----------------------------------");
 		try {
 			isSet = notificationManagementService.setNotificationFlag(
 					applicationId, notificationId);
@@ -334,6 +333,7 @@ public class NotificationManagementController {
 				service.setError(error);
 			}
 		} catch (final Exception e) {
+			e.printStackTrace();
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(316);
 			error.setMessage("Error Fetching Notification History");

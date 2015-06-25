@@ -113,7 +113,7 @@ public class TemplateManagementController {
 	 * @param template the template
 	 * @return the service
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.PUT)
+	@RequestMapping( method = RequestMethod.POST)
 	public @ResponseBody Service createTemplate(
 			@RequestBody TemplateObj template) {
 		Service service = new Service();
@@ -149,7 +149,7 @@ public class TemplateManagementController {
 	 * @param templateObj the template obj
 	 * @return the service
 	 */
-	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.PUT)
 	public @ResponseBody Service updateTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,

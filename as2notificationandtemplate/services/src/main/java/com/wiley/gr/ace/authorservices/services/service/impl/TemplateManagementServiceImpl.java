@@ -3,14 +3,15 @@ package com.wiley.gr.ace.authorservices.services.service.impl;
 import java.io.BufferedReader;
 import java.io.StringWriter;
 import java.sql.Clob;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.rowset.serial.SerialClob;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -101,10 +102,10 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 			templateEntity.setBody(new SerialClob(template.getBody()
 					.toCharArray()));
 			templateEntity.setCreatedBy(template.getCreatedBy());
-			templateEntity.setCreatedOn(template.getCreatedOn());
+			templateEntity.setCreatedOn(getDate(template.getCreatedOn()));
 			templateEntity.setDescription(template.getDescription());
 			templateEntity.setId(template.getId());
-			templateEntity.setLastModifiedOn(template.getLastModifiedOn());
+			templateEntity.setLastModifiedOn(getDate(template.getLastModifiedOn()));
 			templateEntity.setModifiedBy(template.getModifiedBy());
 			templateEntity.setTagl1(template.getTagl1());
 			templateEntity.setTagl2(template.getTagl2());
@@ -172,10 +173,14 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	@Override
 	public TemplateObj searchTemplate(String applicationId, String tagL1,
 			String tagL2) throws Exception {
-
-		ModelMapper modelMapper = new ModelMapper();
+		TemplateObj template = null;
+		if (!StringUtils.isEmpty(applicationId)
+				&& !StringUtils.isEmpty(tagL1)
+				&& !StringUtils.isEmpty(tagL2)) {
 		Template templateEntity = templateManagementDAO.searchTemplate(applicationId, tagL1, tagL2);
-		return modelMapper.map(templateEntity, TemplateObj.class);
+			template = getTemplateVO(templateEntity);
+		}
+		return template;
 
 
 	}
@@ -190,15 +195,25 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	private TemplateObj getTemplateVO(Template templateEntity)
 			throws Exception {
 		TemplateObj template = new TemplateObj();
+		if(!StringUtils.isEmpty(templateEntity.getAppId()))
 		template.setAppId(templateEntity.getAppId());
+		if(!StringUtils.isEmpty(templateEntity.getBody()))
 		template.setBody(clobStringConversion(templateEntity.getBody()));
+		if(!StringUtils.isEmpty(templateEntity.getCreatedBy()))
 		template.setCreatedBy(templateEntity.getCreatedBy());
-		template.setCreatedOn(templateEntity.getCreatedOn());
+		if(!StringUtils.isEmpty(templateEntity.getCreatedOn()))
+		template.setCreatedOn(templateEntity.getCreatedOn().toString());
+		if(!StringUtils.isEmpty(templateEntity.getDescription()))
 		template.setDescription(templateEntity.getDescription());
+		if(!StringUtils.isEmpty(templateEntity.getId()))
 		template.setId(templateEntity.getId());
-		template.setLastModifiedOn(templateEntity.getLastModifiedOn());
+		if(!StringUtils.isEmpty(templateEntity.getLastModifiedOn()))
+		template.setLastModifiedOn(templateEntity.getLastModifiedOn().toString());
+		if(!StringUtils.isEmpty(templateEntity.getModifiedBy()))
 		template.setModifiedBy(templateEntity.getModifiedBy());
+		if(!StringUtils.isEmpty(templateEntity.getTagl1()))
 		template.setTagl1(templateEntity.getTagl1());
+		if(!StringUtils.isEmpty(templateEntity.getTagl2()))
 		template.setTagl2(templateEntity.getTagl2());
 		return template;
 	}
@@ -250,7 +265,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	private static String clobStringConversion(Clob clb) throws Exception
+	private  String clobStringConversion(Clob clb) throws Exception
 			 {
 		if (clb == null)
 			return "";
@@ -266,5 +281,11 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 		return str.toString();
 		
 	}
+	private Date getDate(String strDate) throws Exception{
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = formatter.parse(strDate);
+		return date;
+	}
+	
 
 }

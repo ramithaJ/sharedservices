@@ -4,6 +4,7 @@ package com.wiley.gr.ace.authorservices.persistence.entity;
 
 import java.sql.Clob;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 
 /**
@@ -123,7 +127,7 @@ public class Notification implements java.io.Serializable {
 	 *
 	 * @return the template
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ORIG_TMPL_ID")
 	public Template getTemplate() {
 		return this.template;
@@ -278,6 +282,7 @@ public class Notification implements java.io.Serializable {
 	 * @return the notification recipients
 	 */
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "notification")
+	@Cascade({CascadeType.PERSIST, CascadeType.DELETE})
 	public NotificationRecipients getNotificationRecipients() {
 		return this.notificationRecipients;
 	}

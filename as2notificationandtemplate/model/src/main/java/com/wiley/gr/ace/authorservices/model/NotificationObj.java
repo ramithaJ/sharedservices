@@ -1,8 +1,6 @@
 package com.wiley.gr.ace.authorservices.model;
 
 import java.sql.Clob;
-import java.util.Date;
-
 
 
 /**
@@ -32,7 +30,7 @@ public class NotificationObj {
 	private String type;
 	
 	/** The sent on. */
-	private Date sentOn;
+	private String sentOn;
 	
 	/** The unread. */
 	private Character unread;
@@ -166,24 +164,25 @@ public class NotificationObj {
 		this.type = type;
 	}
 	
+	
 	/**
 	 * Gets the sent on.
 	 *
 	 * @return the sent on
 	 */
-	public Date getSentOn() {
-		return new Date(sentOn.getTime());
+	public String getSentOn() {
+		return sentOn;
 	}
-	
+
 	/**
 	 * Sets the sent on.
 	 *
 	 * @param sentOn the new sent on
 	 */
-	public void setSentOn(Date sentOn) {
-		this.sentOn = new Date(sentOn.getTime());
+	public void setSentOn(String sentOn) {
+		this.sentOn = sentOn;
 	}
-	
+
 	/**
 	 * Gets the unread.
 	 *

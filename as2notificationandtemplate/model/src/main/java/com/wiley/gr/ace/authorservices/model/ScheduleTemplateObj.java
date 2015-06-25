@@ -1,78 +1,57 @@
 package com.wiley.gr.ace.authorservices.model;
 
-
-
 /**
  * The Class ScheduleTemplateObj.
  */
 public class ScheduleTemplateObj {
-	
-	/** The schedule id. */
-	private String scheduleId;
-	
+
 	/** The template by onscreen tmpl id. */
-	private String templateByOnscreenTmplId;
-	
+	private String email;
+
 	/** The template by email tmpl id. */
-	private String templateByEmailTmplId;
-	
+	private String onscreen;
+
 	/** The delay. */
 	private Integer delay;
-	
-	/**
-	 * Gets the schedule id.
-	 *
-	 * @return the schedule id
-	 */
-	public String getScheduleId() {
-		return scheduleId;
-	}
-	
-	/**
-	 * Sets the schedule id.
-	 *
-	 * @param scheduleId the new schedule id
-	 */
-	public void setScheduleId(String scheduleId) {
-		this.scheduleId = scheduleId;
-	}
-	
+
 	/**
 	 * Gets the template by onscreen tmpl id.
 	 *
 	 * @return the template by onscreen tmpl id
 	 */
-	public String getTemplateByOnscreenTmplId() {
-		return templateByOnscreenTmplId;
+	public String getOnscreen() {
+		return onscreen;
 	}
-	
+
 	/**
 	 * Sets the template by onscreen tmpl id.
 	 *
-	 * @param templateByOnscreenTmplId the new template by onscreen tmpl id
+	 * @param templateByOnscreenTmplId
+	 *            the new template by onscreen tmpl id
 	 */
-	public void setTemplateByOnscreenTmplId(String templateByOnscreenTmplId) {
-		this.templateByOnscreenTmplId = templateByOnscreenTmplId;
+	public void setOnscreen(String onscreen) {
+		this.onscreen = onscreen;
 	}
-	
+
 	/**
 	 * Gets the template by email tmpl id.
 	 *
 	 * @return the template by email tmpl id
 	 */
-	public String getTemplateByEmailTmplId() {
-		return templateByEmailTmplId;
+	public String getEmail() {
+		return email;
 	}
-	
+
 	/**
 	 * Sets the template by email tmpl id.
 	 *
-	 * @param templateByEmailTmplId the new template by email tmpl id
+	 * @param templateByEmailTmplId
+	 *            the new template by email tmpl id
 	 */
-	public void setTemplateByEmailTmplId(String templateByEmailTmplId) {
-		this.templateByEmailTmplId = templateByEmailTmplId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	
+
 	/**
 	 * Gets the delay.
 	 *
@@ -81,11 +60,12 @@ public class ScheduleTemplateObj {
 	public Integer getDelay() {
 		return delay;
 	}
-	
+
 	/**
 	 * Sets the delay.
 	 *
-	 * @param delay the new delay
+	 * @param delay
+	 *            the new delay
 	 */
 	public void setDelay(Integer delay) {
 		this.delay = delay;
