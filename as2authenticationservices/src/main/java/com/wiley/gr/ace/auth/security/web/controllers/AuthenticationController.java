@@ -13,14 +13,11 @@
  */
 package com.wiley.gr.ace.auth.security.web.controllers;
 
-import java.util.Properties;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -96,13 +93,6 @@ public class AuthenticationController {
 	private String authMessage007;
 
 	/**
-	 * This field holds the value of messageProp
-	 */
-	@Autowired
-	@Qualifier(value = "messageProperties")
-	private Properties messageProp;
-
-	/**
 	 * This field holds the value of authenticationService
 	 */
 	@Autowired(required = true)
@@ -133,8 +123,7 @@ public class AuthenticationController {
 
 			// Validate the input request.
 			if (null == request) {
-				return new ResponseEntity<>(new Response(
-						this.messageProp.getProperty(this.authMessage001)),
+				return new ResponseEntity<>(new Response(this.authMessage001),
 						null, HttpStatus.OK);
 			}
 
@@ -145,8 +134,7 @@ public class AuthenticationController {
 							String.valueOf(Response.STATUS.LOCKED))) {
 
 				return new ResponseEntity<>(new Response(
-						CommonConstant.LOCKED_CODE,
-						this.messageProp.getProperty(this.authMessage007),
+						CommonConstant.LOCKED_CODE, this.authMessage007,
 						authResponse.getStatus()), null, HttpStatus.OK);
 			}
 
@@ -158,8 +146,7 @@ public class AuthenticationController {
 						.info("Authentication Response..." + authResponse);
 
 				return new ResponseEntity<>(new Response(
-						CommonConstant.FAIL_CODE,
-						this.messageProp.getProperty(this.authMessage005),
+						CommonConstant.FAIL_CODE, this.authMessage005,
 						String.valueOf(Response.STATUS.FAILURE)), null,
 						HttpStatus.OK);
 			}
@@ -170,8 +157,7 @@ public class AuthenticationController {
 			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
 			return new ResponseEntity<>(new Response(
-					CommonConstant.STATUS_CODE,
-					this.messageProp.getProperty(this.authMessage006),
+					CommonConstant.STATUS_CODE, this.authMessage006,
 					String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
 					HttpStatus.OK);
 		} catch (final Exception e) {
