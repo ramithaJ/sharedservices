@@ -3,6 +3,8 @@ package com.wiley.gr.ace.sharedservices.persistence.entity;
 // Generated Jun 23, 2015 4:17:36 PM by Hibernate Tools 3.4.0.CR1
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -70,6 +72,7 @@ public class UserAlerts implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ALERT_CD", nullable = false, insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
 	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 	public Alerts getAlerts() {
 		return this.alerts;

@@ -30,6 +30,7 @@ public class Affiliation implements Serializable {
     private String countryCd;
     private String fromDate;
     private String toDate;
+    private String status;
 
     public String getInstitutionCd() {
         return institutionCd;
@@ -111,6 +112,14 @@ public class Affiliation implements Serializable {
         this.departmentName = departmentName;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Affiliation{" +
@@ -124,6 +133,7 @@ public class Affiliation implements Serializable {
                 ", countryCd='" + countryCd + '\'' +
                 ", fromDate='" + fromDate + '\'' +
                 ", toDate='" + toDate + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

@@ -26,6 +26,8 @@ public class PreferredJournal implements Serializable {
 
     private String journalTitle;
 
+    private String status;
+
     public String getJournalId() {
         return journalId;
     }
@@ -48,6 +50,14 @@ public class PreferredJournal implements Serializable {
 
     public void setJournalTitle(String journalTitle) {
         this.journalTitle = journalTitle;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
