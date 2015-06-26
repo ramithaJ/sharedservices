@@ -97,9 +97,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			throws Exception {
 		Session session = null;
 		boolean isDeleted = false;
-		Schedule schedule = new Schedule();
-		schedule.setId(scheduleId);
-		schedule.setAppId(applicationId);
+		Schedule schedule = getSchedule(applicationId, scheduleId);
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(applicationId)) {
 			try {

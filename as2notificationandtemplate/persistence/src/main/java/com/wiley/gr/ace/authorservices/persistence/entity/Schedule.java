@@ -244,7 +244,7 @@ public class Schedule implements java.io.Serializable {
 	 * @return the schedule template
 	 */
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "schedule")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "schedule", orphanRemoval = true)
 	@Cascade(CascadeType.ALL)
 	public ScheduleTemplate getScheduleTemplate() {
 		return this.scheduleTemplate;
