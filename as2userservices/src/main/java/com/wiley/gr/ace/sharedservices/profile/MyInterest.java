@@ -26,6 +26,8 @@ public class MyInterest implements Serializable {
 
     private String interestName;
 
+    private String status;
+
     public String getId() {
         return id;
     }
@@ -48,6 +50,14 @@ public class MyInterest implements Serializable {
 
     public void setInterestName(String interestName) {
         this.interestName = interestName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

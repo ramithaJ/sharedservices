@@ -25,6 +25,7 @@ public class Funder implements Serializable {
     private String researchFunderName;
     private String researchFunderDoi;
     private List<GrantNumber> grantNumbers;
+    private String status;
 
     public String getId() {
         return id;
@@ -56,6 +57,14 @@ public class Funder implements Serializable {
 
     public void setGrantNumbers(List<GrantNumber> grantNumbers) {
         this.grantNumbers = grantNumbers;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

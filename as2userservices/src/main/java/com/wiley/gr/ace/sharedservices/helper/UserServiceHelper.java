@@ -111,6 +111,40 @@ public class UserServiceHelper {
     }
 
     /**
+     * Setter method to UserAlerts data.
+     * @param alerts
+     * @param alertType
+     * @return
+     */
+    public static UserAlerts setUserAlerts(UserAlerts alerts, AlertType alertType) {
+        if (!Character.isWhitespace(alertType.getEmail())) {
+            alerts.setEmailFlg(alertType.getEmail());
+        }
+        if (!Character.isWhitespace(alertType.getOnScreen())) {
+            alerts.setOnScreenFlg(alertType.getOnScreen());
+        }
+        return alerts;
+    }
+
+    /**
+     * Setter method for ResearchFunders data.
+     *
+     * @param researchFunders
+     * @param funder
+     * @return
+     */
+    public static ResearchFunders setResearchFunders(ResearchFunders researchFunders, Funder funder) {
+        if (!StringUtils.isEmpty(funder.getResearchFunderName())) {
+            researchFunders.setFunderName(funder.getResearchFunderName());
+        }
+        if (!StringUtils.isEmpty(funder.getResearchFunderDoi())) {
+            researchFunders.setFunderDoi(funder.getResearchFunderDoi());
+        }
+        researchFunders.setUpdatedDate(UserServiceHelper.getDate());
+        return researchFunders;
+    }
+
+    /**
      * Setter method for Address data.
      *
      * @param address        Entity Object
@@ -355,6 +389,46 @@ public class UserServiceHelper {
     }
 
     /**
+     * Method to get coauthor details.
+     *
+     * @param authCoauthDetails
+     * @param coAuthor
+     * @return
+     */
+    public static CoAuthor getAuthCoauthDetails(AuthCoauthDetails authCoauthDetails, CoAuthor coAuthor) {
+
+        if (authCoauthDetails.getAuthCoauthId() > 0) {
+            coAuthor.setId("" + authCoauthDetails.getAuthCoauthId());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthFirstName())) {
+            coAuthor.setFirstName(authCoauthDetails.getCoauthFirstName());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthLastName())) {
+            coAuthor.setLastName(authCoauthDetails.getCoauthLastName());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthPhone())) {
+            coAuthor.setPhone(authCoauthDetails.getCoauthPhone());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthEmailAddr())) {
+            coAuthor.setEmail(authCoauthDetails.getCoauthEmailAddr());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthDepartmentCd())) {
+            coAuthor.setDepartmentCd(authCoauthDetails.getCoauthDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthDeptName())) {
+            coAuthor.setDepartmentName(authCoauthDetails.getCoauthDeptName());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthInstitutionCd())) {
+            coAuthor.setInstitutionCd(authCoauthDetails.getCoauthInstitutionCd());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthInstitutionName())) {
+            coAuthor.setInstitutionName(authCoauthDetails.getCoauthInstitutionName());
+        }
+
+        return coAuthor;
+    }
+
+    /**
      * Method to set User Profile Attributes.
      *
      * @param profileAttributeList
@@ -460,8 +534,11 @@ public class UserServiceHelper {
             if (!StringUtils.isEmpty(user.getPrimaryEmailAddr())) {
                 userProfile.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
             }
-            if (null != user.getUserProfileByUserId() && null != user.getUserProfileByUserId().getUserSecondaryEmailAddr()) {
+            if (null != user.getUserProfileByUserId().getUserSecondaryEmailAddr() && !StringUtils.isEmpty(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr())) {
                 userProfile.setRecoveryEmailAddress(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            }
+            if (!StringUtils.isEmpty(userReferenceData.getEcid())) {
+                userProfile.setEcid(userReferenceData.getEcid());
             }
         }
         return userProfile;

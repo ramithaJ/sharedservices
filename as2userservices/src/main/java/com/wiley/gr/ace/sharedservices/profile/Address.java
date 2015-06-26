@@ -38,6 +38,7 @@ public class Address implements Serializable {
     private String phoneNo;
     private String faxNo;
     private String type;
+    private String status;
 
     public String getTitleCd() {
         return titleCd;
@@ -183,6 +184,14 @@ public class Address implements Serializable {
         this.type = type;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Address{" +
@@ -204,6 +213,7 @@ public class Address implements Serializable {
                 ", phoneNo='" + phoneNo + '\'' +
                 ", faxNo='" + faxNo + '\'' +
                 ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

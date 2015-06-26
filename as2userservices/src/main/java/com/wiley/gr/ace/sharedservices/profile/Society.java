@@ -27,6 +27,7 @@ public class Society implements Serializable {
     private String promotionCode;
     private String fromDate;
     private String toDate;
+    private String status;
 
     public String getSocietyCd() {
         return societyCd;
@@ -84,14 +85,25 @@ public class Society implements Serializable {
         this.societyName = societyName;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Society{" +
-                "societyCd='" + societyCd + '\'' +
+                "id='" + id + '\'' +
+                ", societyCd='" + societyCd + '\'' +
+                ", societyName='" + societyName + '\'' +
                 ", membershipNumber='" + membershipNumber + '\'' +
                 ", promotionCode='" + promotionCode + '\'' +
                 ", fromDate='" + fromDate + '\'' +
                 ", toDate='" + toDate + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

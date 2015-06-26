@@ -2,6 +2,8 @@ package com.wiley.gr.ace.sharedservices.persistence.entity;
 // default package
 // Generated Jun 23, 2015 4:17:36 PM by Hibernate Tools 3.4.0.CR1
 
+import org.hibernate.annotations.Cascade;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -688,6 +690,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usersByUserId")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public Set<UserAddresses> getUserAddressesesForUserId() {
 		return this.userAddressesesForUserId;
 	}
@@ -1083,6 +1086,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usersByUserId")
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public UserProfile getUserProfileByUserId() {
 		return this.userProfileByUserId;
 	}

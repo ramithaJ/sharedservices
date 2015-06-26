@@ -69,7 +69,7 @@ public class UserPreferredJournals implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "JOURNAL_ID", nullable = false, insertable = false, updatable = false)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})	public Journals getJournals() {
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})	public Journals getJournals() {
 		return this.journals;
 	}
 

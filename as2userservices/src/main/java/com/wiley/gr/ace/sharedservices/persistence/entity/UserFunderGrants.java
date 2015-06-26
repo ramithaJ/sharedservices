@@ -75,7 +75,7 @@ public class UserFunderGrants implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_FUNDER_ID")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public UserFunders getUserFunders() {
 		return this.userFunders;
 	}

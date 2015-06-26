@@ -30,6 +30,7 @@ public class CoAuthor implements Serializable {
     private String institutionName;
     private String departmentCd;
     private String departmentName;
+    private String status;
 
     public String getTitleCd() {
         return titleCd;
@@ -109,6 +110,14 @@ public class CoAuthor implements Serializable {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
