@@ -102,6 +102,7 @@ public class NotificationManagementServiceImpl implements
 				ScheduleTemplate scheduleTemplate = getScheduleTemplateEntity(
 						schedule.getScheduleTemplate(), schedule.getId(),
 						schedule.getAppId());
+						scheduleTemplate.setSchedule(scheduleEntity);
 				scheduleEntity.setScheduleTemplate(scheduleTemplate);
 			}
 			return notificationManagementDAO
@@ -130,15 +131,14 @@ public class NotificationManagementServiceImpl implements
 		ScheduleTemplate scheduleTemplate = null;
 		scheduleEntity = notificationManagementDAO.getSchedule(applicationId,
 				scheduleId);
-
 		if (!StringUtils.isEmpty(scheduleObj)) {
 			if (!StringUtils.isEmpty(scheduleObj.getAppId()))
 				scheduleEntity.setAppId(scheduleObj.getAppId());
 			if (!StringUtils.isEmpty(scheduleObj.getScheduleTemplate())) {
 				scheduleTemplate = getScheduleTemplateEntity(
-						scheduleObj.getScheduleTemplate(), scheduleObj.getId(),
-						scheduleObj.getAppId());
+						scheduleObj.getScheduleTemplate(), scheduleId,applicationId);
 				if (!StringUtils.isEmpty(scheduleTemplate)) {
+					scheduleTemplate.setSchedule(scheduleEntity);
 					scheduleEntity.setScheduleTemplate(scheduleTemplate);
 				}
 			}
@@ -185,20 +185,23 @@ public class NotificationManagementServiceImpl implements
 	 * @throws Exception
 	 *             the exception
 	 */
-	private ScheduleTemplate getScheduleTemplateEntity(
+	private ScheduleTemplate getScheduleTemplateEntity (
 			ScheduleTemplateObj scheduleTemplateObj, String scheduleId,
 			String applcationId) throws Exception {
-		ScheduleTemplate scheduleTemplate = new ScheduleTemplate();
-		scheduleTemplate.setScheduleId(scheduleId);
+		ScheduleTemplate scheduleTemplate = notificationManagementDAO.getScheduleTemplateEntity(scheduleId);
+		if(StringUtils.isEmpty(scheduleTemplate)){
+			scheduleTemplate = new ScheduleTemplate();
+			scheduleTemplate.setScheduleId(scheduleId);
+		}
 		if (!StringUtils.isEmpty(scheduleTemplateObj.getOnscreen())) {
 			Template temTemplate = notificationManagementDAO.getTemplate(
-					scheduleTemplateObj.getEmail(), applcationId);
+					scheduleTemplateObj.getOnscreen(), applcationId);
 			scheduleTemplate.setTemplateByOnscreenTmpl(temTemplate);
 		}
 
 		if (!StringUtils.isEmpty(scheduleTemplateObj.getEmail())) {
 			Template temTemplate = notificationManagementDAO.getTemplate(
-					scheduleTemplateObj.getOnscreen(), applcationId);
+					scheduleTemplateObj.getEmail(), applcationId);
 			scheduleTemplate.setTemplateByEmailTmpl(temTemplate);
 		}
 		if (!StringUtils.isEmpty(scheduleTemplateObj.getDelay())) {
@@ -251,10 +254,16 @@ public class NotificationManagementServiceImpl implements
 	private ScheduleTemplateObj getScheduleTemplateVO(
 			ScheduleTemplate scheduleTemplateEntity) throws Exception {
 		ScheduleTemplateObj scheduleTemplate = new ScheduleTemplateObj();
+		if(!StringUtils.isEmpty(scheduleTemplateEntity
+				.getTemplateByOnscreenTmpl()))
 		scheduleTemplate.setOnscreen(scheduleTemplateEntity
 				.getTemplateByOnscreenTmpl().getId());
+		if(!StringUtils.isEmpty(scheduleTemplateEntity
+				.getTemplateByEmailTmpl()))
 		scheduleTemplate.setEmail(scheduleTemplateEntity
 				.getTemplateByEmailTmpl().getId());
+		if(!StringUtils.isEmpty(scheduleTemplateEntity
+				.getDelay()))
 		scheduleTemplate.setDelay(scheduleTemplateEntity.getDelay());
 		return scheduleTemplate;
 	}

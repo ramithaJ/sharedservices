@@ -193,6 +193,8 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				template = (Template) session.createQuery(hql)
 						.setString("templateId", templateId).setString("applicationId",applicationId).list().get(0);
 
+			}catch (Exception e) {
+				e.printStackTrace();
 			}
 			finally {
 				if (session != null) {

@@ -2,7 +2,7 @@ package com.wiley.gr.ace.authorservices.persistence.entity;
 
 
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -76,9 +78,9 @@ public class ScheduleTemplate implements java.io.Serializable {
 	 *
 	 * @return the schedule id
 	 */
-	@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "schedule"))
+	//@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "schedule"))
 	@Id
-	@GeneratedValue(generator = "generator")
+	//@GeneratedValue(generator = "generator")
 	@Column(name = "SCHEDULE_ID", unique = true, nullable = false)
 	public String getScheduleId() {
 		return this.scheduleId;
@@ -100,6 +102,7 @@ public class ScheduleTemplate implements java.io.Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ONSCREEN_TMPL")
+
 	public Template getTemplateByOnscreenTmpl() {
 		return this.templateByOnscreenTmpl;
 	}
