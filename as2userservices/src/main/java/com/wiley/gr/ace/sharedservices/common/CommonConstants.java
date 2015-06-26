@@ -18,5 +18,13 @@ public interface CommonConstants {
     String DATE_FORMAT = "MM-dd-yyyy";
     String ADDRESS_ID = "addressId";
 
+    String LOOK_UP = "/lookup";
+    String PRIMARY_EMAIL_ID = "primaryEmailAddr";
+    String FIRST_NAME = "firstName";
+    String LAST_NAME = "lastName";
+    String SECONDARY_EMAIL_ID = "secondaryEmailAddr";
+    String EMAIL_TYPE_PRIMARY = "primary";
+    String EMAIL_TYPE_SECONDARY = "secondary";
+
 
 }

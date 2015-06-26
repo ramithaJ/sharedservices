@@ -15,6 +15,7 @@ package com.wiley.gr.ace.sharedservices.service;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.payload.CreateUserServiceRequest;
+import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 
 /**
@@ -29,5 +30,7 @@ public interface UserService {
     void deleteUserService(String userId) throws SharedServiceException;
 
     UserServiceRequest getUserProfileService(String userId) throws SharedServiceException;
+
+    LookupResponse userlookUpService(String firstName, String lastName, String emailId) throws SharedServiceException;
 
 }
