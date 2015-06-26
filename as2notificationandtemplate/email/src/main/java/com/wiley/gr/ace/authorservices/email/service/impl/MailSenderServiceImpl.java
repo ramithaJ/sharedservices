@@ -40,7 +40,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 		 mailMsg.setFrom(from);
 		 mailMsg.setTo(to);
 		 mailMsg.setSubject(subject);
-		 mailMsg.setText(body);
+		 mailMsg.setText("", body);
 		 mailSender.send(message);
 	}
 
