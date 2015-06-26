@@ -1,4 +1,3 @@
-
 package com.wiley.gr.ace.authorservices.persistence.services;
 
 import java.util.List;
@@ -8,7 +7,6 @@ import com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients
 import com.wiley.gr.ace.authorservices.persistence.entity.Schedule;
 import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
-
 
 /**
  * The Interface NotificationManagementDAO.
@@ -70,7 +68,8 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	Template getTemplate(String templateId, String applicationId) throws Exception;
+	Template getTemplate(String templateId, String applicationId)
+			throws Exception;
 
 	/**
 	 * Save or update schedule.
@@ -83,26 +82,30 @@ public interface NotificationManagementDAO {
 	 */
 	boolean saveOrUpdateSchedule(Schedule schedule) throws Exception;
 
-
-
 	/**
 	 * Gets the schedule template entity.
 	 *
-	 * @param scheduleId the schedule id
+	 * @param scheduleId
+	 *            the schedule id
 	 * @return the schedule template entity
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	ScheduleTemplate getScheduleTemplateEntity(String scheduleId) throws Exception;
+	ScheduleTemplate getScheduleTemplateEntity(String scheduleId)
+			throws Exception;
 
 	/**
 	 * Gets the notification.
 	 *
-	 * @param applicationId the application id
-	 * @param notificationId            the notification id
+	 * @param applicationId
+	 *            the application id
+	 * @param notificationId
+	 *            the notification id
 	 * @return the notification
-	 * @throws Exception             the exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	Notification getNotification(String applicationId, String notificationId)
+	Notification getNotification(String applicationId, Integer notificationId)
 			throws Exception;
 
 	/**
@@ -116,7 +119,7 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	boolean setNotificationFlag(String applicationId, String notificationId)
+	boolean setNotificationFlag(String applicationId, Integer notificationId)
 			throws Exception;
 
 	/**
@@ -140,7 +143,7 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	NotificationRecipients getNotificationRecipients(String notificationId)
+	NotificationRecipients getNotificationRecipients(Integer notificationId)
 			throws Exception;
 
 	/**
@@ -162,7 +165,5 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	boolean createNotificationHistory(String applicationId, String templateId,
-			String senderEmail, String recipientEmail, String content,
-			String type) throws Exception;
+	boolean createNotificationHistory(Notification notification) throws Exception;
 }

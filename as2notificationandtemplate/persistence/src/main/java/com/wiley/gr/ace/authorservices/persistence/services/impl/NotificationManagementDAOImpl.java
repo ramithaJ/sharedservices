@@ -17,7 +17,6 @@ import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 import com.wiley.gr.ace.authorservices.persistence.services.NotificationManagementDAO;
 
-
 /**
  * The Class NotificationManagementDAOImpl.
  */
@@ -26,10 +25,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Gets the schedule.
 	 *
-	 * @param applicationId the application id
-	 * @param scheduleId the schedule id
+	 * @param applicationId
+	 *            the application id
+	 * @param scheduleId
+	 *            the schedule id
 	 * @return the schedule
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public Schedule getSchedule(String applicationId, String scheduleId)
@@ -44,8 +46,8 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				schedule = (Schedule) session.createQuery(hql)
 						.setString("applicationId", applicationId)
 						.setString("scheduleId", scheduleId).list().get(0);
-			
-			}finally {
+
+			} finally {
 				if (!StringUtils.isEmpty(session)) {
 					session.flush();
 					session.close();
@@ -58,10 +60,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Save or update schedule.
 	 *
-	 * @param schedule the schedule
-	 * @param scheduleTemplate the schedule template
+	 * @param schedule
+	 *            the schedule
+	 * @param scheduleTemplate
+	 *            the schedule template
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public boolean saveOrUpdateSchedule(Schedule schedule) throws Exception {
@@ -87,10 +92,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Delete schedule.
 	 *
-	 * @param applicationId the application id
-	 * @param scheduleId the schedule id
+	 * @param applicationId
+	 *            the application id
+	 * @param scheduleId
+	 *            the schedule id
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public boolean deleteSchedule(String applicationId, String scheduleId)
@@ -121,11 +129,15 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Template lookup.
 	 *
-	 * @param applicationId the application id
-	 * @param templateId the template id
-	 * @param type the type
+	 * @param applicationId
+	 *            the application id
+	 * @param templateId
+	 *            the template id
+	 * @param type
+	 *            the type
 	 * @return the list
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public List<Schedule> templateLookup(String applicationId,
@@ -159,7 +171,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				}
 			} catch (Exception e) {
 				scheduleList = null;
-			}finally {
+			} finally {
 				if (session != null) {
 					session.flush();
 					session.close();
@@ -172,14 +184,19 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Save or update schedule.
 	 *
-	 * @param schedule the schedule
-	 * @param scheduleTemplate the schedule template
-	 * @param applicationId the application id
+	 * @param schedule
+	 *            the schedule
+	 * @param scheduleTemplate
+	 *            the schedule template
+	 * @param applicationId
+	 *            the application id
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
-	public Template getTemplate(String templateId,String applicationId) throws Exception {
+	public Template getTemplate(String templateId, String applicationId)
+			throws Exception {
 
 		Session session = null;
 		Template template = null;
@@ -189,12 +206,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			String hql = "from Template t where t.id=:templateId and t.appId = :applicationId";
 			try {
 				template = (Template) session.createQuery(hql)
-						.setString("templateId", templateId).setString("applicationId",applicationId).list().get(0);
+						.setString("templateId", templateId)
+						.setString("applicationId", applicationId).list()
+						.get(0);
 
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			}
-			finally {
+			} finally {
 				if (session != null) {
 					session.flush();
 					session.close();
@@ -207,25 +225,29 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Gets the notification.
 	 *
-	 * @param applicationId the application id
-	 * @param notificationId the notification id
+	 * @param applicationId
+	 *            the application id
+	 * @param notificationId
+	 *            the notification id
 	 * @return the notification
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public Notification getNotification(String applicationId,
-			String notificationId) throws Exception {
+			Integer notificationId) throws Exception {
 		Notification notification = null;
 		Session session = null;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(notificationId)) {
-			try{
-			session = getSessionFactory().openSession();
-			String hql = "from Notification n where n.id = :notificationId and n.appId = :applicationId";
-			notification = (Notification) session.createQuery(hql)
-					.setString("notificationId", notificationId)
-					.setString("applicationId", applicationId).list().get(0);
-			}finally {
+			try {
+				session = getSessionFactory().openSession();
+				String hql = "from Notification n where n.id = :notificationId and n.appId = :applicationId";
+				notification = (Notification) session.createQuery(hql)
+						.setInteger("notificationId", notificationId)
+						.setString("applicationId", applicationId).list()
+						.get(0);
+			} finally {
 				if (session != null) {
 					session.flush();
 					session.close();
@@ -238,14 +260,17 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Sets the notification flag.
 	 *
-	 * @param applicationId the application id
-	 * @param notificationId the notification id
+	 * @param applicationId
+	 *            the application id
+	 * @param notificationId
+	 *            the notification id
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public boolean setNotificationFlag(String applicationId,
-			String notificationId) throws Exception {
+			Integer notificationId) throws Exception {
 		boolean isSet = false;
 		Session session = null;
 		if (!StringUtils.isEmpty(applicationId)
@@ -255,7 +280,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			String unread = notification.getUnread().toString();
 			if (!unread.equalsIgnoreCase("n")) {
 				try {
-					
+
 					session = getSessionFactory().openSession();
 					session.beginTransaction();
 					notification.setUnread('n');
@@ -265,13 +290,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 
 				} catch (Exception e) {
 					isSet = false;
-				}finally{
+				} finally {
 					if (!StringUtils.isEmpty(session)) {
 						session.flush();
 						session.close();
 					}
 				}
-				
+
 			}
 
 		}
@@ -281,9 +306,11 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Gets the notification list.
 	 *
-	 * @param applicationId the application id
+	 * @param applicationId
+	 *            the application id
 	 * @return the notification list
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public List<Notification> getNotificationList(String applicationId)
@@ -310,76 +337,99 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	/**
 	 * Gets the notification recipients.
 	 *
-	 * @param notificationId the notification id
+	 * @param notificationId
+	 *            the notification id
 	 * @return the notification recipients
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public NotificationRecipients getNotificationRecipients(
-			String notificationId) throws Exception {
+			Integer notificationId) throws Exception {
 		NotificationRecipients notificationRecipients = null;
 		Session session = null;
 		if (!StringUtils.isEmpty(notificationId)) {
-			try{
-			session = getSessionFactory().openSession();
-			String hql = "from NotificationRecipients nr where nr.notificationId = :notificationId";
-			notificationRecipients = (NotificationRecipients) session
-					.createQuery(hql)
-					.setString("notificationId", notificationId).list().get(0);
-			}finally {
+			try {
+				session = getSessionFactory().openSession();
+				String hql = "from NotificationRecipients nr where nr.notificationId = :notificationId";
+				notificationRecipients = (NotificationRecipients) session
+						.createQuery(hql)
+						.setInteger("notificationId", notificationId).list()
+						.get(0);
+			} finally {
 				if (!StringUtils.isEmpty(session)) {
 					session.flush();
 					session.close();
 				}
 			}
-			}
+		}
 		return notificationRecipients;
 	}
 
 	/**
 	 * Creates the notification history.
 	 *
-	 * @param applicationId the application id
-	 * @param templateId the template id
-	 * @param senderEmail the sender email
-	 * @param recipientEmail the recipient email
-	 * @param content the content
-	 * @param type the type
+	 * @param applicationId
+	 *            the application id
+	 * @param templateId
+	 *            the template id
+	 * @param senderEmail
+	 *            the sender email
+	 * @param recipientEmail
+	 *            the recipient email
+	 * @param content
+	 *            the content
+	 * @param type
+	 *            the type
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
-	public boolean createNotificationHistory(String applicationId,
-			String templateId, String senderEmail, String recipientEmail,
-			String content, String type) throws Exception {
-		Notification notification = new Notification();
-		NotificationRecipients notificationRecipients = new NotificationRecipients();
+	public boolean createNotificationHistory(Notification notification)
+			throws Exception {
+		Session session = null;
+		boolean isCreated = false;
+		try {
+			session = getSessionFactory().openSession();
+			session.beginTransaction();
+			session.save(notification);
+			session.getTransaction().commit();
+			isCreated = true;
 
-		notificationRecipients.setEmail(recipientEmail);
-		notification.setAppId(applicationId);
+		} catch (Exception e) {
+			isCreated = false;
+		} finally {
+			if (session != null) {
+				session.flush();
+				session.close();
+			}
+		}
 
-		return false;
+		return isCreated;
 	}
+
 	/**
 	 * Gets the schedule template entity.
 	 *
-	 * @param scheduleId the schedule id
+	 * @param scheduleId
+	 *            the schedule id
 	 * @return the schedule template entity
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
-	public ScheduleTemplate getScheduleTemplateEntity(
-			String scheduleId) throws Exception {
+	public ScheduleTemplate getScheduleTemplateEntity(String scheduleId)
+			throws Exception {
 		ScheduleTemplate scheduleTemplate = null;
 		Session session = null;
 		if (!StringUtils.isEmpty(scheduleId)) {
-			try{
-			session = getSessionFactory().openSession(); 
-			String hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
-			scheduleTemplate = (ScheduleTemplate) session
-					.createQuery(hql)
-					.setString("scheduleId", scheduleId).list().get(0);
-			}finally {
+			try {
+				session = getSessionFactory().openSession();
+				String hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
+				scheduleTemplate = (ScheduleTemplate) session.createQuery(hql)
+						.setString("scheduleId", scheduleId).list().get(0);
+			} finally {
 				if (!StringUtils.isEmpty(session)) {
 					session.flush();
 					session.close();
@@ -387,6 +437,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			}
 		}
 		return scheduleTemplate;
-		
+
 	}
 }

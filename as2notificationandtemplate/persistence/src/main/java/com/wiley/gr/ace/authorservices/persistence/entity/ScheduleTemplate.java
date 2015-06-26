@@ -75,9 +75,7 @@ public class ScheduleTemplate implements java.io.Serializable {
 	 *
 	 * @return the schedule id
 	 */
-	//@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "schedule"))
 	@Id
-	//@GeneratedValue(generator = "generator")
 	@Column(name = "SCHEDULE_ID", unique = true, nullable = false)
 	public String getScheduleId() {
 		return this.scheduleId;

@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.sql.rowset.serial.SerialClob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -28,7 +29,6 @@ import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 import com.wiley.gr.ace.authorservices.persistence.services.NotificationManagementDAO;
 import com.wiley.gr.ace.authorservices.services.service.NotificationManagementService;
-import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
 /**
  * The Class NotificationManagementServiceImpl.
@@ -39,10 +39,6 @@ public class NotificationManagementServiceImpl implements
 	/** The notification management dao. */
 	@Autowired(required = true)
 	NotificationManagementDAO notificationManagementDAO;
-
-	/** The template management service. */
-	@Autowired(required = true)
-	TemplateManagementService templateManagementService;
 
 	/** The mail sender service. */
 	@Autowired(required = true)
@@ -102,7 +98,7 @@ public class NotificationManagementServiceImpl implements
 				ScheduleTemplate scheduleTemplate = getScheduleTemplateEntity(
 						schedule.getScheduleTemplate(), schedule.getId(),
 						schedule.getAppId());
-						scheduleTemplate.setSchedule(scheduleEntity);
+				scheduleTemplate.setSchedule(scheduleEntity);
 				scheduleEntity.setScheduleTemplate(scheduleTemplate);
 			}
 			return notificationManagementDAO
@@ -136,7 +132,8 @@ public class NotificationManagementServiceImpl implements
 				scheduleEntity.setAppId(scheduleObj.getAppId());
 			if (!StringUtils.isEmpty(scheduleObj.getScheduleTemplate())) {
 				scheduleTemplate = getScheduleTemplateEntity(
-						scheduleObj.getScheduleTemplate(), scheduleId,applicationId);
+						scheduleObj.getScheduleTemplate(), scheduleId,
+						applicationId);
 				if (!StringUtils.isEmpty(scheduleTemplate)) {
 					scheduleTemplate.setSchedule(scheduleEntity);
 					scheduleEntity.setScheduleTemplate(scheduleTemplate);
@@ -185,11 +182,12 @@ public class NotificationManagementServiceImpl implements
 	 * @throws Exception
 	 *             the exception
 	 */
-	private ScheduleTemplate getScheduleTemplateEntity (
+	private ScheduleTemplate getScheduleTemplateEntity(
 			ScheduleTemplateObj scheduleTemplateObj, String scheduleId,
 			String applcationId) throws Exception {
-		ScheduleTemplate scheduleTemplate = notificationManagementDAO.getScheduleTemplateEntity(scheduleId);
-		if(StringUtils.isEmpty(scheduleTemplate)){
+		ScheduleTemplate scheduleTemplate = notificationManagementDAO
+				.getScheduleTemplateEntity(scheduleId);
+		if (StringUtils.isEmpty(scheduleTemplate)) {
 			scheduleTemplate = new ScheduleTemplate();
 			scheduleTemplate.setScheduleId(scheduleId);
 		}
@@ -254,17 +252,16 @@ public class NotificationManagementServiceImpl implements
 	private ScheduleTemplateObj getScheduleTemplateVO(
 			ScheduleTemplate scheduleTemplateEntity) throws Exception {
 		ScheduleTemplateObj scheduleTemplate = new ScheduleTemplateObj();
-		if(!StringUtils.isEmpty(scheduleTemplateEntity
+		if (!StringUtils.isEmpty(scheduleTemplateEntity
 				.getTemplateByOnscreenTmpl()))
-		scheduleTemplate.setOnscreen(scheduleTemplateEntity
-				.getTemplateByOnscreenTmpl().getId());
-		if(!StringUtils.isEmpty(scheduleTemplateEntity
+			scheduleTemplate.setOnscreen(scheduleTemplateEntity
+					.getTemplateByOnscreenTmpl().getId());
+		if (!StringUtils.isEmpty(scheduleTemplateEntity
 				.getTemplateByEmailTmpl()))
-		scheduleTemplate.setEmail(scheduleTemplateEntity
-				.getTemplateByEmailTmpl().getId());
-		if(!StringUtils.isEmpty(scheduleTemplateEntity
-				.getDelay()))
-		scheduleTemplate.setDelay(scheduleTemplateEntity.getDelay());
+			scheduleTemplate.setEmail(scheduleTemplateEntity
+					.getTemplateByEmailTmpl().getId());
+		if (!StringUtils.isEmpty(scheduleTemplateEntity.getDelay()))
+			scheduleTemplate.setDelay(scheduleTemplateEntity.getDelay());
 		return scheduleTemplate;
 	}
 
@@ -423,7 +420,7 @@ public class NotificationManagementServiceImpl implements
 	 */
 	@Override
 	public NotificationObj getNotification(String applicationId,
-			String notificationId) throws Exception {
+			Integer notificationId) throws Exception {
 		NotificationObj notification = null;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(notificationId))
@@ -445,7 +442,7 @@ public class NotificationManagementServiceImpl implements
 	 */
 	@Override
 	public boolean setNotificationFlag(String applicationId,
-			String notificationId) throws Exception {
+			Integer notificationId) throws Exception {
 		boolean isSet = false;
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(notificationId))
@@ -547,16 +544,26 @@ public class NotificationManagementServiceImpl implements
 	 */
 	@Override
 	public void sendEmailNotification(String applicationId, String templateId,
-			NotificationDetails notificationDetails) throws AddressException,
-			MessagingException, Exception {
-
-		TemplateObj templateObj = templateManagementService.renderTemplate(
-				applicationId, templateId,
-				notificationDetails.getTemplateDetails());
+			NotificationDetails notificationDetails, TemplateObj templateObj)
+			throws AddressException, MessagingException, Exception {
 
 		mailSenderService.sendEmail(notificationDetails.getFrom(),
 				notificationDetails.getTo(), templateObj.getDescription(),
 				templateObj.getBody());
+		
+		NotificationObj notificationObj = new NotificationObj();
+		NotificationRecipientsObj notificationRecipientsObj = new NotificationRecipientsObj();
+		
+		notificationObj.setAppId(applicationId);
+		notificationObj.setContent(new SerialClob(templateObj.getBody().toCharArray()));
+		notificationObj.setSenderEmail(notificationDetails.getFrom());
+		notificationObj.setTemplate(templateObj);
+		notificationObj.setType("email");
+		notificationObj.setUnread('n');
+		
+		notificationRecipientsObj.setEmail(notificationDetails.getTo());
+		
+		createNotificationHistory(notificationObj, notificationRecipientsObj);
 	}
 
 	/**
@@ -575,8 +582,8 @@ public class NotificationManagementServiceImpl implements
 	 */
 	@Override
 	public void resendEmailNotification(String applicationId,
-			String notificationId) throws AddressException, MessagingException,
-			Exception {
+			Integer notificationId) throws AddressException,
+			MessagingException, Exception {
 
 		NotificationRecipients notificationRecipients = notificationManagementDAO
 				.getNotificationRecipients(notificationId);
@@ -613,6 +620,35 @@ public class NotificationManagementServiceImpl implements
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		Date date = formatter.parse(strDate);
 		return date;
+	}
+
+	private void createNotificationHistory(NotificationObj notificationObj,
+			NotificationRecipientsObj notificationRecipientsObj)
+			throws Exception {
+		Notification notification = new Notification();
+		NotificationRecipients notificationRecipients = new NotificationRecipients();
+
+		notification.setAppId(notificationObj.getAppId());
+		notification.setContent(notificationObj.getContent());
+		notification.setSenderEmail(notificationObj.getSenderEmail());
+
+		Template template = new Template();
+		template.setAppId(notificationObj.getTemplate().getAppId());
+		template.setBody(new SerialClob(notificationObj.getTemplate().getBody()
+				.toCharArray()));
+		template.setDescription(notificationObj.getTemplate().getDescription());
+		template.setId(notificationObj.getTemplate().getId());
+		notification.setTemplate(template);
+
+		notification.setType(notificationObj.getType());
+		notification.setUnread(notificationObj.getUnread());
+
+		notificationRecipients.setEmail(notificationRecipientsObj.getEmail());
+		notificationRecipients.setNotificationId(notificationObj.getId());
+		notificationRecipients.setNotification(notification);
+		notification.setNotificationRecipients(notificationRecipients);
+		notificationManagementDAO
+				.createNotificationHistory(notification);
 	}
 
 }
