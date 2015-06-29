@@ -23,7 +23,6 @@ import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.Address;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
-import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -33,10 +32,12 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author kkalyan
@@ -79,19 +80,19 @@ public class UserRepositoryImpl implements UserRepository {
      */
     private void validateRequest(UserServiceRequest userServiceRequest) throws SharedServiceException {
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) {
-            throw new SharedServiceException(userServiceError103);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_103, userServiceError103);
         }
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getLastName())) {
-            throw new SharedServiceException(userServiceError104);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_104, userServiceError104);
         }
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
-            throw new SharedServiceException(userServiceError105);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_105, userServiceError105);
         }
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid())) {
-            throw new SharedServiceException(userServiceError106);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_106, userServiceError106);
         }
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPassword())) {
-            throw new SharedServiceException(userServiceError107);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_107, userServiceError107);
         }
     }
 
@@ -439,26 +440,6 @@ public class UserRepositoryImpl implements UserRepository {
 
             LOGGER.info("Saving the User Profile in DB...");
             session.save(authorProfile);
-             /*if (null != secondaryEmailAddr) {
-                LOGGER.info("Saving the secondaryEmailAddr in DB...");
-                session.save(secondaryEmailAddr);
-            }
-           if (null != userAddresses) {
-                LOGGER.info("Saving the userAddresses in DB...");
-                session.save(userAddresses);
-            }
-            if (null != affiliations) {
-                LOGGER.info("Saving the affiliations in DB...");
-                session.save(affiliations);
-            }
-            if (null != userPreferredJournals) {
-                LOGGER.info("Saving the userPreferredJournals in DB...");
-                session.save(userPreferredJournals);
-            }
-            if (null != alerts) {
-                LOGGER.info("Saving the alerts in DB...");
-                session.save(alerts);
-            }*/
 
             LOGGER.info("Flush...");
             //Flush the session.
@@ -478,9 +459,9 @@ public class UserRepositoryImpl implements UserRepository {
             }
             LOGGER.error("Exception Occurred during user profile creation...", e);
             if (null != e.getCause()) {
-                throw new SharedServiceException("Error :" + e.getCause().getMessage());
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
             } else {
-                throw new SharedServiceException("Error :" + e);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
             }
         } finally {
             if (null != session) {
@@ -506,12 +487,12 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Get User Profile..");
             if (null == userId) {
-                throw new SharedServiceException(userServiceError101);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
             }
             Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
             //Throw Error if user is not found.
             if (null == user) {
-                throw new SharedServiceException(userServiceError102);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_102, userServiceError102);
             }
 
             //Get User Profile info
@@ -644,9 +625,9 @@ public class UserRepositoryImpl implements UserRepository {
             }
             LOGGER.error("Exception Occurred during user profile creation...", e);
             if (null != e.getCause()) {
-                throw new SharedServiceException("Error :" + e.getCause().getMessage());
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
             } else {
-                throw new SharedServiceException("Error :" + e);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
             }
         } finally {
             if (null != session) {
@@ -669,7 +650,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Deleting User ...");
             if (null == userId) {
-                throw new SharedServiceException(userServiceError101);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
             }
 
             Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
@@ -784,9 +765,9 @@ public class UserRepositoryImpl implements UserRepository {
             }
             LOGGER.error("Exception Occurred during user deletion...", e);
             if (null != e.getCause()) {
-                throw new SharedServiceException("Error :" + e.getCause().getMessage());
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
             } else {
-                throw new SharedServiceException("Error :" + e);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
             }
         } finally {
             if (null != session) {
@@ -812,14 +793,14 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             LOGGER.info("Updating User Profile..");
             if (null == userId) {
-                throw new SharedServiceException(userServiceError101);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
             }
 
             Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
 
             //Throw Error if user is not found.
             if (null == user) {
-                throw new SharedServiceException(userServiceError102);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_102, userServiceError102);
             }
 
             session = sessionFactory.openSession();
@@ -1273,9 +1254,9 @@ public class UserRepositoryImpl implements UserRepository {
             }
             LOGGER.error("Exception Occurred during user profile updating...", e);
             if (null != e.getCause()) {
-                throw new SharedServiceException("Error :" + e.getCause().getMessage());
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
             } else {
-                throw new SharedServiceException("Error :" + e);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
             }
         } finally {
             if (null != session) {
@@ -1365,7 +1346,11 @@ public class UserRepositoryImpl implements UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             LOGGER.error("Exception Occurred during get entity...", e);
-            throw new SharedServiceException("Error :" + e.toString());
+            if (null != e.getCause()) {
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
+            } else {
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
+            }
         } finally {
             // Close the session
             if (null != session) {
@@ -1422,7 +1407,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             LOGGER.error("Exception Occurred during get entity...", e);
-            throw new SharedServiceException("Error :" + e);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
         } finally {
             //Close the session
             if (null != session) {
@@ -1469,7 +1454,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             LOGGER.error("Exception Occurred during get entity...", e);
-            throw new SharedServiceException("Error :" + e);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
         } finally {
             //Close the session
             if (null != session) {
