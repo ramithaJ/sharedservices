@@ -14,6 +14,7 @@ package com.wiley.gr.ace.authorservices.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+
 /**
  * This is the generic service VO object which is returned by every service.
  * Data from the service is wrapped into this and returned.
@@ -23,49 +24,64 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class Service {
     
+    /** The status. */
     private String status = "SUCCESS";
     
+    /** The payload. */
     private Object payload;
     
+    /** The error. */
     private ErrorPOJO error;
     
     /**
-     * @return
+     * Gets the status.
+     *
+     * @return the status
      */
     public String getStatus() {
         return status;
     }
     
     /**
-     * @param status
+     * Sets the status.
+     *
+     * @param status the new status
      */
     public void setStatus(String status) {
         this.status = status;
     }
     
     /**
-     * @return
+     * Gets the payload.
+     *
+     * @return the payload
      */
     public Object getPayload() {
         return payload;
     }
     
     /**
-     * @param payload
+     * Sets the payload.
+     *
+     * @param payload the new payload
      */
     public void setPayload(Object payload) {
         this.payload = payload;
     }
     
     /**
-     * @return
+     * Gets the error.
+     *
+     * @return the error
      */
     public ErrorPOJO getError() {
         return error;
     }
     
     /**
-     * @param error
+     * Sets the error.
+     *
+     * @param error the new error
      */
     public void setError(ErrorPOJO error) {
         this.error = error;

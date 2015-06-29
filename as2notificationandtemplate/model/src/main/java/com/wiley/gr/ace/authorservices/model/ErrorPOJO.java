@@ -14,6 +14,7 @@ package com.wiley.gr.ace.authorservices.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+
 /**
  * This is the generic errorVO returned by the service.
  * 
@@ -22,33 +23,43 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class ErrorPOJO {
     
+    /** The code. */
     private int code;
     
+    /** The message. */
     private String message;
     
     /**
-     * @return
+     * Gets the code.
+     *
+     * @return the code
      */
     public int getCode() {
         return code;
     }
     
     /**
-     * @param code
+     * Sets the code.
+     *
+     * @param code the new code
      */
     public void setCode(int code) {
         this.code = code;
     }
     
     /**
-     * @return
+     * Gets the message.
+     *
+     * @return the message
      */
     public String getMessage() {
         return message;
     }
     
     /**
-     * @param message
+     * Sets the message.
+     *
+     * @param message the new message
      */
     public void setMessage(String message) {
         this.message = message;

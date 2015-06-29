@@ -18,19 +18,38 @@ import com.wiley.gr.ace.authorservices.model.NotificationDetails;
 import com.wiley.gr.ace.authorservices.model.NotificationObj;
 import com.wiley.gr.ace.authorservices.model.ScheduleObj;
 import com.wiley.gr.ace.authorservices.model.Service;
+import com.wiley.gr.ace.authorservices.model.TemplateObj;
 import com.wiley.gr.ace.authorservices.services.service.NotificationManagementService;
+import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
+/**
+ * The Class NotificationManagementController.
+ */
 @RestController
 @RequestMapping("/v1/notifications")
 public class NotificationManagementController {
+
+	/** The notification management service. */
 	@Autowired(required = true)
 	NotificationManagementService notificationManagementService;
 
+	/** The template management service. */
+	@Autowired(required = true)
+	TemplateManagementService templateManagementService;
+
+	/**
+	 * Gets the schedule.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param scheduleId
+	 *            the schedule id
+	 * @return the schedule
+	 */
 	@RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getSchedule(
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("scheduleId") final String scheduleId) {
-		System.err.println("--------------------------");
 		Service service = new Service();
 		ScheduleObj schedule = null;
 		try {
@@ -56,6 +75,15 @@ public class NotificationManagementController {
 		return service;
 	}
 
+	/**
+	 * Delete schedule.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param scheduleId
+	 *            the schedule id
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.DELETE)
 	public @ResponseBody Service deleteSchedule(
 			@PathVariable("applicationId") final String applicationId,
@@ -87,7 +115,18 @@ public class NotificationManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.POST)
+	/**
+	 * Update schedule.
+	 *
+	 * @param scheduleId
+	 *            the schedule id
+	 * @param applicationId
+	 *            the application id
+	 * @param scheduleObj
+	 *            the schedule obj
+	 * @return the service
+	 */
+	@RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.PUT)
 	public @ResponseBody Service updateSchedule(
 			@PathVariable("scheduleId") final String scheduleId,
 			@PathVariable("applicationId") final String applicationId,
@@ -118,7 +157,14 @@ public class NotificationManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "schedule/create", method = RequestMethod.PUT)
+	/**
+	 * Creates the schedule.
+	 *
+	 * @param schedule
+	 *            the schedule
+	 * @return the service
+	 */
+	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody Service createSchedule(
 			@RequestBody final ScheduleObj schedule) {
 		Service service = new Service();
@@ -138,7 +184,7 @@ public class NotificationManagementController {
 		}
 
 		else {
-			final ErrorPOJO error = new ErrorPOJO();
+			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(308);
 			error.setMessage("No records found for the required criteria");
 			service.setStatus("FAILURE");
@@ -148,6 +194,17 @@ public class NotificationManagementController {
 		return service;
 	}
 
+	/**
+	 * Template lookup.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param templateId
+	 *            the template id
+	 * @param type
+	 *            the type
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/schedule/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service templateLookup(
 			@PathVariable final String applicationId,
@@ -180,10 +237,19 @@ public class NotificationManagementController {
 		return service;
 	}
 
+	/**
+	 * Gets the notification.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param notificationId
+	 *            the notification id
+	 * @return the notification
+	 */
 	@RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getNotification(
 			@PathVariable("applicationId") final String applicationId,
-			@PathVariable("notificationId") final String notificationId) {
+			@PathVariable("notificationId") final Integer notificationId) {
 		Service service = new Service();
 		NotificationObj notification = null;
 		try {
@@ -209,10 +275,19 @@ public class NotificationManagementController {
 		return service;
 	}
 
+	/**
+	 * Sets the notification flag.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param notificationId
+	 *            the notification id
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service setNotificationFlag(
 			@PathVariable("applicationId") final String applicationId,
-			@PathVariable("notificationId") final String notificationId) {
+			@PathVariable("notificationId") final Integer notificationId) {
 		Service service = new Service();
 		boolean isSet = false;
 		try {
@@ -240,6 +315,25 @@ public class NotificationManagementController {
 		return service;
 	}
 
+	/**
+	 * Gets the notification history.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param from
+	 *            the from
+	 * @param to
+	 *            the to
+	 * @param type
+	 *            the type
+	 * @param offset
+	 *            the offset
+	 * @param limit
+	 *            the limit
+	 * @param unreadFlag
+	 *            the unread flag
+	 * @return the notification history
+	 */
 	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getNotificationHistory(
 			@PathVariable("applicationId") final String applicationId,
@@ -266,6 +360,7 @@ public class NotificationManagementController {
 				service.setError(error);
 			}
 		} catch (final Exception e) {
+			e.printStackTrace();
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(316);
 			error.setMessage("Error Fetching Notification History");
@@ -275,17 +370,36 @@ public class NotificationManagementController {
 		return service;
 	}
 
+	/**
+	 * Send notification.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param templateId
+	 *            the template id
+	 * @param templateType
+	 *            the template type
+	 * @param notificationDetails
+	 *            the notification details
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/send", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service sendNotification(
 			@PathVariable("applicationId") final String applicationId,
 			@RequestParam("tmpl") final String templateId,
-			@RequestParam("type") final String templateType,
+			@RequestParam("type") final String type,
 			@RequestBody final NotificationDetails notificationDetails) {
 		Service service = new Service();
+		TemplateObj templateObj = null;
 		try {
-			if ("email".equalsIgnoreCase(templateType)) {
+			if ("email".equalsIgnoreCase(type)) {
+
+				templateObj = templateManagementService.renderTemplate(
+						applicationId, templateId,
+						notificationDetails.getTemplateDetails());
 				notificationManagementService.sendEmailNotification(
-						applicationId, templateId, notificationDetails);
+						applicationId, templateId, notificationDetails,
+						templateObj);
 				service.setStatus("SUCCESS");
 			}
 		} catch (Exception e) {
@@ -298,16 +412,26 @@ public class NotificationManagementController {
 
 		return service;
 	}
+
+	/**
+	 * Resend notification.
+	 *
+	 * @param applicationId
+	 *            the application id
+	 * @param notificationId
+	 *            the notification id
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/resend/{notificationId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service resendNotification(
 			@PathVariable("applicationId") final String applicationId,
-			@PathVariable("notificationId") final String notificationId) {
+			@PathVariable("notificationId") final Integer notificationId) {
 
 		Service service = new Service();
 		try {
 
-				notificationManagementService.resendEmailNotification(
-						applicationId, notificationId);
+			notificationManagementService.resendEmailNotification(
+					applicationId, notificationId);
 			service.setStatus("SUCCESS");
 		} catch (Exception e) {
 			service.setStatus("ERROR");
@@ -319,6 +443,5 @@ public class NotificationManagementController {
 
 		return service;
 	}
-
 
 }

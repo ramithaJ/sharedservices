@@ -21,17 +21,26 @@ import com.wiley.gr.ace.authorservices.model.TemplateDetails;
 import com.wiley.gr.ace.authorservices.model.TemplateObj;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
+
 /**
- * @author tsandeepr
+ * The Class TemplateManagementController.
  *
+ * @author tsandeepr
  */
 @RestController
 @RequestMapping("/v1/templates")
 public class TemplateManagementController {
 
+	/** The template management service. */
 	@Autowired(required = true)
 	TemplateManagementService templateManagementService;
 
+	/**
+	 * Gets the template tags.
+	 *
+	 * @param applicationId the application id
+	 * @return the template tags
+	 */
 	@RequestMapping(value = "/{applicationId}/tags", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getTemplateTags(
 			@PathVariable String applicationId) {
@@ -59,6 +68,13 @@ public class TemplateManagementController {
 		return service;
 	}
 
+	/**
+	 * Gets the template.
+	 *
+	 * @param templateId the template id
+	 * @param applicationId the application id
+	 * @return the template
+	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getTemplate(
 			@PathVariable("templateId") String templateId,
@@ -91,7 +107,13 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.PUT)
+	/**
+	 * Creates the template.
+	 *
+	 * @param template the template
+	 * @return the service
+	 */
+	@RequestMapping( method = RequestMethod.POST)
 	public @ResponseBody Service createTemplate(
 			@RequestBody TemplateObj template) {
 		Service service = new Service();
@@ -119,7 +141,15 @@ public class TemplateManagementController {
 		return service;
 	}
 
-	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.POST)
+	/**
+	 * Update template.
+	 *
+	 * @param templateId the template id
+	 * @param applicationId the application id
+	 * @param templateObj the template obj
+	 * @return the service
+	 */
+	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.PUT)
 	public @ResponseBody Service updateTemplate(
 			@PathVariable("templateId") String templateId,
 			@PathVariable("applicationId") String applicationId,
@@ -150,6 +180,13 @@ public class TemplateManagementController {
 		return service;
 	}
 
+	/**
+	 * Delete template.
+	 *
+	 * @param applicationId the application id
+	 * @param templateId the template id
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.DELETE)
 	public @ResponseBody Service deleteTemplate(
 			@PathVariable("templateId") String applicationId,
@@ -181,6 +218,14 @@ public class TemplateManagementController {
 		return service;
 	}
 
+	/**
+	 * Search template.
+	 *
+	 * @param applicationId the application id
+	 * @param tagL1 the tag l1
+	 * @param tagL2 the tag l2
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service searchTemplate(
 			@PathVariable("applicationId") String applicationId,
@@ -211,6 +256,14 @@ public class TemplateManagementController {
 		return service;
 	}
 
+	/**
+	 * Render template.
+	 *
+	 * @param templateId the template id
+	 * @param applicationId the application id
+	 * @param templateDetails the template details
+	 * @return the service
+	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}/render", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service renderTemplate(
 			@PathVariable("templateId") String templateId,

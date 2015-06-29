@@ -24,28 +24,44 @@ import org.springframework.web.client.RestTemplate;
 
 import com.wiley.gr.ace.auth.security.model.SecurityResponse;
 
+/**
+ * @author Virtusa
+ *
+ */
 public class StubInvoker {
-	
+
+	/**
+	 * This method is restServiceInvoker
+	 *
+	 * @param url
+	 * @param requestEntityClass
+	 * @param responseEntityClass
+	 * @return Object
+	 */
+	public static <T> Object restServiceInvoker(final String url,
+			final Object requestEntityClass, final Class<T> responseEntityClass) {
+
+		ResponseEntity<T> response = null;
+		try {
+			final HttpHeaders requestHeaders = new HttpHeaders();
+			requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+			response = new RestTemplate().postForEntity(new URI(url),
+					requestEntityClass, responseEntityClass);
+
+			if (null == response) {
+				return new SecurityResponse();
+			}
+		} catch (final Exception e) {
+
+			StubInvoker.LOGGER.error("RestServiceInvoke stub exception", e);
+		}
+
+		return response;
+	}
+
+	/**
+	 * This field holds the value of LOGGER
+	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(StubInvoker.class);
-
-	public static <T> Object restServiceInvoker(String url,
-            Object requestEntityClass, Class<T> responseEntityClass) {
-        
-		ResponseEntity<T> response = null;
-        try {
-            HttpHeaders requestHeaders = new HttpHeaders();
-            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-			response = new RestTemplate().postForEntity(new URI(url), requestEntityClass, responseEntityClass);
-            
-            if(null == response){
-                return new SecurityResponse();
-            }
-        } catch (Exception e) {
-            
-        	LOGGER.error("RestServiceInvoke stub exception", e);
-        }
-        //TODO: we need to capture the status from the url and do something.
-        return response;
-    }
 }

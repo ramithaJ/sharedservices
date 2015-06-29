@@ -11,58 +11,65 @@
  *******************************************************************************/
 package com.wiley.gr.ace.auth.security.service.impl;
 
-/**
- * Created by kkalyan on 5/18/2015.
- */
+import java.io.IOException;
 
-import com.wiley.gr.ace.auth.security.handler.TokenHandler;
-import com.wiley.gr.ace.auth.security.model.TokenRequest;
-import com.wiley.gr.ace.auth.security.service.TokenService;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
+import com.wiley.gr.ace.auth.security.handler.TokenHandler;
+import com.wiley.gr.ace.auth.security.model.TokenRequest;
+import com.wiley.gr.ace.auth.security.service.TokenService;
 
+/**
+ * @author Virtusa
+ *
+ */
 public class TokenServiceImpl implements TokenService {
 
-    @Autowired
-    private TokenHandler tokenHandler;
+	/**
+	 * This field holds the value of tokenHandler
+	 */
+	@Autowired
+	private TokenHandler tokenHandler;
 
-    /**
-     * Service method to generate token.
-     *
-     * @param tokenRequest
-     * @return
-     * @throws JoseException
-     */
-    @Override
-    public String generateToken(TokenRequest tokenRequest) throws JoseException {
-        return tokenHandler.createToken(tokenRequest);
-    }
+	/**
+	 * Service method to generate token.
+	 *
+	 * @param tokenRequest
+	 * @return String
+	 * @throws JoseException
+	 */
+	@Override
+	public String generateToken(final TokenRequest tokenRequest)
+			throws JoseException {
+		return this.tokenHandler.createToken(tokenRequest);
+	}
 
-    /**
-     * Service method to validate token.
-     *
-     * @param token
-     * @return
-     * @throws InvalidJwtException
-     * @throws JoseException
-     * @throws IOException
-     */
-    @Override
-    public boolean validateToken(String token) throws InvalidJwtException, JoseException, IOException {
-        return tokenHandler.validateToken(token);
-    }
+	/**
+	 * Method to refresh the token.
+	 *
+	 * @param token
+	 * @return String
+	 */
+	@Override
+	public String refreshToken(final String token) throws IOException,
+	JoseException, InvalidJwtException {
+		return this.tokenHandler.refreshToken(token);
+	}
 
-    /**
-     * Method to refresh the token.
-     *
-     * @param token
-     * @return
-     */
-    @Override
-    public String refreshToken(String token) throws IOException, JoseException, InvalidJwtException {
-        return tokenHandler.refreshToken(token);
-    }
+	/**
+	 * Service method to validate token.
+	 *
+	 * @param token
+	 * @return boolean
+	 * @throws InvalidJwtException
+	 * @throws JoseException
+	 * @throws IOException
+	 */
+	@Override
+	public boolean validateToken(final String token)
+			throws InvalidJwtException, JoseException, IOException {
+		return this.tokenHandler.validateToken(token);
+	}
 }

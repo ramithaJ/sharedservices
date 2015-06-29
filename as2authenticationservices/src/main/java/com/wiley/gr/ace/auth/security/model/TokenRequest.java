@@ -21,48 +21,91 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * Created by kkalyan on 5/20/2015.
+ * @author Virtusa
+ *
  */
 @JsonInclude(Include.NON_NULL)
 public class TokenRequest {
 
-	@NotNull @NotBlank
-    private String userId;
+	/**
+	 * This field holds the value of userId
+	 */
+	@NotNull
+	@NotBlank
+	private String userId;
 
-    private List<String> roles;
+	/**
+	 * This field holds the value of roles
+	 */
+	private List<String> roles;
 
-    private String appKey;
+	/**
+	 * This field holds the value of appKey
+	 */
+	private String appKey;
 
-    public String getUserId() {
-        return userId;
-    }
+	/**
+	 * This method gets AppKey
+	 *
+	 * @return String
+	 */
+	public String getAppKey() {
+		return this.appKey;
+	}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	/**
+	 * This method gets the list of Roles
+	 *
+	 * @return List<String>
+	 */
+	public List<String> getRoles() {
+		return this.roles;
+	}
 
-    public List<String> getRoles() {
-        return roles;
-    }
+	/**
+	 * This method gets UserId
+	 *
+	 * @return String
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
+	/**
+	 * This method sets AppKey
+	 *
+	 * @param appKey
+	 */
+	public void setAppKey(final String appKey) {
+		this.appKey = appKey;
+	}
 
-    public String getAppKey() {
-        return appKey;
-    }
+	/**
+	 * This method sets the Roles
+	 *
+	 * @param roles
+	 */
+	public void setRoles(final List<String> roles) {
+		this.roles = roles;
+	}
 
-    public void setAppKey(String appKey) {
-        this.appKey = appKey;
-    }
+	/**
+	 * This method sets UserId
+	 *
+	 * @param userId
+	 */
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-    @Override
-    public String toString() {
-        return "TokenRequest{" +
-                "userId='" + userId + '\'' +
-                ", roles=" + roles +
-                ", appKey='" + appKey + '\'' +
-                '}';
-    }
+	/**
+	 * This is toString method
+	 *
+	 * @return
+	 */
+	@Override
+	public String toString() {
+		return "TokenRequest{" + "userId='" + this.userId + '\'' + ", roles="
+				+ this.roles + ", appKey='" + this.appKey + '\'' + '}';
+	}
 }

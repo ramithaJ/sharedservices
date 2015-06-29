@@ -1,7 +1,10 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
+// default package
+// Generated Jun 23, 2015 4:17:36 PM by Hibernate Tools 3.4.0.CR1
 
-// Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
+import org.hibernate.annotations.Cascade;
 
+import java.util.Date;
 import javax.persistence.*;
 
 /**
@@ -11,50 +14,50 @@ import javax.persistence.*;
 @Table(name = "USER_ADDRESSES")
 public class UserAddresses implements java.io.Serializable {
 
-	private UserAddressesId id;
+	private Integer userAddressId;
 	private Users usersByCreatedBy;
 	private Users usersByUpdatedBy;
 	private Address address;
 	private Users usersByUserId;
+	private AddressType addressType;
+	private Date createdDate;
+	private Date updatedDate;
 
 	public UserAddresses() {
 	}
 
-	public UserAddresses(UserAddressesId id) {
-		this.id = id;
+	public UserAddresses(Integer userAddressId) {
+		this.userAddressId = userAddressId;
 	}
 
-	public UserAddresses(UserAddressesId id, Users usersByCreatedBy,
-			Users usersByUpdatedBy, Address address, Users usersByUserId) {
-		this.id = id;
+	public UserAddresses(Integer userAddressId, Users usersByCreatedBy,
+			Users usersByUpdatedBy, Address address, Users usersByUserId,
+			AddressType addressType, Date createdDate, Date updatedDate) {
+		this.userAddressId = userAddressId;
 		this.usersByCreatedBy = usersByCreatedBy;
 		this.usersByUpdatedBy = usersByUpdatedBy;
 		this.address = address;
 		this.usersByUserId = usersByUserId;
+		this.addressType = addressType;
+		this.createdDate = createdDate;
+		this.updatedDate = updatedDate;
 	}
 
-	@EmbeddedId
+	@Id
+	@Column(name = "USER_ADDRESS_ID", unique = true, nullable = false, precision = 22, scale = 0)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_ADDRESSES_SEQ")
 	@SequenceGenerator(name="USER_ADDRESSES_SEQ",sequenceName="USER_ADDRESSES_SEQ",allocationSize=1)
-	@AttributeOverrides({
-			@AttributeOverride(name = "userAddressId", column = @Column(name = "USER_ADDRESS_ID", precision = 22, scale = 0)),
-			@AttributeOverride(name = "userId", column = @Column(name = "USER_ID", precision = 22, scale = 0)),
-			@AttributeOverride(name = "addressId", column = @Column(name = "ADDRESS_ID", precision = 22, scale = 0)),
-			@AttributeOverride(name = "addType", column = @Column(name = "ADD_TYPE", length = 30)),
-			@AttributeOverride(name = "createdDate", column = @Column(name = "CREATED_DATE")),
-			@AttributeOverride(name = "createdBy", column = @Column(name = "CREATED_BY", precision = 22, scale = 0)),
-			@AttributeOverride(name = "updatedDate", column = @Column(name = "UPDATED_DATE")),
-			@AttributeOverride(name = "updatedBy", column = @Column(name = "UPDATED_BY", precision = 22, scale = 0)) })
-	public UserAddressesId getId() {
-		return this.id;
+
+	public Integer getUserAddressId() {
+		return this.userAddressId;
 	}
 
-	public void setId(UserAddressesId id) {
-		this.id = id;
+	public void setUserAddressId(Integer userAddressId) {
+		this.userAddressId = userAddressId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CREATED_BY", insertable = false, updatable = false)
+	@JoinColumn(name = "CREATED_BY")
 	public Users getUsersByCreatedBy() {
 		return this.usersByCreatedBy;
 	}
@@ -64,7 +67,7 @@ public class UserAddresses implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "UPDATED_BY", insertable = false, updatable = false)
+	@JoinColumn(name = "UPDATED_BY")
 	public Users getUsersByUpdatedBy() {
 		return this.usersByUpdatedBy;
 	}
@@ -74,7 +77,8 @@ public class UserAddresses implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ADDRESS_ID", insertable = false, updatable = false)
+	@JoinColumn(name = "ADDRESS_ID")
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	public Address getAddress() {
 		return this.address;
 	}
@@ -84,13 +88,41 @@ public class UserAddresses implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
+	@JoinColumn(name = "USER_ID")
 	public Users getUsersByUserId() {
 		return this.usersByUserId;
 	}
 
 	public void setUsersByUserId(Users usersByUserId) {
 		this.usersByUserId = usersByUserId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ADDRESS_TYPE_CD")
+	public AddressType getAddressType() {
+		return this.addressType;
+	}
+
+	public void setAddressType(AddressType addressType) {
+		this.addressType = addressType;
+	}
+
+	@Column(name = "CREATED_DATE")
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	@Column(name = "UPDATED_DATE")
+	public Date getUpdatedDate() {
+		return this.updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
 	}
 
 }

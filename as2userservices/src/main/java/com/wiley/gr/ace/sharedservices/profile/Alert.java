@@ -25,6 +25,7 @@ public class Alert implements Serializable {
     private String alertCd;
     private String alertName;
     private List<AlertType> alertTypes;
+    private String status;
 
     public String getAlertCd() {
         return alertCd;
@@ -56,6 +57,14 @@ public class Alert implements Serializable {
 
     public void setAlertName(String alertName) {
         this.alertName = alertName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

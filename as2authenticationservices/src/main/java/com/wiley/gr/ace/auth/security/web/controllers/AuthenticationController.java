@@ -13,14 +13,12 @@
  */
 package com.wiley.gr.ace.auth.security.web.controllers;
 
-import java.util.Properties;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,21 +36,71 @@ import com.wiley.gr.ace.auth.security.model.TokenRequest;
 import com.wiley.gr.ace.auth.security.model.User;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 
+/**
+ * @author Virtusa
+ *
+ */
 @Controller
 @RequestMapping("/")
 public class AuthenticationController {
 
+	/**
+	 * This field holds the value of LOGGER
+	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AuthenticationController.class);
 
-	@Autowired
-	@Qualifier(value = "messageProperties")
-	private Properties messageProp;
+	/**
+	 * This field holds the value of authMessage001
+	 */
+	@Value("${auth.message.001}")
+	private String authMessage001;
 
+	/**
+	 * This field holds the value of authMessage002
+	 */
+	@Value("${auth.message.002}")
+	private String authMessage002;
+
+	/**
+	 * This field holds the value of authMessage003
+	 */
+	@Value("${auth.message.003}")
+	private String authMessage003;
+
+	/**
+	 * This field holds the value of authMessage004
+	 */
+	@Value("${auth.message.004}")
+	private String authMessage004;
+
+	/**
+	 * This field holds the value of authMessage005
+	 */
+	@Value("${auth.message.005}")
+	private String authMessage005;
+
+	/**
+	 * This field holds the value of authMessage006
+	 */
+	@Value("${auth.message.006}")
+	private String authMessage006;
+
+	/**
+	 * This field holds the value of authMessage007
+	 */
+	@Value("${auth.message.007}")
+	private String authMessage007;
+
+	/**
+	 * This field holds the value of authenticationService
+	 */
 	@Autowired(required = true)
 	private AuthenticationService authenticationService;
 
-	// Variable to hold the header name of the token.
+	/**
+	 * This field holds the value of AUTH_HEADER_NAME
+	 */
 	public static String AUTH_HEADER_NAME = "X-AS2-AUTH-TOKEN";
 
 	/**
@@ -64,31 +112,29 @@ public class AuthenticationController {
 	 * @param request
 	 *            Request Object which will contain userId, Password,
 	 *            ApplicationKey & Authentication Type
-	 * @return
+	 * @return ResponseEntity<Response>
 	 */
 	@RequestMapping(value = CommonConstant.AUTHENTICATE_SERVICE_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Response> authenticateUser(
-			@Valid @RequestBody AuthenticateRequest request) {
-		LOGGER.info("Authenticating User...");
+			@Valid @RequestBody final AuthenticateRequest request) {
+		AuthenticationController.LOGGER.info("Authenticating User...");
 		Response authResponse = null;
 		try {
 
 			// Validate the input request.
 			if (null == request) {
-				return new ResponseEntity<>(new Response(
-						messageProp.getProperty(CommonConstant.AUTH_001)),
+				return new ResponseEntity<>(new Response(this.authMessage001),
 						null, HttpStatus.OK);
 			}
 
-			authResponse = authenticationService.userLogin(request);
+			authResponse = this.authenticationService.userLogin(request);
 
 			if (null != authResponse
 					&& authResponse.getStatus().equalsIgnoreCase(
 							String.valueOf(Response.STATUS.LOCKED))) {
 
 				return new ResponseEntity<>(new Response(
-						CommonConstant.LOCKED_CODE,
-						messageProp.getProperty(CommonConstant.AUTH_007),
+						CommonConstant.LOCKED_CODE, this.authMessage007,
 						authResponse.getStatus()), null, HttpStatus.OK);
 			}
 
@@ -96,26 +142,27 @@ public class AuthenticationController {
 					|| authResponse.getStatus().equalsIgnoreCase(
 							String.valueOf(Response.STATUS.FAILURE))) {
 
-				LOGGER.info("Authentication Response..." + authResponse);
+				AuthenticationController.LOGGER
+						.info("Authentication Response..." + authResponse);
 
 				return new ResponseEntity<>(new Response(
-						CommonConstant.FAIL_CODE,
-						messageProp.getProperty(CommonConstant.AUTH_005),
+						CommonConstant.FAIL_CODE, this.authMessage005,
 						String.valueOf(Response.STATUS.FAILURE)), null,
 						HttpStatus.OK);
 			}
 			// Set the token in the response headers.
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.set(AUTH_HEADER_NAME, authResponse.getMessage());
+			final HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set(AuthenticationController.AUTH_HEADER_NAME,
+					authResponse.getMessage());
 			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
 			return new ResponseEntity<>(new Response(
-					CommonConstant.STATUS_CODE,
-					messageProp.getProperty(CommonConstant.AUTH_006),
+					CommonConstant.STATUS_CODE, this.authMessage006,
 					String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
 					HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error("Exception Occurred during user authentication...", e);
+		} catch (final Exception e) {
+			AuthenticationController.LOGGER.error(
+					"Exception Occurred during user authentication...", e);
 			return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
 					null, HttpStatus.OK);
 		}
@@ -123,10 +170,9 @@ public class AuthenticationController {
 
 	@RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody User searchUser(
-			@Valid @RequestBody TokenRequest request) {
+			@Valid @RequestBody final TokenRequest request) {
 
-		return authenticationService.searchUser(request.getUserId());
+		return this.authenticationService.searchUser(request.getUserId());
 
 	}
-
 }

@@ -1,65 +1,181 @@
 package com.wiley.gr.ace.authorservices.model;
 
-import java.util.Date;
 
+
+
+/**
+ * The Class ScheduleObj.
+ */
 public class ScheduleObj {
 	
+	/** The id. */
 	private String id;
+	
+	/** The app id. */
 	private String appId;
+	
+	/** The description. */
 	private String description;
+	
+	/** The created by. */
 	private String createdBy;
+	
+	/** The modified by. */
 	private String modifiedBy;
-	private Date createdOn;
-	private Date lastModifiedOn;
+	
+	/** The created on. */
+	private String createdOn;
+	
+	/** The last modified on. */
+	private String lastModifiedOn;
+	
+	/** The schedule template. */
 	private ScheduleTemplateObj scheduleTemplate;
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
 	}
+	
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	/**
+	 * Gets the app id.
+	 *
+	 * @return the app id
+	 */
 	public String getAppId() {
 		return appId;
 	}
+	
+	/**
+	 * Sets the app id.
+	 *
+	 * @param appId the new app id
+	 */
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
+	
+	/**
+	 * Gets the description.
+	 *
+	 * @return the description
+	 */
 	public String getDescription() {
 		return description;
 	}
+	
+	/**
+	 * Sets the description.
+	 *
+	 * @param description the new description
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	/**
+	 * Gets the created by.
+	 *
+	 * @return the created by
+	 */
 	public String getCreatedBy() {
 		return createdBy;
 	}
+	
+	/**
+	 * Sets the created by.
+	 *
+	 * @param createdBy the new created by
+	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+	
+	/**
+	 * Gets the modified by.
+	 *
+	 * @return the modified by
+	 */
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
+	
+	/**
+	 * Sets the modified by.
+	 *
+	 * @param modifiedBy the new modified by
+	 */
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
-	public Date getCreatedOn() {
+	
+	/**
+	 * Gets the created on.
+	 *
+	 * @return the created on
+	 */
+	public String getCreatedOn() {
 		return createdOn;
 	}
-	public void setCreatedOn(Date createdOn) {
+
+	/**
+	 * Sets the created on.
+	 *
+	 * @param createdOn the new created on
+	 */
+	public void setCreatedOn(String createdOn) {
 		this.createdOn = createdOn;
 	}
-	public Date getLastModifiedOn() {
+
+	/**
+	 * Gets the last modified on.
+	 *
+	 * @return the last modified on
+	 */
+	public String getLastModifiedOn() {
 		return lastModifiedOn;
 	}
-	public void setLastModifiedOn(Date lastModifiedOn) {
+
+	/**
+	 * Sets the last modified on.
+	 *
+	 * @param lastModifiedOn the new last modified on
+	 */
+	public void setLastModifiedOn(String lastModifiedOn) {
 		this.lastModifiedOn = lastModifiedOn;
 	}
+
+	/**
+	 * Gets the schedule template.
+	 *
+	 * @return the schedule template
+	 */
 	public ScheduleTemplateObj getScheduleTemplate() {
 		return scheduleTemplate;
 	}
+
+	/**
+	 * Sets the schedule template.
+	 *
+	 * @param scheduleTemplate the new schedule template
+	 */
 	public void setScheduleTemplate(ScheduleTemplateObj scheduleTemplate) {
 		this.scheduleTemplate = scheduleTemplate;
 	}
+
+
 
 }

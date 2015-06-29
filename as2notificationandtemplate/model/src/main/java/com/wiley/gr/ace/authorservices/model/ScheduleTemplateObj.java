@@ -1,33 +1,72 @@
 package com.wiley.gr.ace.authorservices.model;
 
-
+/**
+ * The Class ScheduleTemplateObj.
+ */
 public class ScheduleTemplateObj {
-	private String scheduleId;
-	private String templateByOnscreenTmplId;
-	private String templateByEmailTmplId;
+
+	/** The template by onscreen tmpl id. */
+	private String email;
+
+	/** The template by email tmpl id. */
+	private String onscreen;
+
+	/** The delay. */
 	private Integer delay;
-	public String getScheduleId() {
-		return scheduleId;
+
+	/**
+	 * Gets the template by onscreen tmpl id.
+	 *
+	 * @return the template by onscreen tmpl id
+	 */
+	public String getOnscreen() {
+		return onscreen;
 	}
-	public void setScheduleId(String scheduleId) {
-		this.scheduleId = scheduleId;
+
+	/**
+	 * Sets the template by onscreen tmpl id.
+	 *
+	 * @param templateByOnscreenTmplId
+	 *            the new template by onscreen tmpl id
+	 */
+	public void setOnscreen(String onscreen) {
+		this.onscreen = onscreen;
 	}
-	
-	public String getTemplateByOnscreenTmplId() {
-		return templateByOnscreenTmplId;
+
+	/**
+	 * Gets the template by email tmpl id.
+	 *
+	 * @return the template by email tmpl id
+	 */
+	public String getEmail() {
+		return email;
 	}
-	public void setTemplateByOnscreenTmplId(String templateByOnscreenTmplId) {
-		this.templateByOnscreenTmplId = templateByOnscreenTmplId;
+
+	/**
+	 * Sets the template by email tmpl id.
+	 *
+	 * @param templateByEmailTmplId
+	 *            the new template by email tmpl id
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getTemplateByEmailTmplId() {
-		return templateByEmailTmplId;
-	}
-	public void setTemplateByEmailTmplId(String templateByEmailTmplId) {
-		this.templateByEmailTmplId = templateByEmailTmplId;
-	}
+
+	/**
+	 * Gets the delay.
+	 *
+	 * @return the delay
+	 */
 	public Integer getDelay() {
 		return delay;
 	}
+
+	/**
+	 * Sets the delay.
+	 *
+	 * @param delay
+	 *            the new delay
+	 */
 	public void setDelay(Integer delay) {
 		this.delay = delay;
 	}

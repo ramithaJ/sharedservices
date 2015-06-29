@@ -22,15 +22,33 @@ import java.util.List;
 public class Funder implements Serializable {
 
     private String id;
-    private String researchFunderCd;
+    private String researchFunderName;
+    private String researchFunderDoi;
     private List<GrantNumber> grantNumbers;
+    private String status;
 
-    public String getResearchFunderCd() {
-        return researchFunderCd;
+    public String getId() {
+        return id;
     }
 
-    public void setResearchFunderCd(String researchFunderCd) {
-        this.researchFunderCd = researchFunderCd;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getResearchFunderName() {
+        return researchFunderName;
+    }
+
+    public void setResearchFunderName(String researchFunderName) {
+        this.researchFunderName = researchFunderName;
+    }
+
+    public String getResearchFunderDoi() {
+        return researchFunderDoi;
+    }
+
+    public void setResearchFunderDoi(String researchFunderDoi) {
+        this.researchFunderDoi = researchFunderDoi;
     }
 
     public List<GrantNumber> getGrantNumbers() {
@@ -41,19 +59,20 @@ public class Funder implements Serializable {
         this.grantNumbers = grantNumbers;
     }
 
-    public String getId() {
-        return id;
+    public String getStatus() {
+        return status;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "Funder{" +
                 "id='" + id + '\'' +
-                ", researchFunderCd='" + researchFunderCd + '\'' +
+                ", researchFunderName='" + researchFunderName + '\'' +
+                ", researchFunderDoi='" + researchFunderDoi + '\'' +
                 ", grantNumbers=" + grantNumbers +
                 '}';
     }
