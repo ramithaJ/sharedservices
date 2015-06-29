@@ -403,7 +403,6 @@ public class NotificationManagementController {
 				service.setStatus("SUCCESS");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
 			err.setCode(317);
