@@ -26,5 +26,7 @@ public interface CommonConstants {
     String EMAIL_TYPE_PRIMARY = "primary";
     String EMAIL_TYPE_SECONDARY = "secondary";
 
+    String ERROR_CODE_10001 = "10001";
+
 
 }

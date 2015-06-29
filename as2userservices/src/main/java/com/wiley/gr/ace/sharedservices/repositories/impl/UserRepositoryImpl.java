@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1297,40 +1298,63 @@ public class UserRepositoryImpl implements UserRepository {
      */
     public LookupResponse userlookUpRepository(String firstName, String lastName, String emailId)
             throws SharedServiceException {
-
         LOGGER.info("Search User Profile..");
         LookupResponse response = new LookupResponse();
         Session session = null;
-        Users user = null;
+        List<Object> user = null;
+        UserSecondaryEmailAddr userSecondaryEmailAddr = null;
         try {
             LOGGER.info("Getting Entity...");
             session = sessionFactory.openSession();
             // Begin the transaction.
             session.beginTransaction();
-            // Get the user role object.
-            Criteria criteriaAuthor = session.createCriteria(Users.class);
-            criteriaAuthor.add(Restrictions.eq(
-                    CommonConstants.PRIMARY_EMAIL_ID, emailId));
-            if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
-                criteriaAuthor.add(Restrictions.eq(CommonConstants.FIRST_NAME,
+            // Get the user object.
+            Criteria userCriteria = session.createCriteria(Users.class);
+            // Set Projections
+            userCriteria.setProjection(Projections.projectionList()
+                    .add(Projections.property(CommonConstants.USER_ID))
+                    .add(Projections.property(CommonConstants.PRIMARY_EMAIL_ID)));
+
+            userCriteria.add(Restrictions.eq(CommonConstants.PRIMARY_EMAIL_ID,
+                    emailId));
+            //Apply firstName and lastName to criteria
+            if (!StringUtils.isEmpty(firstName)
+                    && !StringUtils.isEmpty(lastName)) {
+                userCriteria.add(Restrictions.eq(CommonConstants.FIRST_NAME,
                         firstName));
-                criteriaAuthor.add(Restrictions.eq(CommonConstants.LAST_NAME,
+                userCriteria.add(Restrictions.eq(CommonConstants.LAST_NAME,
                         lastName));
             }
 
-            if (null != criteriaAuthor.uniqueResult()) {
-                user = (Users) criteriaAuthor.uniqueResult();
-                response.setUserId("" + user.getUserId());
-                response.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
-                if (!StringUtils.isEmpty(user.getPrimaryEmailAddr()) && emailId.equalsIgnoreCase(user.getPrimaryEmailAddr())) {
+            //If record found in user table
+            if (userCriteria.list().size() > 0) {
+                user = userCriteria.list();
+                Object[] items = (Object[]) user.get(0);
+                int id = (Integer) items[0];
+                String pEmail = (String) items[1];
+                response.setUserId("" + id);
+                response.setPrimaryEmailAddress(pEmail);
+                if (!StringUtils.isEmpty(pEmail)
+                        && StringUtils.equalsIgnoreCase(emailId, pEmail)) {
                     response.setEmailType(CommonConstants.EMAIL_TYPE_PRIMARY);
                 }
-                Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = user.getUserSecondaryEmailAddrsForUserId();
-                for (UserSecondaryEmailAddr userSecondaryEmailAddr : userSecondaryEmailAddrSet) {
-                    if (!StringUtils.isEmpty(userSecondaryEmailAddr.getSecondaryEmailAddr()) && emailId.equalsIgnoreCase(userSecondaryEmailAddr.getSecondaryEmailAddr())) {
-                        response.setEmailType(CommonConstants.EMAIL_TYPE_SECONDARY);
-                    }
+            } //Else Search with User Secondary Email Addrr Table.
+            else {
+                userCriteria = session
+                        .createCriteria(UserSecondaryEmailAddr.class);
+                userCriteria.add(Restrictions.eq(CommonConstants.SECONDARY_EMAIL_ID,
+                        emailId));
+                if (null != userCriteria.uniqueResult()) {
+                    userSecondaryEmailAddr = (UserSecondaryEmailAddr) userCriteria
+                            .uniqueResult();
+                    response.setUserId(""
+                            + userSecondaryEmailAddr.getUsersByUserId()
+                            .getUserId());
+                    response.setPrimaryEmailAddress(userSecondaryEmailAddr
+                            .getUsersByUserId().getPrimaryEmailAddr());
+                    response.setEmailType(CommonConstants.EMAIL_TYPE_SECONDARY);
                 }
+
             }
 
             // Flush the session
@@ -1349,6 +1373,7 @@ public class UserRepositoryImpl implements UserRepository {
             }
         }
         return response;
+
     }
 
     /**
