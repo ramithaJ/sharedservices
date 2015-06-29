@@ -8,10 +8,13 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -62,6 +65,8 @@ public class Notification implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTIFICATION_SEQ")
+	@SequenceGenerator(name = "NOTIFICATION_SEQ", sequenceName = "NOTIFICATION_SEQ", allocationSize = 1)
 	public Integer getId() {
 		return this.id;
 	}
@@ -144,8 +149,8 @@ public class Notification implements java.io.Serializable {
 		this.unread = unread;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "notification", orphanRemoval = true)
-	@Cascade({ CascadeType.ALL })
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "notification")
+	@Cascade(CascadeType.ALL)
 	public NotificationRecipients getNotificationRecipients() {
 		return this.notificationRecipients;
 	}

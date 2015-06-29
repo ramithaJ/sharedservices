@@ -550,7 +550,6 @@ public class NotificationManagementServiceImpl implements
 		mailSenderService.sendEmail(notificationDetails.getFrom(),
 				notificationDetails.getTo(), templateObj.getDescription(),
 				templateObj.getBody());
-		
 		NotificationObj notificationObj = new NotificationObj();
 		NotificationRecipientsObj notificationRecipientsObj = new NotificationRecipientsObj();
 		
@@ -644,7 +643,7 @@ public class NotificationManagementServiceImpl implements
 		notification.setUnread(notificationObj.getUnread());
 
 		notificationRecipients.setEmail(notificationRecipientsObj.getEmail());
-		notificationRecipients.setNotificationId(notificationObj.getId());
+		//notificationRecipients.setNotificationId(notificationObj.getId());
 		notificationRecipients.setNotification(notification);
 		notification.setNotificationRecipients(notificationRecipients);
 		notificationManagementDAO

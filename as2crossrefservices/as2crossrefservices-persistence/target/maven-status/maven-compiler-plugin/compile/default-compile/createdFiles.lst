@@ -1,0 +1,4 @@
+com\wiley\gr\ace\authorservices\persistence\services\CrossRefDAO.class
+com\wiley\gr\ace\authorservices\persistence\connection\CrossRefHibernateConnection.class
+com\wiley\gr\ace\authorservices\persistence\services\impl\CrossRefDAOImpl.class
+com\wiley\gr\ace\authorservices\persistence\context\CrossRefPersistenceBeanConfig.class
