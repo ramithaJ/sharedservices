@@ -322,7 +322,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				});
 		if (null == list) {
 			AuthenticationServiceImpl.LOGGER
-			.error("List is empty / no records found ");
+					.error("List is empty / no records found ");
 			return new User();
 		}
 		final String[] string = list.get(0).toString().split(",");
@@ -388,7 +388,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// if time elapsed we will unlock the user, remove the record in table
 		// and proceed for authentication.
 		final long minutes = TimeUnit.MILLISECONDS.toMinutes(new Date()
-		.getTime() - loginAttemptTime.getTime());
+				.getTime() - loginAttemptTime.getTime());
 		if (this.unlockTime < minutes) {
 			final SecurityRequest requestEntityClass = new SecurityRequest();
 			requestEntityClass.setUserId(request.getUserId());
@@ -398,6 +398,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			}
 			this.userLoginDao.removeUser(request.getUserId());
 			return this.processAuthenticatedUser(request);
+		}
+		if (this.lockAttempts < lockedAccountDetails.getInvalidLoginCount()) {
+			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
+			return response;
 		}
 		// if time not elapsed we will check the login failure count.
 		// if count is 3 then we will lock the user and update the time stamp in

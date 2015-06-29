@@ -100,6 +100,8 @@ public class UserLoginDAOImpl implements UserLoginDAO {
 			transaction = session.beginTransaction();
 			final LockedAccountDetails lockedAccountDetails = (LockedAccountDetails) session
 					.get(LockedAccountDetails.class, userId);
+			int count = lockedAccountDetails.getInvalidLoginCount();
+			lockedAccountDetails.setInvalidLoginCount(++count);
 			lockedAccountDetails.setLockedTime(new Date());
 			lockedAccountDetails.setUpdatedDate(new Date());
 			session.update(lockedAccountDetails);
