@@ -10,10 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Parameter;
 
 /**
@@ -56,7 +53,6 @@ public class NotificationRecipients implements java.io.Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Notification getNotification() {
 		return this.notification;
 	}

@@ -398,6 +398,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			isCreated = true;
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			isCreated = false;
 		} finally {
 			if (session != null) {
