@@ -45,8 +45,8 @@ public class UserServiceController {
     @Value("${USER_SERVICE_ERROR_101}")
     private String userServiceError101;
 
-    @Value("${USER_LOOKUP_SERVICE_ERROR_101}")
-    private String userlookUpServiceError101;
+    @Value("${USER_SERVICE_ERROR_201}")
+    private String userlookUpServiceError201;
 
 
     /**
@@ -63,7 +63,7 @@ public class UserServiceController {
             service.setPayload(new UserId(authorServicesUniqueIdentifier));
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Create User Service", e);
-            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, e.getMessage(), CommonConstants.ERROR);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
         return service;
     }
@@ -80,13 +80,13 @@ public class UserServiceController {
         try {
             String authorServicesUniqueIdentifier = deleteProfileRequest.getUserProfile().getAsid();
             if (StringUtils.isEmpty(authorServicesUniqueIdentifier)) {
-                throw new SharedServiceException(userServiceError101);
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
             }
 
             userService.deleteUserService(authorServicesUniqueIdentifier);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Create User Service", e);
-            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, e.getMessage(), CommonConstants.ERROR);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
         return service;
     }
@@ -103,13 +103,13 @@ public class UserServiceController {
     public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
         try {
             if (StringUtils.isEmpty(userId)) {
-                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, userServiceError101, CommonConstants.ERROR);
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
             }
             userService.updateUserProfileService(userServiceRequest, userId);
             LOGGER.debug("Update User Service:", userId);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Update User Service", e);
-            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, e.getMessage(), CommonConstants.ERROR);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
         return new Service();
     }
@@ -126,13 +126,13 @@ public class UserServiceController {
         UserServiceRequest userServiceRequest = null;
         try {
             if (StringUtils.isEmpty(userId)) {
-                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, userServiceError101, CommonConstants.ERROR);
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
             }
             LOGGER.debug("Get User Service:", userId);
             userServiceRequest = userService.getUserProfileService(userId);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Get User Service", e);
-            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, e.getMessage(), CommonConstants.ERROR);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
         service.setPayload(userServiceRequest);
         return service;
@@ -151,13 +151,13 @@ public class UserServiceController {
         try {
             //Check whether email address is null or empty. Throw error
             if (StringUtils.isEmpty(lookUp.getUserProfile().getEmailAddress())) {
-                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, userlookUpServiceError101, CommonConstants.ERROR);
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_201, userlookUpServiceError201, CommonConstants.ERROR);
             }
             LookupResponse response = userService.userlookUpService(lookUp.getUserProfile().getFirstName(), lookUp.getUserProfile().getLastName(), lookUp.getUserProfile().getEmailAddress());
             service.setPayload(response);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Get User Service", e);
-            return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_10001, e.getMessage(), CommonConstants.ERROR);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
 
         return service;
