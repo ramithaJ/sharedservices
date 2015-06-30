@@ -8,7 +8,7 @@ import com.wiley.gr.ace.authorservices.services.service.impl.CrossRefServiceImpl
 
 @Configuration
 public class CrossRefServiceBeanConfig {
-	@Bean(name = "CrossRef")
+	@Bean(name = "CrossRefService")
 	public CrossRefService crossRefService() {
 		return new CrossRefServiceImpl();
 	}

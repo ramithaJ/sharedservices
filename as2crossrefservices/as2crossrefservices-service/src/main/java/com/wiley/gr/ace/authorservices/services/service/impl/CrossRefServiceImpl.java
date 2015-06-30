@@ -12,9 +12,6 @@ import com.wiley.gr.ace.authorservices.services.service.CrossRefService;
 public class CrossRefServiceImpl implements CrossRefService {
 
 	@Autowired(required = true)
-	CrossRefService crossRefService;
-
-	@Autowired(required = true)
 	CrossRefDAO crossRefDAO;
 
 	public ProductPersonRelationObj getProductPersonRelationObj(Integer dhId)
