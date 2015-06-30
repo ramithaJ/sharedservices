@@ -14,6 +14,7 @@
 package com.wiley.gr.ace.sharedservices.controllers;
 
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.common.Property;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
 import com.wiley.gr.ace.sharedservices.payload.*;
@@ -32,29 +33,13 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/v1/")
-public class UserServiceController {
+public class UserServiceController extends Property {
 
     //Logger Instance
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceController.class);
 
     @Autowired
     private UserService userService;
-
-    @Value("${USER_SERVICE_ERROR_101}")
-    private String userServiceError101;
-
-    @Value("${USER_SERVICE_ERROR_201}")
-    private String userlookUpServiceError201;
-
-    @Value("${USER_SERVICE_ERROR_103}")
-    private String userlookUpServiceError103;
-
-    @Value("${USER_SERVICE_ERROR_104}")
-    private String userlookUpServiceError104;
-
-    @Value("${USER_SERVICE_ERROR_108}")
-    private String userlookUpServiceError108;
-
 
     /**
      * Method to Create User

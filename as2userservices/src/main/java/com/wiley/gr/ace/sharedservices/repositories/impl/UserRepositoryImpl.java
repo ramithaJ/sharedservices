@@ -14,19 +14,16 @@
 package com.wiley.gr.ace.sharedservices.repositories.impl;
 
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.common.Property;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
-import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
-import com.wiley.gr.ace.sharedservices.payload.Service;
-import com.wiley.gr.ace.sharedservices.payload.UserSearchResponse;
-import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
+import com.wiley.gr.ace.sharedservices.payload.Error;
+import com.wiley.gr.ace.sharedservices.payload.*;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.Address;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
-import com.wiley.gr.ace.sharedservices.payload.Error;
-import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -36,7 +33,6 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -46,44 +42,13 @@ import java.util.Set;
 /**
  * @author kkalyan
  */
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl extends Property implements UserRepository {
 
     //Logger Instance
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
     @Autowired
     private SessionFactory sessionFactory;
-
-    @Value("${USER_SERVICE_ERROR_101}")
-    private String userServiceError101;
-
-    @Value("${USER_SERVICE_ERROR_102}")
-    private String userServiceError102;
-
-    @Value("${USER_SERVICE_ERROR_103}")
-    private String userServiceError103;
-
-    @Value("${USER_SERVICE_ERROR_104}")
-    private String userServiceError104;
-
-    @Value("${USER_SERVICE_ERROR_105}")
-    private String userServiceError105;
-
-    @Value("${USER_SERVICE_ERROR_106}")
-    private String userServiceError106;
-
-    @Value("${USER_SERVICE_ERROR_107}")
-    private String userServiceError107;
-
-    @Value("${USER_SERVICE_ERROR_301}")
-    private String userSearchServiceError301;
-
-    @Value("${USER_SERVICE_ERROR_302}")
-    private String userSearchServiceError302;
-
-    @Value("${USER_SERVICE_ERROR_303}")
-    private String userSearchServiceError303;
-
 
     /**
      * Method to create user.
