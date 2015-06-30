@@ -8,32 +8,23 @@ package com.wiley.gr.ace.authorservices.model;
  *
  */
 public class PersonDetails {
-private Integer userId;
-private String emailAddr;
-private String productRoleCode;
-public String getEmailAddr() {
-	return emailAddr;
-}
+	private Integer userId;
+	private String emailAddr;
 
-public void setEmailAddr(String emailAddr) {
-	this.emailAddr = emailAddr;
-}
+	public String getEmailAddr() {
+		return emailAddr;
+	}
 
-public String getProductRoleCode() {
-	return productRoleCode;
-}
+	public void setEmailAddr(String emailAddr) {
+		this.emailAddr = emailAddr;
+	}
 
-public void setProductRoleCode(String productRoleCode) {
-	this.productRoleCode = productRoleCode;
-}
+	public Integer getUserId() {
+		return userId;
+	}
 
-
-public Integer getUserId() {
-	return userId;
-}
-
-public void setUserId(Integer userId) {
-	this.userId = userId;
-}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
 }
