@@ -26,6 +26,7 @@ import com.wiley.gr.ace.sharedservices.profile.Address;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.payload.Error;
+import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -85,30 +86,6 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     /**
-     * Method to validate the request parameters.
-     *
-     * @param userServiceRequest
-     * @throws SharedServiceException
-     */
-    private void validateRequest(UserServiceRequest userServiceRequest) throws SharedServiceException {
-        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_103, userServiceError103);
-        }
-        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getLastName())) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_104, userServiceError104);
-        }
-        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_105, userServiceError105);
-        }
-        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid())) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_106, userServiceError106);
-        }
-        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPassword())) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_107, userServiceError107);
-        }
-    }
-
-    /**
      * Method to create user.
      *
      * @param userServiceRequest
@@ -141,55 +118,29 @@ public class UserRepositoryImpl implements UserRepository {
 
 
             //Create AuthorProfile Object
-            UserProfile authorProfile = new UserProfile();
+            UserProfile userProfile = new UserProfile();
             LOGGER.info("Set Author Profile...");
-            authorProfile = UserServiceHelper.setAuthorProfile(userServiceRequest, authorProfile);
-            authorProfile.setCreatedDate(UserServiceHelper.getDate());
-            authorProfile.setUsersByCreatedBy(user);
-            authorProfile.setUsersByUpdatedBy(user);
-            authorProfile.setUsersByUserId(user);
-            session.save(authorProfile);
+            userProfile = UserServiceHelper.setAuthorProfile(userServiceRequest, userProfile);
+            userProfile.setCreatedDate(UserServiceHelper.getDate());
+            userProfile.setUsersByCreatedBy(user);
+            userProfile.setUsersByUpdatedBy(user);
+            userProfile.setUsersByUserId(user);
+            session.save(userProfile);
 
             //Set Orcid id information
             if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
                 LOGGER.debug("Set User Reference Data...");
-                UserReferenceData userReferenceData = new UserReferenceData();
-                userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
-                userReferenceData.setCreatedDate(UserServiceHelper.getDate());
-                userReferenceData.setUsersByCreatedBy(user);
-                userReferenceData.setUsersByUpdatedBy(user);
-                userReferenceData.setUsersByUserId(user);
-                session.save(userReferenceData);
+                addUserReferenceData(session, user, userServiceRequest);
             }
 
             //Set Profile Information
             List<ProfileVisible> profileVisibleList = userServiceRequest.getUserProfile().getProfileVisible();
             Set<UserProfileAttribVisible> userProfileAttribVisibleSet = new HashSet<>();
             if (null != profileVisibleList && profileVisibleList.size() > 0) {
-                LOGGER.debug("Set Profile Visible Id...");
-                for (ProfileVisible profileVisible : profileVisibleList) {
-                    //Get the Profile Attribute List
-                    ProfileAttributeList profileAttributeList = (ProfileAttributeList) getEntity("profileAttribCd", profileVisible.getTitleCd(), ProfileAttributeList.class, false);
-                    if (null != profileAttributeList) {
-                        UserProfileAttribVisibleId userProfileAttribVisibleId = new UserProfileAttribVisibleId();
-                        userProfileAttribVisibleId.setUserId(user.getUserId());
-                        userProfileAttribVisibleId.setProfileAttribCd(profileVisible.getTitleCd());
-
-                        //Set User Profile Attribute Visible
-                        UserProfileAttribVisible userProfileAttribVisible = new UserProfileAttribVisible();
-                        userProfileAttribVisible = UserServiceHelper.setProfileAttributeList(profileAttributeList, authorProfile, userProfileAttribVisible);
-                        userProfileAttribVisible.setId(userProfileAttribVisibleId);
-                        userProfileAttribVisible.setProfileVisibilityFlg(profileVisible.getTitleValue());
-                        userProfileAttribVisible.setCreatedDate(UserServiceHelper.getDate());
-                        userProfileAttribVisible.setUpdatedDate(UserServiceHelper.getDate());
-                        userProfileAttribVisible.setUsersByCreatedBy(user);
-                        userProfileAttribVisible.setUsersByUpdatedBy(user);
-                        session.save(userProfileAttribVisible);
-                        userProfileAttribVisibleSet.add(userProfileAttribVisible);
-                    }
-                }
+                //Add Profile Visible.
+                addProfileVisible(session, user, profileVisibleList, userProfile, userProfileAttribVisibleSet);
                 if (userProfileAttribVisibleSet.size() > 0) {
-                    authorProfile.setUserProfileAttribVisibles(userProfileAttribVisibleSet);
+                    userProfile.setUserProfileAttribVisibles(userProfileAttribVisibleSet);
                 }
             }
 
@@ -200,42 +151,23 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != secondaryEmailAddr) {
                 LOGGER.debug("Set Secondary Email Addr...");
                 secondaryEmailAddr.setCreatedDate(UserServiceHelper.getDate());
+                secondaryEmailAddr.setUpdatedDate(UserServiceHelper.getDate());
                 secondaryEmailAddr.setUsersByCreatedBy(user);
                 secondaryEmailAddr.setUsersByUpdatedBy(user);
                 userSecondaryEmailAddrSet.add(secondaryEmailAddr);
                 //Set the secondary email address to the user object
                 secondaryEmailAddr.setUsersByUserId(user);
                 session.save(secondaryEmailAddr);
-                authorProfile.setUserSecondaryEmailAddr(secondaryEmailAddr);
+                userProfile.setUserSecondaryEmailAddr(secondaryEmailAddr);
             }
 
 
             //Create user Address Object
             List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
-            UserAddresses userAddresses = null;
             if (null != addressList && addressList.size() > 0) {
                 Set<UserAddresses> userAddressesSet = new HashSet<>();
                 LOGGER.debug("Set User  Addr...");
-                for (Address addressProfile : addressList) {
-                    userAddresses = new UserAddresses();
-                    com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
-                    address = UserServiceHelper.setAddress(address, addressProfile);
-                    address.setCreatedDate(UserServiceHelper.getDate());
-                    address.setUsersByCreatedBy(user);
-                    address.setUsersByUpdatedBy(user);
-                    session.save(address);
-                    AddressType addressType = (AddressType) getEntity("addressTypeCd", addressProfile.getType(), AddressType.class, false);
-                    if (null != addressType) {
-                        userAddresses.setAddressType(addressType);
-                        userAddresses.setAddress(address);
-                        userAddresses.setUsersByCreatedBy(user);
-                        userAddresses.setUsersByUserId(user);
-                        userAddresses.setUsersByCreatedBy(user);
-                        userAddresses.setUsersByUpdatedBy(user);
-                        session.save(userAddresses);
-                        userAddressesSet.add(userAddresses);
-                    }
-                }
+                addAddress(session, user, userAddressesSet, addressList);
                 if (userAddressesSet.size() > 0) {
                     user.setUserAddressesesForUserId(userAddressesSet);
                 }
@@ -246,20 +178,7 @@ public class UserRepositoryImpl implements UserRepository {
             UserAffiliations affiliations = null;
             if (null != affiliationList && affiliationList.size() > 0) {
                 LOGGER.debug("Set Affiliation...");
-                Set<UserAffiliations> userAffiliationsSet = new HashSet<>();
-                for (Affiliation affiliation : affiliationList) {
-                    affiliations = new UserAffiliations();
-                    affiliations = UserServiceHelper.setUserAffiliations(affiliations, affiliation);
-                    affiliations.setCreatedDate(UserServiceHelper.getDate());
-                    affiliations.setUsersByCreatedBy(user);
-                    affiliations.setUsersByUpdatedBy(user);
-                    affiliations.setUserProfile(authorProfile);
-                    session.save(affiliations);
-                    userAffiliationsSet.add(affiliations);
-                }
-
-                //Set User Affiliations
-                authorProfile.setUserAffiliationses(userAffiliationsSet);
+                addAffiliation(session, user, userProfile, affiliationList);
             }
 
             //Set funder details
@@ -267,41 +186,9 @@ public class UserRepositoryImpl implements UserRepository {
             Set<UserFunders> grants = new HashSet<>();
             if (null != funders && funders.size() > 0) {
                 LOGGER.debug("Set Funder...");
-                for (Funder funder : funders) {
-                    List<GrantNumber> grantList = funder.getGrantNumbers();
-                    int grantListSize = grantList.size();
-                    ResearchFunders researchFunders = new ResearchFunders();
-                    researchFunders = UserServiceHelper.setResearchFunders(researchFunders, funder);
-                    researchFunders.setCreatedDate(UserServiceHelper.getDate());
-                    researchFunders.setUsersByCreatedBy(user);
-                    researchFunders.setUsersByUpdatedBy(user);
-                    session.save(researchFunders);
-
-                    UserFunders userFunders = new UserFunders();
-                    userFunders.setResearchFunders(researchFunders);
-                    userFunders.setUserProfile(authorProfile);
-                    userFunders.setCreatedDate(UserServiceHelper.getDate());
-                    userFunders.setUpdatedDate(UserServiceHelper.getDate());
-                    userFunders.setUsersByCreatedBy(user);
-                    userFunders.setUsersByUpdatedBy(user);
-                    userFunders.setUserProfile(authorProfile);
-                    session.save(userFunders);
-
-                    for (int i = 0; i < grantListSize; i++) {
-                        UserFunderGrants userFunderGrants = new UserFunderGrants();
-                        userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, ((GrantNumber) grantList.get(i)).getGrantNumber());
-                        userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
-                        userFunderGrants.setUsersByCreatedBy(user);
-                        userFunderGrants.setUsersByUpdatedBy(user);
-                        userFunderGrants.setUserFunders(userFunders);
-                        session.save(userFunderGrants);
-                        //researchFunders.getUserFunderGrantses().add(userFunderGrants);
-
-                    }
-                    grants.add(userFunders);
-                }
+                addFunder(session, user, userProfile, funders, grants);
                 if (grants.size() > 0) {
-                    authorProfile.setUserFunderses(grants);
+                    userProfile.setUserFunderses(grants);
                 }
 
             }
@@ -311,23 +198,9 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != societyList && societyList.size() > 0) {
                 LOGGER.debug("Set Society...");
                 Set<UserSocietyDetails> societyDetailsSet = new HashSet<>();
-                for (Society society : societyList) {
-                    //Get Societies
-                    Societies societies = (Societies) getEntity("societyCd", society.getSocietyCd(), Societies.class, false);
-                    if (null != societies) {
-                        UserSocietyDetails userSocietyDetails = new UserSocietyDetails();
-                        userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
-                        userSocietyDetails.setSocieties(societies);
-                        userSocietyDetails.setCreatedDate(UserServiceHelper.getDate());
-                        userSocietyDetails.setUsersByCreatedBy(user);
-                        userSocietyDetails.setUsersByUpdatedBy(user);
-                        userSocietyDetails.setUserProfile(authorProfile);
-                        session.save(userSocietyDetails);
-                        societyDetailsSet.add(userSocietyDetails);
-                    }
-                }
+                addSociety(session, user, userProfile, societyList, societyDetailsSet);
                 if (societyDetailsSet.size() > 0) {
-                    authorProfile.setUserSocietyDetailses(societyDetailsSet);
+                    userProfile.setUserSocietyDetailses(societyDetailsSet);
                 }
             }
 
@@ -337,26 +210,9 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != myInterestList && myInterestList.size() > 0) {
                 Set<UserAreaOfInterest> userAreaOfInterestHashSet = new HashSet<>();
                 LOGGER.debug("Set MyInterest...");
-                for (MyInterest myInterest : myInterestList) {
-                    UserAreaOfInterest userAreaOfInterest = new UserAreaOfInterest();
-                    AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
-                    if (null != areaOfInterest) {
-                        UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
-                        userAreaOfInterestId.setUserId(user.getUserId());
-                        userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
-                        userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
-                        userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
-                        userAreaOfInterest.setUsersByCreatedBy(user);
-                        userAreaOfInterest.setUsersByUpdatedBy(user);
-                        userAreaOfInterest.setAreaOfInterest(areaOfInterest);
-                        userAreaOfInterest.setUserProfile(authorProfile);
-                        userAreaOfInterest.setId(userAreaOfInterestId);
-                        session.save(userAreaOfInterest);
-                        userAreaOfInterestHashSet.add(userAreaOfInterest);
-                    }
-                }
+                addInterest(session, user, userProfile, myInterestList, userAreaOfInterestHashSet);
                 if (userAreaOfInterestHashSet.size() > 0) {
-                    authorProfile.setUserAreaOfInterests(userAreaOfInterestHashSet);
+                    userProfile.setUserAreaOfInterests(userAreaOfInterestHashSet);
                 }
 
             }
@@ -366,92 +222,40 @@ public class UserRepositoryImpl implements UserRepository {
             if (null != coAuthorList && coAuthorList.size() > 0) {
                 LOGGER.debug("Set CoAuthor...");
                 Set<AuthCoauthDetails> authCoauthDetailsSet = new HashSet<>();
-                for (CoAuthor coAuthor : coAuthorList) {
-                    AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
-                    authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
-                    authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
-                    authCoauthDetails.setUserProfileByAuthorUserId(authorProfile);
-                    authCoauthDetails.setAuthCoauthId(user.getUserId());
-                    //TODO: Set CoAuthor ID
-                    authCoauthDetails.setUsersByCreatedBy(user);
-                    authCoauthDetails.setUsersByUpdatedBy(user);
-                    session.save(authCoauthDetails);
-                    authCoauthDetailsSet.add(authCoauthDetails);
-                }
-                authorProfile.setAuthCoauthDetailsesForAuthorUserId(authCoauthDetailsSet);
+                addAuthor(session, user, userProfile, coAuthorList, authCoauthDetailsSet);
+                userProfile.setAuthCoauthDetailsesForAuthorUserId(authCoauthDetailsSet);
             }
 
 
             //Set Preferred Journals
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
-            UserPreferredJournals userPreferredJournals = null;
-
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
-
                 LOGGER.info("Set PreferredJournal...");
                 Set<UserPreferredJournals> userPreferredJournalsSet = new HashSet<>();
-                for (PreferredJournal preferredJournal : preferredJournalList) {
-                    UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
-                    userPreferredJournals = new UserPreferredJournals();
-                    Journals journals = (Journals) getEntityById(CommonConstants.JOURNAL_ID, preferredJournal.getJournalId(), Journals.class);
-                    if (null != journals) {
-                        userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
-                        userPreferredJournalsId.setUserId(user.getUserId());
-                        userPreferredJournalsId.setJournalId(journals.getJournalId());
-                        userPreferredJournals.setId(userPreferredJournalsId);
-                        userPreferredJournals.setUserProfile(authorProfile);
-                        userPreferredJournals.setUsersByCreatedBy(user);
-                        userPreferredJournals.setUsersByUpdatedBy(user);
-                        session.save(userPreferredJournals);
-                        userPreferredJournalsSet.add(userPreferredJournals);
-                    }
-                }
+                addJournal(session, user, userProfile, preferredJournalList, userPreferredJournalsSet);
                 if (userPreferredJournalsSet.size() > 0) {
-                    authorProfile.setUserPreferredJournalses(userPreferredJournalsSet);
+                    userProfile.setUserPreferredJournalses(userPreferredJournalsSet);
                 }
             }
 
             //Set Alerts
             List<Alert> alertList = userServiceRequest.getUserProfile().getAlerts();
-            UserAlerts alerts = null;
+
             if (null != alertList && alertList.size() > 0) {
                 LOGGER.info("Set Alerts...");
                 Set<UserAlerts> userAlertsHashSet = new HashSet<>();
-                for (Alert alert : alertList) {
-                    List<AlertType> alertTypeList = alert.getAlertTypes();
-
-                    //Get Alerts Object.
-                    Alerts alertsObj = (Alerts) getEntity("alertCd", alert.getAlertCd(), Alerts.class, false);
-
-                    if (null != alertTypeList && alertTypeList.size() > 0) {
-                        int alertListSize = alertTypeList.size();
-                        for (int j = 0; j < alertListSize; j++) {
-                            AlertType alertType = alertTypeList.get(j);
-                            UserAlertsId userAlertsId = new UserAlertsId();
-                            userAlertsId.setUserId(user.getUserId());
-                            userAlertsId.setAlertCd(alert.getAlertCd());
-                            alerts = new UserAlerts();
-                            alerts = UserServiceHelper.setUserAlerts(alerts, alertType);
-                            alerts.setId(userAlertsId);
-                            alerts.setAlerts(alertsObj);
-                            alerts.setUsersByCreatedBy(user);
-                            alerts.setUsersByUpdatedBy(user);
-                            session.save(alerts);
-                            userAlertsHashSet.add(alerts);
-                        }
-                    }
-                }
+                addAlert(session, user, userProfile, alertList, userAlertsHashSet);
                 if (userAlertsHashSet.size() > 0) {
-                    authorProfile.setUserAlertses(userAlertsHashSet);
+                    userProfile.setUserAlertses(userAlertsHashSet);
                 }
             }
             LOGGER.info("Saving the User in DB...");
 
             //Set Author Profile to user
-            authorProfile.setUsersByUserId(user);
+            userProfile.setUsersByUserId(user);
 
             LOGGER.info("Saving the User Profile in DB...");
-            session.save(authorProfile);
+            session.save(userProfile);
 
             LOGGER.info("Flush...");
             //Flush the session.
@@ -514,6 +318,8 @@ public class UserRepositoryImpl implements UserRepository {
             session = sessionFactory.openSession();
             //Begin the transaction.
             session.beginTransaction();
+
+            //TODO: Profile & Primary email
 
             //Get Address and set to the response.
             List<Address> addressList = new LinkedList<>();
@@ -1588,5 +1394,334 @@ public class UserRepositoryImpl implements UserRepository {
         return classObj;
     }
 
+    /**
+     * Method to validate the request parameters.
+     *
+     * @param userServiceRequest
+     * @throws SharedServiceException
+     */
+    private void validateRequest(UserServiceRequest userServiceRequest) throws SharedServiceException {
+        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) {
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_103, userServiceError103);
+        }
+        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getLastName())) {
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_104, userServiceError104);
+        }
+        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_105, userServiceError105);
+        }
+        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid())) {
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_106, userServiceError106);
+        }
+        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPassword())) {
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_107, userServiceError107);
+        }
+    }
+
+    /**
+     * Method to add Profile Visible list.
+     *
+     * @param session
+     * @param user
+     * @param profileVisibleList
+     * @param authorProfile
+     * @param userProfileAttribVisibleSet
+     * @return
+     * @throws SharedServiceException
+     */
+    private void addProfileVisible(Session session, Users user, List<ProfileVisible> profileVisibleList, UserProfile authorProfile, Set<UserProfileAttribVisible> userProfileAttribVisibleSet) throws SharedServiceException {
+        LOGGER.debug("Set Profile Visible Id...");
+        for (ProfileVisible profileVisible : profileVisibleList) {
+            //Get the Profile Attribute List
+            ProfileAttributeList profileAttributeList = (ProfileAttributeList) getEntity(CommonConstants.PROFILE_ATTR_CD, profileVisible.getTitleCd(), ProfileAttributeList.class, false);
+            if (null != profileAttributeList) {
+                UserProfileAttribVisibleId userProfileAttribVisibleId = new UserProfileAttribVisibleId();
+                userProfileAttribVisibleId.setUserId(user.getUserId());
+                userProfileAttribVisibleId.setProfileAttribCd(profileVisible.getTitleCd());
+
+                //Set User Profile Attribute Visible
+                UserProfileAttribVisible userProfileAttribVisible = new UserProfileAttribVisible();
+                userProfileAttribVisible = UserServiceHelper.setProfileAttributeList(profileAttributeList, authorProfile, userProfileAttribVisible);
+                userProfileAttribVisible.setId(userProfileAttribVisibleId);
+                userProfileAttribVisible.setProfileVisibilityFlg(profileVisible.getTitleValue());
+                userProfileAttribVisible.setCreatedDate(UserServiceHelper.getDate());
+                userProfileAttribVisible.setUsersByCreatedBy(user);
+                userProfileAttribVisible.setUsersByUpdatedBy(user);
+                session.save(userProfileAttribVisible);
+                userProfileAttribVisibleSet.add(userProfileAttribVisible);
+            }
+        }
+    }
+
+    /**
+     * Method to add User Reference data.
+     *
+     * @param session
+     * @param user
+     * @return
+     */
+    private void addUserReferenceData(Session session, Users user, UserServiceRequest userServiceRequest) throws SharedServiceException {
+        UserReferenceData userReferenceData = new UserReferenceData();
+        userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
+        userReferenceData.setCreatedDate(UserServiceHelper.getDate());
+        userReferenceData.setUsersByCreatedBy(user);
+        userReferenceData.setUsersByUpdatedBy(user);
+        userReferenceData.setUsersByUserId(user);
+        session.save(userReferenceData);
+    }
+
+    /**
+     * Method to add address.
+     *
+     * @param session
+     * @param user
+     * @param userAddressesSet
+     * @param addressList
+     * @throws SharedServiceException
+     */
+    private void addAddress(Session session, Users user, Set<UserAddresses> userAddressesSet, List<Address> addressList) throws SharedServiceException {
+        for (Address addressProfile : addressList) {
+            UserAddresses userAddresses = new UserAddresses();
+            com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
+            address = UserServiceHelper.setAddress(address, addressProfile);
+            address.setCreatedDate(UserServiceHelper.getDate());
+            address.setUpdatedDate(UserServiceHelper.getDate());
+            address.setUsersByCreatedBy(user);
+            address.setUsersByUpdatedBy(user);
+            session.save(address);
+            AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
+            if (null != addressType) {
+                userAddresses.setAddressType(addressType);
+                userAddresses.setAddress(address);
+                userAddresses.setUsersByUserId(user);
+                userAddresses.setCreatedDate(UserServiceHelper.getDate());
+                userAddresses.setUpdatedDate(UserServiceHelper.getDate());
+                userAddresses.setUsersByCreatedBy(user);
+                userAddresses.setUsersByUpdatedBy(user);
+                session.save(userAddresses);
+                userAddressesSet.add(userAddresses);
+            }
+        }
+    }
+
+    /**
+     * Method to add affiliations.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param affiliationList
+     */
+    private void addAffiliation(Session session, Users user, UserProfile userProfile, List<Affiliation> affiliationList) {
+        if (null != affiliationList && affiliationList.size() > 0) {
+            LOGGER.debug("Set Affiliation...");
+            Set<UserAffiliations> userAffiliationsSet = new HashSet<>();
+            for (Affiliation affiliation : affiliationList) {
+                UserAffiliations affiliations = new UserAffiliations();
+                affiliations = UserServiceHelper.setUserAffiliations(affiliations, affiliation);
+                affiliations.setCreatedDate(UserServiceHelper.getDate());
+                affiliations.setUsersByCreatedBy(user);
+                affiliations.setUsersByUpdatedBy(user);
+                affiliations.setUserProfile(userProfile);
+                session.save(affiliations);
+                userAffiliationsSet.add(affiliations);
+            }
+            //Set User Affiliations
+            userProfile.setUserAffiliationses(userAffiliationsSet);
+        }
+    }
+
+    /**
+     * Method to add funder.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param funders
+     * @param grants
+     */
+    private void addFunder(Session session, Users user, UserProfile userProfile, List<Funder> funders, Set<UserFunders> grants) {
+        for (Funder funder : funders) {
+            List<GrantNumber> grantList = funder.getGrantNumbers();
+            int grantListSize = grantList.size();
+            ResearchFunders researchFunders = new ResearchFunders();
+            researchFunders = UserServiceHelper.setResearchFunders(researchFunders, funder);
+            researchFunders.setCreatedDate(UserServiceHelper.getDate());
+            researchFunders.setUsersByCreatedBy(user);
+            researchFunders.setUsersByUpdatedBy(user);
+            session.save(researchFunders);
+
+            UserFunders userFunders = new UserFunders();
+            userFunders.setResearchFunders(researchFunders);
+            userFunders.setUserProfile(userProfile);
+            userFunders.setCreatedDate(UserServiceHelper.getDate());
+            userFunders.setUpdatedDate(UserServiceHelper.getDate());
+            userFunders.setUsersByCreatedBy(user);
+            userFunders.setUsersByUpdatedBy(user);
+            userFunders.setUserProfile(userProfile);
+            session.save(userFunders);
+
+            for (int i = 0; i < grantListSize; i++) {
+                UserFunderGrants userFunderGrants = new UserFunderGrants();
+                userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, ((GrantNumber) grantList.get(i)).getGrantNumber());
+                userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
+                userFunderGrants.setUsersByCreatedBy(user);
+                userFunderGrants.setUsersByUpdatedBy(user);
+                userFunderGrants.setUserFunders(userFunders);
+                session.save(userFunderGrants);
+                //researchFunders.getUserFunderGrantses().add(userFunderGrants);
+
+            }
+            grants.add(userFunders);
+        }
+    }
+
+    /**
+     * Method to save society.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param societyList
+     * @param societyDetailsSet
+     * @throws SharedServiceException
+     */
+    private void addSociety(Session session, Users user, UserProfile userProfile, List<Society> societyList, Set<UserSocietyDetails> societyDetailsSet) throws SharedServiceException {
+        for (Society society : societyList) {
+            //Get Societies
+            Societies societies = (Societies) getEntity(CommonConstants.SOCIETY_CD, society.getSocietyCd(), Societies.class, false);
+            if (null != societies) {
+                UserSocietyDetails userSocietyDetails = new UserSocietyDetails();
+                userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
+                userSocietyDetails.setSocieties(societies);
+                userSocietyDetails.setCreatedDate(UserServiceHelper.getDate());
+                userSocietyDetails.setUsersByCreatedBy(user);
+                userSocietyDetails.setUsersByUpdatedBy(user);
+                userSocietyDetails.setUserProfile(userProfile);
+                session.save(userSocietyDetails);
+                societyDetailsSet.add(userSocietyDetails);
+            }
+        }
+    }
+
+    /**
+     * Method to add interest.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param myInterestList
+     * @param userAreaOfInterestHashSet
+     * @throws SharedServiceException
+     */
+    private void addInterest(Session session, Users user, UserProfile userProfile, List<MyInterest> myInterestList, Set<UserAreaOfInterest> userAreaOfInterestHashSet) throws SharedServiceException {
+        for (MyInterest myInterest : myInterestList) {
+            UserAreaOfInterest userAreaOfInterest = new UserAreaOfInterest();
+            AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
+            if (null != areaOfInterest) {
+                UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
+                userAreaOfInterestId.setUserId(user.getUserId());
+                userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
+                userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
+                userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
+                userAreaOfInterest.setUsersByCreatedBy(user);
+                userAreaOfInterest.setUsersByUpdatedBy(user);
+                userAreaOfInterest.setAreaOfInterest(areaOfInterest);
+                userAreaOfInterest.setUserProfile(userProfile);
+                userAreaOfInterest.setId(userAreaOfInterestId);
+                session.save(userAreaOfInterest);
+                userAreaOfInterestHashSet.add(userAreaOfInterest);
+            }
+        }
+
+    }
+
+    /**
+     * Method to add author.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param coAuthorList
+     * @param authCoauthDetailsSet
+     */
+    private void addAuthor(Session session, Users user, UserProfile userProfile, List<CoAuthor> coAuthorList, Set<AuthCoauthDetails> authCoauthDetailsSet) {
+        for (CoAuthor coAuthor : coAuthorList) {
+            AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
+            authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
+            authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
+            authCoauthDetails.setUserProfileByAuthorUserId(userProfile);
+            authCoauthDetails.setAuthCoauthId(user.getUserId());
+            //TODO: Set CoAuthor ID
+            authCoauthDetails.setUsersByCreatedBy(user);
+            authCoauthDetails.setUsersByUpdatedBy(user);
+            session.save(authCoauthDetails);
+            authCoauthDetailsSet.add(authCoauthDetails);
+        }
+    }
+
+    /**
+     * Method to add journal.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param preferredJournalList
+     * @param userPreferredJournalsSet
+     * @throws SharedServiceException
+     */
+    private void addJournal(Session session, Users user, UserProfile userProfile, List<PreferredJournal> preferredJournalList, Set<UserPreferredJournals> userPreferredJournalsSet) throws SharedServiceException {
+        for (PreferredJournal preferredJournal : preferredJournalList) {
+            UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
+            UserPreferredJournals userPreferredJournals = new UserPreferredJournals();
+            Journals journals = (Journals) getEntityById(CommonConstants.JOURNAL_ID, preferredJournal.getJournalId(), Journals.class);
+            if (null != journals) {
+                userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
+                userPreferredJournalsId.setUserId(user.getUserId());
+                userPreferredJournalsId.setJournalId(journals.getJournalId());
+                userPreferredJournals.setId(userPreferredJournalsId);
+                userPreferredJournals.setUserProfile(userProfile);
+                userPreferredJournals.setUsersByCreatedBy(user);
+                userPreferredJournals.setUsersByUpdatedBy(user);
+                session.save(userPreferredJournals);
+                userPreferredJournalsSet.add(userPreferredJournals);
+            }
+        }
+    }
+
+    /**
+     * Method to add alert.
+     *
+     * @param session
+     * @param user
+     * @param userProfile
+     * @param alertList
+     * @param userAlertsHashSet
+     * @throws SharedServiceException
+     */
+    private void addAlert(Session session, Users user, UserProfile userProfile, List<Alert> alertList, Set<UserAlerts> userAlertsHashSet) throws SharedServiceException {
+        for (Alert alert : alertList) {
+            List<AlertType> alertTypeList = alert.getAlertTypes();
+            //Get Alerts Object.
+            Alerts alertsObj = (Alerts) getEntity("alertCd", alert.getAlertCd(), Alerts.class, false);
+            if (null != alertTypeList && alertTypeList.size() > 0) {
+                int alertListSize = alertTypeList.size();
+                for (int j = 0; j < alertListSize; j++) {
+                    AlertType alertType = alertTypeList.get(j);
+                    UserAlertsId userAlertsId = new UserAlertsId();
+                    userAlertsId.setUserId(user.getUserId());
+                    userAlertsId.setAlertCd(alert.getAlertCd());
+                    UserAlerts alerts = new UserAlerts();
+                    alerts = UserServiceHelper.setUserAlerts(alerts, alertType);
+                    alerts.setId(userAlertsId);
+                    alerts.setAlerts(alertsObj);
+                    alerts.setUsersByCreatedBy(user);
+                    alerts.setUsersByUpdatedBy(user);
+                    session.save(alerts);
+                    userAlertsHashSet.add(alerts);
+                }
+            }
+        }
+    }
 
 }

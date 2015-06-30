@@ -32,6 +32,9 @@ public interface CommonConstants {
     String USER_SERVICE_REQUEST_PATH = "/profile";
     String DATE_FORMAT = "MM-dd-yyyy";
     String ADDRESS_ID = "addressId";
+    String PROFILE_ATTR_CD = "profileAttribCd";
+    String ADDRESS_TYPE_CD = "addressTypeCd";
+    String SOCIETY_CD = "societyCd";
 
     String LOOK_UP = "/lookup";
     String PRIMARY_EMAIL_ID = "primaryEmailAddr";
