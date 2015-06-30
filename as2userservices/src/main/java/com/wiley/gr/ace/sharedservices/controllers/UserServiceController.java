@@ -17,17 +17,15 @@ import com.wiley.gr.ace.sharedservices.common.CommonConstants;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
 import com.wiley.gr.ace.sharedservices.payload.*;
+import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Properties;
 
 /**
  * @author kkalyan
@@ -48,13 +46,22 @@ public class UserServiceController {
     @Value("${USER_SERVICE_ERROR_201}")
     private String userlookUpServiceError201;
 
+    @Value("${USER_SERVICE_ERROR_103}")
+    private String userlookUpServiceError103;
+
+    @Value("${USER_SERVICE_ERROR_104}")
+    private String userlookUpServiceError104;
+
+    @Value("${USER_SERVICE_ERROR_108}")
+    private String userlookUpServiceError108;
+
 
     /**
      * Method to Create User
      *
      * @param userServiceRequest
      */
-    @RequestMapping(value = CommonConstants.CREATE_USER_REQUEST_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Service createUserService(@RequestBody UserServiceRequest userServiceRequest) {
         Service service = new Service();
@@ -73,7 +80,7 @@ public class UserServiceController {
      *
      * @param deleteProfileRequest
      */
-    @RequestMapping(value = CommonConstants.CREATE_USER_REQUEST_PATH, method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Service deleteUserService(@RequestBody DeleteProfileRequest deleteProfileRequest) {
         Service service = new Service();
@@ -156,7 +163,46 @@ public class UserServiceController {
             LookupResponse response = userService.userlookUpService(lookUp.getUserProfile().getFirstName(), lookUp.getUserProfile().getLastName(), lookUp.getUserProfile().getEmailAddress());
             service.setPayload(response);
         } catch (SharedServiceException e) {
-            LOGGER.error("Error Occurred in Get User Service", e);
+            LOGGER.error("Error Occurred in Lookup User Service", e);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
+
+        return service;
+    }
+
+    /**
+     * User Search Controller.
+     *
+     * @param primaryEmail
+     * @param secondaryEmail
+     * @param firstName
+     * @param lastName
+     * @param orcidId
+     * @return
+     */
+    @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.GET)
+    @ResponseBody
+    public Service searchUserService(@RequestParam(value = "primaryEmail", required = true) String primaryEmail, @RequestParam(value = "secondaryEmail", required = true) String secondaryEmail, @RequestParam(value = "firstName", required = true) String firstName, @RequestParam(value = "lastName", required = true) String lastName, @RequestParam(value = "orcidId", required = true) String orcidId) {
+        Service service = new Service();
+        try {
+
+            //Validate the input parameters.
+            if (StringUtils.isEmpty(primaryEmail) || StringUtils.isEmpty(secondaryEmail)) {
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_201, userlookUpServiceError201, CommonConstants.ERROR);
+            }
+            if (StringUtils.isEmpty(firstName)) {
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_103, userlookUpServiceError103, CommonConstants.ERROR);
+            }
+            if (StringUtils.isEmpty(lastName)) {
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_104, userlookUpServiceError104, CommonConstants.ERROR);
+            }
+            if (StringUtils.isEmpty(orcidId)) {
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_108, userlookUpServiceError108, CommonConstants.ERROR);
+            }
+            //Search user with the input parameters.
+            service = userService.searchUserService(primaryEmail, secondaryEmail, firstName, lastName, orcidId);
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Search User Service", e);
             return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
 

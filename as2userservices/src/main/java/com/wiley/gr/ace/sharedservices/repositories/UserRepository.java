@@ -14,9 +14,7 @@
 package com.wiley.gr.ace.sharedservices.repositories;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
-import com.wiley.gr.ace.sharedservices.payload.CreateUserServiceRequest;
-import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
-import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
+import com.wiley.gr.ace.sharedservices.payload.*;
 
 /**
  * @author kkalyan
@@ -32,5 +30,7 @@ public interface UserRepository {
     void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
     LookupResponse userlookUpRepository(String firstName, String lastName, String emailId) throws SharedServiceException;
+
+    Service searchUserRepository(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException;
 
 }

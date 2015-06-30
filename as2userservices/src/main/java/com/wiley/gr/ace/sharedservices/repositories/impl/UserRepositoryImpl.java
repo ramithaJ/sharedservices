@@ -17,12 +17,15 @@ import com.wiley.gr.ace.sharedservices.common.CommonConstants;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
 import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
+import com.wiley.gr.ace.sharedservices.payload.Service;
+import com.wiley.gr.ace.sharedservices.payload.UserSearchResponse;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.Address;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
+import com.wiley.gr.ace.sharedservices.payload.Error;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -70,6 +73,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Value("${USER_SERVICE_ERROR_107}")
     private String userServiceError107;
+
+    @Value("${USER_SERVICE_ERROR_301}")
+    private String userSearchServiceError301;
+
+    @Value("${USER_SERVICE_ERROR_302}")
+    private String userSearchServiceError302;
+
+    @Value("${USER_SERVICE_ERROR_303}")
+    private String userSearchServiceError303;
 
 
     /**
@@ -1279,7 +1291,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     public LookupResponse userlookUpRepository(String firstName, String lastName, String emailId)
             throws SharedServiceException {
-        LOGGER.info("Search User Profile..");
+        LOGGER.info("Lookup User Profile..");
         LookupResponse response = new LookupResponse();
         Session session = null;
         List<Object> user = null;
@@ -1345,7 +1357,7 @@ public class UserRepositoryImpl implements UserRepository {
             // Commit the transaction.
             session.getTransaction().commit();
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during get entity...", e);
+            LOGGER.error("Exception Occurred during Lookup user...", e);
             if (null != e.getCause()) {
                 throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
             } else {
@@ -1359,6 +1371,118 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return response;
 
+    }
+
+    /**
+     * Method to search user.
+     *
+     * @param primaryEmail
+     * @param secondaryEmail
+     * @param firstName
+     * @param lastName
+     * @param orcidId
+     * @return
+     * @throws SharedServiceException
+     */
+    public Service searchUserRepository(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException {
+        LOGGER.info("Search User Profile..");
+        Service service = new Service();
+        UserSearchResponse response = new UserSearchResponse();
+        Session session = null;
+        try {
+
+            session = sessionFactory.openSession();
+            // Begin the transaction.
+            session.beginTransaction();
+
+
+            // Check whether primary email exists
+            Criteria userCriteria = session.createCriteria(Users.class);
+            // Set Projections
+            userCriteria.setProjection(Projections.projectionList()
+                    .add(Projections.property(CommonConstants.USER_ID))
+                    .add(Projections.property(CommonConstants.PRIMARY_EMAIL_ID)));
+
+            userCriteria.add(Restrictions.eq(CommonConstants.PRIMARY_EMAIL_ID,
+                    primaryEmail));
+
+            //If Primary email found set error
+            if (userCriteria.list().size() > 0) {
+                service.setError(new Error(3001, userSearchServiceError301));
+            }
+            //If Secondary email found set error
+            if (null == service.getError()) {
+                userCriteria = session
+                        .createCriteria(UserSecondaryEmailAddr.class);
+                // Set Projections
+                userCriteria.setProjection(Projections.projectionList()
+                        .add(Projections.property(CommonConstants.USER_SECONDARY_EMAIL_ID)));
+                userCriteria.add(Restrictions.eq(CommonConstants.SECONDARY_EMAIL_ID,
+                        secondaryEmail));
+                if (userCriteria.list().size() > 0) {
+                    service.setError(new Error(3002, userSearchServiceError302));
+                }
+            }
+            //If Orcid id found set error
+            if (null == service.getError()) {
+                userCriteria = session
+                        .createCriteria(UserReferenceData.class);
+                userCriteria.setProjection(Projections.projectionList()
+                        .add(Projections.property(CommonConstants.ORCID_ID)));
+                userCriteria.add(Restrictions.eq(CommonConstants.ORCID_ID,
+                        orcidId));
+                if (userCriteria.list().size() > 0) {
+                    service.setError(new Error(3003, userSearchServiceError303));
+                }
+            }
+
+            //If there is no error. Search with FN & LN.
+            if (null == service.getError()) {
+                // Get the user object.
+                userCriteria = session.createCriteria(Users.class);
+                userCriteria.add(Restrictions.eq(CommonConstants.FIRST_NAME,
+                        firstName));
+                userCriteria.add(Restrictions.eq(CommonConstants.LAST_NAME,
+                        lastName));
+                UserSearchResponse.UserSearchResults searchResults = response.new UserSearchResults();
+                List<UserSearchResponse.UserSearchResults> searchResultsList = new LinkedList<>();
+                if (userCriteria.list().size() > 0) {
+                    List<Users> userlist = userCriteria.list();
+                    for (Users user : userlist) {
+                        searchResults.setFirstName(user.getFirstName());
+                        searchResults.setLastName(user.getLastName());
+                        searchResults.setSuffix(user.getUserProfileByUserId().getSuffixCd());
+                        searchResults.setTitle(user.getUserProfileByUserId().getTitleCd());
+                        searchResults.setMiddleName(user.getUserProfileByUserId().getMiddleName());
+                        searchResults.setInstitution(user.getUserProfileByUserId().getIndustryCd());
+                        searchResults.setOrcidId(user.getUserReferenceDataByUserId().getOrcidId());
+                        searchResultsList.add(searchResults);
+                    }
+                }//End of if
+                response.setSearchResults(searchResultsList);
+                service.setPayload(response);
+            }
+
+            // Flush the session
+            session.flush();
+            // Clear session
+            session.clear();
+            // Commit the transaction.
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            LOGGER.error("Exception Occurred during search user...", e);
+            if (null != e.getCause()) {
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e.getCause().getMessage());
+            } else {
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, "Error :" + e);
+            }
+        } finally {
+            // Close the session
+            if (null != session) {
+                session.close();
+            }
+        }
+        return service;
     }
 
     /**

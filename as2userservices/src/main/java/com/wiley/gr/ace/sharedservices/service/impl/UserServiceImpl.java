@@ -15,6 +15,7 @@ package com.wiley.gr.ace.sharedservices.service.impl;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
+import com.wiley.gr.ace.sharedservices.payload.Service;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.service.UserService;
@@ -74,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to user lookup.
+     *
      * @param firstName
      * @param lastName
      * @param emailId
@@ -83,5 +85,20 @@ public class UserServiceImpl implements UserService {
     public LookupResponse userlookUpService(String firstName, String lastName, String emailId)
             throws SharedServiceException {
         return userRepository.userlookUpRepository(firstName, lastName, emailId);
+    }
+
+    /**
+     * Service method to user search.
+     *
+     * @param primaryEmail
+     * @param secondaryEmail
+     * @param firstName
+     * @param lastName
+     * @param orcidId
+     * @return
+     * @throws SharedServiceException
+     */
+    public Service searchUserService(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException {
+        return userRepository.searchUserRepository(primaryEmail, secondaryEmail, firstName, lastName, orcidId);
     }
 }

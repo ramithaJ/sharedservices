@@ -25,9 +25,11 @@ public interface CommonConstants {
     String RESFUNDER_ID = "resfunderid";
     String ALERT_CD = "alertCd";
     String AUTH_COAUTH_ID = "authCoauthId";
+    String USER_SECONDARY_EMAIL_ID = "userSecondaryEmailId";
+    String ORCID_ID = "orcidId";
     String ERROR = "ERROR";
     String REQUEST_PATH = "/profile/{userId}";
-    String CREATE_USER_REQUEST_PATH = "/profile";
+    String USER_SERVICE_REQUEST_PATH = "/profile";
     String DATE_FORMAT = "MM-dd-yyyy";
     String ADDRESS_ID = "addressId";
 
@@ -47,6 +49,7 @@ public interface CommonConstants {
     String ERROR_CODE_105 = "1005";
     String ERROR_CODE_106 = "1006";
     String ERROR_CODE_107 = "1007";
+    String ERROR_CODE_108 = "1008";
 
     String ERROR_CODE_201 = "2001";
 
