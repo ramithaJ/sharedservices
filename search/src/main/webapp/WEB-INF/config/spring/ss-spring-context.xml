@@ -12,7 +12,7 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <context:component-scan base-package="com.wiley.gr"/>
+    <!--<context:component-scan base-package="com.wiley.gr"/>-->
     <context:property-placeholder location="classpath:*.properties"
                                   file-encoding="UTF-8"/>
 
