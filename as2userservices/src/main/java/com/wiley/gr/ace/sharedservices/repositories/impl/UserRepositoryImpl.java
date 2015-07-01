@@ -1147,15 +1147,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     /**
      * Method to search user.
      *
-     * @param primaryEmail
-     * @param secondaryEmail
+     * @param email
      * @param firstName
      * @param lastName
      * @param orcidId
      * @return
      * @throws SharedServiceException
      */
-    public Service searchUserRepository(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException {
+    public Service searchUserRepository(String email, String firstName, String lastName, String orcidId) throws SharedServiceException {
         LOGGER.info("Search User Profile..");
         Service service = new Service();
         UserSearchResponse response = new UserSearchResponse();
@@ -1175,7 +1174,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     .add(Projections.property(CommonConstants.PRIMARY_EMAIL_ID)));
 
             userCriteria.add(Restrictions.eq(CommonConstants.PRIMARY_EMAIL_ID,
-                    primaryEmail));
+                    email));
 
             //If Primary email found set error
             if (userCriteria.list().size() > 0) {
@@ -1189,7 +1188,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 userCriteria.setProjection(Projections.projectionList()
                         .add(Projections.property(CommonConstants.USER_SECONDARY_EMAIL_ID)));
                 userCriteria.add(Restrictions.eq(CommonConstants.SECONDARY_EMAIL_ID,
-                        secondaryEmail));
+                        email));
                 if (userCriteria.list().size() > 0) {
                     service.setError(new Error(3002, userSearchServiceError302));
                 }

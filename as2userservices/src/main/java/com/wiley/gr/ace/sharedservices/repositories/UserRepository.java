@@ -31,6 +31,6 @@ public interface UserRepository {
 
     LookupResponse userlookUpRepository(String firstName, String lastName, String emailId) throws SharedServiceException;
 
-    Service searchUserRepository(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException;
+    Service searchUserRepository(String email, String firstName, String lastName, String orcidId) throws SharedServiceException;
 
 }
