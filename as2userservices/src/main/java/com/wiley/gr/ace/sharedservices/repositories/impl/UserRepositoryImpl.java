@@ -300,64 +300,72 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             }
 
             //Get Affiliations
-            List<Affiliation> affiliationList = new LinkedList<>();
-            Set<UserAffiliations> userAffiliationsSet = user.getUserProfileByUserId().getUserAffiliationses();
-            if (null != userAffiliationsSet && userAffiliationsSet.size() > 0) {
-                LOGGER.debug("Get UserAffiliations...");
-                for (UserAffiliations userAffiliations : userAffiliationsSet) {
-                    Affiliation affiliation = UserServiceHelper.getAffiliation(userAffiliations);
-                    affiliationList.add(affiliation);
+            if (null != user.getUserProfileByUserId()) {
+                List<Affiliation> affiliationList = new LinkedList<>();
+                Set<UserAffiliations> userAffiliationsSet = user.getUserProfileByUserId().getUserAffiliationses();
+                if (null != userAffiliationsSet && userAffiliationsSet.size() > 0) {
+                    LOGGER.debug("Get UserAffiliations...");
+                    for (UserAffiliations userAffiliations : userAffiliationsSet) {
+                        Affiliation affiliation = UserServiceHelper.getAffiliation(userAffiliations);
+                        affiliationList.add(affiliation);
+                    }
+                    userProfile.setAffiliations(affiliationList);
                 }
-                userProfile.setAffiliations(affiliationList);
             }
 
             //Get Funder
-            List<Funder> funders = new LinkedList<>();
-            Set<UserFunders> userFundersSet = user.getUserProfileByUserId().getUserFunderses();
-            if (null != userFundersSet && userFundersSet.size() > 0) {
-                LOGGER.debug("Get UserFunderGrants...");
-                List<GrantNumber> grantNumbers = new LinkedList<>();
-                for (UserFunders userFunders : userFundersSet) {
-                    ResearchFunders researchFunders = userFunders.getResearchFunders();
-                    Funder funder = new Funder();
-                    funder.setId("" + researchFunders.getResfunderid());
-                    funder.setResearchFunderName(researchFunders.getFunderName());
-                    funder.setResearchFunderDoi(researchFunders.getFunderDoi());
-                    Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
-                    for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
-                        GrantNumber grantNumber = new GrantNumber();
-                        grantNumber.setGrantNumber(userFunderGrants.getGrantNum());
-                        grantNumbers.add(grantNumber);
+            if (null != user.getUserProfileByUserId()) {
+                List<Funder> funders = new LinkedList<>();
+                Set<UserFunders> userFundersSet = user.getUserProfileByUserId().getUserFunderses();
+                if (null != userFundersSet && userFundersSet.size() > 0) {
+                    LOGGER.debug("Get UserFunderGrants...");
+                    List<GrantNumber> grantNumbers = new LinkedList<>();
+                    for (UserFunders userFunders : userFundersSet) {
+                        ResearchFunders researchFunders = userFunders.getResearchFunders();
+                        Funder funder = new Funder();
+                        funder.setId("" + researchFunders.getResfunderid());
+                        funder.setResearchFunderName(researchFunders.getFunderName());
+                        funder.setResearchFunderDoi(researchFunders.getFunderDoi());
+                        Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                        for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                            GrantNumber grantNumber = new GrantNumber();
+                            grantNumber.setGrantNumber(userFunderGrants.getGrantNum());
+                            grantNumbers.add(grantNumber);
+                        }
+                        funder.setGrantNumbers(grantNumbers);
+                        funders.add(funder);
                     }
-                    funder.setGrantNumbers(grantNumbers);
-                    funders.add(funder);
+                    userProfile.setFunders(funders);
                 }
-                userProfile.setFunders(funders);
             }
 
             //Get Society
-            List<Society> societies = new LinkedList<>();
-            Set<UserSocietyDetails> userSocietyDetailsSet = user.getUserProfileByUserId().getUserSocietyDetailses();
-            if (null != userSocietyDetailsSet && userSocietyDetailsSet.size() > 0) {
-                LOGGER.debug("Get UserSocietyDetails...");
-                for (UserSocietyDetails userSocietyDetails : userSocietyDetailsSet) {
-                    Society society = UserServiceHelper.getSociety(userSocietyDetails);
-                    societies.add(society);
+            if (null != user.getUserProfileByUserId()) {
+                List<Society> societies = new LinkedList<>();
+                Set<UserSocietyDetails> userSocietyDetailsSet = user.getUserProfileByUserId().getUserSocietyDetailses();
+                if (null != userSocietyDetailsSet && userSocietyDetailsSet.size() > 0) {
+                    LOGGER.debug("Get UserSocietyDetails...");
+                    for (UserSocietyDetails userSocietyDetails : userSocietyDetailsSet) {
+                        Society society = UserServiceHelper.getSociety(userSocietyDetails);
+                        societies.add(society);
+                    }
+                    userProfile.setSocieties(societies);
                 }
-                userProfile.setSocieties(societies);
             }
 
             //Get MyInterest
-            List<MyInterest> myInterests = new LinkedList<>();
-            Set<UserAreaOfInterest> userAreaOfInterestSet = user.getUserProfileByUserId().getUserAreaOfInterests();
-            if (null != userAreaOfInterestSet && userAreaOfInterestSet.size() > 0) {
-                LOGGER.debug("Get UserAreaOfInterest...");
-                for (UserAreaOfInterest userAreaOfInterest : userAreaOfInterestSet) {
-                    AreaOfInterest areaOfInterest = userAreaOfInterest.getAreaOfInterest();
-                    MyInterest myInterest = UserServiceHelper.getMyInterest(areaOfInterest);
-                    myInterests.add(myInterest);
+            if (null != user.getUserProfileByUserId()) {
+                List<MyInterest> myInterests = new LinkedList<>();
+                Set<UserAreaOfInterest> userAreaOfInterestSet = user.getUserProfileByUserId().getUserAreaOfInterests();
+                if (null != userAreaOfInterestSet && userAreaOfInterestSet.size() > 0) {
+                    LOGGER.debug("Get UserAreaOfInterest...");
+                    for (UserAreaOfInterest userAreaOfInterest : userAreaOfInterestSet) {
+                        AreaOfInterest areaOfInterest = userAreaOfInterest.getAreaOfInterest();
+                        MyInterest myInterest = UserServiceHelper.getMyInterest(areaOfInterest);
+                        myInterests.add(myInterest);
+                    }
+                    userProfile.setMyInterests(myInterests);
                 }
-                userProfile.setMyInterests(myInterests);
             }
 
 
@@ -375,29 +383,33 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             }
 
             //Get PreferredJournal
-            List<PreferredJournal> journalsList = new LinkedList<>();
-            Set<UserPreferredJournals> userPreferredJournalsSet = user.getUserProfileByUserId().getUserPreferredJournalses();
-            if (null != userPreferredJournalsSet && userPreferredJournalsSet.size() > 0) {
-                LOGGER.debug("Get UserPreferredJournals...");
-                for (UserPreferredJournals userPreferredJournals : userPreferredJournalsSet) {
-                    Journals journal = userPreferredJournals.getJournals();
-                    PreferredJournal preferredJournal = UserServiceHelper.getPreferredJournal(journal);
-                    journalsList.add(preferredJournal);
+            if (null != user.getUserProfileByUserId()) {
+                List<PreferredJournal> journalsList = new LinkedList<>();
+                Set<UserPreferredJournals> userPreferredJournalsSet = user.getUserProfileByUserId().getUserPreferredJournalses();
+                if (null != userPreferredJournalsSet && userPreferredJournalsSet.size() > 0) {
+                    LOGGER.debug("Get UserPreferredJournals...");
+                    for (UserPreferredJournals userPreferredJournals : userPreferredJournalsSet) {
+                        Journals journal = userPreferredJournals.getJournals();
+                        PreferredJournal preferredJournal = UserServiceHelper.getPreferredJournal(journal);
+                        journalsList.add(preferredJournal);
+                    }
+                    userProfile.setJournals(journalsList);
                 }
-                userProfile.setJournals(journalsList);
             }
 
             //Get Alerts
-            List<Alert> alerts = new LinkedList<>();
-            Set<UserAlerts> alertsSet = user.getUserProfileByUserId().getUserAlertses();
-            if (null != alertsSet && alertsSet.size() > 0) {
-                LOGGER.debug("Get UserAlerts...");
-                for (UserAlerts userAlerts : alertsSet) {
-                    Alerts userAlert = userAlerts.getAlerts();
-                    Alert alert = UserServiceHelper.getAlert(userAlert);
-                    alerts.add(alert);
+            if (null != user.getUserProfileByUserId()) {
+                List<Alert> alerts = new LinkedList<>();
+                Set<UserAlerts> alertsSet = user.getUserProfileByUserId().getUserAlertses();
+                if (null != alertsSet && alertsSet.size() > 0) {
+                    LOGGER.debug("Get UserAlerts...");
+                    for (UserAlerts userAlerts : alertsSet) {
+                        Alerts userAlert = userAlerts.getAlerts();
+                        Alert alert = UserServiceHelper.getAlert(userAlert);
+                        alerts.add(alert);
+                    }
+                    userProfile.setAlerts(alerts);
                 }
-                userProfile.setAlerts(alerts);
             }
             userResponse.setUserProfile(userProfile);
 
@@ -470,30 +482,27 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 //Delete MyInterests
                 Set<UserAreaOfInterest> userAreaOfInterestSet = authorProfile.getUserAreaOfInterests();
                 for (UserAreaOfInterest userAreaOfInterest : userAreaOfInterestSet) {
-                    AreaOfInterest areaOfInterest = userAreaOfInterest.getAreaOfInterest();
-                    if (null != areaOfInterest) {
-                        session.delete(areaOfInterest);
-                    }
                     session.delete(userAreaOfInterest);
                 }
 
 
                 //Delete Funders
-                Set<UserFunders> userFundersSet = user.getUserProfileByUserId().getUserFunderses();
+                Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
                 for (UserFunders userFunders : userFundersSet) {
-                    Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
                     ResearchFunders researchFunders = userFunders.getResearchFunders();
                     if (null != researchFunders) {
                         session.delete(researchFunders);
                     }
-                    for (UserFunderGrants userFunderGrant : userFunderGrantsSet) {
-                        session.delete(userFunderGrant);
+
+                    Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                    for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                        session.delete(userFunderGrants);
                     }
                     session.delete(userFunders);
                 }
 
                 //Delete Affiliations
-                Set<UserAffiliations> userAffiliationsSet = user.getUserProfileByUserId().getUserAffiliationses();
+                Set<UserAffiliations> userAffiliationsSet = authorProfile.getUserAffiliationses();
                 for (UserAffiliations userAffiliations : userAffiliationsSet) {
                     session.delete(userAffiliations);
                 }
@@ -510,36 +519,47 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 }
 
                 //Delete Society
-                Set<UserSocietyDetails> userSocietyDetailsSet = user.getUserProfileByUserId().getUserSocietyDetailses();
+                Set<UserSocietyDetails> userSocietyDetailsSet = authorProfile.getUserSocietyDetailses();
                 for (UserSocietyDetails userSocietyDetails : userSocietyDetailsSet) {
-                    Societies societies = userSocietyDetails.getSocieties();
-                    if (null != societies) {
-                        session.delete(societies);
-                    }
                     session.delete(userSocietyDetails);
                 }
 
                 //Delete User Profile Visible.
-                Set<UserProfileAttribVisible> userProfileAttribVisibles = user.getUserProfileByUserId().getUserProfileAttribVisibles();
+                Set<UserProfileAttribVisible> userProfileAttribVisibles = authorProfile.getUserProfileAttribVisibles();
                 for (UserProfileAttribVisible userProfileAttribVisible : userProfileAttribVisibles) {
-                    ProfileAttributeList profileAttributeList = userProfileAttribVisible.getProfileAttributeList();
-                    if (null != profileAttributeList) {
-                        session.delete(profileAttributeList);
-                    }
                     session.delete(userProfileAttribVisible);
                 }
 
                 //Delete user reference data
                 session.delete(authorProfile);
-                session.delete(user);
+            }//End of if condition
 
-                LOGGER.info("Flush...");
-                session.flush();
-                LOGGER.info("Clear...");
-                session.clear();
-                LOGGER.info("Commit...");
-                session.getTransaction().commit();
+            //Delete Reference data
+            UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
+            if (null != userReferenceData) {
+                session.delete(userReferenceData);
             }
+
+            //Delete Secondary email addrr
+            Set<UserSecondaryEmailAddr> secondaryEmailAddrSet = user.getUserSecondaryEmailAddrsForUserId();
+            for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrSet) {
+                session.delete(secondaryEmailAddr);
+            }
+
+            //Delete admin profile
+            AdminProfile adminProfile = user.getAdminProfileByUserId();
+            if (null != adminProfile) {
+                session.delete(adminProfile);
+            }
+
+            session.delete(user);
+
+            LOGGER.info("Flush...");
+            session.flush();
+            LOGGER.info("Clear...");
+            session.clear();
+            LOGGER.info("Commit...");
+            session.getTransaction().commit();
 
         } catch (Exception e) {
             //Rollback the session if any exception occurs.
