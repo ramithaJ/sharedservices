@@ -31,6 +31,6 @@ public interface UserService {
 
     LookupResponse userlookUpService(String firstName, String lastName, String emailId) throws SharedServiceException;
 
-    Service searchUserService(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException;
+    Service searchUserService(String email, String firstName, String lastName, String orcidId) throws SharedServiceException;
 
 }

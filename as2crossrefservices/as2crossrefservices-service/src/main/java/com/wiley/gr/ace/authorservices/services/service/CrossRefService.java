@@ -6,4 +6,10 @@ public interface CrossRefService {
 	ProductPersonRelationObj getProductPersonRelationObj(Integer dhId)
 			throws Exception;
 
+	ProductPersonRelationObj getProductPersonRelationsByUserID(Integer userId)
+			throws Exception;
+
+	ProductPersonRelationObj getProductPersonRelationsByEmailAddr(
+			String emailAddr) throws Exception;
+
 }

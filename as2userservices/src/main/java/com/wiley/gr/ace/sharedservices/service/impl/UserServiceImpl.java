@@ -90,15 +90,14 @@ public class UserServiceImpl implements UserService {
     /**
      * Service method to user search.
      *
-     * @param primaryEmail
-     * @param secondaryEmail
+     * @param email
      * @param firstName
      * @param lastName
      * @param orcidId
      * @return
      * @throws SharedServiceException
      */
-    public Service searchUserService(String primaryEmail, String secondaryEmail, String firstName, String lastName, String orcidId) throws SharedServiceException {
-        return userRepository.searchUserRepository(primaryEmail, secondaryEmail, firstName, lastName, orcidId);
+    public Service searchUserService(String email, String firstName, String lastName, String orcidId) throws SharedServiceException {
+        return userRepository.searchUserRepository(email, firstName, lastName, orcidId);
     }
 }

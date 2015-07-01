@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,6 +50,48 @@ public class CrossRefController {
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(316);
 			error.setMessage("Error Fetching Cross ref");
+			service.setStatus("ERROR");
+			service.setError(error);
+		}
+		return service;
+	}
+
+	@RequestMapping(value = "/articles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Service getCrossRefUserId(
+			@RequestParam(value = "userId") final String userId,
+			@RequestParam(value = "emailAddr") final String emailAddr) {
+		Service service = new Service();
+		ProductPersonRelationObj productPersonRelationObj = null;
+		try {
+			productPersonRelationObj = crossRefService
+					.getProductPersonRelationsByEmailAddr(emailAddr);
+			if (!StringUtils.isEmpty(userId) && StringUtils.isEmpty(emailAddr)) {
+				productPersonRelationObj = crossRefService
+						.getProductPersonRelationsByUserID(Integer
+								.parseInt(userId));
+				if (!StringUtils.isEmpty(emailAddr)
+						&& StringUtils.isEmpty(userId)) {
+					productPersonRelationObj = crossRefService
+							.getProductPersonRelationsByEmailAddr(emailAddr);
+					if (!StringUtils.isEmpty(productPersonRelationObj)) {
+						service.setStatus("SUCCESS");
+						service.setPayload(productPersonRelationObj);
+					}
+				}
+
+				else {
+					final ErrorPOJO error = new ErrorPOJO();
+					error.setCode(315);
+					error.setMessage("No criteria");
+					service.setStatus("ERROR");
+					service.setError(error);
+				}
+			}
+		} catch (final Exception e) {
+			e.printStackTrace();
+			final ErrorPOJO error = new ErrorPOJO();
+			error.setCode(316);
+			error.setMessage("Error Fetching Value");
 			service.setStatus("ERROR");
 			service.setError(error);
 		}
