@@ -18,13 +18,11 @@ import com.wiley.gr.ace.sharedservices.common.Property;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
 import com.wiley.gr.ace.sharedservices.payload.*;
-import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -156,36 +154,35 @@ public class UserServiceController extends Property {
     }
 
     /**
-     * User Search Controller.
+     * User Search controller service.
      *
-     * @param primaryEmail
-     * @param secondaryEmail
-     * @param firstName
-     * @param lastName
-     * @param orcidId
+     * @param semail
+     * @param fn
+     * @param ln
+     * @param oid
      * @return
      */
     @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.GET)
     @ResponseBody
-    public Service searchUserService(@RequestParam(value = "primaryEmail", required = true) String primaryEmail, @RequestParam(value = "secondaryEmail", required = true) String secondaryEmail, @RequestParam(value = "firstName", required = true) String firstName, @RequestParam(value = "lastName", required = true) String lastName, @RequestParam(value = "orcidId", required = true) String orcidId) {
+    public Service searchUserService(@RequestParam(value = "semail", required = true) String semail, @RequestParam(value = "fn", required = true) String fn, @RequestParam(value = "ln", required = true) String ln, @RequestParam(value = "oid", required = true) String oid) {
         Service service = new Service();
         try {
 
             //Validate the input parameters.
-            if (StringUtils.isEmpty(primaryEmail) || StringUtils.isEmpty(secondaryEmail)) {
+            if (StringUtils.isEmpty(semail)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_201, userlookUpServiceError201, CommonConstants.ERROR);
             }
-            if (StringUtils.isEmpty(firstName)) {
+            if (StringUtils.isEmpty(fn)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_103, userlookUpServiceError103, CommonConstants.ERROR);
             }
-            if (StringUtils.isEmpty(lastName)) {
+            if (StringUtils.isEmpty(ln)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_104, userlookUpServiceError104, CommonConstants.ERROR);
             }
-            if (StringUtils.isEmpty(orcidId)) {
+            if (StringUtils.isEmpty(oid)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_108, userlookUpServiceError108, CommonConstants.ERROR);
             }
             //Search user with the input parameters.
-            service = userService.searchUserService(primaryEmail, secondaryEmail, firstName, lastName, orcidId);
+            service = userService.searchUserService(semail, fn, ln, oid);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Search User Service", e);
             return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
