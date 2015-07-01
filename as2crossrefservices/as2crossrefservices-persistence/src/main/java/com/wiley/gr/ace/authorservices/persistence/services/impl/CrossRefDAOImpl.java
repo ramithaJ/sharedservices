@@ -22,4 +22,27 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 				.setInteger("dhId", dhId).list();
 		return productPersonRelationList;
 	}
+
+	@Override
+	public final List<ProductPersonRelations> getProductPersonRelationsByUserID(
+			final Integer userId) throws Exception {
+		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
+		Session session = getSessionFactory().openSession();
+		String hql = "from ProductPersonRelations where userId=:userId";
+		productPersonRelationList = session.createQuery(hql)
+				.setInteger("userId", userId).list();
+		return productPersonRelationList;
+	}
+
+	@Override
+	public final List<ProductPersonRelations> getProductPersonRelationsByEmailAddr(
+			final String emailAddr) throws Exception {
+		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
+		Session session = getSessionFactory().openSession();
+		String hql = "from ProductPersonRelations where emailAddr=:emailAddr";
+		productPersonRelationList = session.createQuery(hql)
+				.setString("emailAddr", emailAddr).list();
+		return productPersonRelationList;
+	}
+
 }

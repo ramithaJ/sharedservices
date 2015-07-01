@@ -5,8 +5,26 @@ import java.util.List;
 public class ProductPersonRelationObj {
 
 	private Integer dhId;
+	private Integer userId;
+	private String emailAddr;
 	private List<PersonDetails> coAuthorList;
 	private PersonDetails correspondingAuthor;
+
+	public final Integer getUserId() {
+		return userId;
+	}
+
+	public final void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public final String getEmailAddr() {
+		return emailAddr;
+	}
+
+	public final void setEmailAddr(String emailAddr) {
+		this.emailAddr = emailAddr;
+	}
 
 	public Integer getDhId() {
 		return dhId;
