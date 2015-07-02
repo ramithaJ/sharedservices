@@ -1,15 +1,13 @@
 package com.wiley.gr.ace.authorservices.services.service;
 
+import com.wiley.gr.ace.authorservices.model.AuthorDetails;
 import com.wiley.gr.ace.authorservices.model.ProductPersonRelationObj;
 
 public interface CrossRefService {
 	ProductPersonRelationObj getProductPersonRelationObj(Integer dhId)
 			throws Exception;
 
-	ProductPersonRelationObj getProductPersonRelationsByUserID(Integer userId)
-			throws Exception;
+	AuthorDetails getAuthorDetailsByEmail(String email) throws Exception;
 
-	ProductPersonRelationObj getProductPersonRelationsByEmailAddr(
-			String emailAddr) throws Exception;
-
+	AuthorDetails getAuthorDetailsById(String userId) throws Exception;
 }

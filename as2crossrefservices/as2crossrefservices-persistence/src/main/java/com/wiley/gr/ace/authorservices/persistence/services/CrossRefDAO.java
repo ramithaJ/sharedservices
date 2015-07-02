@@ -8,9 +8,10 @@ public interface CrossRefDAO {
 	List<ProductPersonRelations> getProductPersonRelations(Integer dhId)
 			throws Exception;
 
-	List<ProductPersonRelations> getProductPersonRelationsByUserID(
+	List<ProductPersonRelations> getProductPersonRelationsByUserId(
 			Integer userId) throws Exception;
 
 	List<ProductPersonRelations> getProductPersonRelationsByEmailAddr(
 			String emailAddr) throws Exception;
+	
 }
