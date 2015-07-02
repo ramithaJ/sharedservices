@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import com.wiley.gr.ace.authorservices.model.AuthorDetails;
 import com.wiley.gr.ace.authorservices.model.PersonDetails;
+import com.wiley.gr.ace.authorservices.model.ProductId;
 import com.wiley.gr.ace.authorservices.model.ProductPersonRelationObj;
 import com.wiley.gr.ace.authorservices.persistence.entity.ProductPersonRelations;
 import com.wiley.gr.ace.authorservices.persistence.services.CrossRefDAO;
@@ -55,87 +57,62 @@ public class CrossRefServiceImpl implements CrossRefService {
 		return productPersonRelationObj;
 	}
 
-	public ProductPersonRelationObj getProductPersonRelationsByUserID(
-			Integer userId) throws Exception {
-
-		ProductPersonRelationObj productPersonRelationObj = new ProductPersonRelationObj();
-		PersonDetails correspondingAuthor = new PersonDetails();
-		List<PersonDetails> coAuthorList = new ArrayList<PersonDetails>();
-		System.err.println("object of product person relations"
-				+ productPersonRelationObj);
-		if (!StringUtils.isEmpty(userId)) {
-			List<ProductPersonRelations> productPersonRelationList = crossRefDAO
-					.getProductPersonRelationsByUserID(userId);
-			if (!StringUtils.isEmpty(productPersonRelationList)) {
-
-				productPersonRelationObj.setUserId(userId);
-
-				for (ProductPersonRelations productPersonRelations : productPersonRelationList) {
-					if ("8011047".equalsIgnoreCase(productPersonRelations
-							.getProductRoles().getProductRoleCd())) {
-						PersonDetails tempPersonDetails = new PersonDetails();
-						tempPersonDetails.setUserId(productPersonRelations
-								.getUserProfile().getUserId());
-						tempPersonDetails.setEmailAddr(productPersonRelations
-								.getEmailAddr());
-
-						coAuthorList.add(tempPersonDetails);
-					} else {
-						correspondingAuthor.setEmailAddr(productPersonRelations
-								.getEmailAddr());
-						correspondingAuthor.setUserId(productPersonRelations
-								.getUserProfile().getUserId());
-					}
+	@Override
+	public AuthorDetails getAuthorDetailsByEmail(String email) throws Exception {
+		AuthorDetails authorDetails = null;
+		System.err.println("--------------------------------");
+		if (!StringUtils.isEmpty(email)) {
+			List<ProductPersonRelations> productPersonRelationEntityList = crossRefDAO
+					.getProductPersonRelationsByEmailAddr(email);
+			authorDetails = new AuthorDetails();
+			authorDetails.setEmail(email);
+			ProductId productId;
+			List<ProductId> coAuthorList = new ArrayList<ProductId>();
+			List<ProductId> AuthorList = new ArrayList<ProductId>();
+			for (ProductPersonRelations p : productPersonRelationEntityList) {
+				if ("102".equals("p.getProductRoles().getProductRoleCd()")) {
+					productId = new ProductId();
+					productId.setDhId(p.getProducts().getDhId().toString());
+					coAuthorList.add(productId);
+				} else {
+					productId = new ProductId();
+					productId.setDhId(p.getProducts().getDhId().toString());
+					AuthorList.add(productId);
 				}
-
-				productPersonRelationObj.setCoAuthorList(coAuthorList);
-				productPersonRelationObj
-						.setCorrespondingAuthor(correspondingAuthor);
 			}
+			authorDetails.setCoAuthor(coAuthorList);
+			authorDetails.setCorresPondingAuthor(AuthorList);
 		}
-
-		return productPersonRelationObj;
+		return authorDetails;
 	}
 
-	public ProductPersonRelationObj getProductPersonRelationsByEmailAddr(
-			String emailAddr) throws Exception {
-
-		ProductPersonRelationObj productPersonRelationObj = new ProductPersonRelationObj();
-		PersonDetails correspondingAuthor = new PersonDetails();
-		List<PersonDetails> coAuthorList = new ArrayList<PersonDetails>();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			List<ProductPersonRelations> productPersonRelationList = crossRefDAO
-					.getProductPersonRelationsByEmailAddr(emailAddr);
-			System.err.println("email addresss " + emailAddr);
-			if (!StringUtils.isEmpty(productPersonRelationList)) {
-
-				productPersonRelationObj.setEmailAddr(emailAddr);
-
-				for (ProductPersonRelations productPersonRelations : productPersonRelationList) {
-					if ("shiva@gmail.com"
-							.equalsIgnoreCase(productPersonRelations
-									.getProductRoles().getProductRoleCd())) {
-						PersonDetails tempPersonDetails = new PersonDetails();
-						tempPersonDetails.setEmailAddr(productPersonRelations
-								.getEmailAddr());
-						tempPersonDetails.setUserId(productPersonRelations
-								.getUserProfile().getUserId());
-						coAuthorList.add(tempPersonDetails);
-					} else {
-						correspondingAuthor.setEmailAddr(productPersonRelations
-								.getEmailAddr());
-						correspondingAuthor.setUserId(productPersonRelations
-								.getUserProfile().getUserId());
-					}
+	@Override
+	public AuthorDetails getAuthorDetailsById(String userId) throws Exception {
+		AuthorDetails authorDetails = null;
+		System.err.println("--------------------------------");
+		if (!StringUtils.isEmpty(userId)) {
+			List<ProductPersonRelations> productPersonRelationEntityList = crossRefDAO
+					.getProductPersonRelationsByUserId(Integer.parseInt(userId));
+			authorDetails = new AuthorDetails();
+			authorDetails.setEmail(userId);
+			ProductId productId;
+			List<ProductId> coAuthorList = new ArrayList<ProductId>();
+			List<ProductId> AuthorList = new ArrayList<ProductId>();
+			for (ProductPersonRelations p : productPersonRelationEntityList) {
+				if ("102".equals("p.getProductRoles().getProductRoleCd()")) {
+					productId = new ProductId();
+					productId.setDhId(p.getProducts().getDhId().toString());
+					coAuthorList.add(productId);
+				} else {
+					productId = new ProductId();
+					productId.setDhId(p.getProducts().getDhId().toString());
+					AuthorList.add(productId);
 				}
-
-				productPersonRelationObj.setCoAuthorList(coAuthorList);
-				productPersonRelationObj
-						.setCorrespondingAuthor(correspondingAuthor);
 			}
+			authorDetails.setCoAuthor(coAuthorList);
+			authorDetails.setCorresPondingAuthor(AuthorList);
 		}
-
-		return productPersonRelationObj;
+		return authorDetails;
 	}
 
 }

@@ -24,11 +24,11 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 	}
 
 	@Override
-	public final List<ProductPersonRelations> getProductPersonRelationsByUserID(
+	public final List<ProductPersonRelations> getProductPersonRelationsByUserId(
 			final Integer userId) throws Exception {
 		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
 		Session session = getSessionFactory().openSession();
-		String hql = "from ProductPersonRelations where userId=:userId";
+		String hql = "from ProductPersonRelations ppr where ppr.userProfile.userId=:userId";
 		productPersonRelationList = session.createQuery(hql)
 				.setInteger("userId", userId).list();
 		return productPersonRelationList;
@@ -39,7 +39,7 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 			final String emailAddr) throws Exception {
 		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
 		Session session = getSessionFactory().openSession();
-		String hql = "from ProductPersonRelations where emailAddr=:emailAddr";
+		String hql = "from ProductPersonRelations ppr where ppr.emailAddr=:emailAddr";
 		productPersonRelationList = session.createQuery(hql)
 				.setString("emailAddr", emailAddr).list();
 		return productPersonRelationList;
