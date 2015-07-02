@@ -3,12 +3,16 @@ package com.wiley.gr.ace.authorservices.persistence.entity;
 // Generated Jun 26, 2015 10:24:59 AM by Hibernate Tools 4.0.0
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -53,6 +57,8 @@ public class ProductPersonRelations implements java.io.Serializable {
 
 	@Id
 	@Column(name = "PROD_RELATION_ID", unique = true, nullable = false, precision = 22, scale = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROD_PERSON_RELATIONS_SEQ")
+	@SequenceGenerator(name = "PROD_PERSON_RELATIONS_SEQ", sequenceName = "PROD_PERSON_RELATIONS_SEQ", allocationSize = 1)
 	public Integer getProdRelationId() {
 		return this.prodRelationId;
 	}

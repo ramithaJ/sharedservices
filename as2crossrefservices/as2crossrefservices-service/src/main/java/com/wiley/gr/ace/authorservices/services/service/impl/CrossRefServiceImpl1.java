@@ -33,7 +33,17 @@ public class CrossRefServiceImpl1 implements CrossRefService1 {
 	public boolean updateCrossRef(
 			ProductPersonRelationRequest productPersonRelation)
 			throws Exception {
-		return false;
+
+		boolean isUpdated = false;
+		if (!StringUtils.isEmpty(productPersonRelation.getEmail())
+				&& !StringUtils.isEmpty(productPersonRelation.getDhId())
+				&& !StringUtils.isEmpty(productPersonRelation.getUserId())) {
+			isUpdated = crossRefDAO.updateProductPersonRelation(
+					Integer.parseInt(productPersonRelation.getUserId()),
+					productPersonRelation.getEmail(),
+					Integer.parseInt(productPersonRelation.getDhId()));
+		}
+		return isUpdated;
 	}
 
 	@Override
@@ -42,8 +52,10 @@ public class CrossRefServiceImpl1 implements CrossRefService1 {
 			throws Exception {
 		boolean isDeleted = false;
 		if (!StringUtils.isEmpty(productPersonRelation)) {
-			isDeleted = crossRefDAO
-					.deleteProductPersonRelation(productPersonRelation.getUserId(),productPersonRelation.getEmail(),productPersonRelation.getDhId());
+			isDeleted = crossRefDAO.deleteProductPersonRelation(
+					Integer.parseInt(productPersonRelation.getUserId()),
+					productPersonRelation.getEmail(),
+					Integer.parseInt(productPersonRelation.getDhId()));
 		}
 		return isDeleted;
 
@@ -55,18 +67,18 @@ public class CrossRefServiceImpl1 implements CrossRefService1 {
 		ProductPersonRelations productPersonRelationsEntity = null;
 		if (!StringUtils.isEmpty(productPersonRelations)) {
 			productPersonRelationsEntity = new ProductPersonRelations();
+			System.err.println(productPersonRelations.getUserId());
 			if (!StringUtils.isEmpty(productPersonRelations.getUserId())) {
-				UserProfile user = crossRefDAO.getUserProfileById(productPersonRelations
-						.getUserId());
+				UserProfile user = crossRefDAO.getUserProfileById(Integer
+						.parseInt(productPersonRelations.getUserId()));
 				productPersonRelationsEntity.setUserProfile(user);
-			}
-			else if (!StringUtils.isEmpty(productPersonRelations.getEmail())) { 
+			} else if (!StringUtils.isEmpty(productPersonRelations.getEmail())) {
 				productPersonRelationsEntity
 						.setEmailAddr(productPersonRelations.getEmail());
 			}
 			if (!StringUtils.isEmpty(productPersonRelations.getDhId())) {
-				Products product = crossRefDAO
-						.getProducts(productPersonRelations.getDhId());
+				Products product = crossRefDAO.getProducts(Integer
+						.parseInt(productPersonRelations.getDhId()));
 				productPersonRelationsEntity.setProducts(product);
 			}
 			if (!StringUtils.isEmpty(productPersonRelations.getRole())) {

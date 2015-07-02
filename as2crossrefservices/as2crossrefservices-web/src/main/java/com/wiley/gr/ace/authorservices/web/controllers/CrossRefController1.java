@@ -48,7 +48,28 @@ public class CrossRefController1 {
 	}
 	@RequestMapping(value = "/article/assign", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service updateCrossRef(@RequestBody ProductPersonRelationRequest productPersonRelation) {
-		return new Service();
+		Service service = new Service();
+		boolean isUpdated = false;
+		try {
+			isUpdated = crossRefService.updateCrossRef(productPersonRelation);
+			}catch (final Exception e) {
+	        ErrorPOJO error = new ErrorPOJO();
+			error.setCode(402);
+			error.setMessage("Error getting Cross ref");
+			service.setStatus("ERROR");
+			service.setError(error);
+		}
+		if (isUpdated) {
+			service.setStatus("SUCCESS");
+		}
+		else {
+			final ErrorPOJO error = new ErrorPOJO();
+			error.setCode(403);
+			error.setMessage("Enter valid inputs");
+			service.setStatus("FAILURE");
+			service.setError(error);
+		}
+		return service;
 
 	}
 	@RequestMapping(value = "/article/assign", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -138,4 +138,34 @@ public class CrossRefDAOImpl1 implements CrossRefDAO1 {
 		return isDeleted;
 	}
 
+	@Override
+	public boolean updateProductPersonRelation(int userId, String email, int dhId)
+			throws Exception {
+		boolean isUpdated = false;
+		Session session = null;
+		if (!StringUtils.isEmpty(dhId)&&!StringUtils.isEmpty(email)&&!StringUtils.isEmpty(userId)) {
+			try {
+				session = getSessionFactory().openSession();
+				session.beginTransaction();
+					String hql = "from ProductPersonRelations pr where pr.emailAddr = :email and pr.products.dhId = :dhId";
+					ProductPersonRelations productPersonRelations = (ProductPersonRelations) session
+							.createQuery(hql).setString("email", email)
+							.setInteger("dhId", dhId).uniqueResult();
+				productPersonRelations.setUserProfile(getUserProfileById(userId));
+				productPersonRelations.setEmailAddr(null);
+				session.saveOrUpdate(productPersonRelations);
+				session.getTransaction().commit();
+				isUpdated = true;
+			} catch (Exception e) {
+				isUpdated = false;
+			} finally {
+				if (!StringUtils.isEmpty(session)) {
+					session.flush();
+					session.close();
+				}
+			}
+			}
+		return isUpdated;
+	}
+
 }

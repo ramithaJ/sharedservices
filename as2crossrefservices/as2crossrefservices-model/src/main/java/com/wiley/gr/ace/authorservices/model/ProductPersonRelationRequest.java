@@ -1,14 +1,14 @@
 package com.wiley.gr.ace.authorservices.model;
 
 public class ProductPersonRelationRequest {
-	int UserId;
+	String UserId;
 	String email;
-	int dhId;
+	String dhId;
 	String role;
-	public int getUserId() {
+	public String getUserId() {
 		return UserId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		UserId = userId;
 	}
 	public String getEmail() {
@@ -17,10 +17,10 @@ public class ProductPersonRelationRequest {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getDhId() {
+	public String getDhId() {
 		return dhId;
 	}
-	public void setDhId(int dhId) {
+	public void setDhId(String dhId) {
 		this.dhId = dhId;
 	}
 	public String getRole() {

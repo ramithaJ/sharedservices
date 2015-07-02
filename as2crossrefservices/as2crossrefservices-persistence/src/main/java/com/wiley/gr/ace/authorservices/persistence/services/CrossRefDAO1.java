@@ -11,4 +11,5 @@ public interface CrossRefDAO1 {
 	Products getProducts(int dhId) throws Exception;
 	boolean saveOrUpdateProductPersonRelation(ProductPersonRelations productPersonRelations) throws Exception;
 	boolean deleteProductPersonRelation(int userId,String email, int dhId) throws Exception;
+	boolean updateProductPersonRelation(int userId,String email, int dhId) throws Exception;
 }
