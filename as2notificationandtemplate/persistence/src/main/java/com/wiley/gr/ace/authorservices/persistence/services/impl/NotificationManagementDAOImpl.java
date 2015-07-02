@@ -386,28 +386,26 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	 *             the exception
 	 */
 	@Override
-	public boolean createNotificationHistory(Notification notification)
+	public Integer createNotificationHistory(Notification notification)
 			throws Exception {
 		Session session = null;
-		boolean isCreated = false;
+		Integer notificationId = null;
 		try {
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
 			session.save(notification);
 			session.getTransaction().commit();
-			isCreated = true;
+			notificationId = notification.getId();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			isCreated = false;
-		} finally {
+		}
+		finally {
 			if (session != null) {
 				session.flush();
 				session.close();
 			}
 		}
 
-		return isCreated;
+		return notificationId;
 	}
 
 	/**

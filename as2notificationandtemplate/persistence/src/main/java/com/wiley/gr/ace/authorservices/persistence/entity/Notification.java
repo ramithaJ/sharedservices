@@ -75,7 +75,7 @@ public class Notification implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ORIG_TMPL_ID")
 	public Template getTemplate() {
 		return this.template;
@@ -149,7 +149,7 @@ public class Notification implements java.io.Serializable {
 		this.unread = unread;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "notification")
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "notification")
 	@Cascade(CascadeType.ALL)
 	public NotificationRecipients getNotificationRecipients() {
 		return this.notificationRecipients;
