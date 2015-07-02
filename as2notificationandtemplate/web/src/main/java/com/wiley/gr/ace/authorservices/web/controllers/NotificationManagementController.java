@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wiley.gr.ace.authorservices.model.ErrorPOJO;
 import com.wiley.gr.ace.authorservices.model.NotificationDetails;
 import com.wiley.gr.ace.authorservices.model.NotificationObj;
+import com.wiley.gr.ace.authorservices.model.NotificationResponse;
 import com.wiley.gr.ace.authorservices.model.ScheduleObj;
 import com.wiley.gr.ace.authorservices.model.Service;
 import com.wiley.gr.ace.authorservices.model.TemplateObj;
@@ -391,16 +392,18 @@ public class NotificationManagementController {
 			@RequestBody final NotificationDetails notificationDetails) {
 		Service service = new Service();
 		TemplateObj templateObj = null;
+		NotificationResponse notificationResponse = null;
 		try {
 			if ("email".equalsIgnoreCase(type)) {
 
 				templateObj = templateManagementService.renderTemplate(
 						applicationId, templateId,
 						notificationDetails.getTemplateDetails());
-				notificationManagementService.sendEmailNotification(
-						applicationId, templateId, notificationDetails,
-						templateObj);
+				notificationResponse = notificationManagementService
+						.sendEmailNotification(applicationId, templateId,
+								notificationDetails, templateObj);
 				service.setStatus("SUCCESS");
+				service.setPayload(notificationResponse);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -429,11 +432,13 @@ public class NotificationManagementController {
 			@PathVariable("notificationId") final Integer notificationId) {
 
 		Service service = new Service();
+		NotificationResponse notificationResponse = null;
 		try {
 
-			notificationManagementService.resendEmailNotification(
-					applicationId, notificationId);
+			notificationResponse = notificationManagementService
+					.resendEmailNotification(applicationId, notificationId);
 			service.setStatus("SUCCESS");
+			service.setPayload(notificationResponse);
 		} catch (Exception e) {
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();

@@ -165,5 +165,5 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	boolean createNotificationHistory(Notification notification) throws Exception;
+	Integer createNotificationHistory(Notification notification) throws Exception;
 }

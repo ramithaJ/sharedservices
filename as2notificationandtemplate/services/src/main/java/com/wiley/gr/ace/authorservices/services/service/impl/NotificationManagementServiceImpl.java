@@ -19,6 +19,7 @@ import com.wiley.gr.ace.authorservices.email.service.MailSenderService;
 import com.wiley.gr.ace.authorservices.model.NotificationDetails;
 import com.wiley.gr.ace.authorservices.model.NotificationObj;
 import com.wiley.gr.ace.authorservices.model.NotificationRecipientsObj;
+import com.wiley.gr.ace.authorservices.model.NotificationResponse;
 import com.wiley.gr.ace.authorservices.model.ScheduleObj;
 import com.wiley.gr.ace.authorservices.model.ScheduleTemplateObj;
 import com.wiley.gr.ace.authorservices.model.TemplateObj;
@@ -543,10 +544,10 @@ public class NotificationManagementServiceImpl implements
 	 *             the exception
 	 */
 	@Override
-	public void sendEmailNotification(String applicationId, String templateId,
+	public NotificationResponse sendEmailNotification(String applicationId, String templateId,
 			NotificationDetails notificationDetails, TemplateObj templateObj)
 			throws AddressException, MessagingException, Exception {
-
+		NotificationResponse notificationResponse = new NotificationResponse();
 		mailSenderService.sendEmail(notificationDetails.getFrom(),
 				notificationDetails.getTo(), templateObj.getDescription(),
 				templateObj.getBody());
@@ -562,7 +563,14 @@ public class NotificationManagementServiceImpl implements
 		
 		notificationRecipientsObj.setEmail(notificationDetails.getTo());
 		
-		createNotificationHistory(notificationObj, notificationRecipientsObj);
+		Integer notificationId = createNotificationHistory(notificationObj, notificationRecipientsObj);
+		if(!StringUtils.isEmpty(notificationId)){
+			notificationResponse.setNotificationId(notificationId.toString());
+			notificationResponse.setSentTo(notificationRecipientsObj.getEmail());
+			notificationResponse.setTemplateID(templateId);
+		}
+		
+		return notificationResponse;
 	}
 
 	/**
@@ -580,10 +588,10 @@ public class NotificationManagementServiceImpl implements
 	 *             the exception
 	 */
 	@Override
-	public void resendEmailNotification(String applicationId,
+	public NotificationResponse resendEmailNotification(String applicationId,
 			Integer notificationId) throws AddressException,
 			MessagingException, Exception {
-
+		NotificationResponse notificationResponse = new NotificationResponse();
 		NotificationRecipients notificationRecipients = notificationManagementDAO
 				.getNotificationRecipients(notificationId);
 		Notification notification = notificationManagementDAO.getNotification(
@@ -592,8 +600,12 @@ public class NotificationManagementServiceImpl implements
 		TemplateObj templateObj = getTemplateVO(template);
 
 		mailSenderService.sendEmail(notification.getSenderEmail(),
-				notificationRecipients.getUserId(),
+				notificationRecipients.getEmail(),
 				templateObj.getDescription(), templateObj.getBody());
+		notificationResponse.setNotificationId(notificationId.toString());
+		notificationResponse.setSentTo(notificationRecipients.getEmail());
+		notificationResponse.setTemplateID(template.getId());
+		return notificationResponse;
 	}
 
 	/**
@@ -621,9 +633,10 @@ public class NotificationManagementServiceImpl implements
 		return date;
 	}
 
-	private void createNotificationHistory(NotificationObj notificationObj,
+	private Integer createNotificationHistory(NotificationObj notificationObj,
 			NotificationRecipientsObj notificationRecipientsObj)
 			throws Exception {
+		Integer notificationId;
 		Notification notification = new Notification();
 		NotificationRecipients notificationRecipients = new NotificationRecipients();
 
@@ -646,8 +659,9 @@ public class NotificationManagementServiceImpl implements
 		//notificationRecipients.setNotificationId(notificationObj.getId());
 		notificationRecipients.setNotification(notification);
 		notification.setNotificationRecipients(notificationRecipients);
-		notificationManagementDAO
+		notificationId = notificationManagementDAO
 				.createNotificationHistory(notification);
+		return notificationId;
 	}
 
 }
