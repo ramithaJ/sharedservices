@@ -33,6 +33,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -42,6 +43,7 @@ import java.util.Set;
 /**
  * @author kkalyan
  */
+@Repository
 public class UserRepositoryImpl extends Property implements UserRepository {
 
     //Logger Instance
@@ -51,10 +53,10 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     private SessionFactory sessionFactory;
 
     /**
-     * Method to create user.
+     * Repository method to create user.
      *
-     * @param userServiceRequest
-     * @return
+     * @param userServiceRequest Request Java Mapping Object
+     * @return Returns Author Services User Unique id
      * @throws SharedServiceException
      */
     public String createUserRepository(UserServiceRequest userServiceRequest) throws SharedServiceException {
@@ -255,10 +257,10 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to get user profile.
+     * Repository method to get user profile.
      *
-     * @param userId
-     * @return
+     * @param userId Author Services Unique Id
+     * @return Returns UserServuceRequest Object
      * @throws Exception
      */
     public UserServiceRequest getUserRepository(String userId) throws SharedServiceException {
@@ -434,9 +436,9 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to delete user object.
+     * Repository method to delete user object.
      *
-     * @param userId
+     * @param userId Author Services Unique id
      * @throws SharedServiceException
      */
     public void deleteUserRepository(String userId) throws SharedServiceException {
@@ -583,10 +585,10 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
 
     /**
-     * Method to update user
+     * Repository method to update user.
      *
      * @param userServiceRequest
-     * @param userId
+     * @param userId             Author Services Unique id
      * @throws SharedServiceException
      */
 
@@ -619,7 +621,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
 
             //Update User Secondary Email Address
-            Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = new HashSet<>();
+
             Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
             if (null != secondaryEmailAddrs && secondaryEmailAddrs.size() > 0) {
 
@@ -627,7 +629,6 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
                     if (null != secondaryEmailAddr) {
                         LOGGER.info("Set Secondary Email Addr...");
-                        userSecondaryEmailAddrSet.add(secondaryEmailAddr);
                         //Set the secondary email address to the user object
                         secondaryEmailAddr.setUsersByUserId(user);
                         session.update(secondaryEmailAddr);
@@ -647,25 +648,25 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             //Update user Address Object
             List<Address> addressList = userServiceRequest.getUserProfile().getAddresses();
-            UserAddresses userAddresses = null;
+            UserAddresses userAddresses;
             if (null != addressList && addressList.size() > 0) {
                 LOGGER.debug("Update addressList...");
                 Set<UserAddresses> userAddressesSet = new HashSet<>();
                 for (Address addressProfile : addressList) {
-                    com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj = null;
-                    if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase("edit")) {
-                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById("addressId", addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                    com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj;
+                    if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById(CommonConstants.ADDRESS_ID, addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
                         if (null != addressObj) {
                             addressObj = UserServiceHelper.setAddress(addressObj, addressProfile);
                             session.update(addressObj);
                         }
-                    } else if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase("delete")) {
-                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById("addressId", addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                    } else if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById(CommonConstants.ADDRESS_ID, addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
                         if (null != addressObj) {
                             addressObj = UserServiceHelper.setAddress(addressObj, addressProfile);
                             session.delete(addressObj);
                         }
-                    } else if (addressProfile.getStatus().equalsIgnoreCase("add")) {
+                    } else if (addressProfile.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         userAddresses = new UserAddresses();
                         com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
                         address = UserServiceHelper.setAddress(address, addressProfile);
@@ -673,7 +674,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         address.setUpdatedDate(UserServiceHelper.getDate());
                         address.setUsersByUpdatedBy(user);
                         session.save(address);
-                        AddressType addressType = (AddressType) getEntity("addressTypeCd", addressProfile.getType(), AddressType.class, false);
+                        AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
                         userAddresses.setAddressType(addressType);
                         userAddresses.setAddress(address);
                         userAddresses.setUsersByCreatedBy(user);
@@ -695,20 +696,20 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Update affiliationList...");
                 Set<UserAffiliations> userAffiliationsSet = new HashSet<>();
                 for (Affiliation affiliation : affiliationList) {
-                    UserAffiliations userAffiliations = null;
-                    if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase("edit")) {
-                        userAffiliations = (UserAffiliations) getEntityById("affiliationId", affiliation.getId(), UserAffiliations.class);
+                    UserAffiliations userAffiliations;
+                    if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                        userAffiliations = (UserAffiliations) getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
                         if (null != userAffiliations) {
                             userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
                             session.update(userAffiliations);
                         }
-                    } else if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase("delete")) {
-                        userAffiliations = (UserAffiliations) getEntityById("affiliationId", affiliation.getId(), UserAffiliations.class);
+                    } else if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                        userAffiliations = (UserAffiliations) getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
                         if (null != userAffiliations) {
                             userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
                             session.delete(userAffiliations);
                         }
-                    } else if (affiliation.getStatus().equalsIgnoreCase("add")) {
+                    } else if (affiliation.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         userAffiliations = new UserAffiliations();
                         userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
                         userAffiliations.setCreatedDate(UserServiceHelper.getDate());
@@ -730,22 +731,22 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Update societyList...");
                 Set<UserSocietyDetails> societyDetailsSet = new HashSet<>();
                 for (Society society : societyList) {
-                    UserSocietyDetails userSocietyDetails = null;
-                    if (null != society.getId() && society.getStatus().equalsIgnoreCase("edit")) {
-                        userSocietyDetails = (UserSocietyDetails) getEntityById("userSocietyId", society.getId(), UserSocietyDetails.class);
+                    UserSocietyDetails userSocietyDetails;
+                    if (null != society.getId() && society.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                        userSocietyDetails = (UserSocietyDetails) getEntityById(CommonConstants.USER_SOCIETY_ID, society.getId(), UserSocietyDetails.class);
                         if (null != userSocietyDetails) {
                             userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
                             session.update(userSocietyDetails);
                         }
-                    } else if (null != society.getId() && society.getStatus().equalsIgnoreCase("delete")) {
-                        userSocietyDetails = (UserSocietyDetails) getEntityById("userSocietyId", society.getId(), UserSocietyDetails.class);
+                    } else if (null != society.getId() && society.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                        userSocietyDetails = (UserSocietyDetails) getEntityById(CommonConstants.USER_SOCIETY_ID, society.getId(), UserSocietyDetails.class);
                         if (null != userSocietyDetails) {
                             userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
                             session.delete(userSocietyDetails);
                         }
-                    } else if (null != society.getStatus() && society.getStatus().equalsIgnoreCase("add")) {
+                    } else if (null != society.getStatus() && society.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         //Get Societies
-                        Societies societies = (Societies) getEntity("societyCd", society.getSocietyCd(), Societies.class, false);
+                        Societies societies = (Societies) getEntity(CommonConstants.SOCIETY_CD, society.getSocietyCd(), Societies.class, false);
                         if (null != societies) {
                             userSocietyDetails = new UserSocietyDetails();
                             userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
@@ -770,20 +771,20 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Update CoAuthor...");
                 Set<AuthCoauthDetails> authCoauthDetailsSet = new HashSet<>();
                 for (CoAuthor coAuthor : coAuthorList) {
-                    if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase("edit")) {
-                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById("authCoauthId", coAuthor.getId(), AuthCoauthDetails.class);
+                    if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class);
                         if (null != authCoauthDetails) {
                             authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
                             authCoauthDetails.setUsersByUpdatedBy(user);
                             session.update(authCoauthDetails);
                         }
-                    } else if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase("delete")) {
-                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById("authCoauthId", coAuthor.getId(), AuthCoauthDetails.class);
+                    } else if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class);
                         if (null != authCoauthDetails) {
                             authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
                             session.delete(authCoauthDetails);
                         }
-                    } else if (null != coAuthor.getStatus() && coAuthor.getStatus().equalsIgnoreCase("add")) {
+                    } else if (null != coAuthor.getStatus() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
                         authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
                         authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
@@ -803,17 +804,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             //Update Alerts
             List<Alert> alertList = userServiceRequest.getUserProfile().getAlerts();
-            UserAlerts alerts = null;
+            UserAlerts alerts;
             if (null != alertList && alertList.size() > 0) {
                 LOGGER.info("Set Alerts...");
-                Set<UserAlerts> userAlertsHashSet = new HashSet<>();
                 for (Alert alert : alertList) {
                     List<AlertType> alertTypeList = alert.getAlertTypes();
-                    if (null != alert.getId() && alert.getStatus().equalsIgnoreCase("edit")) {
+                    if (null != alert.getId() && alert.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
                         if (null != alertTypeList && alertTypeList.size() > 0) {
-                            int alertListSize = alertTypeList.size();
-                            for (int j = 0; j < alertListSize; j++) {
-                                AlertType alertType = alertTypeList.get(j);
+                            for (AlertType alertType : alertTypeList) {
                                 UserAlertsId userAlertsId = new UserAlertsId();
                                 userAlertsId.setUserId(user.getUserId());
                                 userAlertsId.setAlertCd(alert.getAlertCd());
@@ -828,7 +826,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                             }
                         }
 
-                    } else if (null != alert.getId() && alert.getStatus().equalsIgnoreCase("delete")) {
+                    } else if (null != alert.getId() && alert.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
                         if (null != alertTypeList && alertTypeList.size() > 0) {
                             int alertListSize = alertTypeList.size();
                             for (int j = 0; j < alertListSize; j++) {
@@ -841,13 +839,11 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 }
                             }
                         }
-                    } else if (null != alert.getStatus() && alert.getStatus().equalsIgnoreCase("add")) {
+                    } else if (null != alert.getStatus() && alert.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         //Get Alerts Object.
-                        Alerts alertsObj = (Alerts) getEntity("alertCd", alert.getAlertCd(), Alerts.class, false);
+                        Alerts alertsObj = (Alerts) getEntity(CommonConstants.ALERT_CD, alert.getAlertCd(), Alerts.class, false);
                         if (null != alertTypeList && alertTypeList.size() > 0) {
-                            int alertListSize = alertTypeList.size();
-                            for (int j = 0; j < alertListSize; j++) {
-                                AlertType alertType = alertTypeList.get(j);
+                            for (AlertType alertType : alertTypeList) {
                                 UserAlertsId userAlertsId = new UserAlertsId();
                                 userAlertsId.setUserId(user.getUserId());
                                 userAlertsId.setAlertCd(alert.getAlertCd());
@@ -861,7 +857,6 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 alerts.setCreatedDate(UserServiceHelper.getDate());
                                 alerts.setUpdatedDate(UserServiceHelper.getDate());
                                 session.save(alerts);
-                                userAlertsHashSet.add(alerts);
                             }
                         }
                     }
@@ -870,12 +865,12 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             //Update Preferred Journals
             List<PreferredJournal> preferredJournalList = userServiceRequest.getUserProfile().getJournals();
-            UserPreferredJournals userPreferredJournals = null;
+            UserPreferredJournals userPreferredJournals;
             if (null != preferredJournalList && preferredJournalList.size() > 0) {
                 LOGGER.debug("Update preferredJournalList...");
                 Set<UserPreferredJournals> userPreferredJournalsSet = new HashSet<>();
                 for (PreferredJournal preferredJournal : preferredJournalList) {
-                    if (null != preferredJournal.getId() && preferredJournal.getStatus().equalsIgnoreCase("edit")) {
+                    if (null != preferredJournal.getId() && preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
                         UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
                         userPreferredJournalsId.setUserId(user.getUserId());
                         userPreferredJournalsId.setJournalId(Integer.parseInt(preferredJournal.getId()));
@@ -883,7 +878,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         if (null != userPreferredJournal) {
                             session.update(userPreferredJournal);
                         }
-                    } else if (null != preferredJournal.getId() && preferredJournal.getStatus().equalsIgnoreCase("delete")) {
+                    } else if (null != preferredJournal.getId() && preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
                         UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
                         userPreferredJournalsId.setUserId(user.getUserId());
                         userPreferredJournalsId.setJournalId(Integer.parseInt(preferredJournal.getId()));
@@ -891,7 +886,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         if (null != userPreferredJournal) {
                             session.delete(userPreferredJournal);
                         }
-                    } else if (null != preferredJournal.getStatus() && preferredJournal.getStatus().equalsIgnoreCase("add")) {
+                    } else if (null != preferredJournal.getStatus() && preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
                         userPreferredJournals = new UserPreferredJournals();
                         Journals journals = new Journals();
@@ -925,26 +920,26 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 Set<UserAreaOfInterest> userAreaOfInterestHashSet = new HashSet<>();
                 LOGGER.debug("Set MyInterest...");
                 for (MyInterest myInterest : myInterestList) {
-                    if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase("edit")) {
+                    if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
                         UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
                         userAreaOfInterestId.setUserId(user.getUserId());
                         userAreaOfInterestId.setAreaOfInterestCd(myInterest.getId());
                         UserAreaOfInterestId userArea = (UserAreaOfInterestId) session.get(UserAreaOfInterestId.class, userAreaOfInterestId);
-                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
+                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
                         if (null != areaOfInterest) {
                             userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
                             session.update(userArea);
                         }
 
-                    } else if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase("delete")) {
+                    } else if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
                         UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
                         userAreaOfInterestId.setUserId(user.getUserId());
                         userAreaOfInterestId.setAreaOfInterestCd(myInterest.getId());
                         UserAreaOfInterestId userArea = (UserAreaOfInterestId) session.get(UserAreaOfInterestId.class, userAreaOfInterestId);
                         session.update(userArea);
-                    } else if (null != myInterest.getStatus() && myInterest.getStatus().equalsIgnoreCase("add")) {
+                    } else if (null != myInterest.getStatus() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         userAreaOfInterest = new UserAreaOfInterest();
-                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity("areaOfInterestCd", myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
+                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
                         if (null != areaOfInterest) {
                             UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
                             userAreaOfInterestId.setUserId(user.getUserId());
@@ -972,12 +967,9 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             if (null != funders && funders.size() > 0) {
                 LOGGER.debug("Update Funder...");
                 for (Funder funder : funders) {
-                    if (null != funder.getId() && funder.getStatus().equalsIgnoreCase("edit")) {
-
-                        Set<UserFunderGrants> grants = new HashSet<>();
+                    if (null != funder.getId() && funder.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
                         List<GrantNumber> grantList = funder.getGrantNumbers();
-                        int grantListSize = grantList.size();
-                        ResearchFunders researchFunders = (ResearchFunders) getEntity("funderName", funder.getResearchFunderName(), ResearchFunders.class, false);
+                        ResearchFunders researchFunders = (ResearchFunders) getEntity(CommonConstants.FUNDER_NAME, funder.getResearchFunderName(), ResearchFunders.class, false);
                         UserFunders userFunders = new UserFunders();
                         userFunders.setResearchFunders(researchFunders);
                         userFunders.setUserProfile(authorProfile);
@@ -987,23 +979,20 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         userFunders.setUsersByUpdatedBy(user);
                         userFunders.setUserProfile(authorProfile);
                         session.save(userFunders);
-
-                        for (int i = 0; i < grantListSize; i++) {
-                            UserFunderGrants userFunderGrants = (UserFunderGrants) getEntity("funderName", ((GrantNumber) grantList.get(i)).getGrantNumber(), UserFunderGrants.class, false);
+                        for (GrantNumber grantNumber : grantList) {
+                            UserFunderGrants userFunderGrants = (UserFunderGrants) getEntity(CommonConstants.FUNDER_NAME, grantNumber.getGrantNumber(), UserFunderGrants.class, false);
                             userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
                             userFunderGrants.setUsersByCreatedBy(user);
                             userFunderGrants.setUsersByUpdatedBy(user);
                             userFunderGrants.setUserFunders(userFunders);
                             session.save(userFunderGrants);
-                            grants.add(userFunderGrants);
                         }
 
-                    } else if (null != funder.getId() && funder.getStatus().equalsIgnoreCase("delete")) {
+                    } else if (null != funder.getId() && funder.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                        //TODO: Funder delete
+                    } else if (null != funder.getStatus() && funder.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
 
-                    } else if (null != funder.getStatus() && funder.getStatus().equalsIgnoreCase("add")) {
-                        Set<UserFunderGrants> grants = new HashSet<>();
                         List<GrantNumber> grantList = funder.getGrantNumbers();
-                        int grantListSize = grantList.size();
                         ResearchFunders researchFunders = new ResearchFunders();
                         researchFunders.setFunderName(funder.getResearchFunderName());
                         researchFunders.setFunderDoi(funder.getResearchFunderDoi());
@@ -1021,16 +1010,15 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                             userFunders.setUserProfile(authorProfile);
                             session.save(userFunders);
 
-                            for (int i = 0; i < grantListSize; i++) {
+                            for (GrantNumber grantNumber : grantList) {
                                 UserFunderGrants userFunderGrants = new UserFunderGrants();
-                                userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, ((GrantNumber) grantList.get(i)).getGrantNumber());
+                                userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, grantNumber.getGrantNumber());
                                 userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
                                 userFunderGrants.setUsersByCreatedBy(user);
                                 userFunderGrants.setUsersByUpdatedBy(user);
                                 userFunderGrants.setUserFunders(userFunders);
                                 session.save(userFunderGrants);
                                 //researchFunders.getUserFunderGrantses().add(userFunderGrants);
-                                grants.add(userFunderGrants);
                             }
                         }
                     }
@@ -1072,7 +1060,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
 
     /**
-     * Method to do a lookup on user object.
+     * Repository method to do a lookup on user object.
      *
      * @param firstName
      * @param lastName
@@ -1086,7 +1074,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         LookupResponse response = new LookupResponse();
         Session session = null;
         List<Object> user = null;
-        UserSecondaryEmailAddr userSecondaryEmailAddr = null;
+        UserSecondaryEmailAddr userSecondaryEmailAddr;
         try {
             LOGGER.info("Getting Entity...");
             session = sessionFactory.openSession();
@@ -1165,7 +1153,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to search user.
+     * Repository method to search user.
      *
      * @param email
      * @param firstName
@@ -1353,6 +1341,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             session.beginTransaction();
             //Get the user role object.
             Criteria criteria = session.createCriteria(entityClass);
+            //Check if typcast is true. Then typecast the input parameter.
             if (typeCast) {
                 criteria.add(Restrictions.eq(columnName, Integer.parseInt(primaryId)));
             } else {
@@ -1379,7 +1368,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to validate the request parameters.
+     * Repository method to validate the request parameters.
      *
      * @param userServiceRequest
      * @throws SharedServiceException
@@ -1394,16 +1383,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
             throw new SharedServiceException(CommonConstants.ERROR_CODE_105, userServiceError105);
         }
-        if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid())) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_106, userServiceError106);
-        }
         if (StringUtils.isEmpty(userServiceRequest.getUserProfile().getPassword())) {
             throw new SharedServiceException(CommonConstants.ERROR_CODE_107, userServiceError107);
         }
     }
 
     /**
-     * Method to add Profile Visible list.
+     * Repository method to add Profile Visible list.
      *
      * @param session
      * @param user
@@ -1438,7 +1424,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to add User Reference data.
+     * Repository method to add User Reference data.
      *
      * @param session
      * @param user
@@ -1455,7 +1441,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to add address.
+     * Repository method to add address.
      *
      * @param session
      * @param user
@@ -1489,7 +1475,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     }
 
     /**
-     * Method to add affiliations.
+     * Repository method to add affiliations.
      *
      * @param session
      * @param user
@@ -1527,7 +1513,6 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     private void addFunder(Session session, Users user, UserProfile userProfile, List<Funder> funders, Set<UserFunders> grants) {
         for (Funder funder : funders) {
             List<GrantNumber> grantList = funder.getGrantNumbers();
-            int grantListSize = grantList.size();
             ResearchFunders researchFunders = new ResearchFunders();
             researchFunders = UserServiceHelper.setResearchFunders(researchFunders, funder);
             researchFunders.setCreatedDate(UserServiceHelper.getDate());
@@ -1545,9 +1530,9 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             userFunders.setUserProfile(userProfile);
             session.save(userFunders);
 
-            for (int i = 0; i < grantListSize; i++) {
+            for (GrantNumber grantNumber : grantList) {
                 UserFunderGrants userFunderGrants = new UserFunderGrants();
-                userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, ((GrantNumber) grantList.get(i)).getGrantNumber());
+                userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, grantNumber.getGrantNumber());
                 userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
                 userFunderGrants.setUsersByCreatedBy(user);
                 userFunderGrants.setUsersByUpdatedBy(user);
