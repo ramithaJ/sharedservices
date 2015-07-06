@@ -66,7 +66,7 @@ public class UserServiceController extends Property {
      * @param userId Author Services Unique Id
      * @return Returns Service response Object
      */
-    @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.DELETE)
+    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.DELETE)
     @ResponseBody
     public Service deleteUserService(@PathVariable(CommonConstants.USER_ID) String userId) {
         Service service = new Service();
