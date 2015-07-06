@@ -170,7 +170,7 @@ public class UserServiceController extends Property {
      */
     @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.GET)
     @ResponseBody
-    public Service searchUserService(@RequestParam(value = "semail") String semail, @RequestParam(value = "fn") String fn, @RequestParam(value = "ln") String ln, @RequestParam(value = "oid") String oid) {
+    public Service searchUserService(@RequestParam(value = "semail", required = false) String semail, @RequestParam(value = "fn", required = false) String fn, @RequestParam(value = "ln", required = false) String ln, @RequestParam(value = "oid", required = false) String oid) {
         Service service = new Service();
         try {
 
