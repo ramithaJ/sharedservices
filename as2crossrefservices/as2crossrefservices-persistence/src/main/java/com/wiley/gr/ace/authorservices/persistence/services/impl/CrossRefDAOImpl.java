@@ -14,40 +14,104 @@ import com.wiley.gr.ace.authorservices.persistence.entity.Products;
 import com.wiley.gr.ace.authorservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.authorservices.persistence.services.CrossRefDAO;
 
+/**
+ * The Class CrossRefDAOImpl.
+ */
 public class CrossRefDAOImpl implements CrossRefDAO {
 
+	/**
+	 * Gets the product person relations.
+	 *
+	 * @param dhId
+	 *            the dh id
+	 * @return the product person relations
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public final List<ProductPersonRelations> getProductPersonRelations(
 			final Integer dhId) throws Exception {
-		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
-		Session session = getSessionFactory().openSession();
-		String hql = "from ProductPersonRelations ppr where ppr.products.dhId=:dhId";
-		productPersonRelationList = session.createQuery(hql)
-				.setInteger("dhId", dhId).list();
+		List<ProductPersonRelations> productPersonRelationList = null;
+		Session session = null;
+		try {
+			session = getSessionFactory().openSession();
+			String hql = "from ProductPersonRelations ppr where ppr.products.dhId=:dhId";
+			productPersonRelationList = session.createQuery(hql)
+					.setInteger("dhId", dhId).list();
+		} finally {
+			if (!StringUtils.isEmpty(session)) {
+				session.flush();
+				session.close();
+			}
+		}
 		return productPersonRelationList;
 	}
 
+	/**
+	 * Gets the product person relations by user id.
+	 *
+	 * @param userId
+	 *            the user id
+	 * @return the product person relations by user id
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public final List<ProductPersonRelations> getProductPersonRelationsByUserId(
 			final Integer userId) throws Exception {
-		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
-		Session session = getSessionFactory().openSession();
-		String hql = "from ProductPersonRelations ppr where ppr.userProfile.userId=:userId";
-		productPersonRelationList = session.createQuery(hql)
-				.setInteger("userId", userId).list();
+		List<ProductPersonRelations> productPersonRelationList = null;
+		Session session = null;
+		try {
+			session = getSessionFactory().openSession();
+			String hql = "from ProductPersonRelations ppr where ppr.userProfile.userId=:userId";
+			productPersonRelationList = session.createQuery(hql)
+					.setInteger("userId", userId).list();
+		} finally {
+			if (!StringUtils.isEmpty(session)) {
+				session.flush();
+				session.close();
+			}
+		}
 		return productPersonRelationList;
 	}
 
+	/**
+	 * Gets the product person relations by email addr.
+	 *
+	 * @param emailAddr
+	 *            the email addr
+	 * @return the product person relations by email addr
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public final List<ProductPersonRelations> getProductPersonRelationsByEmailAddr(
 			final String emailAddr) throws Exception {
-		List<ProductPersonRelations> productPersonRelationList = new ArrayList<ProductPersonRelations>();
-		Session session = getSessionFactory().openSession();
-		String hql = "from ProductPersonRelations ppr where ppr.emailAddr=:emailAddr";
-		productPersonRelationList = session.createQuery(hql)
-				.setString("emailAddr", emailAddr).list();
+		List<ProductPersonRelations> productPersonRelationList = null;
+		Session session = null;
+		try {
+			session = getSessionFactory().openSession();
+			String hql = "from ProductPersonRelations ppr where ppr.emailAddr=:emailAddr";
+			productPersonRelationList = session.createQuery(hql)
+					.setString("emailAddr", emailAddr).list();
+		} finally {
+			if (!StringUtils.isEmpty(session)) {
+				session.flush();
+				session.close();
+			}
+		}
 		return productPersonRelationList;
 	}
+
+	/**
+	 * Gets the user profile by id.
+	 *
+	 * @param userId
+	 *            the user id
+	 * @return the user profile by id
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public UserProfile getUserProfileById(int userId) throws Exception {
 		UserProfile user = null;
@@ -69,6 +133,15 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return user;
 	}
 
+	/**
+	 * Gets the product roles.
+	 *
+	 * @param roleCd
+	 *            the role cd
+	 * @return the product roles
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public ProductRoles getProductRoles(String roleCd) throws Exception {
 		ProductRoles roles = null;
@@ -90,6 +163,15 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return roles;
 	}
 
+	/**
+	 * Gets the products.
+	 *
+	 * @param dhId
+	 *            the dh id
+	 * @return the products
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public Products getProducts(int dhId) throws Exception {
 		Products product = null;
@@ -111,6 +193,15 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return product;
 	}
 
+	/**
+	 * Save or update product person relation.
+	 *
+	 * @param productPersonRelations
+	 *            the product person relations
+	 * @return true, if successful
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public boolean saveOrUpdateProductPersonRelation(
 			ProductPersonRelations productPersonRelations) throws Exception {
@@ -124,7 +215,6 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 				session.getTransaction().commit();
 				isCreated = true;
 			} catch (Exception e) {
-				e.printStackTrace();
 				isCreated = false;
 			} finally {
 				if (!StringUtils.isEmpty(session)) {
@@ -136,6 +226,19 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return isCreated;
 	}
 
+	/**
+	 * Delete product person relation.
+	 *
+	 * @param userId
+	 *            the user id
+	 * @param email
+	 *            the email
+	 * @param dhId
+	 *            the dh id
+	 * @return true, if successful
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public boolean deleteProductPersonRelation(int userId, String email,
 			int dhId) throws Exception {
@@ -161,7 +264,6 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 				session.getTransaction().commit();
 				isDeleted = true;
 			} catch (Exception e) {
-				e.printStackTrace();
 				isDeleted = false;
 			} finally {
 				if (!StringUtils.isEmpty(session)) {
@@ -173,20 +275,35 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return isDeleted;
 	}
 
+	/**
+	 * Update product person relation.
+	 *
+	 * @param userId
+	 *            the user id
+	 * @param email
+	 *            the email
+	 * @param dhId
+	 *            the dh id
+	 * @return true, if successful
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
-	public boolean updateProductPersonRelation(int userId, String email, int dhId)
-			throws Exception {
+	public boolean updateProductPersonRelation(int userId, String email,
+			int dhId) throws Exception {
 		boolean isUpdated = false;
 		Session session = null;
-		if (!StringUtils.isEmpty(dhId)&&!StringUtils.isEmpty(email)&&!StringUtils.isEmpty(userId)) {
+		if (!StringUtils.isEmpty(dhId) && !StringUtils.isEmpty(email)
+				&& !StringUtils.isEmpty(userId)) {
 			try {
 				session = getSessionFactory().openSession();
 				session.beginTransaction();
-					String hql = "from ProductPersonRelations pr where pr.emailAddr = :email and pr.products.dhId = :dhId";
-					ProductPersonRelations productPersonRelations = (ProductPersonRelations) session
-							.createQuery(hql).setString("email", email)
-							.setInteger("dhId", dhId).uniqueResult();
-				productPersonRelations.setUserProfile(getUserProfileById(userId));
+				String hql = "from ProductPersonRelations pr where pr.emailAddr = :email and pr.products.dhId = :dhId";
+				ProductPersonRelations productPersonRelations = (ProductPersonRelations) session
+						.createQuery(hql).setString("email", email)
+						.setInteger("dhId", dhId).uniqueResult();
+				productPersonRelations
+						.setUserProfile(getUserProfileById(userId));
 				productPersonRelations.setEmailAddr(null);
 				session.saveOrUpdate(productPersonRelations);
 				session.getTransaction().commit();
@@ -199,7 +316,7 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 					session.close();
 				}
 			}
-			}
+		}
 		return isUpdated;
 	}
 

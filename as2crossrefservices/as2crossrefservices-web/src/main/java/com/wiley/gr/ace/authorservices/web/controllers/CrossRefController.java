@@ -18,18 +18,28 @@ import com.wiley.gr.ace.authorservices.model.ProductPersonRelationRequest;
 import com.wiley.gr.ace.authorservices.model.Service;
 import com.wiley.gr.ace.authorservices.services.service.CrossRefService;
 
+/**
+ * The Class CrossRefController.
+ */
 @RestController
 @RequestMapping("/v1")
 public class CrossRefController {
+
+	/** The cross ref service. */
 	@Autowired(required = true)
 	CrossRefService crossRefService;
 
+	/**
+	 * Gets the cross ref.
+	 *
+	 * @param dhId
+	 *            the dh id
+	 * @return the cross ref
+	 */
 	@RequestMapping(value = "/authors/{dhId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getCrossRef(
 			@PathVariable("dhId") final Integer dhId) {
 		Service service = new Service();
-
-		System.err.println("Controller");
 		ProductPersonRelationObj productPersonRelationObj = null;
 		try {
 
@@ -49,7 +59,6 @@ public class CrossRefController {
 
 			}
 		} catch (final Exception e) {
-			e.printStackTrace();
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(316);
 			error.setMessage("Error Fetching Cross ref");
@@ -59,6 +68,15 @@ public class CrossRefController {
 		return service;
 	}
 
+	/**
+	 * Gets the cross ref user id.
+	 *
+	 * @param userId
+	 *            the user id
+	 * @param emailAddr
+	 *            the email addr
+	 * @return the cross ref user id
+	 */
 	@RequestMapping(value = "/articles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getCrossRefUserId(
 			@RequestParam(value = "userId") final String userId,
@@ -73,12 +91,11 @@ public class CrossRefController {
 				authorDetails = crossRefService
 						.getAuthorDetailsByEmail(emailAddr);
 			}
-				if (!StringUtils.isEmpty(authorDetails)) {
-					service.setStatus("SUCCESS");
+			if (!StringUtils.isEmpty(authorDetails)) {
+				service.setStatus("SUCCESS");
 
-					service.setPayload(authorDetails);
-				}
-			
+				service.setPayload(authorDetails);
+			}
 
 			else {
 				final ErrorPOJO error = new ErrorPOJO();
@@ -88,7 +105,6 @@ public class CrossRefController {
 				service.setError(error);
 			}
 		} catch (final Exception e) {
-			e.printStackTrace();
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(316);
 			error.setMessage("Error Fetching Value");
@@ -97,14 +113,23 @@ public class CrossRefController {
 		}
 		return service;
 	}
+
+	/**
+	 * Creates the cross ref.
+	 *
+	 * @param productPersonRelation
+	 *            the product person relation
+	 * @return the service
+	 */
 	@RequestMapping(value = "/article/assign", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Service createCrossRef(@RequestBody ProductPersonRelationRequest productPersonRelation) {
+	public @ResponseBody Service createCrossRef(
+			@RequestBody ProductPersonRelationRequest productPersonRelation) {
 		Service service = new Service();
 		boolean isCreated = false;
 		try {
 			isCreated = crossRefService.createCrossRef(productPersonRelation);
-			}catch (final Exception e) {
-	        ErrorPOJO error = new ErrorPOJO();
+		} catch (final Exception e) {
+			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(400);
 			error.setMessage("Error inserting Cross ref");
 			service.setStatus("ERROR");
@@ -112,8 +137,7 @@ public class CrossRefController {
 		}
 		if (isCreated) {
 			service.setStatus("SUCCESS");
-		}
-		else {
+		} else {
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(401);
 			error.setMessage("Enter valid inputs");
@@ -122,14 +146,23 @@ public class CrossRefController {
 		}
 		return service;
 	}
+
+	/**
+	 * Update cross ref.
+	 *
+	 * @param productPersonRelation
+	 *            the product person relation
+	 * @return the service
+	 */
 	@RequestMapping(value = "/article/assign", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Service updateCrossRef(@RequestBody ProductPersonRelationRequest productPersonRelation) {
+	public @ResponseBody Service updateCrossRef(
+			@RequestBody ProductPersonRelationRequest productPersonRelation) {
 		Service service = new Service();
 		boolean isUpdated = false;
 		try {
 			isUpdated = crossRefService.updateCrossRef(productPersonRelation);
-			}catch (final Exception e) {
-	        ErrorPOJO error = new ErrorPOJO();
+		} catch (final Exception e) {
+			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(402);
 			error.setMessage("Error getting Cross ref");
 			service.setStatus("ERROR");
@@ -137,8 +170,7 @@ public class CrossRefController {
 		}
 		if (isUpdated) {
 			service.setStatus("SUCCESS");
-		}
-		else {
+		} else {
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(403);
 			error.setMessage("Enter valid inputs");
@@ -148,14 +180,23 @@ public class CrossRefController {
 		return service;
 
 	}
+
+	/**
+	 * Delete cross ref.
+	 *
+	 * @param productPersonRelation
+	 *            the product person relation
+	 * @return the service
+	 */
 	@RequestMapping(value = "/article/assign", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Service deleteCrossRef(@RequestBody ProductPersonRelationRequest productPersonRelation) {
+	public @ResponseBody Service deleteCrossRef(
+			@RequestBody ProductPersonRelationRequest productPersonRelation) {
 		Service service = new Service();
 		boolean isDeleted = false;
 		try {
 			isDeleted = crossRefService.deleteCrossRef(productPersonRelation);
-			}catch (final Exception e) {
-	        ErrorPOJO error = new ErrorPOJO();
+		} catch (final Exception e) {
+			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(404);
 			error.setMessage("Error getting Cross ref");
 			service.setStatus("ERROR");
@@ -163,8 +204,7 @@ public class CrossRefController {
 		}
 		if (isDeleted) {
 			service.setStatus("SUCCESS");
-		}
-		else {
+		} else {
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(405);
 			error.setMessage("Enter valid inputs");
