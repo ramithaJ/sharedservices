@@ -2,7 +2,6 @@ package com.wiley.gr.ace.authorservices.persistence.services.impl;
 
 import static com.wiley.gr.ace.authorservices.persistence.connection.CrossRefHibernateConnection.getSessionFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
