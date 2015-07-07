@@ -452,6 +452,11 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
 
+            if (null == user) {
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_102, userServiceError102);
+            }
+
+
             //Open Session.
             session = sessionFactory.openSession();
             //Begin the transaction.
