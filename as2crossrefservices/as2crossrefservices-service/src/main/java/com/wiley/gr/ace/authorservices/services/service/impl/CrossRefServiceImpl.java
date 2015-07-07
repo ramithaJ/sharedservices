@@ -93,20 +93,22 @@ public class CrossRefServiceImpl implements CrossRefService {
 					.getProductPersonRelationsByEmailAddr(email);
 			authorDetails = new AuthorDetails();
 			authorDetails.setEmail(email);
-			ProductId productId = new ProductId();
+			ProductId productId = null;
 			List<ProductId> coAuthorList = new ArrayList<ProductId>();
-			List<ProductId> AuthorList = new ArrayList<ProductId>();
+			List<ProductId> authorList = new ArrayList<ProductId>();
 			for (ProductPersonRelations p : productPersonRelationEntityList) {
-				if ("102".equals("p.getProductRoles().getProductRoleCd()")) {
+				if ("101".equals(p.getProductRoles().getProductRoleCd())) {
+					productId = new ProductId();
+					productId.setDhId(p.getProducts().getDhId().toString());
+					authorList.add(productId);
+				} else {
+					productId = new ProductId();
 					productId.setDhId(p.getProducts().getDhId().toString());
 					coAuthorList.add(productId);
-				} else {
-					productId.setDhId(p.getProducts().getDhId().toString());
-					AuthorList.add(productId);
 				}
 			}
 			authorDetails.setCoAuthor(coAuthorList);
-			authorDetails.setCorresPondingAuthor(AuthorList);
+			authorDetails.setCorresPondingAuthor(authorList);
 		}
 		return authorDetails;
 	}
