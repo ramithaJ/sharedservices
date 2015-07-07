@@ -598,7 +598,6 @@ public class NotificationManagementServiceImpl implements
 				applicationId, notificationId);
 		Template template = notification.getTemplate();
 		TemplateObj templateObj = getTemplateVO(template);
-
 		mailSenderService.sendEmail(notification.getSenderEmail(),
 				notificationRecipients.getEmail(),
 				templateObj.getDescription(), templateObj.getBody());
@@ -629,14 +628,12 @@ public class NotificationManagementServiceImpl implements
 
 	private Date getDate(String strDate) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		Date date = formatter.parse(strDate);
-		return date;
+		return formatter.parse(strDate);
 	}
 
 	private Integer createNotificationHistory(NotificationObj notificationObj,
 			NotificationRecipientsObj notificationRecipientsObj)
 			throws Exception {
-		Integer notificationId;
 		Notification notification = new Notification();
 		NotificationRecipients notificationRecipients = new NotificationRecipients();
 
@@ -659,9 +656,8 @@ public class NotificationManagementServiceImpl implements
 		//notificationRecipients.setNotificationId(notificationObj.getId());
 		notificationRecipients.setNotification(notification);
 		notification.setNotificationRecipients(notificationRecipients);
-		notificationId = notificationManagementDAO
+		return notificationManagementDAO
 				.createNotificationHistory(notification);
-		return notificationId;
 	}
 
 }

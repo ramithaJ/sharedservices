@@ -2,9 +2,13 @@ package com.wiley.gr.ace.authorservices.model;
 
 import java.sql.Clob;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * The Class NotificationObj.
  */
+@JsonInclude(Include.NON_NULL)
 public class NotificationObj {
 
 	/** The id. */

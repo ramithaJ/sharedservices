@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDAO;
 
-
 /**
  * The Class TemplateManagementDAOImpl.
  */
@@ -20,12 +19,15 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	/**
 	 * Gets the template tags.
 	 *
-	 * @param applicationId the application id
+	 * @param applicationId
+	 *            the application id
 	 * @return the template tags
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
-	public List<Template> getTemplateTags(String applicationId) throws Exception {
+	public List<Template> getTemplateTags(String applicationId)
+			throws Exception {
 		Session session = null;
 		List<Template> templateEntityList = null;
 		try {
@@ -48,13 +50,17 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	/**
 	 * Gets the template.
 	 *
-	 * @param templateId the template id
-	 * @param applicationId the application id
+	 * @param templateId
+	 *            the template id
+	 * @param applicationId
+	 *            the application id
 	 * @return the template
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
-	public Template getTemplate(String templateId, String applicationId)  throws Exception{
+	public Template getTemplate(String templateId, String applicationId)
+			throws Exception {
 
 		Session session = null;
 		Template template = null;
@@ -78,12 +84,15 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		}
 		return template;
 	}
+
 	/**
 	 * Save or update template.
 	 *
-	 * @param template the template
+	 * @param template
+	 *            the template
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public boolean saveOrUpdateTemplate(Template template) throws Exception {
@@ -105,17 +114,20 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 		}
 	}
 
-
 	/**
 	 * Delete template.
 	 *
-	 * @param applicationId the application id
-	 * @param templateId the template id
+	 * @param applicationId
+	 *            the application id
+	 * @param templateId
+	 *            the template id
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
-	public boolean deleteTemplate(String applicationId, String templateId) throws Exception {
+	public boolean deleteTemplate(String applicationId, String templateId)
+			throws Exception {
 		Session session = null;
 		boolean deleteStatus = false;
 		if (!StringUtils.isEmpty(templateId)) {
@@ -144,11 +156,15 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	/**
 	 * Search template.
 	 *
-	 * @param applicationId the application id
-	 * @param tagL1 the tag l1
-	 * @param tagL2 the tag l2
+	 * @param applicationId
+	 *            the application id
+	 * @param tagL1
+	 *            the tag l1
+	 * @param tagL2
+	 *            the tag l2
 	 * @return the template
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Override
 	public Template searchTemplate(String applicationId, String tagL1,

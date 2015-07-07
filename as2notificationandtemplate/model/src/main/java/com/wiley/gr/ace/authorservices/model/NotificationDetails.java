@@ -1,10 +1,14 @@
 package com.wiley.gr.ace.authorservices.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 
 /**
  * The Class NotificationDetails.
  */
+@JsonInclude(Include.NON_NULL)
 public class NotificationDetails {
 
 	/** The from. */

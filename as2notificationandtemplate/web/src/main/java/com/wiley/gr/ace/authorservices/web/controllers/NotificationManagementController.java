@@ -361,7 +361,6 @@ public class NotificationManagementController {
 				service.setError(error);
 			}
 		} catch (final Exception e) {
-			e.printStackTrace();
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(316);
 			error.setMessage("Error Fetching Notification History");
@@ -406,7 +405,6 @@ public class NotificationManagementController {
 				service.setPayload(notificationResponse);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
 			err.setCode(317);
@@ -430,7 +428,7 @@ public class NotificationManagementController {
 	public @ResponseBody Service resendNotification(
 			@PathVariable("applicationId") final String applicationId,
 			@PathVariable("notificationId") final Integer notificationId) {
-
+		
 		Service service = new Service();
 		NotificationResponse notificationResponse = null;
 		try {

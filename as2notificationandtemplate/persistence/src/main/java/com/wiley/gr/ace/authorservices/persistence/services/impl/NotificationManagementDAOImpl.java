@@ -79,7 +79,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		} finally {
 			if (session != null) {
@@ -105,10 +104,10 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			throws Exception {
 		Session session = null;
 		boolean isDeleted = false;
-		Schedule schedule = getSchedule(applicationId, scheduleId);
 		if (!StringUtils.isEmpty(applicationId)
 				&& !StringUtils.isEmpty(applicationId)) {
 			try {
+				Schedule schedule = getSchedule(applicationId, scheduleId);
 				session = getSessionFactory().openSession();
 				session.beginTransaction();
 				session.delete(schedule);
@@ -210,8 +209,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 						.setString("applicationId", applicationId).list()
 						.get(0);
 
-			} catch (Exception e) {
-				e.printStackTrace();
 			} finally {
 				if (session != null) {
 					session.flush();
@@ -278,7 +275,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			Notification notification = getNotification(applicationId,
 					notificationId);
 			String unread = notification.getUnread().toString();
-			if (!unread.equalsIgnoreCase("n")) {
+			if (!"n".equalsIgnoreCase(unread)) {
 				try {
 
 					session = getSessionFactory().openSession();
@@ -397,8 +394,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			session.getTransaction().commit();
 			notificationId = notification.getId();
 
-		}
-		finally {
+		} finally {
 			if (session != null) {
 				session.flush();
 				session.close();

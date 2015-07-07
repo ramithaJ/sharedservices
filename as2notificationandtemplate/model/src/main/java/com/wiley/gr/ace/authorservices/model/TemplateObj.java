@@ -2,9 +2,6 @@ package com.wiley.gr.ace.authorservices.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class TemplateObj.
  */
