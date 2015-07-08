@@ -12,6 +12,17 @@
 package com.wiley.gr.ace.discount.controller;
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -24,7 +35,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.wiles.gr.ace.discount.exception.ASException;
 import com.wiles.gr.ace.discount.exception.ASExceptionController;
@@ -159,13 +173,41 @@ public class DiscountController extends ASExceptionController {
      * Service to upload the discount data  csv file.
      * @return {@link Service}
      */
-    @RequestMapping(value = "/discounts/file", method = RequestMethod.POST)
-    public final Service upload() {
-        
-        Service service = new Service();
-		return service;
-    }
-    
+	@RequestMapping(value = "/discounts/upload", method = RequestMethod.POST)
+	public @ResponseBody String handleFileUpload(@RequestParam("file") MultipartFile file) {
+		String name = "test11";
+		if (!file.isEmpty()) {
+			try {
+				
+				String  obj = new String();
+				byte[] bytes = file.getBytes();
+				
+				ByteArrayInputStream bis = new ByteArrayInputStream(file.getBytes());
+				
+				ObjectInput in = null;
+				try {
+				  in = new ObjectInputStream(bis);
+				  Object o = in.readObject();
+				
+				}catch(Exception e){}
+				
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(name + "-uploaded.txt")));
+				stream.write(bytes);
+				
+					  
+				stream.close();
+				System.out.println(obj);
+				return "You successfully uploaded " + name + " into " + name
+						+ "-uploaded !";
+			} catch (Exception e) {
+				return "You failed to upload " + name + " => " + e.getMessage();
+			}
+		} else {
+			return "You failed to upload " + name
+					+ " because the file was empty.";
+		}
+	}
+  
     /**
      * Service to downlaod the discount data csv file
      * @return 
