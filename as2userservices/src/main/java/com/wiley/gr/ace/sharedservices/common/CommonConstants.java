@@ -19,18 +19,22 @@ package com.wiley.gr.ace.sharedservices.common;
 public interface CommonConstants {
     String USER_ID = "userId";
     String AFFILIATION_ID = "affiliationId";
-    String SOCIETY_ID = "societyId";
     String AREA_OF_INTEREST_CD = "areaOfInterestCd";
     String JOURNAL_ID = "journalId";
-    String RESFUNDER_ID = "resfunderid";
-    String ALERT_CD = "alertCd";
+    String FUNDER_NAME = "funderName";
     String AUTH_COAUTH_ID = "authCoauthId";
+    String USER_SOCIETY_ID = "userSocietyId";
+    String ALERT_CD = "alertCd";
+    String USER_SECONDARY_EMAIL_ID = "userSecondaryEmailId";
+    String ORCID_ID = "orcidId";
     String ERROR = "ERROR";
     String REQUEST_PATH = "/profile/{userId}";
-    String CREATE_USER_REQUEST_PATH = "/profile";
+    String USER_SERVICE_REQUEST_PATH = "/profile";
     String DATE_FORMAT = "MM-dd-yyyy";
     String ADDRESS_ID = "addressId";
-
+    String PROFILE_ATTR_CD = "profileAttribCd";
+    String ADDRESS_TYPE_CD = "addressTypeCd";
+    String SOCIETY_CD = "societyCd";
     String LOOK_UP = "/lookup";
     String PRIMARY_EMAIL_ID = "primaryEmailAddr";
     String FIRST_NAME = "firstName";
@@ -38,17 +42,18 @@ public interface CommonConstants {
     String SECONDARY_EMAIL_ID = "secondaryEmailAddr";
     String EMAIL_TYPE_PRIMARY = "primary";
     String EMAIL_TYPE_SECONDARY = "secondary";
-
+    String EDIT = "edit";
+    String DELETE = "delete";
+    String ADD = "add";
     String ERROR_CODE_100 = "1000";
     String ERROR_CODE_101 = "1001";
     String ERROR_CODE_102 = "1002";
     String ERROR_CODE_103 = "1003";
     String ERROR_CODE_104 = "1004";
     String ERROR_CODE_105 = "1005";
-    String ERROR_CODE_106 = "1006";
     String ERROR_CODE_107 = "1007";
-
     String ERROR_CODE_201 = "2001";
+    String ERROR_CODE_304 = "3004";
 
 
 }

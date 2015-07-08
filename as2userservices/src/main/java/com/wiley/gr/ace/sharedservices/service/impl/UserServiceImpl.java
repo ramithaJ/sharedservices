@@ -15,6 +15,7 @@ package com.wiley.gr.ace.sharedservices.service.impl;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
+import com.wiley.gr.ace.sharedservices.payload.Service;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.repositories.UserRepository;
 import com.wiley.gr.ace.sharedservices.service.UserService;
@@ -23,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author kkalyan
  */
+@org.springframework.stereotype.Service
 public class UserServiceImpl implements UserService {
 
+    //User Repository Implementation Class
     @Autowired
     private UserRepository userRepository;
 
@@ -32,8 +35,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Service method to create user.
      *
-     * @param userServiceRequest
-     * @return
+     * @param userServiceRequest Request Java Mapping Object
+     * @return Returns User Id
      * @throws SharedServiceException
      */
     public String createUserService(UserServiceRequest userServiceRequest) throws SharedServiceException {
@@ -43,8 +46,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Service method to update user profile.
      *
-     * @param userServiceRequest
-     * @param userId
+     * @param userServiceRequest Request Java Mapping Object
+     * @param userId             Author Services Unique Id
      * @throws SharedServiceException
      */
     public void updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
@@ -54,8 +57,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Service method to get user profile.
      *
-     * @param userId
-     * @return
+     * @param userId Author Services Unique Id
+     * @return Returns Service response Object
      * @throws SharedServiceException
      */
     public UserServiceRequest getUserProfileService(String userId) throws SharedServiceException {
@@ -65,7 +68,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Service method to delete user.
      *
-     * @param userId
+     * @param userId Author Services Unique Id
      * @throws SharedServiceException
      */
     public void deleteUserService(String userId) throws SharedServiceException {
@@ -74,14 +77,29 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to user lookup.
-     * @param firstName
-     * @param lastName
-     * @param emailId
-     * @return
+     *
+     * @param firstName FirstName of the user
+     * @param lastName  LastName of the user
+     * @param emailId   Primary (or) Secondary Email Address of the user
+     * @return Returns LookupResponse Object
      * @throws SharedServiceException
      */
     public LookupResponse userlookUpService(String firstName, String lastName, String emailId)
             throws SharedServiceException {
         return userRepository.userlookUpRepository(firstName, lastName, emailId);
+    }
+
+    /**
+     * Service method to user search.
+     *
+     * @param email     Primary (or) Secondary Email Address of the user
+     * @param firstName FirstName of the user
+     * @param lastName  LastName of the user
+     * @param orcidId   Orcid Id of the user
+     * @return Returns Service response Object
+     * @throws SharedServiceException
+     */
+    public Service searchUserService(String email, String firstName, String lastName, String orcidId) throws SharedServiceException {
+        return userRepository.searchUserRepository(email, firstName, lastName, orcidId);
     }
 }

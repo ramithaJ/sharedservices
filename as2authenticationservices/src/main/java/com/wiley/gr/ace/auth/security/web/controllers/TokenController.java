@@ -190,7 +190,7 @@ public class TokenController {
 	 * @param token
 	 * @return ResponseEntity<Response>
 	 */
-	@RequestMapping(value = CommonConstant.TOKEN_REFRESH_SERVICE_URL, method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = CommonConstant.TOKEN_REFRESH_SERVICE_URL, method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<Response> refreshToken(
 			@RequestHeader(value = "X-AS2-AUTH-TOKEN") final String token) {
 		TokenController.LOGGER.info("Refreshing Token...");

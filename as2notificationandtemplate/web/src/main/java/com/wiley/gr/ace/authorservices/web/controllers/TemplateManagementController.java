@@ -21,7 +21,6 @@ import com.wiley.gr.ace.authorservices.model.TemplateDetails;
 import com.wiley.gr.ace.authorservices.model.TemplateObj;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
-
 /**
  * The Class TemplateManagementController.
  *
@@ -38,7 +37,8 @@ public class TemplateManagementController {
 	/**
 	 * Gets the template tags.
 	 *
-	 * @param applicationId the application id
+	 * @param applicationId
+	 *            the application id
 	 * @return the template tags
 	 */
 	@RequestMapping(value = "/{applicationId}/tags", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,8 +71,10 @@ public class TemplateManagementController {
 	/**
 	 * Gets the template.
 	 *
-	 * @param templateId the template id
-	 * @param applicationId the application id
+	 * @param templateId
+	 *            the template id
+	 * @param applicationId
+	 *            the application id
 	 * @return the template
 	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,10 +112,11 @@ public class TemplateManagementController {
 	/**
 	 * Creates the template.
 	 *
-	 * @param template the template
+	 * @param template
+	 *            the template
 	 * @return the service
 	 */
-	@RequestMapping( method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody Service createTemplate(
 			@RequestBody TemplateObj template) {
 		Service service = new Service();
@@ -144,9 +147,12 @@ public class TemplateManagementController {
 	/**
 	 * Update template.
 	 *
-	 * @param templateId the template id
-	 * @param applicationId the application id
-	 * @param templateObj the template obj
+	 * @param templateId
+	 *            the template id
+	 * @param applicationId
+	 *            the application id
+	 * @param templateObj
+	 *            the template obj
 	 * @return the service
 	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.PUT)
@@ -183,8 +189,10 @@ public class TemplateManagementController {
 	/**
 	 * Delete template.
 	 *
-	 * @param applicationId the application id
-	 * @param templateId the template id
+	 * @param applicationId
+	 *            the application id
+	 * @param templateId
+	 *            the template id
 	 * @return the service
 	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}", method = RequestMethod.DELETE)
@@ -221,9 +229,12 @@ public class TemplateManagementController {
 	/**
 	 * Search template.
 	 *
-	 * @param applicationId the application id
-	 * @param tagL1 the tag l1
-	 * @param tagL2 the tag l2
+	 * @param applicationId
+	 *            the application id
+	 * @param tagL1
+	 *            the tag l1
+	 * @param tagL2
+	 *            the tag l2
 	 * @return the service
 	 */
 	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -259,9 +270,12 @@ public class TemplateManagementController {
 	/**
 	 * Render template.
 	 *
-	 * @param templateId the template id
-	 * @param applicationId the application id
-	 * @param templateDetails the template details
+	 * @param templateId
+	 *            the template id
+	 * @param applicationId
+	 *            the application id
+	 * @param templateDetails
+	 *            the template details
 	 * @return the service
 	 */
 	@RequestMapping(value = "/{applicationId}/{templateId}/render", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

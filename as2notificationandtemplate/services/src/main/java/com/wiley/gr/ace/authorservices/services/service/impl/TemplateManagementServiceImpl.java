@@ -283,8 +283,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 	}
 	private Date getDate(String strDate) throws Exception{
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		Date date = formatter.parse(strDate);
-		return date;
+		return formatter.parse(strDate);
 	}
 	
 

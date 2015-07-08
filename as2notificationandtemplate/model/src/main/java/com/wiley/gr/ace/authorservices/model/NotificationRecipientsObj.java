@@ -1,8 +1,12 @@
 package com.wiley.gr.ace.authorservices.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * The Class NotificationRecipientsObj.
  */
+@JsonInclude(Include.NON_NULL)
 public class NotificationRecipientsObj {
 
 	/** The notification id. */

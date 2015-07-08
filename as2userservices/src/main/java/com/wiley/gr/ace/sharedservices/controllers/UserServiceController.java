@@ -14,6 +14,7 @@
 package com.wiley.gr.ace.sharedservices.controllers;
 
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
+import com.wiley.gr.ace.sharedservices.common.Property;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
 import com.wiley.gr.ace.sharedservices.payload.*;
@@ -22,39 +23,30 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Properties;
 
 /**
  * @author kkalyan
  */
 @RestController
 @RequestMapping("/v1/")
-public class UserServiceController {
+public class UserServiceController extends Property {
 
     //Logger Instance
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceController.class);
 
+    //User Service Implementation
     @Autowired
     private UserService userService;
 
-    @Value("${USER_SERVICE_ERROR_101}")
-    private String userServiceError101;
-
-    @Value("${USER_SERVICE_ERROR_201}")
-    private String userlookUpServiceError201;
-
-
     /**
-     * Method to Create User
+     * Controller method to create user.
      *
-     * @param userServiceRequest
+     * @param userServiceRequest Request Java Mapping Object
+     * @return Returns Service response Object
      */
-    @RequestMapping(value = CommonConstants.CREATE_USER_REQUEST_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Service createUserService(@RequestBody UserServiceRequest userServiceRequest) {
         Service service = new Service();
@@ -69,21 +61,21 @@ public class UserServiceController {
     }
 
     /**
-     * Method to Delete User
+     * Controller method for user delete.
      *
-     * @param deleteProfileRequest
+     * @param userId Author Services Unique Id
+     * @return Returns Service response Object
      */
-    @RequestMapping(value = CommonConstants.CREATE_USER_REQUEST_PATH, method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.DELETE)
     @ResponseBody
-    public Service deleteUserService(@RequestBody DeleteProfileRequest deleteProfileRequest) {
+    public Service deleteUserService(@PathVariable(CommonConstants.USER_ID) String userId) {
         Service service = new Service();
         try {
-            String authorServicesUniqueIdentifier = deleteProfileRequest.getUserProfile().getAsid();
-            if (StringUtils.isEmpty(authorServicesUniqueIdentifier)) {
+            //Validate user id
+            if (StringUtils.isEmpty(userId)) {
                 throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
             }
-
-            userService.deleteUserService(authorServicesUniqueIdentifier);
+            userService.deleteUserService(userId);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Create User Service", e);
             return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
@@ -93,15 +85,17 @@ public class UserServiceController {
 
 
     /**
-     * Method to update User.
+     * Controller method to update user.
      *
-     * @param userServiceRequest
-     * @param userId
+     * @param userServiceRequest Request Java Mapping Object
+     * @param userId             Author Services Unique id of the User
+     * @return Returns Service response Object
      */
     @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
         try {
+            //Validate user id
             if (StringUtils.isEmpty(userId)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
             }
@@ -115,9 +109,10 @@ public class UserServiceController {
     }
 
     /**
-     * Method to get user.
+     * Controller method for get user service.
      *
-     * @param userId
+     * @param userId Author Services Unique id of the User
+     * @return Returns Service response Object
      */
     @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -125,6 +120,7 @@ public class UserServiceController {
         Service service = new Service();
         UserServiceRequest userServiceRequest = null;
         try {
+            //Validate user id
             if (StringUtils.isEmpty(userId)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
             }
@@ -139,24 +135,55 @@ public class UserServiceController {
     }
 
     /**
-     * Lookup method for user
+     * Controller method for user lookup.
      *
-     * @param lookUp
-     * @return
+     * @param lookUp Search Java Lookup Mapping Object
+     * @return Returns Service response Object
      */
     @RequestMapping(value = CommonConstants.LOOK_UP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Service lookUpAuthorService(@RequestBody LookupRequest lookUp) {
         Service service = new Service();
         try {
-            //Check whether email address is null or empty. Throw error
+            //Check whether email address is null or empty. Throw error if it is null (or) emtpy
             if (StringUtils.isEmpty(lookUp.getUserProfile().getEmailAddress())) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_201, userlookUpServiceError201, CommonConstants.ERROR);
             }
             LookupResponse response = userService.userlookUpService(lookUp.getUserProfile().getFirstName(), lookUp.getUserProfile().getLastName(), lookUp.getUserProfile().getEmailAddress());
             service.setPayload(response);
         } catch (SharedServiceException e) {
-            LOGGER.error("Error Occurred in Get User Service", e);
+            LOGGER.error("Error Occurred in Lookup User Service", e);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
+
+        return service;
+    }
+
+    /**
+     * Controller method for search user.
+     *
+     * @param semail Either Primary Email (or) Secondary Email of the user
+     * @param fn     FirstName
+     * @param ln     LastName
+     * @param oid    Orcid Id
+     * @return Returns Service response Object
+     */
+    @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.GET)
+    @ResponseBody
+    public Service searchUserService(@RequestParam(value = "semail", required = false) String semail, @RequestParam(value = "fn", required = false) String fn, @RequestParam(value = "ln", required = false) String ln, @RequestParam(value = "oid", required = false) String oid) {
+        Service service = new Service();
+        try {
+
+            //Check whether atleast one input parameter is
+            if (StringUtils.isEmpty(semail) && StringUtils.isEmpty(fn) && StringUtils.isEmpty(ln) && StringUtils.isEmpty(oid)) {
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_304, userSearchServiceError304, CommonConstants.ERROR);
+            }
+
+            //Search user with the input parameters.
+            service = userService.searchUserService(semail, fn, ln, oid);
+
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Search User Service", e);
             return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
 

@@ -7,6 +7,7 @@ import javax.mail.internet.AddressException;
 
 import com.wiley.gr.ace.authorservices.model.NotificationDetails;
 import com.wiley.gr.ace.authorservices.model.NotificationObj;
+import com.wiley.gr.ace.authorservices.model.NotificationResponse;
 import com.wiley.gr.ace.authorservices.model.ScheduleObj;
 import com.wiley.gr.ace.authorservices.model.TemplateObj;
 
@@ -170,7 +171,7 @@ public interface NotificationManagementService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	void sendEmailNotification(String applicationId, String templateId,
+	NotificationResponse  sendEmailNotification(String applicationId, String templateId,
 			NotificationDetails notificationDetails, TemplateObj templateObj)
 			throws AddressException, MessagingException, Exception;
 
@@ -188,7 +189,7 @@ public interface NotificationManagementService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	void resendEmailNotification(String applicationId, Integer notificationId)
+	NotificationResponse resendEmailNotification(String applicationId, Integer notificationId)
 			throws AddressException, MessagingException, Exception;
 
 }
