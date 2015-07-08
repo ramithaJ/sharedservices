@@ -7,8 +7,15 @@ public class Discount {
 	private String discountValue;
 	private String discountCode;
 	private String promoCode;
+	private double discountPercentage;
 	
 	
+	public double getDiscountPercentage() {
+		return discountPercentage;
+	}
+	public void setDiscountPercentage(double discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
 	public String getPromoCode() {
 		return promoCode;
 	}
