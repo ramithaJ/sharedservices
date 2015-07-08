@@ -1,0 +1,31 @@
+<!-- Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved. -->
+
+<!-- All material contained herein is proprietary to John Wiley & Sons  -->
+<!-- and its third party suppliers, if any. The methods, techniques and  -->
+<!-- technical concepts contained herein are considered trade secrets  -->
+<!-- and confidential and may be protected by intellectual property laws.   -->
+<!-- Reproduction or distribution of this material, in whole or in part,  -->
+<!-- is strictly forbidden except by express prior written permission  -->
+<!-- of John Wiley & Sons. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.wiley.gr.ace</groupId>
+		<artifactId>staticcontentservice</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>staticcontentservice-dotcms</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<dependencies>
+		<dependency>
+			<groupId>com.wiley.gr.ace</groupId>
+			<artifactId>staticcontentservice-model</artifactId>
+			<version>2.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		
+	</dependencies>
+</project>

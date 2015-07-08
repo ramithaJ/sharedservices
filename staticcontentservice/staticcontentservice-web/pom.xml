@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.wiley.gr.ace</groupId>
+    <artifactId>staticcontentservice</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>staticcontentservice-web</artifactId>
+  <packaging>war</packaging>
+  <name>staticcontentservice-web Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+     <groupId>com.wiley.gr.ace</groupId>
+ 	 <artifactId>staticcontentservice-model</artifactId>
+ 	 <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+   <groupId>com.wiley.gr.ace</groupId>
+	<artifactId>staticcontentservice-service</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>staticcontentservice-web</finalName>
+  </build>
+</project>
