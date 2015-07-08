@@ -1,5 +1,6 @@
 package com.wiley.gr.ace.discount.services.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import com.wiely.gr.ace.discount.service.model.Discount;
@@ -9,6 +10,7 @@ import com.wiely.gr.ace.discount.service.model.Institution;
 import com.wiely.gr.ace.discount.service.model.Society;
 import com.wiely.gr.ace.discount.service.model.SocietyList;
 import com.wiles.gr.ace.discount.exception.ASException;
+import com.wiley.gr.ace.discount.persistence.DiscountDAO;
 import com.wiley.gr.ace.discount.services.service.DiscountService;
 
 public class DiscountServiceImpl implements DiscountService {
@@ -23,6 +25,15 @@ public class DiscountServiceImpl implements DiscountService {
 		discount.setPromoCode("ABC001");
 		discount.setValueType("A");
 
+		
+		for (String Values : requestObject.values()) {
+			
+			if(Values.contains(",")){
+				String[] valueList = Values.split(",");
+			}
+			
+		}
+		
 		return discount;
 
 	}
@@ -44,6 +55,9 @@ public class DiscountServiceImpl implements DiscountService {
 		
 		if(!journalCode.isEmpty() ||journalCode!=null){
 		
+			DiscountDAO discountDAO = new DiscountDAO();
+			discountDAO.getDiscSocietiesForJournal();
+			
 		societyList.getSocieties().add(society);
 		
 		}
