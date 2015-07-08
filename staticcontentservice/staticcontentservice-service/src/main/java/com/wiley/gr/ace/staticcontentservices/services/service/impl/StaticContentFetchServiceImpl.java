@@ -9,11 +9,19 @@ import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalog;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StaticContentFetchServiceImpl.
+ */
 public class StaticContentFetchServiceImpl implements StaticContentFetchService {
 
+	/** The dot cms data service. */
 	@Autowired(required = true)
 	private DotCMSDataService dotCMSDataService;
 
+	/* (non-Javadoc)
+	 * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getUiMessageContent(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public UIMessageContent getUiMessageContent(String pageName, String locale)
 			throws Exception {

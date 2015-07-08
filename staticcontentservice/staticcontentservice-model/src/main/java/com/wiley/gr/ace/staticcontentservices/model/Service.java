@@ -14,6 +14,7 @@ package com.wiley.gr.ace.staticcontentservices.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+// TODO: Auto-generated Javadoc
 /**
  * This is the generic service VO object which is returned by every service.
  * Data from the service is wrapped into this and returned.
@@ -33,6 +34,8 @@ public class Service {
     private ErrorPOJO error;
 
     /**
+     * Gets the status.
+     *
      * @return the status
      */
     public final String getStatus() {
@@ -40,14 +43,17 @@ public class Service {
     }
 
     /**
-     * @param status
-     *            the status to set
+     * Sets the status.
+     *
+     * @param status            the status to set
      */
     public final void setStatus(final String status) {
         this.status = status;
     }
 
     /**
+     * Gets the payload.
+     *
      * @return the payload
      */
     public final Object getPayload() {
@@ -55,14 +61,17 @@ public class Service {
     }
 
     /**
-     * @param payload
-     *            the payload to set
+     * Sets the payload.
+     *
+     * @param payload            the payload to set
      */
     public final void setPayload(final Object payload) {
         this.payload = payload;
     }
 
     /**
+     * Gets the error.
+     *
      * @return the error
      */
     public final ErrorPOJO getError() {
@@ -70,8 +79,9 @@ public class Service {
     }
 
     /**
-     * @param error
-     *            the error to set
+     * Sets the error.
+     *
+     * @param error            the error to set
      */
     public final void setError(final ErrorPOJO error) {
         this.error = error;

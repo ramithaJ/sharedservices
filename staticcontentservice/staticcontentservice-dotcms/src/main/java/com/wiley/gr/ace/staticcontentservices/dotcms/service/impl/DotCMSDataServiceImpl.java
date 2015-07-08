@@ -11,11 +11,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DotCMSDataServiceImpl.
+ */
 public class DotCMSDataServiceImpl implements DotCMSDataService {
 
+	/** The content url. */
 	@Value("${dotcms-rest.url}")
 	private String contentUrl;
 
+	/* (non-Javadoc)
+	 * @see com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService#getUiMessageCatalog(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
 			String locale) throws Exception {

@@ -14,13 +14,25 @@ import com.wiley.gr.ace.staticcontentservices.model.Service;
 import com.wiley.gr.ace.staticcontentservices.model.UIMessageContent;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DotCMSStaticContentController.
+ */
 @RestController
 @RequestMapping("/staticcontent/get")
 public class DotCMSStaticContentController {
 
+	/** The static content fetch service. */
 	@Autowired(required = true)
 	private StaticContentFetchService staticContentFetchService;
 
+	/**
+	 * Gets the ui message catalog.
+	 *
+	 * @param pageName the page name
+	 * @param locale the locale
+	 * @return the ui message catalog
+	 */
 	@RequestMapping(value = "/uimessage/{pageName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getUiMessageCatalog(
 			@PathVariable("pageName") String pageName,

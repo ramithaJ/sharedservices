@@ -14,6 +14,7 @@ package com.wiley.gr.ace.staticcontentservices.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+// TODO: Auto-generated Javadoc
 /**
  * This is the generic errorVO returned by the service.
  * 
@@ -29,6 +30,8 @@ public class ErrorPOJO {
     private String message;
 
     /**
+     * Gets the code.
+     *
      * @return the code
      */
     public final int getCode() {
@@ -36,14 +39,17 @@ public class ErrorPOJO {
     }
 
     /**
-     * @param code
-     *            the code to set
+     * Sets the code.
+     *
+     * @param code            the code to set
      */
     public final void setCode(final int code) {
         this.code = code;
     }
 
     /**
+     * Gets the message.
+     *
      * @return the message
      */
     public final String getMessage() {
@@ -51,8 +57,9 @@ public class ErrorPOJO {
     }
 
     /**
-     * @param message
-     *            the message to set
+     * Sets the message.
+     *
+     * @param message            the message to set
      */
     public final void setMessage(final String message) {
         this.message = message;
