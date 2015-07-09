@@ -5,14 +5,14 @@ import java.util.List;
 
 public class InstituteList {
 
-	private List<Institution> instituteList;
+	private List<Institution> institutes;
 
-	public List<Institution> getInstituteList() {
-		if (instituteList == null) {
-			instituteList = new ArrayList<Institution>();
+	public List<Institution> getinstitutes() {
+		if (institutes == null) {
+			institutes = new ArrayList<Institution>();
 		}
 
-		return instituteList;
+		return institutes;
 	}
 
 }

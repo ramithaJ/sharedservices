@@ -4,7 +4,14 @@ public class Institution {
 	
 	private String instituteCode;
 	private String instituteName;
+	private Discount discount;
 
+	public Discount getDiscount() {
+		return discount;
+	}
+	public void setDiscount(Discount discount) {
+		this.discount = discount;
+	}
 	public String getInstituteCode() {
 		return instituteCode;
 	}

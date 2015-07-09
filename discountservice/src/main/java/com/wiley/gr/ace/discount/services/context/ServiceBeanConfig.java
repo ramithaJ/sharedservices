@@ -11,8 +11,12 @@
  *******************************************************************************/
 package com.wiley.gr.ace.discount.services.context;
 
+import javax.servlet.MultipartConfigElement;
+
+import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.wiley.gr.ace.discount.services.service.DiscountService;
 import com.wiley.gr.ace.discount.services.service.impl.DiscountServiceImpl;
@@ -24,5 +28,13 @@ public class ServiceBeanConfig {
     public DiscountService discountService() {
         return new DiscountServiceImpl();
     }
-          
+ 
+    
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver=new CommonsMultipartResolver();
+        resolver.setDefaultEncoding("utf-8");
+        return resolver;
+    }
+    
 }

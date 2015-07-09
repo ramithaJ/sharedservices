@@ -12,6 +12,12 @@
 package com.wiley.gr.ace.discount.controller;
 
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -24,9 +30,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.wiles.gr.ace.discount.exception.ASException;
 import com.wiles.gr.ace.discount.exception.ASExceptionController;
 import com.wiley.gr.ace.discount.services.service.DiscountService;
 import com.wiley.gr.ace.authorservices.model.Service;
@@ -109,7 +117,7 @@ public class DiscountController extends ASExceptionController {
      * @param institutionCode to be set
      * @return {@link Service}
      */
-    @RequestMapping(value = "/discounts/institution/{institutionCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/discounts/institutions/{institutionCode}", method = RequestMethod.GET)
     public final Service getDiscForInstitutions(@PathVariable("institutionCode") String institutionCode) {
         
         Service service = new Service();
@@ -138,34 +146,46 @@ public class DiscountController extends ASExceptionController {
 		return service;
     }
     
-    /**
-     * Method returns discount details for given discoout code. 
-     * @param discountCode to be set.
-     * @return {@link Service}
-     */
-    @RequestMapping(value = "/discount/{discountCode}", method = RequestMethod.GET)
-    public final Service getDiscDetails(@PathVariable("discountCode") String discountCode) {
-        
-    	
-        Service service = new Service();
-        service.setPayload(discountService.getDiscDetails(discountCode));
-        
-        LOGGER.info("Return discount details for discount code " + discountCode+ " sucessfully");
-        
-		return service;
-    }
-    
+ 
     /**
      * Service to upload the discount data  csv file.
      * @return {@link Service}
      */
-    @RequestMapping(value = "/discounts/file", method = RequestMethod.POST)
-    public final Service upload() {
-        
-        Service service = new Service();
-		return service;
-    }
-    
+	@RequestMapping(value = "/discounts/upload", method = RequestMethod.POST)
+	public @ResponseBody String handleFileUpload(@RequestParam("file") MultipartFile file) {
+		String name = "test11";
+		if (!file.isEmpty()) {
+			try {
+				
+				String  obj = new String();
+				byte[] bytes = file.getBytes();
+				
+				ByteArrayInputStream bis = new ByteArrayInputStream(file.getBytes());
+				
+				ObjectInput in = null;
+				try {
+				  in = new ObjectInputStream(bis);
+				  Object o = in.readObject();
+				
+				}catch(Exception e){}
+				
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(name + "-uploaded.txt")));
+				stream.write(bytes);
+				
+					  
+				stream.close();
+				System.out.println(obj);
+				return "You successfully uploaded " + name + " into " + name
+						+ "-uploaded !";
+			} catch (Exception e) {
+				return "You failed to upload " + name + " => " + e.getMessage();
+			}
+		} else {
+			return "You failed to upload " + name
+					+ " because the file was empty.";
+		}
+	}
+  
     /**
      * Service to downlaod the discount data csv file
      * @return 

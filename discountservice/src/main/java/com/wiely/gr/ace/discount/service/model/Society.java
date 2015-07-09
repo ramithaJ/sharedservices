@@ -5,7 +5,14 @@ public class Society {
 	private String societyName;
 	private String valueType;
 	private String value;
+	private String societyCode;
 	
+	public String getSocietyCode() {
+		return societyCode;
+	}
+	public void setSocietyCode(String societyCode) {
+		this.societyCode = societyCode;
+	}
 	public String getSocietyName() {
 		return societyName;
 	}

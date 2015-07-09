@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.wiley.gr.ace</groupId>
-  <artifactId>discount</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+	<groupId>com.wiley.gr.ace</groupId>
+	<artifactId>discount</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 
-  <name>discountService</name>
-  <properties>
+	<name>discountService</name>
+	<properties>
 		<java.version>1.8</java.version>
 		<jdk.version>1.8</jdk.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
@@ -27,6 +27,17 @@
 			<version>${javax.servlet.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.bitbucket.b_c</groupId>
 			<artifactId>jose4j</artifactId>
@@ -67,7 +78,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
@@ -85,7 +96,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-ldap</artifactId>
 			<version>${spring.security.version}</version>
-		</dependency> 
+		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -102,12 +113,13 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${sl4j.version}</version>
 		</dependency>
-		<dependency>
+		
+		<!-- <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${sl4j.version}</version>
 		</dependency>
-
+ -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -119,7 +131,7 @@
 			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
 
-		  <dependency>
+		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0.2</version>
@@ -130,13 +142,9 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.3</version>
 		</dependency>
-		
-		<!-- <dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
-		</dependency>
- -->
+
+		<!-- <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
+			<version>1.0.0.GA</version> </dependency> -->
 	</dependencies>
 	<repositories>
 		<repository>
