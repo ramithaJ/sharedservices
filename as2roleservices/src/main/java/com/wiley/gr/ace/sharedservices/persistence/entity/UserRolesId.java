@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
 
-// Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
+// Generated Jul 7, 2015 5:39:57 PM by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -24,7 +24,7 @@ public class UserRolesId implements java.io.Serializable {
 
     @Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
     public int getUserId() {
-        return this.userId;
+        return userId;
     }
 
     public void setUserId(int userId) {
@@ -33,31 +33,36 @@ public class UserRolesId implements java.io.Serializable {
 
     @Column(name = "ROLE_ID", nullable = false, precision = 22, scale = 0)
     public int getRoleId() {
-        return this.roleId;
+        return roleId;
     }
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
     }
 
+    @Override
     public boolean equals(Object other) {
-        if ((this == other))
+        if (this == other) {
             return true;
-        if ((other == null))
+        }
+        if (other == null) {
             return false;
-        if (!(other instanceof UserRolesId))
+        }
+        if (!(other instanceof UserRolesId)) {
             return false;
-        UserRolesId castOther = (UserRolesId) other;
+        }
+        final UserRolesId castOther = (UserRolesId) other;
 
-        return (this.getUserId() == castOther.getUserId())
-                && (this.getRoleId() == castOther.getRoleId());
+        return getUserId() == castOther.getUserId()
+                && getRoleId() == castOther.getRoleId();
     }
 
+    @Override
     public int hashCode() {
         int result = 17;
 
-        result = 37 * result + this.getUserId();
-        result = 37 * result + this.getRoleId();
+        result = 37 * result + getUserId();
+        result = 37 * result + getRoleId();
         return result;
     }
 

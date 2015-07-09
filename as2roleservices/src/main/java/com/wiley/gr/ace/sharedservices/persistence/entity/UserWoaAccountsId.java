@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
 
-// Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
+// Generated Jul 7, 2015 5:39:57 PM by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -12,58 +12,63 @@ import javax.persistence.Embeddable;
 public class UserWoaAccountsId implements java.io.Serializable {
 
     private int userId;
-    private String woaaccntCd;
+    private String woaInstitutionCd;
 
     public UserWoaAccountsId() {
     }
 
-    public UserWoaAccountsId(int userId, String woaaccntCd) {
+    public UserWoaAccountsId(int userId, String woaInstitutionCd) {
         this.userId = userId;
-        this.woaaccntCd = woaaccntCd;
+        this.woaInstitutionCd = woaInstitutionCd;
     }
 
     @Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
     public int getUserId() {
-        return this.userId;
+        return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    @Column(name = "WOAACCNT_CD", nullable = false, length = 15)
-    public String getWoaaccntCd() {
-        return this.woaaccntCd;
+    @Column(name = "WOA_INSTITUTION_CD", nullable = false, length = 15)
+    public String getWoaInstitutionCd() {
+        return woaInstitutionCd;
     }
 
-    public void setWoaaccntCd(String woaaccntCd) {
-        this.woaaccntCd = woaaccntCd;
+    public void setWoaInstitutionCd(String woaInstitutionCd) {
+        this.woaInstitutionCd = woaInstitutionCd;
     }
 
+    @Override
     public boolean equals(Object other) {
-        if ((this == other))
+        if (this == other) {
             return true;
-        if ((other == null))
+        }
+        if (other == null) {
             return false;
-        if (!(other instanceof UserWoaAccountsId))
+        }
+        if (!(other instanceof UserWoaAccountsId)) {
             return false;
-        UserWoaAccountsId castOther = (UserWoaAccountsId) other;
+        }
+        final UserWoaAccountsId castOther = (UserWoaAccountsId) other;
 
-        return (this.getUserId() == castOther.getUserId())
-                && ((this.getWoaaccntCd() == castOther.getWoaaccntCd()) || (this
-                .getWoaaccntCd() != null
-                && castOther.getWoaaccntCd() != null && this
-                .getWoaaccntCd().equals(castOther.getWoaaccntCd())));
+        return getUserId() == castOther.getUserId()
+                && (getWoaInstitutionCd() == castOther.getWoaInstitutionCd() || getWoaInstitutionCd() != null
+                        && castOther.getWoaInstitutionCd() != null
+                        && getWoaInstitutionCd().equals(
+                                castOther.getWoaInstitutionCd()));
     }
 
+    @Override
     public int hashCode() {
         int result = 17;
 
-        result = 37 * result + this.getUserId();
+        result = 37 * result + getUserId();
         result = 37
                 * result
-                + (getWoaaccntCd() == null ? 0 : this.getWoaaccntCd()
-                .hashCode());
+                + (getWoaInstitutionCd() == null ? 0 : getWoaInstitutionCd()
+                        .hashCode());
         return result;
     }
 

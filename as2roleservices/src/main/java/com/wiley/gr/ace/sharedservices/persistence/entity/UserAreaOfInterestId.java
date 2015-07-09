@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
 
-// Generated May 26, 2015 6:09:14 PM by Hibernate Tools 3.4.0.CR1
+// Generated Jul 7, 2015 5:39:57 PM by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,60 +11,67 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UserAreaOfInterestId implements java.io.Serializable {
 
-    private int userId;
+    private Integer userId;
     private String areaOfInterestCd;
 
     public UserAreaOfInterestId() {
     }
 
-    public UserAreaOfInterestId(int userId, String areaOfInterestCd) {
+    public UserAreaOfInterestId(Integer userId, String areaOfInterestCd) {
         this.userId = userId;
         this.areaOfInterestCd = areaOfInterestCd;
     }
 
     @Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
-    public int getUserId() {
-        return this.userId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
     @Column(name = "AREA_OF_INTEREST_CD", nullable = false, length = 15)
     public String getAreaOfInterestCd() {
-        return this.areaOfInterestCd;
+        return areaOfInterestCd;
     }
 
     public void setAreaOfInterestCd(String areaOfInterestCd) {
         this.areaOfInterestCd = areaOfInterestCd;
     }
 
+    @Override
     public boolean equals(Object other) {
-        if ((this == other))
+        if (this == other) {
             return true;
-        if ((other == null))
+        }
+        if (other == null) {
             return false;
-        if (!(other instanceof UserAreaOfInterestId))
+        }
+        if (!(other instanceof UserAreaOfInterestId)) {
             return false;
-        UserAreaOfInterestId castOther = (UserAreaOfInterestId) other;
+        }
+        final UserAreaOfInterestId castOther = (UserAreaOfInterestId) other;
 
-        return (this.getUserId() == castOther.getUserId())
-                && ((this.getAreaOfInterestCd() == castOther
-                .getAreaOfInterestCd()) || (this.getAreaOfInterestCd() != null
-                && castOther.getAreaOfInterestCd() != null && this
-                .getAreaOfInterestCd().equals(
-                        castOther.getAreaOfInterestCd())));
+        return (getUserId() == castOther.getUserId() || getUserId() != null
+                && castOther.getUserId() != null
+                && getUserId().equals(castOther.getUserId()))
+                && (getAreaOfInterestCd() == castOther.getAreaOfInterestCd() || getAreaOfInterestCd() != null
+                        && castOther.getAreaOfInterestCd() != null
+                        && getAreaOfInterestCd().equals(
+                                castOther.getAreaOfInterestCd()));
     }
 
+    @Override
     public int hashCode() {
         int result = 17;
 
-        result = 37 * result + this.getUserId();
+        result = 37 * result
+                + (getUserId() == null ? 0 : getUserId().hashCode());
         result = 37
                 * result
-                + (getAreaOfInterestCd() == null ? 0 : this
-                .getAreaOfInterestCd().hashCode());
+                + (getAreaOfInterestCd() == null ? 0 : getAreaOfInterestCd()
+                        .hashCode());
         return result;
     }
 

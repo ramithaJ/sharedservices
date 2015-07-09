@@ -1,6 +1,6 @@
 package com.wiley.gr.ace.sharedservices.persistence.entity;
 
-// Generated May 27, 2015 4:45:01 PM by Hibernate Tools 3.4.0.CR1
+// Generated Jul 7, 2015 5:39:57 PM by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +20,7 @@ public class InviteResetpwdLog implements java.io.Serializable {
     private String emailAddress;
     private String userType;
     private String status;
+    private String type;
 
     public InviteResetpwdLog() {
     }
@@ -30,46 +31,47 @@ public class InviteResetpwdLog implements java.io.Serializable {
     }
 
     public InviteResetpwdLog(String guid, String firstName, String lastName,
-                             String emailAddress, String userType, String status) {
+            String emailAddress, String userType, String status, String type) {
         this.guid = guid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.userType = userType;
         this.status = status;
+        this.type = type;
     }
 
     @Id
     @Column(name = "GUID", unique = true, nullable = false, length = 200)
     public String getGuid() {
-        return this.guid;
+        return guid;
     }
 
     public void setGuid(String guid) {
         this.guid = guid;
     }
 
-    @Column(name = "FIRST_NAME", length = 200)
+    @Column(name = "FIRST_NAME", length = 100)
     public String getFirstName() {
-        return this.firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    @Column(name = "LAST_NAME", length = 200)
+    @Column(name = "LAST_NAME", length = 100)
     public String getLastName() {
-        return this.lastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    @Column(name = "EMAIL_ADDRESS", nullable = false, length = 256)
+    @Column(name = "EMAIL_ADDRESS", nullable = false, length = 100)
     public String getEmailAddress() {
-        return this.emailAddress;
+        return emailAddress;
     }
 
     public void setEmailAddress(String emailAddress) {
@@ -78,7 +80,7 @@ public class InviteResetpwdLog implements java.io.Serializable {
 
     @Column(name = "USER_TYPE", length = 20)
     public String getUserType() {
-        return this.userType;
+        return userType;
     }
 
     public void setUserType(String userType) {
@@ -87,11 +89,20 @@ public class InviteResetpwdLog implements java.io.Serializable {
 
     @Column(name = "STATUS", length = 20)
     public String getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Column(name = "TYPE", length = 50)
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

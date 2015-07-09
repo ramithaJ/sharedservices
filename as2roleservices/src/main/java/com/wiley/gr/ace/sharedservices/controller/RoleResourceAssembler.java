@@ -1,27 +1,52 @@
 package com.wiley.gr.ace.sharedservices.controller;
 
-import com.wiley.gr.ace.sharedservices.service.Role;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import com.wiley.gr.ace.sharedservices.service.Role;
 
+/**
+ * The Class RoleResourceAssembler.
+ */
 @Component
-public class RoleResourceAssembler extends ResourceAssemblerSupport<Role, RoleResource> {
+public class RoleResourceAssembler extends
+ResourceAssemblerSupport<Role, RoleResource> {
+
+    /**
+     * Instantiates a new role resource assembler.
+     */
     public RoleResourceAssembler() {
         super(RoleController.class, RoleResource.class);
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.hateoas.ResourceAssembler#toResource(java.lang.Object
+     * )
+     */
     @Override
     public RoleResource toResource(Role role) {
-        RoleResource resource = createResourceWithId(role.getRoleId(), role);
-        resource.add(linkTo(methodOn(RoleController.class).getRolePermissions(role.getRoleId())).withRel("permissions"));
+        final RoleResource resource = createResourceWithId(role.getRoleId(),
+                role);
+        resource.add(ControllerLinkBuilder.linkTo(
+                ControllerLinkBuilder.methodOn(RoleController.class)
+                .getRolePermissions(role.getRoleId())).withRel(
+                        "permissions"));
         return resource;
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.hateoas.mvc.ResourceAssemblerSupport#instantiateResource
+     * (java.lang.Object)
+     */
     @Override
     protected RoleResource instantiateResource(Role role) {
-        return new RoleResource(role.getRoleId(), role.getName());
+        return new RoleResource(role.getRoleId(), role.getRoleName());
     }
 }
