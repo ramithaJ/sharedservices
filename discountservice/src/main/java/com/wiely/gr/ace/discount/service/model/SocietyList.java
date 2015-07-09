@@ -5,13 +5,13 @@ import java.util.List;
 
 public class SocietyList {
 
-	private List<Society> societies;
+	private List<Society> societyDiscounts;
 
 	public List<Society> getSocieties() {
-		if (societies == null) {
-			societies = new ArrayList<Society>();
+		if (societyDiscounts == null) {
+			societyDiscounts = new ArrayList<Society>();
 		}
-		return societies;
+		return societyDiscounts;
 	}
 
 }
