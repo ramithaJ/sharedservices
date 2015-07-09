@@ -97,21 +97,25 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 	@Override
 	public boolean saveOrUpdateTemplate(Template template) throws Exception {
 		Session session = null;
+		boolean isSaved = false;
 		try {
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
 			session.saveOrUpdate(template);
 			session.getTransaction().commit();
-			return true;
+			isSaved = true;
 
 		} catch (Exception e) {
-			return false;
+			isSaved = false;
+			if (null != session)
+				session.getTransaction().rollback();
 		} finally {
 			if (session != null) {
 				session.flush();
 				session.close();
 			}
 		}
+		return isSaved;
 	}
 
 	/**
@@ -142,6 +146,8 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
 				deleteStatus = true;
 			} catch (Exception e) {
 				deleteStatus = false;
+				if (null != session)
+					session.getTransaction().rollback();
 			} finally {
 				if (session != null) {
 					session.flush();

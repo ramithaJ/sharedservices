@@ -71,21 +71,26 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 	@Override
 	public boolean saveOrUpdateSchedule(Schedule schedule) throws Exception {
 		Session session = null;
+		boolean isSaved = false;
 		try {
 			session = getSessionFactory().openSession();
 			session.beginTransaction();
 			session.saveOrUpdate(schedule);
 			session.getTransaction().commit();
-			return true;
+			isSaved = true;
 
 		} catch (Exception e) {
-			return false;
+			isSaved = false;
+			if (null != session)
+				session.getTransaction().rollback();
 		} finally {
 			if (session != null) {
 				session.flush();
 				session.close();
 			}
 		}
+
+		return isSaved;
 	}
 
 	/**
@@ -115,6 +120,8 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 				isDeleted = true;
 			} catch (Exception e) {
 				isDeleted = false;
+				if (null != session)
+					session.getTransaction().rollback();
 			} finally {
 				if (session != null) {
 					session.flush();
@@ -287,6 +294,8 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 
 				} catch (Exception e) {
 					isSet = false;
+					if (null != session)
+						session.getTransaction().rollback();
 				} finally {
 					if (!StringUtils.isEmpty(session)) {
 						session.flush();
@@ -394,7 +403,11 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
 			session.getTransaction().commit();
 			notificationId = notification.getId();
 
+		} catch (Exception e) {
+			if (null != session)
+				session.getTransaction().rollback();
 		} finally {
+
 			if (session != null) {
 				session.flush();
 				session.close();
