@@ -22,48 +22,48 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class ErrorPOJO {
 
-	/** The code. */
-	private int code;
+    /** The code. */
+    private int code;
 
-	/** The message. */
-	private String message;
+    /** The message. */
+    private String message;
 
-	/**
-	 * Gets the code.
-	 *
-	 * @return the code
-	 */
-	public int getCode() {
-		return code;
-	}
+    /**
+     * Gets the code.
+     *
+     * @return the code
+     */
+    public final int getCode() {
+        return code;
+    }
 
-	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
-	 */
-	public void setCode(int code) {
-		this.code = code;
-	}
+    /**
+     * Sets the code.
+     *
+     * @param code
+     *            the new code
+     */
+    public final void setCode(final int code) {
+        this.code = code;
+    }
 
-	/**
-	 * Gets the message.
-	 *
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
-	}
+    /**
+     * Gets the message.
+     *
+     * @return the message
+     */
+    public final String getMessage() {
+        return message;
+    }
 
-	/**
-	 * Sets the message.
-	 *
-	 * @param message
-	 *            the new message
-	 */
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    /**
+     * Sets the message.
+     *
+     * @param message
+     *            the new message
+     */
+    public final void setMessage(final String message) {
+        this.message = message;
+    }
 
 }

@@ -25,14 +25,14 @@ import com.wiley.gr.ace.authorservices.services.service.impl.CrossRefServiceImpl
 @Configuration
 public class CrossRefServiceBeanConfig {
 
-	/**
-	 * Cross ref service.
-	 *
-	 * @return the cross ref service
-	 */
-	@Bean(name = "CrossRefService")
-	public CrossRefService crossRefService() {
-		return new CrossRefServiceImpl();
-	}
+    /**
+     * Cross ref service.
+     *
+     * @return the cross ref service
+     */
+    @Bean(name = "CrossRefService")
+    public final CrossRefService crossRefService() {
+        return new CrossRefServiceImpl();
+    }
 
 }

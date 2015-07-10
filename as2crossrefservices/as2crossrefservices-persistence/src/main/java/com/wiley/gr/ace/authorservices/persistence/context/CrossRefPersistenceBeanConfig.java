@@ -26,24 +26,24 @@ import com.wiley.gr.ace.authorservices.persistence.services.impl.CrossRefDAOImpl
 @Configuration
 public class CrossRefPersistenceBeanConfig {
 
-	/**
-	 * Cross ref hibernate connection.
-	 *
-	 * @return the cross ref hibernate connection
-	 */
-	@Bean(name = "CrossRefHibernateConnection")
-	public CrossRefHibernateConnection crossRefHibernateConnection() {
-		return new CrossRefHibernateConnection();
-	}
+    /**
+     * Cross ref hibernate connection.
+     *
+     * @return the cross ref hibernate connection
+     */
+    @Bean(name = "CrossRefHibernateConnection")
+    public final CrossRefHibernateConnection crossRefHibernateConnection() {
+        return new CrossRefHibernateConnection();
+    }
 
-	/**
-	 * Cross ref dao.
-	 *
-	 * @return the cross ref dao
-	 */
-	@Bean(name = "CrossRefDAO")
-	public CrossRefDAO crossRefDAO() {
-		return new CrossRefDAOImpl();
-	}
+    /**
+     * Cross ref dao.
+     *
+     * @return the cross ref dao
+     */
+    @Bean(name = "CrossRefDAO")
+    public final CrossRefDAO crossRefDAO() {
+        return new CrossRefDAOImpl();
+    }
 
 }

@@ -38,7 +38,7 @@ public class Service {
      *
      * @return the status
      */
-    public String getStatus() {
+    public final String getStatus() {
         return status;
     }
     
@@ -47,7 +47,7 @@ public class Service {
      *
      * @param status the new status
      */
-    public void setStatus(String status) {
+    public final void setStatus(final String status) {
         this.status = status;
     }
     
@@ -56,7 +56,7 @@ public class Service {
      *
      * @return the payload
      */
-    public Object getPayload() {
+    public final Object getPayload() {
         return payload;
     }
     
@@ -65,7 +65,7 @@ public class Service {
      *
      * @param payload the new payload
      */
-    public void setPayload(Object payload) {
+    public final void setPayload(final Object payload) {
         this.payload = payload;
     }
     
@@ -74,7 +74,7 @@ public class Service {
      *
      * @return the error
      */
-    public ErrorPOJO getError() {
+    public final ErrorPOJO getError() {
         return error;
     }
     
@@ -83,7 +83,7 @@ public class Service {
      *
      * @param error the new error
      */
-    public void setError(ErrorPOJO error) {
+    public final void setError(final ErrorPOJO error) {
         this.error = error;
     }
     

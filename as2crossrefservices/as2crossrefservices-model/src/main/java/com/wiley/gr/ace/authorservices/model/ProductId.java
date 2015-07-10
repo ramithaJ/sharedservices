@@ -22,25 +22,26 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class ProductId {
-	
-	/** The dh id. */
-	private String dhId;
 
-	/**
-	 * Gets the dh id.
-	 *
-	 * @return the dh id
-	 */
-	public final String getDhId() {
-		return dhId;
-	}
+    /** The dh id. */
+    private String dhId;
 
-	/**
-	 * Sets the dh id.
-	 *
-	 * @param dhId the new dh id
-	 */
-	public final void setDhId(String dhId) {
-		this.dhId = dhId;
-	}
+    /**
+     * Gets the dh id.
+     *
+     * @return the dh id
+     */
+    public final String getDhId() {
+        return dhId;
+    }
+
+    /**
+     * Sets the dh id.
+     *
+     * @param dhId
+     *            the new dh id
+     */
+    public final void setDhId(final String dhId) {
+        this.dhId = dhId;
+    }
 }
