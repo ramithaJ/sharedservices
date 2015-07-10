@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
 import com.wiley.gr.ace.staticcontentservices.services.service.impl.StaticContentFetchServiceImpl;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class StaticContentFetchBeanConfig.
  */
@@ -22,4 +22,5 @@ public class StaticContentFetchBeanConfig {
 	public StaticContentFetchService staticContentFetchService() {
 		return new StaticContentFetchServiceImpl();
 	}
+	
 }

@@ -2,7 +2,7 @@ package com.wiley.gr.ace.staticcontentservices.model.external;
 
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UIMessageCatalog.
  */
@@ -10,8 +10,18 @@ public class UIMessageCatalog {
 
 	/** The page name. */
 	private String pageName;
+	
+	private String title;
 
-	/** The host. */
+	public final String getTitle() {
+        return title;
+    }
+
+    public final void setTitle(String title) {
+        this.title = title;
+    }
+
+    /** The host. */
 	private String host;
 
 	/** The sort order. */
