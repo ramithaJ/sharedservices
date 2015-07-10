@@ -23,6 +23,8 @@ import com.wiley.gr.ace.authorservices.persistence.services.impl.TemplateManagem
 
 /**
  * The Class NotificationTemplatePersistenceBeanConfig.
+ * 
+ * @author virtusa version 1.0
  */
 @Configuration
 public class NotificationTemplatePersistenceBeanConfig {

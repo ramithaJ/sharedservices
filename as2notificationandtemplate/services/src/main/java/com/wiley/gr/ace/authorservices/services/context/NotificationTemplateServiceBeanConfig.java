@@ -22,6 +22,8 @@ import com.wiley.gr.ace.authorservices.services.service.impl.TemplateManagementS
 
 /**
  * The Class NotificationTemplateServiceBeanConfig.
+ * 
+ * @author virtusa version 1.0
  */
 @Configuration
 public class NotificationTemplateServiceBeanConfig {
