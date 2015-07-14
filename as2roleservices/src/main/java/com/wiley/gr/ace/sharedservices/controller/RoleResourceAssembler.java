@@ -11,7 +11,7 @@ import com.wiley.gr.ace.sharedservices.service.Role;
  */
 @Component
 public class RoleResourceAssembler extends
-ResourceAssemblerSupport<Role, RoleResource> {
+        ResourceAssemblerSupport<Role, RoleResource> {
 
     /**
      * Instantiates a new role resource assembler.
@@ -22,7 +22,7 @@ ResourceAssemblerSupport<Role, RoleResource> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.springframework.hateoas.ResourceAssembler#toResource(java.lang.Object
      * )
@@ -33,14 +33,14 @@ ResourceAssemblerSupport<Role, RoleResource> {
                 role);
         resource.add(ControllerLinkBuilder.linkTo(
                 ControllerLinkBuilder.methodOn(RoleController.class)
-                .getRolePermissions(role.getRoleId())).withRel(
-                        "permissions"));
+                        .getRolePermissions(role.getRoleId())).withRel(
+                "permissions"));
         return resource;
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.springframework.hateoas.mvc.ResourceAssemblerSupport#instantiateResource
      * (java.lang.Object)

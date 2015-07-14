@@ -16,7 +16,7 @@ public interface PermissionRepository {
      *            the name
      * @return the role
      */
-    Role createNewRole(String name);
+    void createNewRole(Role role) throws SharedServiceException;
 
     /**
      * Find role.
@@ -130,4 +130,33 @@ public interface PermissionRepository {
      *             the shared service exception
      */
     void updateRole(int roleId, Role role) throws SharedServiceException;
+
+    /**
+     * @param role
+     * @throws SharedServiceException
+     */
+    void updatePermission(List<Permission> permissionList, int roleId)
+            throws SharedServiceException;
+
+    /**
+     * @param userId
+     * @param articleId
+     * @throws SharedServiceException
+     */
+    void updateAdditionalPermissions(int userId, int articleId,
+            AdditionalPermission additionalPermission)
+            throws SharedServiceException;
+
+    /**
+     * @param role
+     * @throws SharedServiceException
+     */
+    void createNewPermission(Permission permission)
+            throws SharedServiceException;
+
+    /**
+     * @return List of roles
+     * @throws SharedServiceException
+     */
+    List<Permission> findPermissions() throws SharedServiceException;
 }

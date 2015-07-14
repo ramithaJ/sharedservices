@@ -3,10 +3,6 @@ package com.wiley.gr.ace.sharedservices.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,19 +38,19 @@ public class RoleController extends AbstractController {
     /**
      * Creates the new role.
      *
-     * @param newRole
-     *            the new role
+     * @param role
+     *            the role
      * @return the response entity
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Void> createNewRole(@RequestBody NewRole newRole) {
-        final Role role = permissionRepository.createNewRole(newRole.getName());
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ControllerLinkBuilder.linkTo(
-                ControllerLinkBuilder.methodOn(getClass()).getRole(
-                        role.getRoleId())).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    public void createNewRole(@RequestBody Role role) {
+        try {
+            permissionRepository.createNewRole(role);
+        } catch (final SharedServiceException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -81,7 +77,7 @@ public class RoleController extends AbstractController {
     @ResponseBody
     public Role getRole(@PathVariable("roleId") int roleId) {
         try {
-            return findRoleAndValidate(roleId);
+            return permissionRepository.findRole(roleId);
         } catch (final SharedServiceException e) {
             e.printStackTrace();
         }

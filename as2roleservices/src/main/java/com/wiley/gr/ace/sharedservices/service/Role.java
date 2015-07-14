@@ -1,14 +1,12 @@
 package com.wiley.gr.ace.sharedservices.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * The Class Role.
  */
-@JsonInclude()
 public class Role {
 
     /** The role id. */
@@ -20,9 +18,27 @@ public class Role {
     /** The role description. */
     private String roleDescription;
 
+    /** The role type. */
+    private String roleType;
+
+    /** The created date. */
+    private Date createdDate;
+
+    /** The updated date. */
+    private Date updatedDate;
+
+    /** The created by. */
+    private int createdBy;
+
+    /** The updated by. */
+    private int updatedBy;
+
     /** The permissions. */
     private List<Permission> permissions = new ArrayList<Permission>();
 
+    /**
+     * Instantiates a new role.
+     */
     public Role() {
     }
 
@@ -116,6 +132,101 @@ public class Role {
      */
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    /**
+     * Gets the role type.
+     *
+     * @return the roleType
+     */
+    public final String getRoleType() {
+        return roleType;
+    }
+
+    /**
+     * Gets the created date.
+     *
+     * @return the createdDate
+     */
+    public final Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * Gets the updated date.
+     *
+     * @return the updatedDate
+     */
+    public final Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    /**
+     * Gets the created by.
+     *
+     * @return the createdBy
+     */
+    public final int getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * Gets the updated by.
+     *
+     * @return the updatedBy
+     */
+    public final int getUpdatedBy() {
+        return updatedBy;
+    }
+
+    /**
+     * Sets the role type.
+     *
+     * @param roleType
+     *            the roleType to set
+     */
+    public final void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
+
+    /**
+     * Sets the created date.
+     *
+     * @param createdDate
+     *            the createdDate to set
+     */
+    public final void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    /**
+     * Sets the updated date.
+     *
+     * @param updatedDate
+     *            the updatedDate to set
+     */
+    public final void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    /**
+     * Sets the created by.
+     *
+     * @param createdBy
+     *            the createdBy to set
+     */
+    public final void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * Sets the updated by.
+     *
+     * @param updatedBy
+     *            the updatedBy to set
+     */
+    public final void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
 }

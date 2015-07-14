@@ -11,7 +11,7 @@ import com.wiley.gr.ace.sharedservices.service.Permission;
  */
 @Component
 public class PermissionResourceAssembler extends
-        ResourceAssemblerSupport<Permission, PermissionResource> {
+ResourceAssemblerSupport<Permission, PermissionResource> {
 
     /** The role resource assembler. */
     @Autowired
@@ -26,7 +26,7 @@ public class PermissionResourceAssembler extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.springframework.hateoas.ResourceAssembler#toResource(java.lang.Object
      * )
@@ -34,9 +34,9 @@ public class PermissionResourceAssembler extends
     @Override
     public PermissionResource toResource(Permission permission) {
         final PermissionResource permissionResource = createResourceWithId(
-                permission.getCode(), permission);
-        permissionResource.setCode(permission.getCode());
-        permissionResource.setName(permission.getName());
+                permission.getPermissionCd(), permission);
+        permissionResource.setCode(permission.getPermissionCd());
+        permissionResource.setName(permission.getPermissionName());
         /*
          * permissionResource.setGroup(permission.getGroup());
          * permissionResource.setPublishingDate(permission.getPublishingDate());
