@@ -12,17 +12,17 @@
 package com.wiley.gr.ace.authorservices.web.controllers;
 
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.authorservices.model.ErrorPOJO;
@@ -55,7 +55,151 @@ public class NotificationManagementController {
     /** The template management service. */
     @Autowired(required = true)
     private TemplateManagementService templateManagementService;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noSchedule.code}")
+    private int noScheduleErrorCode;
 
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noSchedule.message}")
+    private String noScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.getSchedule.code}")
+    private int getScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.getSchedule.message}")
+    private String getScheduleErrorMessage;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noDeleteSchedule.code}")
+    private int noDeleteScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noDeleteSchedule.message}")
+    private String noDeleteScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.deleteSchedule.code}")
+    private int deleteScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.deleteSchedule.message}")
+    private String deleteScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noUpdateSchedule.code}")
+    private int noUpdateScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noUpdateSchedule.message}")
+    private String noUpdateScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.updateSchedule.code}")
+    private int updateScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.updateSchedule.message}")
+    private String updateScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noCreateSchedule.code}")
+    private int noCreateScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noCreateSchedule.message}")
+    private String noCreateScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.createSchedule.code}")
+    private int createScheduleErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.createSchedule.message}")
+    private String createScheduleErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noTemplateLookup.code}")
+    private int noTemplateLookupErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noTemplateLookup.message}")
+    private String noTemplateLookupErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.templateLookup.code}")
+    private int templateLookupErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.templateLookup.message}")
+    private String templateLookupErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noNotification.code}")
+    private int noNotificationErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noNotification.message}")
+    private String noNotificationErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.getNotification.code}")
+    private int getNotificationErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.getNotification.message}")
+    private String getNotificationErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noSetNotificationFlag.code}")
+    private int noSetNotificationFlagErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noSetNotificationFlag.message}")
+    private String noSetNotificationFlagErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.setNotificationFlag.code}")
+    private int setNotificationFlagErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.setNotificationFlag.message}")
+    private String setNotificationFlagErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noNotificationHistory.code}")
+    private int noNotificationHistoryErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.noNotificationHistory.message}")
+    private String noNotificationHistoryErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.getNotificationHistory.code}")
+    private int getNotificationHistoryErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.getNotificationHistory.message}")
+    private String getNotificationHistoryErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.sendNotification.code}")
+    private int sendNotificationErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.sendNotification.message}")
+    private String sendNotificationErrorMessage;
+    
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.resendNotification.code}")
+    private int resendNotificationErrorCode;
+
+    /** value from props file configured. */
+    @Value("${NotificationManagementController.sendNotification.message}")
+    private String resendNotificationErrorMessage;
+    
     /**
      * Gets the schedule.
      *
@@ -65,8 +209,8 @@ public class NotificationManagementController {
      *            the schedule id
      * @return the schedule
      */
-    @RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service getSchedule(
+    @RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.GET)
+    public final Service getSchedule(
             @PathVariable("applicationId") final String applicationId,
             @PathVariable("scheduleId") final String scheduleId) {
         LOGGER.info("inside getSchedule method of NotificationManagementController");
@@ -80,16 +224,16 @@ public class NotificationManagementController {
                 service.setPayload(schedule);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
-                error.setCode(301);
-                error.setMessage("No records found for the required criteria");
+                error.setCode(noScheduleErrorCode);
+                error.setMessage(noScheduleErrorMessage);
                 service.setStatus("ERROR");
                 service.setError(error);
             }
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(302);
-            error.setMessage("Error Fetching Schedule");
+            error.setCode(getScheduleErrorCode);
+            error.setMessage(getScheduleErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -106,7 +250,7 @@ public class NotificationManagementController {
      * @return the service
      */
     @RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.DELETE)
-    public @ResponseBody final Service deleteSchedule(
+    public final Service deleteSchedule(
             @PathVariable("applicationId") final String applicationId,
             @PathVariable("scheduleId") final String scheduleId) {
         LOGGER.info("inside deleteSchedule method of NotificationManagementController");
@@ -118,8 +262,8 @@ public class NotificationManagementController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(303);
-            error.setMessage("Error Fetching Schedule");
+            error.setCode(deleteScheduleErrorCode);
+            error.setMessage(deleteScheduleErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -128,8 +272,8 @@ public class NotificationManagementController {
             service.setPayload(isDeleted);
         } else {
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(304);
-            error.setMessage("No records found for the required criteria");
+            error.setCode(noDeleteScheduleErrorCode);
+            error.setMessage(noDeleteScheduleErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
@@ -148,7 +292,7 @@ public class NotificationManagementController {
      * @return the service
      */
     @RequestMapping(value = "/{applicationId}/schedule/{scheduleId}", method = RequestMethod.PUT)
-    public @ResponseBody final Service updateSchedule(
+    public final Service updateSchedule(
             @PathVariable("scheduleId") final String scheduleId,
             @PathVariable("applicationId") final String applicationId,
             @RequestBody final ScheduleObj scheduleObj) {
@@ -161,8 +305,8 @@ public class NotificationManagementController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(305);
-            error.setMessage("Error Fetching Schedule");
+            error.setCode(updateScheduleErrorCode);
+            error.setMessage(updateScheduleErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -170,8 +314,8 @@ public class NotificationManagementController {
             service.setStatus("SUCCESS");
         } else {
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(306);
-            error.setMessage("No records found for the required criteria");
+            error.setCode(noUpdateScheduleErrorCode);
+            error.setMessage(noUpdateScheduleErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
@@ -186,8 +330,7 @@ public class NotificationManagementController {
      * @return the service
      */
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody final Service createSchedule(
-            @RequestBody final ScheduleObj schedule) {
+    public final Service createSchedule(@RequestBody final ScheduleObj schedule) {
         LOGGER.info("inside createSchedule method of NotificationManagementController");
         Service service = new Service();
         boolean isCreated = false;
@@ -196,8 +339,8 @@ public class NotificationManagementController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(307);
-            error.setMessage("Error creating Schedule");
+            error.setCode(createScheduleErrorCode);
+            error.setMessage(createScheduleErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -206,11 +349,10 @@ public class NotificationManagementController {
             service.setPayload(isCreated);
         } else {
             ErrorPOJO error = new ErrorPOJO();
-            error.setCode(308);
-            error.setMessage("No records found for the required criteria");
+            error.setCode(noCreateScheduleErrorCode);
+            error.setMessage(noCreateScheduleErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
-
         }
         return service;
     }
@@ -226,8 +368,8 @@ public class NotificationManagementController {
      *            the type
      * @return the service
      */
-    @RequestMapping(value = "/{applicationId}/schedule/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service templateLookup(
+    @RequestMapping(value = "/{applicationId}/schedule/template/{templateId}", method = RequestMethod.GET)
+    public final Service templateLookup(
             @PathVariable final String applicationId,
             @PathVariable final String templateId,
             @RequestParam(value = "type") final String type) {
@@ -241,8 +383,8 @@ public class NotificationManagementController {
                 service.setPayload(scheduleList);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
-                error.setCode(309);
-                error.setMessage("No records found for the required criteria");
+                error.setCode(noTemplateLookupErrorCode);
+                error.setMessage(noTemplateLookupErrorMessage);
                 service.setStatus("FAILURE");
                 service.setError(error);
 
@@ -250,8 +392,8 @@ public class NotificationManagementController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(310);
-            error.setMessage("Error fetching Schedule");
+            error.setCode(templateLookupErrorCode);
+            error.setMessage(templateLookupErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
@@ -267,8 +409,8 @@ public class NotificationManagementController {
      *            the notification id
      * @return the notification
      */
-    @RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service getNotification(
+    @RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.GET)
+    public final Service getNotification(
             @PathVariable("applicationId") final String applicationId,
             @PathVariable("notificationId") final Integer notificationId) {
         LOGGER.info("inside getNotification method of NotificationManagementController");
@@ -282,16 +424,16 @@ public class NotificationManagementController {
                 service.setPayload(notification);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
-                error.setCode(311);
-                error.setMessage("No records found for the required criteria");
+                error.setCode(noNotificationErrorCode);
+                error.setMessage(noNotificationErrorMessage);
                 service.setStatus("ERROR");
                 service.setError(error);
             }
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(312);
-            error.setMessage("Error Fetching Notification");
+            error.setCode(getNotificationErrorCode);
+            error.setMessage(getNotificationErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -307,8 +449,8 @@ public class NotificationManagementController {
      *            the notification id
      * @return the service
      */
-    @RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service setNotificationFlag(
+    @RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.PUT)
+    public final Service setNotificationFlag(
             @PathVariable("applicationId") final String applicationId,
             @PathVariable("notificationId") final Integer notificationId) {
         LOGGER.info("inside setNotificationFlag method of NotificationManagementController");
@@ -320,8 +462,8 @@ public class NotificationManagementController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(313);
-            error.setMessage("Error Fetching Notification");
+            error.setCode(setNotificationFlagErrorCode);
+            error.setMessage(setNotificationFlagErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -330,8 +472,8 @@ public class NotificationManagementController {
             service.setPayload(isSet);
         } else {
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(314);
-            error.setMessage("Flag already set");
+            error.setCode(noSetNotificationFlagErrorCode);
+            error.setMessage(noSetNotificationFlagErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
@@ -357,8 +499,8 @@ public class NotificationManagementController {
      *            the unread flag
      * @return the notification history
      */
-    @RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service getNotificationHistory(
+    @RequestMapping(value = "/{applicationId}", method = RequestMethod.GET)
+    public final Service getNotificationHistory(
             @PathVariable("applicationId") final String applicationId,
             @RequestParam(value = "from") final String from,
             @RequestParam(value = "to") final String to,
@@ -378,16 +520,16 @@ public class NotificationManagementController {
                 service.setPayload(notificationHistory);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
-                error.setCode(315);
-                error.setMessage("No records found for the required criteria");
+                error.setCode(noNotificationHistoryErrorCode);
+                error.setMessage(noNotificationHistoryErrorMessage);
                 service.setStatus("ERROR");
                 service.setError(error);
             }
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(316);
-            error.setMessage("Error Fetching Notification History");
+            error.setCode(getNotificationHistoryErrorCode);
+            error.setMessage(getNotificationHistoryErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -407,8 +549,8 @@ public class NotificationManagementController {
      *            the notification details
      * @return the service
      */
-    @RequestMapping(value = "/{applicationId}/send", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service sendNotification(
+    @RequestMapping(value = "/{applicationId}/send", method = RequestMethod.POST)
+    public final Service sendNotification(
             @PathVariable("applicationId") final String applicationId,
             @RequestParam("tmpl") final String templateId,
             @RequestParam("type") final String type,
@@ -433,11 +575,10 @@ public class NotificationManagementController {
             LOGGER.error("Print Stack Trace- ", e);
             service.setStatus("ERROR");
             ErrorPOJO err = new ErrorPOJO();
-            err.setCode(317);
-            err.setMessage("Mail sending failed");
+            err.setCode(sendNotificationErrorCode);
+            err.setMessage(sendNotificationErrorMessage);
             service.setError(err);
         }
-
         return service;
     }
 
@@ -450,15 +591,14 @@ public class NotificationManagementController {
      *            the notification id
      * @return the service
      */
-    @RequestMapping(value = "/{applicationId}/resend/{notificationId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service resendNotification(
+    @RequestMapping(value = "/{applicationId}/resend/{notificationId}", method = RequestMethod.POST)
+    public final Service resendNotification(
             @PathVariable("applicationId") final String applicationId,
             @PathVariable("notificationId") final Integer notificationId) {
         LOGGER.info("inside resendNotification method of NotificationManagementController");
         Service service = new Service();
         NotificationResponse notificationResponse = null;
         try {
-
             notificationResponse = notificationManagementService
                     .resendEmailNotification(applicationId, notificationId);
             service.setStatus("SUCCESS");
@@ -467,12 +607,10 @@ public class NotificationManagementController {
             LOGGER.error("Print Stack Trace- ", e);
             service.setStatus("ERROR");
             ErrorPOJO err = new ErrorPOJO();
-            err.setCode(318);
-            err.setMessage("Mail sending failed");
+            err.setCode(resendNotificationErrorCode);
+            err.setMessage(resendNotificationErrorMessage);
             service.setError(err);
         }
-
         return service;
     }
-
 }
