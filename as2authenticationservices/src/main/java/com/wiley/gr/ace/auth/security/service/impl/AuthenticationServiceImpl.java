@@ -320,6 +320,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 					list1.add(attrs.get("cn"));
 					return list1;
 				});
+		System.err.println(list.size());
 		if (null == list) {
 			AuthenticationServiceImpl.LOGGER
 					.error("List is empty / no records found ");
