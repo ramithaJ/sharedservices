@@ -2,7 +2,7 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UIMessageContent.
  */

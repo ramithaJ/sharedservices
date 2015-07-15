@@ -5,19 +5,19 @@ import java.util.List;
 
 
 /**
- * The Class UIMessageCatalogDotcmsResponse.
+ * The Class ConfirmationCatalogDotcmsResponse.
  */
-public class UIMessageCatalogDotcmsResponse {
+public class ConfirmationCatalogDotcmsResponse {
 
 	/** The contentlets. */
-	List<UIMessageCatalog> contentlets;
+	List<ConfirmationCatalog> contentlets;
 
 	/**
 	 * Gets the contentlets.
 	 *
 	 * @return the contentlets
 	 */
-	public final List<UIMessageCatalog> getContentlets() {
+	public final List<ConfirmationCatalog> getContentlets() {
 		return contentlets;
 	}
 
@@ -26,7 +26,7 @@ public class UIMessageCatalogDotcmsResponse {
 	 *
 	 * @param contentlets the new contentlets
 	 */
-	public final void setContentlets(List<UIMessageCatalog> contentlets) {
+	public final void setContentlets(List<ConfirmationCatalog> contentlets) {
 		this.contentlets = contentlets;
 	}
 }

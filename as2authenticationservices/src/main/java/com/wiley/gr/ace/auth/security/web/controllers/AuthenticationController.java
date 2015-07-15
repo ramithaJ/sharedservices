@@ -135,7 +135,7 @@ public class AuthenticationController {
 
 				return new ResponseEntity<>(new Response(
 						CommonConstant.LOCKED_CODE, this.authMessage007,
-						authResponse.getStatus()), null, HttpStatus.OK);
+						authResponse.getStatus()), null, HttpStatus.LOCKED);
 			}
 
 			if (null == authResponse
@@ -148,7 +148,7 @@ public class AuthenticationController {
 				return new ResponseEntity<>(new Response(
 						CommonConstant.FAIL_CODE, this.authMessage005,
 						String.valueOf(Response.STATUS.FAILURE)), null,
-						HttpStatus.OK);
+						HttpStatus.UNAUTHORIZED);
 			}
 			// Set the token in the response headers.
 			final HttpHeaders responseHeaders = new HttpHeaders();
@@ -164,7 +164,7 @@ public class AuthenticationController {
 			AuthenticationController.LOGGER.error(
 					"Exception Occurred during user authentication...", e);
 			return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
-					null, HttpStatus.OK);
+					null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

@@ -134,22 +134,25 @@ public class UserServiceController extends Property {
         return service;
     }
 
+
     /**
      * Controller method for user lookup.
      *
-     * @param lookUp Search Java Lookup Mapping Object
+     * @param emailAddress Email Address - Primary (or) Secondary
+     * @param firstName    FirstName of the user
+     * @param lastName     LastName of the user
      * @return Returns Service response Object
      */
-    @RequestMapping(value = CommonConstants.LOOK_UP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = CommonConstants.LOOK_UP, method = RequestMethod.GET)
     @ResponseBody
-    public Service lookUpAuthorService(@RequestBody LookupRequest lookUp) {
+    public Service lookUpAuthorService(@RequestParam(value = "emailAddress", required = false) String emailAddress, @RequestParam(value = "firstName", required = false) String firstName, @RequestParam(value = "lastName", required = false) String lastName) {
         Service service = new Service();
         try {
             //Check whether email address is null or empty. Throw error if it is null (or) emtpy
-            if (StringUtils.isEmpty(lookUp.getUserProfile().getEmailAddress())) {
+            if (StringUtils.isEmpty(emailAddress)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_201, userlookUpServiceError201, CommonConstants.ERROR);
             }
-            LookupResponse response = userService.userlookUpService(lookUp.getUserProfile().getFirstName(), lookUp.getUserProfile().getLastName(), lookUp.getUserProfile().getEmailAddress());
+            LookupResponse response = userService.userlookUpService(firstName, lastName, emailAddress);
             service.setPayload(response);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Lookup User Service", e);

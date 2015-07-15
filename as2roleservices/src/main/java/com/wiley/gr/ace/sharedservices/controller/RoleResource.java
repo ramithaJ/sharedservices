@@ -2,7 +2,6 @@ package com.wiley.gr.ace.sharedservices.controller;
 
 import org.springframework.hateoas.ResourceSupport;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RoleResource.
  */

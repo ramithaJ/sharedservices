@@ -1,5 +1,6 @@
 package com.wiley.gr.ace.sharedservices.service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,40 +9,60 @@ import java.util.List;
 public class Permission {
 
     /** The code. */
-    private String code;
+    private String permissionCd;
 
-    /** The name. */
-    private String name;
+    /** The permission name. */
+    private String permissionName;
+
+    /** The created on. */
+    private Date createdOn;
+
+    /** The updated on. */
+    private Date updatedOn;
+
+    /** The created by. */
+    private Integer createdBy;
+
+    /** The updated by. */
+    private Integer updatedBy;
 
     /** The groups. */
     private List<String> groups;
 
     /**
      * Instantiates a new permission.
-     *
-     * @param code
-     *            the code
-     * @param name
-     *            the name
      */
-    public Permission(String code, String name) {
-        this.code = code;
-        this.name = name;
+    public Permission() {
+
     }
 
     /**
      * Instantiates a new permission.
      *
-     * @param code
-     *            the code
-     * @param name
-     *            the name
+     * @param permissionCd
+     *            the permission cd
+     * @param permissionName
+     *            the permission name
+     */
+    public Permission(String permissionCd, String permissionName) {
+        this.permissionCd = permissionCd;
+        this.permissionName = permissionName;
+    }
+
+    /**
+     * Instantiates a new permission.
+     *
+     * @param permissionCd
+     *            the permission cd
+     * @param permissionName
+     *            the permission name
      * @param groups
      *            the groups
      */
-    public Permission(String code, String name, List<String> groups) {
-        this.code = code;
-        this.name = name;
+    public Permission(String permissionCd, String permissionName,
+            List<String> groups) {
+        this.permissionCd = permissionCd;
+        this.permissionName = permissionName;
         this.groups = groups;
     }
 
@@ -50,8 +71,8 @@ public class Permission {
      *
      * @return the code
      */
-    public final String getCode() {
-        return code;
+    public final String getPermissionCd() {
+        return permissionCd;
     }
 
     /**
@@ -59,8 +80,8 @@ public class Permission {
      *
      * @return the name
      */
-    public final String getName() {
-        return name;
+    public final String getPermissionName() {
+        return permissionName;
     }
 
     /**
@@ -75,21 +96,21 @@ public class Permission {
     /**
      * Sets the code.
      *
-     * @param code
-     *            the code to set
+     * @param permissionCd
+     *            the new permission cd
      */
-    public final void setCode(String code) {
-        this.code = code;
+    public final void setPermissionCd(String permissionCd) {
+        this.permissionCd = permissionCd;
     }
 
     /**
      * Sets the name.
      *
-     * @param name
-     *            the name to set
+     * @param permissionName
+     *            the new permission name
      */
-    public final void setName(String name) {
-        this.name = name;
+    public final void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
     }
 
     /**
@@ -100,6 +121,82 @@ public class Permission {
      */
     public final void setGroups(List<String> groups) {
         this.groups = groups;
+    }
+
+    /**
+     * Gets the created on.
+     *
+     * @return the createdOn
+     */
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    /**
+     * Sets the created on.
+     *
+     * @param createdOn
+     *            the createdOn to set
+     */
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    /**
+     * Gets the updated on.
+     *
+     * @return the updatedOn
+     */
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    /**
+     * Sets the updated on.
+     *
+     * @param updatedOn
+     *            the updatedOn to set
+     */
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
+    /**
+     * Gets the created by.
+     *
+     * @return the createdBy
+     */
+    public Integer getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * Sets the created by.
+     *
+     * @param createdBy
+     *            the createdBy to set
+     */
+    public void setCreatedBy(Integer createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * Gets the updated by.
+     *
+     * @return the updatedBy
+     */
+    public Integer getUpdatedBy() {
+        return updatedBy;
+    }
+
+    /**
+     * Sets the updated by.
+     *
+     * @param updatedBy
+     *            the updatedBy to set
+     */
+    public void setUpdatedBy(Integer updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
 }
