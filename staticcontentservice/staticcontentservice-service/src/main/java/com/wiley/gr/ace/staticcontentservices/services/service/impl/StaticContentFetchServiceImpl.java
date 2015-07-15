@@ -5,8 +5,14 @@ import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService;
 import com.wiley.gr.ace.staticcontentservices.model.ConfirmationContent;
+import com.wiley.gr.ace.staticcontentservices.model.EmailContent;
+import com.wiley.gr.ace.staticcontentservices.model.StaticContent;
 import com.wiley.gr.ace.staticcontentservices.model.StatusContent;
 import com.wiley.gr.ace.staticcontentservices.model.UIMessageContent;
+import com.wiley.gr.ace.staticcontentservices.model.external.EmailCatalog;
+import com.wiley.gr.ace.staticcontentservices.model.external.EmailCatalogDotcmsResponse;
+import com.wiley.gr.ace.staticcontentservices.model.external.StaticCatalog;
+import com.wiley.gr.ace.staticcontentservices.model.external.StaticCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.StatusCatalog;
 import com.wiley.gr.ace.staticcontentservices.model.external.StatusCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.ConfirmationCatalog;
@@ -15,11 +21,6 @@ import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalog;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
 
-
-//import com.wiley.gr.ace.staticcontentservices.model.ConfirmationContent;
-//import com.wiley.gr.ace.staticcontentservices.model.external.ConfirmationCatalog;
-//import com.wiley.gr.ace.staticcontentservices.model.external.ConfirmationCatalogDotcmsResponse;
-//import com.wiley.gr.ace.staticcontentservices.services.service.ConfirmationFetchService;
 
 
 /**
@@ -64,11 +65,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
  	 * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getConfirmationMessageContent(java.lang.String, java.lang.String)
  	 */
  	@Override
-	    public ConfirmationContent getConfirmationMessageContent(String moduleName, String locale)
+	    public ConfirmationContent getConfirmationMessageContent(String contentTiltle, String moduleName, String locale)
 	            throws Exception {
 
 	        ConfirmationCatalogDotcmsResponse confirmationCatalogDotcmsResponse = dotCMSDataService
-	                .getConfirmationCatalog(moduleName, locale);
+	                .getConfirmationCatalog(contentTiltle,moduleName, locale);
 	        ConfirmationContent confirmationContent = null;
 	        if (!StringUtils.isEmpty(confirmationCatalogDotcmsResponse)) {
 	            confirmationContent = new ConfirmationContent();
@@ -76,7 +77,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	                    .getContentlets().get(0);
 	            confirmationContent.setConfirmationMessages(confirmationCatalog
 	                    .getConfirmationMessages());
-
+	            confirmationContent.setContentTiltle(contentTiltle);
 	            confirmationContent.setLocale(locale);
 	            confirmationContent.setModuleName(moduleName);
 
@@ -89,11 +90,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
     	 * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getStatusContent(java.lang.String, java.lang.String)
     	 */
     	@Override
-	    public StatusContent getStatusContent(String statusMessageType, String locale)
+	    public StatusContent getStatusContent(String contentTitle, String statusMessageType, String locale)
                 throws Exception {
 
             StatusCatalogDotcmsResponse statusCatalogDotcmsResponse = dotCMSDataService
-                    .getStatusCatalog(statusMessageType, locale);
+                    .getStatusCatalog(contentTitle,statusMessageType, locale);
             StatusContent statusContent = null;
             if (!StringUtils.isEmpty(statusCatalogDotcmsResponse)) {
                 statusContent = new StatusContent();
@@ -101,7 +102,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
                         .getContentlets().get(0);
                 statusContent.setStatusMessages(statusCatalog
                         .getStatusMessages());
-
+                statusContent.setContentTitle(contentTitle);
                 statusContent.setLocale(locale);
                 statusContent.setStatusMessageType(statusMessageType);
 
@@ -109,4 +110,56 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 
             return statusContent;
         }
+    	
+    	
+    	/* (non-Javadoc)
+	     * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getEmailContent(java.lang.String)
+	     */
+	    @Override
+        public EmailContent getEmailContent(String contentTitle)
+                throws Exception {
+
+            EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
+                    .getEmailCatalog(contentTitle);
+            EmailContent emailContent = null;
+            if (!StringUtils.isEmpty(emailCatalogDotcmsResponse)) {
+                emailContent = new EmailContent();
+                EmailCatalog emailCatalog = emailCatalogDotcmsResponse
+                        .getContentlets().get(0);
+                emailContent.setContentTitle(emailCatalog
+                        .getContentTitle());
+
+                emailContent.setContentTitle(contentTitle);
+
+            }
+
+            return emailContent;
+        }
+	    
+	       /* (non-Javadoc)
+       	 * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getStaticContent(java.lang.String, java.lang.String, java.lang.String)
+       	 */
+       	@Override
+	        public StaticContent getStaticContent(String contentTitle, String pageName,  String locale)
+	                throws Exception {
+
+	            StaticCatalogDotcmsResponse staticCatalogDotcmsResponse = dotCMSDataService
+	                    .getStaticCatalog(contentTitle,pageName,locale);
+	            StaticContent staticContent = null;
+	            if (!StringUtils.isEmpty(staticCatalogDotcmsResponse)) {
+	                staticContent = new StaticContent();
+	                StaticCatalog staticCatalog = staticCatalogDotcmsResponse
+	                        .getContentlets().get(0);
+	                staticContent.setContentTitle(staticCatalog
+	                        .getContentTitle());
+
+	                staticContent.setContentTitle(contentTitle);
+	                staticContent.setPageName(pageName);
+	                staticContent.setLocale(locale);
+	                staticContent.setAdBlockBody(staticCatalog.getAdBlockContent());
+
+	            }
+
+	            return staticContent;
+	        }
 }

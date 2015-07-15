@@ -3,22 +3,20 @@ package com.wiley.gr.ace.staticcontentservices.model.external;
 import java.util.List;
 
 
-
-
 /**
- * The Class UIMessageCatalogDotcmsResponse.
+ * The Class StaticCatalogDotcmsResponse.
  */
-public class StatusCatalogDotcmsResponse {
-
+public class StaticCatalogDotcmsResponse {
+    
     /** The contentlets. */
-    List<StatusCatalog> contentlets;
+    List<StaticCatalog> contentlets;
 
     /**
      * Gets the contentlets.
      *
      * @return the contentlets
      */
-    public final List<StatusCatalog> getContentlets() {
+    public final List<StaticCatalog> getContentlets() {
         return contentlets;
     }
 
@@ -27,7 +25,8 @@ public class StatusCatalogDotcmsResponse {
      *
      * @param contentlets the new contentlets
      */
-    public final void setContentlets(List<StatusCatalog> contentlets) {
+    public final void setContentlets(List<StaticCatalog> contentlets) {
         this.contentlets = contentlets;
     }
+
 }

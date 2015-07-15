@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.staticcontentservices.model.ConfirmationContent;
+import com.wiley.gr.ace.staticcontentservices.model.EmailContent;
 import com.wiley.gr.ace.staticcontentservices.model.ErrorPOJO;
 import com.wiley.gr.ace.staticcontentservices.model.Service;
+import com.wiley.gr.ace.staticcontentservices.model.StaticContent;
 import com.wiley.gr.ace.staticcontentservices.model.StatusContent;
 import com.wiley.gr.ace.staticcontentservices.model.UIMessageContent;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
+
 
 
 /**
@@ -67,12 +70,14 @@ public class DotCMSStaticContentController {
 	   /**
    	 * Gets the confirmation catalog.
    	 *
+   	 * @param contentTiltle the content tiltle
    	 * @param moduleName the module name
    	 * @param locale the locale
    	 * @return the confirmation catalog
    	 */
-   	@RequestMapping(value = "/confirmation/{moduleName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+   	@RequestMapping(value = "/confirmation/{contentTiltle}/{moduleName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	    public @ResponseBody Service getConfirmationCatalog(
+	            @PathVariable("contentTiltle") String contentTiltle,
 	            @PathVariable("moduleName") String moduleName,
 	            @PathVariable("locale") String locale) {
 	        ConfirmationContent confirmationContent = null;
@@ -80,7 +85,7 @@ public class DotCMSStaticContentController {
 
 	        try {
 	            confirmationContent = staticContentFetchService.getConfirmationMessageContent(
-	                    moduleName, locale);
+	                    contentTiltle,moduleName, locale);
 	            if (!StringUtils.isEmpty(confirmationContent)) {
 	                service.setStatus("SUCCESS");
 	                service.setPayload(confirmationContent);
@@ -101,12 +106,14 @@ public class DotCMSStaticContentController {
 	   /**
    	 * Gets the status content.
    	 *
+   	 * @param contentTitle the content title
    	 * @param statusMessageType the status message type
    	 * @param locale the locale
    	 * @return the status content
    	 */
-   	@RequestMapping(value = "/status/{statusMessageType}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+   	@RequestMapping(value = "/status/{contentTitle}/{statusMessageType}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
        public @ResponseBody Service getStatusContent(
+               @PathVariable("contentTitle") String contentTitle,
                @PathVariable("statusMessageType") String statusMessageType,
                @PathVariable("locale") String locale) {
            StatusContent statusContent = null;
@@ -114,7 +121,7 @@ public class DotCMSStaticContentController {
 
            try {
                statusContent = staticContentFetchService.getStatusContent(
-                       statusMessageType, locale);
+                       contentTitle,statusMessageType, locale);
                if (!StringUtils.isEmpty(statusContent)) {
                    service.setStatus("SUCCESS");
                    service.setPayload(statusContent);
@@ -131,4 +138,77 @@ public class DotCMSStaticContentController {
 
            return service;
        }
+   	
+   	
+   	/**
+	    * Gets the email content.
+	    *
+	    * @param contentTitle the content title
+	    * @return the email content
+	    */
+	   @RequestMapping(value = "/email/{contentTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Service getEmailContent(
+            @PathVariable("contentTitle") String contentTitle) {
+        EmailContent emailContent = null;
+        Service service = new Service();
+
+        try {
+            emailContent = staticContentFetchService.getEmailContent(
+                    contentTitle);
+            if (!StringUtils.isEmpty(emailContent)) {
+                service.setStatus("SUCCESS");
+                service.setPayload(emailContent);
+            } else {
+                service.setStatus("FAILURE");
+            }
+        } catch (Exception e) {
+            service.setStatus("ERROR");
+            ErrorPOJO err = new ErrorPOJO();
+            err.setCode(209);
+            err.setMessage("Fetch failed");
+            service.setError(err);
+        }
+
+        return service;
+    }
+	   
+	   
+	   
+	   /**
+   	 * Gets the static content.
+   	 *
+   	 * @param contentTitle the content title
+   	 * @param pageName the page name
+   	 * @param locale the locale
+   	 * @return the static content
+   	 */
+   	@RequestMapping(value = "/static/{contentTitle}/{pageName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	    public @ResponseBody Service getStaticContent(
+	            @PathVariable("contentTitle") String contentTitle,
+	            @PathVariable("pageName") String pageName,
+	            @PathVariable("locale") String locale){
+	        StaticContent staticContent = null;
+	        Service service = new Service();
+
+	        try {
+	            staticContent = staticContentFetchService.getStaticContent(
+	                    contentTitle,pageName,locale);
+	            if (!StringUtils.isEmpty(staticContent)) {
+	                service.setStatus("SUCCESS");
+	                service.setPayload(staticContent);
+	            } else {
+	                service.setStatus("FAILURE");
+	            }
+	        } catch (Exception e) {
+	            service.setStatus("ERROR");
+	            ErrorPOJO err = new ErrorPOJO();
+	            err.setCode(209);
+	            err.setMessage("Fetch failed");
+	            service.setError(err);
+	        }
+
+	        return service;
+	    }
+	   
+	   
 }

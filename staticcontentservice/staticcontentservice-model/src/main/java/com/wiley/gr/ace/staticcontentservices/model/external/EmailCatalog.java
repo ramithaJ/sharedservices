@@ -3,43 +3,16 @@ package com.wiley.gr.ace.staticcontentservices.model.external;
 import java.util.HashMap;
 
 
-
 /**
- * The Class StatusCatalog.
+ * The Class EmailCatalog.
  */
-public class StatusCatalog {
+public class EmailCatalog {
     
- 
     /** The host. */
     private String host;
 
     /** The sort order. */
     private String sortOrder;
-
-    /** The locale. */
-    private String locale;
-    
-    /** The title. */
-    private String title;
-
-    /**
-     * Gets the title.
-     *
-     * @return the title
-     */
-    public final String getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets the title.
-     *
-     * @param title the new title
-     */
-    public final void setTitle(String title) {
-        this.title = title;
-    }
-
 
     /** The st inode. */
     private String stInode;
@@ -52,9 +25,6 @@ public class StatusCatalog {
 
     /** The folder. */
     private String folder;
-
-    /** The status message type. */
-    private String statusMessageType;
 
     /** The   dotname. */
     private String __DOTNAME__;
@@ -74,13 +44,12 @@ public class StatusCatalog {
     /** The inode. */
     private String inode;
 
+    /** The survey link. */
+    private HashMap<String, String> surveyLink;
+
     /** The identifier. */
     private String identifier;
 
-    /**  The status messages. */
-    private HashMap<String, String> statusMessages;
-    
-    
     /**
      * Gets the host.
      *
@@ -119,26 +88,6 @@ public class StatusCatalog {
     public void setSortOrder (String sortOrder)
     {
         this.sortOrder = sortOrder;
-    }
-
-    /**
-     * Gets the locale.
-     *
-     * @return the locale
-     */
-    public String getLocale ()
-    {
-        return locale;
-    }
-
-    /**
-     * Sets the locale.
-     *
-     * @param locale the new locale
-     */
-    public void setLocale (String locale)
-    {
-        this.locale = locale;
     }
 
     /**
@@ -219,26 +168,6 @@ public class StatusCatalog {
     public void setFolder (String folder)
     {
         this.folder = folder;
-    }
-
-    /**
-     * Gets the status message type.
-     *
-     * @return the status message type
-     */
-    public String getStatusMessageType ()
-    {
-        return statusMessageType;
-    }
-
-    /**
-     * Sets the status message type.
-     *
-     * @param statusMessageType the new status message type
-     */
-    public void setStatusMessageType (String statusMessageType)
-    {
-        this.statusMessageType = statusMessageType;
     }
 
     /**
@@ -361,6 +290,29 @@ public class StatusCatalog {
         this.inode = inode;
     }
 
+    
+    /**
+     * Gets the survey link.
+     *
+     * @return the survey link
+     */
+    public final HashMap<String, String> getSurveyLink() {
+        return surveyLink;
+    }
+
+ 
+    /**
+     * Sets the survey link.
+     *
+     * @param surveyLink the survey link
+     */
+    public final void setSurveyLink(
+            HashMap<String, String> surveyLink) {
+        this.surveyLink = surveyLink;
+    }
+    
+   
+
     /**
      * Gets the identifier.
      *
@@ -380,26 +332,5 @@ public class StatusCatalog {
     {
         this.identifier = identifier;
     }
-
-    /**
-     * Gets the error messages option2.
-     *
-     * @return the error messages option2
-     */
-    public final HashMap<String, String> getStatusMessages() {
-        return statusMessages;
-    }
-
-    
-    /**
-     * Sets the .
-     *
-     * @param statusMessages the 
-     */
-    public final void setStatusMessages(
-            HashMap<String, String> statusMessages) {
-        this.statusMessages = statusMessages;
-    }
-
 
 }

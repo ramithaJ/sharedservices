@@ -3,6 +3,7 @@ package com.wiley.gr.ace.staticcontentservices.model.external;
 import java.util.HashMap;
 
 
+
 /**
  * The Class ConfirmationCatalog.
  */

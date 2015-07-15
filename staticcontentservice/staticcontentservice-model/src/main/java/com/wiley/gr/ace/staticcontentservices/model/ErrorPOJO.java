@@ -14,7 +14,7 @@ package com.wiley.gr.ace.staticcontentservices.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * This is the generic errorVO returned by the service.
  * 
