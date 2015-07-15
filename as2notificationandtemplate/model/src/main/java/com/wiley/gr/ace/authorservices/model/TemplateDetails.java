@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The Class TemplateDetails.
+ * 
+ * @author virtusa version 1.0
  */
 @JsonInclude(Include.NON_NULL)
 public class TemplateDetails {

@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The Class ScheduleTemplateObj.
+ * 
+ * @author virtusa version 1.0
  */
 @JsonInclude(Include.NON_NULL)
 public class ScheduleTemplateObj {
