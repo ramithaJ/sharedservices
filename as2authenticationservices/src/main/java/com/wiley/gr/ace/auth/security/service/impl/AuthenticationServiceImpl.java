@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -310,7 +311,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	@Override
 	public <T> User searchUser(final String userId)
-			throws IndexOutOfBoundsException {
+			throws NameNotFoundException {
 
 		AuthenticationServiceImpl.LOGGER.info("Inside searchUser method");
 		this.setContext(this.directoyServiceUrl, null, null);

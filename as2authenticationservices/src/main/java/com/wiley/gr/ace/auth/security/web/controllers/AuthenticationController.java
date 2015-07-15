@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -182,7 +183,7 @@ public class AuthenticationController {
 			User user = this.authenticationService.searchUser(request
 					.getUserId());
 			return new ResponseEntity<>(user, null, HttpStatus.OK);
-		} catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+		} catch (NameNotFoundException nameNotFoundException) {
 			return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
 					this.authMessage008, CommonConstant.FAILURE_STATUS), null,
 					HttpStatus.UNAUTHORIZED);

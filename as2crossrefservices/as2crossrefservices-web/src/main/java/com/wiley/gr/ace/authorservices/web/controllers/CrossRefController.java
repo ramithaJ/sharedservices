@@ -11,17 +11,16 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.web.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.authorservices.model.AuthorDetails;
@@ -44,6 +43,86 @@ public class CrossRefController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CrossRefController.class);
 
+    /** The get dh id code. */
+    @Value("${CrossRefController.getNoDhId.code}")
+    private int getNoDhIdErrorCode;
+
+    /** The get dh id message. */
+    @Value("${CrossRefController.getNoDhId.message}")
+    private String getNoDhIdErrorMessage;
+
+    /** The get dh id error code. */
+    @Value("${CrossRefController.getDhIdError.code}")
+    private int getDhIdErrorCode;
+
+    /** The get dh id error message. */
+    @Value("${CrossRefController.getDhIdError.message}")
+    private String getDhIdErrorMessage;
+
+    /** The get no value error code. */
+    @Value("${CrossRefController.getNoValue.code}")
+    private int getNoValueErrorCode;
+
+    /** The get no value error message. */
+    @Value("${CrossRefController.getNoValue.message}")
+    private String getNoValueErrorMessage;
+
+    /** The get value error code. */
+    @Value("${CrossRefController.getValue.code}")
+    private int getValueErrorCode;
+
+    /** The get value error message. */
+    @Value("${CrossRefController.getValue.message}")
+    private String getValueErrorMessage;
+
+    /** The create no value error code. */
+    @Value("${CrossRefController.createNoValue.code}")
+    private int createNoValueErrorCode;
+
+    /** The create no value error message. */
+    @Value("${CrossRefController.createNoValue.message}")
+    private String createNoValueErrorMessage;
+
+    /** The create value error code. */
+    @Value("${CrossRefController.createValue.code}")
+    private int createValueErrorCode;
+
+    /** The create value error message. */
+    @Value("${CrossRefController.createValue.message}")
+    private String createValueErrorMessage;
+
+    /** The update no value error code. */
+    @Value("${CrossRefController.updateNoValue.code}")
+    private int updateNoValueErrorCode;
+
+    /** The update no value error message. */
+    @Value("${CrossRefController.updateNoValue.message}")
+    private String updateNoValueErrorMessage;
+
+    /** The update value error code. */
+    @Value("${CrossRefController.updateValue.code}")
+    private int updateValueErrorCode;
+
+    /** The update value error message. */
+    @Value("${CrossRefController.updateValue.message}")
+    private String updateValueErrorMessage;
+
+    /** The delete no value error code. */
+    @Value("${CrossRefController.deleteNoValue.code}")
+    private int deleteNoValueErrorCode;
+
+    /** The delete no value error message. */
+    @Value("${CrossRefController.deleteNoValue.message}")
+    private String deleteNoValueErrorMessage;
+
+    /** The delete value error code. */
+    @Value("${CrossRefController.deleteValue.code}")
+    private int deleteValueErrorCode;
+
+    /** The delete value error message. */
+    @Value("${CrossRefController.deleteValue.message}")
+    private String deleteValueErrorMessage;
+
     /** The cross ref service. */
     @Autowired(required = true)
     private CrossRefService crossRefService;
@@ -55,8 +134,8 @@ public class CrossRefController {
      *            the dh id
      * @return the cross ref
      */
-    @RequestMapping(value = "/authors/{dhId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service getCrossRef(
+    @RequestMapping(value = "/authors/{dhId}", method = RequestMethod.GET)
+    public final Service getCrossRef(
             @PathVariable("dhId") final Integer dhId) {
         LOGGER.info("inside getCrossRef method of CrossRefController");
         Service service = new Service();
@@ -70,8 +149,8 @@ public class CrossRefController {
                 service.setPayload(productPersonRelationObj);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
-                error.setCode(309);
-                error.setMessage("No records found for the required criteria");
+                error.setCode(getNoDhIdErrorCode);
+                error.setMessage(getNoDhIdErrorMessage);
                 service.setStatus("FAILURE");
                 service.setError(error);
 
@@ -79,8 +158,8 @@ public class CrossRefController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(316);
-            error.setMessage("Error Fetching Cross ref");
+            error.setCode(getDhIdErrorCode);
+            error.setMessage(getDhIdErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -96,8 +175,8 @@ public class CrossRefController {
      *            the email addr
      * @return the cross ref user id
      */
-    @RequestMapping(value = "/articles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service getCrossRefUserId(
+    @RequestMapping(value = "/articles", method = RequestMethod.GET)
+    public final Service getCrossRefUserId(
             @RequestParam(value = "userId") final String userId,
             @RequestParam(value = "emailAddr") final String emailAddr) {
         LOGGER.info("inside getCrossRefUserId method of CrossRefController");
@@ -116,16 +195,16 @@ public class CrossRefController {
                 service.setPayload(authorDetails);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
-                error.setCode(315);
-                error.setMessage("No criteria");
+                error.setCode(getNoValueErrorCode);
+                error.setMessage(getNoValueErrorMessage);
                 service.setStatus("ERROR");
                 service.setError(error);
             }
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(316);
-            error.setMessage("Error Fetching Value");
+            error.setCode(getValueErrorCode);
+            error.setMessage(getValueErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -139,8 +218,8 @@ public class CrossRefController {
      *            the product person relation
      * @return the service
      */
-    @RequestMapping(value = "/article/assign", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service createCrossRef(
+    @RequestMapping(value = "/article/assign", method = RequestMethod.POST)
+    public final Service createCrossRef(
             @RequestBody final ProductPersonRelationRequest productPersonRelation) {
         LOGGER.info("inside createCrossRef method of CrossRefController");
         Service service = new Service();
@@ -150,8 +229,8 @@ public class CrossRefController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             ErrorPOJO error = new ErrorPOJO();
-            error.setCode(400);
-            error.setMessage("Error inserting Cross ref");
+            error.setCode(createNoValueErrorCode);
+            error.setMessage(createNoValueErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -159,8 +238,8 @@ public class CrossRefController {
             service.setStatus("SUCCESS");
         } else {
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(401);
-            error.setMessage("Enter valid inputs");
+            error.setCode(createValueErrorCode);
+            error.setMessage(createValueErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
@@ -174,8 +253,8 @@ public class CrossRefController {
      *            the product person relation
      * @return the service
      */
-    @RequestMapping(value = "/article/assign", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service updateCrossRef(
+    @RequestMapping(value = "/article/assign", method = RequestMethod.PUT)
+    public final Service updateCrossRef(
             @RequestBody final ProductPersonRelationRequest productPersonRelation) {
         LOGGER.info("inside updateCrossRef method of CrossRefController");
         Service service = new Service();
@@ -185,8 +264,8 @@ public class CrossRefController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             ErrorPOJO error = new ErrorPOJO();
-            error.setCode(402);
-            error.setMessage("Error getting Cross ref");
+            error.setCode(updateNoValueErrorCode);
+            error.setMessage(updateNoValueErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -194,8 +273,8 @@ public class CrossRefController {
             service.setStatus("SUCCESS");
         } else {
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(403);
-            error.setMessage("Enter valid inputs");
+            error.setCode(updateValueErrorCode);
+            error.setMessage(updateValueErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
@@ -210,8 +289,8 @@ public class CrossRefController {
      *            the product person relation
      * @return the service
      */
-    @RequestMapping(value = "/article/assign", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody final Service deleteCrossRef(
+    @RequestMapping(value = "/article/assign", method = RequestMethod.DELETE)
+    public final Service deleteCrossRef(
             @RequestBody final ProductPersonRelationRequest productPersonRelation) {
         LOGGER.info("inside deleteCrossRef method of CrossRefController");
         Service service = new Service();
@@ -221,8 +300,8 @@ public class CrossRefController {
         } catch (final Exception e) {
             LOGGER.error("Print Stack Trace- ", e);
             ErrorPOJO error = new ErrorPOJO();
-            error.setCode(404);
-            error.setMessage("Error getting Cross ref");
+            error.setCode(deleteNoValueErrorCode);
+            error.setMessage(deleteNoValueErrorMessage);
             service.setStatus("ERROR");
             service.setError(error);
         }
@@ -230,8 +309,8 @@ public class CrossRefController {
             service.setStatus("SUCCESS");
         } else {
             final ErrorPOJO error = new ErrorPOJO();
-            error.setCode(405);
-            error.setMessage("Enter valid inputs");
+            error.setCode(deleteValueErrorCode);
+            error.setMessage(deleteValueErrorMessage);
             service.setStatus("FAILURE");
             service.setError(error);
         }
