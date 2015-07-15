@@ -11,10 +11,14 @@
  *******************************************************************************/
 package com.wiley.gr.ace.auth.security.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * @author Virtusa
  *
  */
+@JsonInclude(Include.NON_NULL)
 public class User {
 
 	/**
@@ -26,6 +30,79 @@ public class User {
 	 * This field holds the value of lastName
 	 */
 	private String lastName;
+	
+	/**
+	 * This field holds the value of code
+	 */
+	private String code;
+
+	/**
+	 * This field holds the value of message
+	 */
+	private String message;
+
+	/**
+	 * This field holds the value of status
+	 */
+	private String status;
+
+	public User() {
+		
+	}
+	/**
+	 * Constructor
+	 *
+	 * @param code
+	 * @param message
+	 * @param status
+	 */
+	public User(final String code, final String message, final String status) {
+		this.code = code;
+		this.message = message;
+		this.status = status;
+	}
+
+	/**
+	 * @return the code
+	 */
+	public final String getCode() {
+		return code;
+	}
+
+	/**
+	 * @param code the code to set
+	 */
+	public final void setCode(String code) {
+		this.code = code;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public final String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public final void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public final String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public final void setStatus(String status) {
+		this.status = status;
+	}
 
 	/**
 	 * This method gets FirstName

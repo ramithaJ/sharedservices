@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,6 +92,12 @@ public class AuthenticationController {
 	 */
 	@Value("${auth.message.007}")
 	private String authMessage007;
+
+	/**
+	 * This field holds the value of authMessage007
+	 */
+	@Value("${auth.message.008}")
+	private String authMessage008;
 
 	/**
 	 * This field holds the value of authenticationService
@@ -169,10 +176,17 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody User searchUser(
+	public @ResponseBody ResponseEntity<User> searchUser(
 			@Valid @RequestBody final TokenRequest request) {
 
-		return this.authenticationService.searchUser(request.getUserId());
-
+		try {
+			User user = this.authenticationService.searchUser(request
+					.getUserId());
+			return new ResponseEntity<>(user, null, HttpStatus.OK);
+		} catch (NameNotFoundException nameNotFoundException) {
+			return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
+					this.authMessage008, CommonConstant.FAILURE_STATUS), null,
+					HttpStatus.UNAUTHORIZED);
+		}
 	}
 }
