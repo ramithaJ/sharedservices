@@ -175,6 +175,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private String authenticationType;
 
 	/**
+	 * This field holds the value of authMessage007
+	 */
+	@Value("${auth.message.007}")
+	private String authMessage007;
+
+	/**
 	 * Method to authenticate the user.
 	 *
 	 * @param userId
@@ -303,7 +309,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @return <T>
 	 */
 	@Override
-	public <T> User searchUser(final String userId) {
+	public <T> User searchUser(final String userId)
+			throws IndexOutOfBoundsException {
 
 		AuthenticationServiceImpl.LOGGER.info("Inside searchUser method");
 		this.setContext(this.directoyServiceUrl, null, null);
@@ -313,6 +320,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter(filterMatch, userId));
 		List<T> list = new ArrayList<T>();
+		User user = null;
 		list = this.ldapTemplate.search(filterPath, filter.encode(),
 				(AttributesMapper) attrs -> {
 					final List list1 = new ArrayList();
@@ -320,18 +328,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 					list1.add(attrs.get("cn"));
 					return list1;
 				});
-		System.err.println(list.size());
-		if (null == list) {
-			AuthenticationServiceImpl.LOGGER
-					.error("List is empty / no records found ");
-			return new User();
-		}
 		final String[] string = list.get(0).toString().split(",");
 		final String first = string[1].substring(5);
 		final String lastName = string[0].substring(5);
 		final String firstName = first.substring(0,
 				first.length() - lastName.length() - 2);
-		final User user = new User();
+		user = new User();
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		return user;
