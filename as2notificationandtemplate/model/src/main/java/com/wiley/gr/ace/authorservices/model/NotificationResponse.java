@@ -21,67 +21,70 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class NotificationResponse {
-	
-	/** The notification id. */
-	String notificationId;
-	
-	/**
-	 * Gets the notification id.
-	 *
-	 * @return the notification id
-	 */
-	public String getNotificationId() {
-		return notificationId;
-	}
-	
-	/**
-	 * Sets the notification id.
-	 *
-	 * @param notificationId the new notification id
-	 */
-	public void setNotificationId(String notificationId) {
-		this.notificationId = notificationId;
-	}
-	
-	/**
-	 * Gets the template id.
-	 *
-	 * @return the template id
-	 */
-	public String getTemplateId() {
-		return templateId;
-	}
-	
-	/**
-	 * Sets the template id.
-	 *
-	 * @param templateId the new template id
-	 */
-	public void setTemplateID(String templateId) {
-		this.templateId = templateId;
-	}
-	
-	/**
-	 * Gets the sent to.
-	 *
-	 * @return the sent to
-	 */
-	public String getSentTo() {
-		return sentTo;
-	}
-	
-	/**
-	 * Sets the sent to.
-	 *
-	 * @param sentTo the new sent to
-	 */
-	public void setSentTo(String sentTo) {
-		this.sentTo = sentTo;
-	}
-	
-	/** The template id. */
-	String templateId;
-	
-	/** The sent to. */
-	String sentTo;
+
+    /** The notification id. */
+   private String notificationId;
+
+    /**
+     * Gets the notification id.
+     *
+     * @return the notification id
+     */
+    public final String getNotificationId() {
+        return notificationId;
+    }
+
+    /**
+     * Sets the notification id.
+     *
+     * @param notificationId
+     *            the new notification id
+     */
+    public final void setNotificationId(final String notificationId) {
+        this.notificationId = notificationId;
+    }
+
+    /**
+     * Gets the template id.
+     *
+     * @return the template id
+     */
+    public final String getTemplateId() {
+        return templateId;
+    }
+
+    /**
+     * Sets the template id.
+     *
+     * @param templateId
+     *            the new template id
+     */
+    public final void setTemplateID(final String templateId) {
+        this.templateId = templateId;
+    }
+
+    /**
+     * Gets the sent to.
+     *
+     * @return the sent to
+     */
+    public final String getSentTo() {
+        return sentTo;
+    }
+
+    /**
+     * Sets the sent to.
+     *
+     * @param sentTo
+     *            the new sent to
+     */
+    public final void setSentTo(final String sentTo) {
+        this.sentTo = sentTo;
+    }
+
+    /** The template id. */
+   private String templateId;
+
+    /** The sent to. */
+   private String sentTo;
 }

@@ -33,63 +33,63 @@ import org.hibernate.annotations.Parameter;
 @Table(name = "NOTIFICATION_RECIPIENTS")
 public class NotificationRecipients implements java.io.Serializable {
 
-	private Integer notificationId;
-	private Notification notification;
-	private String userId;
-	private String email;
+    private Integer notificationId;
+    private Notification notification;
+    private String userId;
+    private String email;
 
-	public NotificationRecipients() {
-	}
+    public NotificationRecipients() {
+    }
 
-	public NotificationRecipients(Notification notification) {
-		this.notification = notification;
-	}
+    public NotificationRecipients(Notification notification) {
+        this.notification = notification;
+    }
 
-	public NotificationRecipients(Notification notification, String userId,
-			String email) {
-		this.notification = notification;
-		this.userId = userId;
-		this.email = email;
-	}
+    public NotificationRecipients(Notification notification, String userId,
+            String email) {
+        this.notification = notification;
+        this.userId = userId;
+        this.email = email;
+    }
 
-	@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "notification"))
-	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "NOTIFICATION_ID", unique = true, nullable = false, precision = 22, scale = 0)
-	public Integer getNotificationId() {
-		return this.notificationId;
-	}
+    @GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "notification"))
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "NOTIFICATION_ID", unique = true, nullable = false, precision = 22, scale = 0)
+    public Integer getNotificationId() {
+        return this.notificationId;
+    }
 
-	public void setNotificationId(Integer notificationId) {
-		this.notificationId = notificationId;
-	}
+    public void setNotificationId(Integer notificationId) {
+        this.notificationId = notificationId;
+    }
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
-	public Notification getNotification() {
-		return this.notification;
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    public Notification getNotification() {
+        return this.notification;
+    }
 
-	public void setNotification(Notification notification) {
-		this.notification = notification;
-	}
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
 
-	@Column(name = "USER_ID")
-	public String getUserId() {
-		return this.userId;
-	}
+    @Column(name = "USER_ID")
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	@Column(name = "EMAIL")
-	public String getEmail() {
-		return this.email;
-	}
+    @Column(name = "EMAIL")
+    public String getEmail() {
+        return this.email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 }

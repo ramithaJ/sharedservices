@@ -17,21 +17,20 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * The Class NotificationTemplateHibernateConnection.
  * 
  * @author virtusa version 1.0
  */
 public class NotificationTemplateHibernateConnection {
-    
+
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(NotificationTemplateHibernateConnection.class);
-    
+
     /** The Constant sessionFactory. */
     private static final SessionFactory sessionFactory = buildSessionFactory();
-    
+
     /**
      * Builds the session factory.
      *
@@ -43,14 +42,14 @@ public class NotificationTemplateHibernateConnection {
             StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties());
             LOGGER.info("Hibernate Configuration loaded");
-            
+
             return configuration.buildSessionFactory(builder.build());
         } catch (Exception ex) {
             LOGGER.error("Initial SessionFactory creation failed.", ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
-    
+
     /**
      * Gets the session factory.
      *
@@ -59,12 +58,12 @@ public class NotificationTemplateHibernateConnection {
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
-    
+
     /**
      * Shut down session factory.
      */
     public static void shutDownSessionFactory() {
         getSessionFactory().close();
     }
-    
+
 }

@@ -21,175 +21,181 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class ScheduleObj {
-	
-	/** The id. */
-	private String id;
-	
-	/** The app id. */
-	private String appId;
-	
-	/** The description. */
-	private String description;
-	
-	/** The created by. */
-	private String createdBy;
-	
-	/** The modified by. */
-	private String modifiedBy;
-	
-	/** The created on. */
-	private String createdOn;
-	
-	/** The last modified on. */
-	private String lastModifiedOn;
-	
-	/** The schedule template. */
-	private ScheduleTemplateObj scheduleTemplate;
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-	
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	/**
-	 * Gets the app id.
-	 *
-	 * @return the app id
-	 */
-	public String getAppId() {
-		return appId;
-	}
-	
-	/**
-	 * Sets the app id.
-	 *
-	 * @param appId the new app id
-	 */
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
-	
-	/**
-	 * Gets the description.
-	 *
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-	
-	/**
-	 * Sets the description.
-	 *
-	 * @param description the new description
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	/**
-	 * Gets the created by.
-	 *
-	 * @return the created by
-	 */
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	/**
-	 * Sets the created by.
-	 *
-	 * @param createdBy the new created by
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	/**
-	 * Gets the modified by.
-	 *
-	 * @return the modified by
-	 */
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	/**
-	 * Sets the modified by.
-	 *
-	 * @param modifiedBy the new modified by
-	 */
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	/**
-	 * Gets the created on.
-	 *
-	 * @return the created on
-	 */
-	public String getCreatedOn() {
-		return createdOn;
-	}
+    /** The id. */
+    private String id;
 
-	/**
-	 * Sets the created on.
-	 *
-	 * @param createdOn the new created on
-	 */
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+    /** The app id. */
+    private String appId;
 
-	/**
-	 * Gets the last modified on.
-	 *
-	 * @return the last modified on
-	 */
-	public String getLastModifiedOn() {
-		return lastModifiedOn;
-	}
+    /** The description. */
+    private String description;
 
-	/**
-	 * Sets the last modified on.
-	 *
-	 * @param lastModifiedOn the new last modified on
-	 */
-	public void setLastModifiedOn(String lastModifiedOn) {
-		this.lastModifiedOn = lastModifiedOn;
-	}
+    /** The created by. */
+    private String createdBy;
 
-	/**
-	 * Gets the schedule template.
-	 *
-	 * @return the schedule template
-	 */
-	public ScheduleTemplateObj getScheduleTemplate() {
-		return scheduleTemplate;
-	}
+    /** The modified by. */
+    private String modifiedBy;
 
-	/**
-	 * Sets the schedule template.
-	 *
-	 * @param scheduleTemplate the new schedule template
-	 */
-	public void setScheduleTemplate(ScheduleTemplateObj scheduleTemplate) {
-		this.scheduleTemplate = scheduleTemplate;
-	}
+    /** The created on. */
+    private String createdOn;
 
+    /** The last modified on. */
+    private String lastModifiedOn;
 
+    /** The schedule template. */
+    private ScheduleTemplateObj scheduleTemplate;
+
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * Sets the id.
+     *
+     * @param id
+     *            the new id
+     */
+    public final void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
+     * Gets the app id.
+     *
+     * @return the app id
+     */
+    public final String getAppId() {
+        return appId;
+    }
+
+    /**
+     * Sets the app id.
+     *
+     * @param appId
+     *            the new app id
+     */
+    public final void setAppId(final String appId) {
+        this.appId = appId;
+    }
+
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
+    public final String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description.
+     *
+     * @param description
+     *            the new description
+     */
+    public final void setDescription(final String description) {
+        this.description = description;
+    }
+
+    /**
+     * Gets the created by.
+     *
+     * @return the created by
+     */
+    public final String getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * Sets the created by.
+     *
+     * @param createdBy
+     *            the new created by
+     */
+    public final void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * Gets the modified by.
+     *
+     * @return the modified by
+     */
+    public final String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    /**
+     * Sets the modified by.
+     *
+     * @param modifiedBy
+     *            the new modified by
+     */
+    public final void setModifiedBy(final String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    /**
+     * Gets the created on.
+     *
+     * @return the created on
+     */
+    public final String getCreatedOn() {
+        return createdOn;
+    }
+
+    /**
+     * Sets the created on.
+     *
+     * @param createdOn
+     *            the new created on
+     */
+    public final void setCreatedOn(final String createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    /**
+     * Gets the last modified on.
+     *
+     * @return the last modified on
+     */
+    public final String getLastModifiedOn() {
+        return lastModifiedOn;
+    }
+
+    /**
+     * Sets the last modified on.
+     *
+     * @param lastModifiedOn
+     *            the new last modified on
+     */
+    public final void setLastModifiedOn(final String lastModifiedOn) {
+        this.lastModifiedOn = lastModifiedOn;
+    }
+
+    /**
+     * Gets the schedule template.
+     *
+     * @return the schedule template
+     */
+    public final ScheduleTemplateObj getScheduleTemplate() {
+        return scheduleTemplate;
+    }
+
+    /**
+     * Sets the schedule template.
+     *
+     * @param scheduleTemplate
+     *            the new schedule template
+     */
+    public final void setScheduleTemplate(final ScheduleTemplateObj scheduleTemplate) {
+        this.scheduleTemplate = scheduleTemplate;
+    }
 
 }

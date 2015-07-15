@@ -12,6 +12,8 @@
 package com.wiley.gr.ace.authorservices.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,10 @@ import com.wiley.gr.ace.authorservices.services.service.CrossRefService;
 @RequestMapping("/v1")
 public class CrossRefController {
 
+    /** logger configured. */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(CrossRefController.class);
+
     /** The cross ref service. */
     @Autowired(required = true)
     private CrossRefService crossRefService;
@@ -52,6 +58,7 @@ public class CrossRefController {
     @RequestMapping(value = "/authors/{dhId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody final Service getCrossRef(
             @PathVariable("dhId") final Integer dhId) {
+        LOGGER.info("inside getCrossRef method of CrossRefController");
         Service service = new Service();
         ProductPersonRelationObj productPersonRelationObj = null;
         try {
@@ -70,6 +77,7 @@ public class CrossRefController {
 
             }
         } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
             error.setCode(316);
             error.setMessage("Error Fetching Cross ref");
@@ -92,10 +100,10 @@ public class CrossRefController {
     public @ResponseBody final Service getCrossRefUserId(
             @RequestParam(value = "userId") final String userId,
             @RequestParam(value = "emailAddr") final String emailAddr) {
+        LOGGER.info("inside getCrossRefUserId method of CrossRefController");
         Service service = new Service();
         AuthorDetails authorDetails = null;
         try {
-
             if (!StringUtils.isEmpty(userId)) {
                 authorDetails = crossRefService.getAuthorDetailsById(userId);
             } else if (!StringUtils.isEmpty(emailAddr)) {
@@ -114,6 +122,7 @@ public class CrossRefController {
                 service.setError(error);
             }
         } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             final ErrorPOJO error = new ErrorPOJO();
             error.setCode(316);
             error.setMessage("Error Fetching Value");
@@ -133,11 +142,13 @@ public class CrossRefController {
     @RequestMapping(value = "/article/assign", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody final Service createCrossRef(
             @RequestBody final ProductPersonRelationRequest productPersonRelation) {
+        LOGGER.info("inside createCrossRef method of CrossRefController");
         Service service = new Service();
         boolean isCreated = false;
         try {
             isCreated = crossRefService.createCrossRef(productPersonRelation);
         } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             ErrorPOJO error = new ErrorPOJO();
             error.setCode(400);
             error.setMessage("Error inserting Cross ref");
@@ -166,11 +177,13 @@ public class CrossRefController {
     @RequestMapping(value = "/article/assign", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody final Service updateCrossRef(
             @RequestBody final ProductPersonRelationRequest productPersonRelation) {
+        LOGGER.info("inside updateCrossRef method of CrossRefController");
         Service service = new Service();
         boolean isUpdated = false;
         try {
             isUpdated = crossRefService.updateCrossRef(productPersonRelation);
         } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             ErrorPOJO error = new ErrorPOJO();
             error.setCode(402);
             error.setMessage("Error getting Cross ref");
@@ -200,11 +213,13 @@ public class CrossRefController {
     @RequestMapping(value = "/article/assign", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody final Service deleteCrossRef(
             @RequestBody final ProductPersonRelationRequest productPersonRelation) {
+        LOGGER.info("inside deleteCrossRef method of CrossRefController");
         Service service = new Service();
         boolean isDeleted = false;
         try {
             isDeleted = crossRefService.deleteCrossRef(productPersonRelation);
         } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             ErrorPOJO error = new ErrorPOJO();
             error.setCode(404);
             error.setMessage("Error getting Cross ref");

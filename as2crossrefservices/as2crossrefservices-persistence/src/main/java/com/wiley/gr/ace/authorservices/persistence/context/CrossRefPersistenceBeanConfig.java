@@ -32,7 +32,7 @@ public class CrossRefPersistenceBeanConfig {
      * @return the cross ref hibernate connection
      */
     @Bean(name = "CrossRefHibernateConnection")
-    public final CrossRefHibernateConnection crossRefHibernateConnection() {
+    public CrossRefHibernateConnection crossRefHibernateConnection() {
         return new CrossRefHibernateConnection();
     }
 
@@ -42,7 +42,7 @@ public class CrossRefPersistenceBeanConfig {
      * @return the cross ref dao
      */
     @Bean(name = "CrossRefDAO")
-    public final CrossRefDAO crossRefDAO() {
+    public CrossRefDAO crossRefDAO() {
         return new CrossRefDAOImpl();
     }
 
