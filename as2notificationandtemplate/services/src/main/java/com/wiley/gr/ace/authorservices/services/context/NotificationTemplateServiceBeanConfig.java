@@ -19,7 +19,6 @@ import com.wiley.gr.ace.authorservices.services.service.TemplateManagementServic
 import com.wiley.gr.ace.authorservices.services.service.impl.NotificationManagementServiceImpl;
 import com.wiley.gr.ace.authorservices.services.service.impl.TemplateManagementServiceImpl;
 
-
 /**
  * The Class NotificationTemplateServiceBeanConfig.
  * 
@@ -28,23 +27,23 @@ import com.wiley.gr.ace.authorservices.services.service.impl.TemplateManagementS
 @Configuration
 public class NotificationTemplateServiceBeanConfig {
 
-	/**
-	 * Template management service.
-	 *
-	 * @return the template management service
-	 */
-	@Bean(name = "TemplateManagementService")
-	public TemplateManagementService templateManagementService() {
-		return new TemplateManagementServiceImpl();
-	}
+    /**
+     * Template management service.
+     *
+     * @return the template management service
+     */
+    @Bean(name = "TemplateManagementService")
+    public TemplateManagementService templateManagementService() {
+        return new TemplateManagementServiceImpl();
+    }
 
-	/**
-	 * Notification management service.
-	 *
-	 * @return the notification management service
-	 */
-	@Bean(name = "NotificationManagementService")
-	public NotificationManagementService notificationManagementService() {
-		return new NotificationManagementServiceImpl();
-	}
+    /**
+     * Notification management service.
+     *
+     * @return the notification management service
+     */
+    @Bean(name = "NotificationManagementService")
+    public NotificationManagementService notificationManagementService() {
+        return new NotificationManagementServiceImpl();
+    }
 }

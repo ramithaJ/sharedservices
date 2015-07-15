@@ -404,9 +404,10 @@ public class NotificationManagementServiceImpl implements
 
         BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
 
-        while ((strng = bufferRead.readLine()) != null)
+        while ((strng = bufferRead.readLine()) != null) {
             str.append(strng);
-        bufferRead.close();
+            bufferRead.close();
+        }
         return str.toString();
 
     }
@@ -435,8 +436,9 @@ public class NotificationManagementServiceImpl implements
                 && !StringUtils.isEmpty(type)) {
             List<Schedule> scheduleEntityList = notificationManagementDAO
                     .templateLookup(applicationId, templateId, type);
-            for (Schedule s : scheduleEntityList)
+            for (Schedule s : scheduleEntityList) {
                 scheduleList.add(getScheduleVO(s));
+            }
         }
         return scheduleList;
     }
@@ -554,8 +556,9 @@ public class NotificationManagementServiceImpl implements
                 int index = Integer.parseInt(offset);
                 int range = Integer.parseInt(limit);
                 List<NotificationObj> tempList = new ArrayList<NotificationObj>();
-                for (int i = index; i < range; i++)
+                for (int i = index; i < range; i++) {
                     tempList.add(notificationList.get(i));
+                }
                 notificationList.retainAll(tempList);
 
             }
@@ -722,5 +725,4 @@ public class NotificationManagementServiceImpl implements
         return notificationManagementDAO
                 .createNotificationHistory(notification);
     }
-
 }
