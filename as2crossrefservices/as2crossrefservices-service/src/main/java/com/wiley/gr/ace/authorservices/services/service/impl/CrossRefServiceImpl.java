@@ -13,7 +13,8 @@ package com.wiley.gr.ace.authorservices.services.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -36,6 +37,10 @@ import com.wiley.gr.ace.authorservices.services.service.CrossRefService;
  */
 public class CrossRefServiceImpl implements CrossRefService {
 
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(CrossRefServiceImpl.class);
+
     /** The cross ref dao. */
     @Autowired(required = true)
     private CrossRefDAO crossRefDAO;
@@ -51,6 +56,7 @@ public class CrossRefServiceImpl implements CrossRefService {
      */
     public final ProductPersonRelationObj getProductPersonRelationObj(
             final Integer dhId) throws Exception {
+        LOGGER.info("inside getProductPersonRelationObj Method of CrossRefServiceImpl");
         ProductPersonRelationObj productPersonRelationObj = new ProductPersonRelationObj();
         PersonDetails correspondingAuthor = new PersonDetails();
         List<PersonDetails> coAuthorList = new ArrayList<PersonDetails>();
@@ -100,6 +106,7 @@ public class CrossRefServiceImpl implements CrossRefService {
     @Override
     public final AuthorDetails getAuthorDetailsByEmail(final String email)
             throws Exception {
+        LOGGER.info("inside getAuthorDetailsByEmail Method of CrossRefServiceImpl");
         AuthorDetails authorDetails = null;
         if (!StringUtils.isEmpty(email)) {
             List<ProductPersonRelations> productPersonRelationEntityList = crossRefDAO
@@ -110,7 +117,7 @@ public class CrossRefServiceImpl implements CrossRefService {
             List<ProductId> coAuthorList = new ArrayList<ProductId>();
             List<ProductId> authorList = new ArrayList<ProductId>();
             for (ProductPersonRelations p : productPersonRelationEntityList) {
-                if ("101".equals(p.getProductRoles().getProductRoleCd())) {
+                if ("102".equals(p.getProductRoles().getProductRoleCd())) {
                     productId = new ProductId();
                     productId.setDhId(p.getProducts().getDhId().toString());
                     authorList.add(productId);
@@ -136,33 +143,33 @@ public class CrossRefServiceImpl implements CrossRefService {
      *             the exception
      */
     @Override
-    public final AuthorDetails getAuthorDetailsById(final String userId) throws Exception {
-        AuthorDetails authorDetails1 = null;
+    public final AuthorDetails getAuthorDetailsById(final String userId)
+            throws Exception {
+        LOGGER.info("inside getAuthorDetailsById Method of CrossRefServiceImpl");
+        AuthorDetails authorDetails = null;
         if (!StringUtils.isEmpty(userId)) {
             List<ProductPersonRelations> productPersonRelationEntityList = crossRefDAO
                     .getProductPersonRelationsByUserId(Integer.valueOf(userId));
-            if (StringUtils.isEmpty(productPersonRelationEntityList)) {
-                authorDetails1 = new AuthorDetails();
-                authorDetails1.setUserId(userId);
-                ProductId productId1 = new ProductId();
+            if (!StringUtils.isEmpty(productPersonRelationEntityList)) {
+                authorDetails = new AuthorDetails();
+                authorDetails.setUserId(userId);
+                ProductId productId = new ProductId();
                 List<ProductId> coAuthorList = new ArrayList<ProductId>();
                 List<ProductId> AuthorList = new ArrayList<ProductId>();
                 for (ProductPersonRelations p : productPersonRelationEntityList) {
                     if ("102".equals("p.getProductRoles().getProductRoleCd()")) {
-                        productId1
-                                .setDhId(p.getProducts().getDhId().toString());
-                        coAuthorList.add(productId1);
+                        productId.setDhId(p.getProducts().getDhId().toString());
+                        coAuthorList.add(productId);
                     } else {
-                        productId1
-                                .setDhId(p.getProducts().getDhId().toString());
-                        AuthorList.add(productId1);
+                        productId.setDhId(p.getProducts().getDhId().toString());
+                        AuthorList.add(productId);
                     }
                 }
-                authorDetails1.setCoAuthor(coAuthorList);
-                authorDetails1.setCorresPondingAuthor(AuthorList);
+                authorDetails.setCoAuthor(coAuthorList);
+                authorDetails.setCorresPondingAuthor(AuthorList);
             }
         }
-        return authorDetails1;
+        return authorDetails;
     }
 
     /**
@@ -178,6 +185,7 @@ public class CrossRefServiceImpl implements CrossRefService {
     public final boolean createCrossRef(
             final ProductPersonRelationRequest productPersonRelation)
             throws Exception {
+        LOGGER.info("inside createCrossRef Method of CrossRefServiceImpl");
         boolean isCreated = false;
         if (!StringUtils.isEmpty(productPersonRelation)) {
             ProductPersonRelations productPersonRelations = getProductPersonRelationsEntity(productPersonRelation);
@@ -200,7 +208,7 @@ public class CrossRefServiceImpl implements CrossRefService {
     public final boolean updateCrossRef(
             final ProductPersonRelationRequest productPersonRelation)
             throws Exception {
-
+        LOGGER.info("inside updateCrossRef Method of CrossRefServiceImpl");
         boolean isUpdated = false;
         if (!StringUtils.isEmpty(productPersonRelation)) {
             isUpdated = crossRefDAO.updateProductPersonRelation(
@@ -224,6 +232,7 @@ public class CrossRefServiceImpl implements CrossRefService {
     public final boolean deleteCrossRef(
             final ProductPersonRelationRequest productPersonRelation)
             throws Exception {
+        LOGGER.info("inside deleteCrossRef Method of CrossRefServiceImpl");
         boolean isDeleted = false;
         if (!StringUtils.isEmpty(productPersonRelation)) {
             isDeleted = crossRefDAO.deleteProductPersonRelation(
@@ -247,6 +256,7 @@ public class CrossRefServiceImpl implements CrossRefService {
     private ProductPersonRelations getProductPersonRelationsEntity(
             final ProductPersonRelationRequest productPersonRelations)
             throws Exception {
+        LOGGER.info("inside getProductPersonRelationsEntity Method of CrossRefServiceImpl");
         ProductPersonRelations productPersonRelationsEntity = null;
         if (!StringUtils.isEmpty(productPersonRelations)) {
             productPersonRelationsEntity = new ProductPersonRelations();

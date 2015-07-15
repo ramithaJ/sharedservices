@@ -22,92 +22,92 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class NotificationRecipientsObj {
 
-	/** The notification id. */
-	private Integer notificationId;
+    /** The notification id. */
+    private Integer notificationId;
 
-	/** The notification. */
-	private NotificationObj notification;
+    /** The notification. */
+    private NotificationObj notification;
 
-	/** The user id. */
-	private String userId;
+    /** The user id. */
+    private String userId;
 
-	/** The email. */
-	private String email;
+    /** The email. */
+    private String email;
 
-	/**
-	 * Gets the notification id.
-	 *
-	 * @return the notification id
-	 */
-	public Integer getNotificationId() {
-		return notificationId;
-	}
+    /**
+     * Gets the notification id.
+     *
+     * @return the notification id
+     */
+    public final Integer getNotificationId() {
+        return notificationId;
+    }
 
-	/**
-	 * Sets the notification id.
-	 *
-	 * @param notificationId
-	 *            the new notification id
-	 */
-	public void setNotificationId(Integer notificationId) {
-		this.notificationId = notificationId;
-	}
+    /**
+     * Sets the notification id.
+     *
+     * @param notificationId
+     *            the new notification id
+     */
+    public final void setNotificationId(final Integer notificationId) {
+        this.notificationId = notificationId;
+    }
 
-	/**
-	 * Gets the notification.
-	 *
-	 * @return the notification
-	 */
-	public NotificationObj getNotification() {
-		return notification;
-	}
+    /**
+     * Gets the notification.
+     *
+     * @return the notification
+     */
+    public final NotificationObj getNotification() {
+        return notification;
+    }
 
-	/**
-	 * Sets the notification.
-	 *
-	 * @param notification
-	 *            the new notification
-	 */
-	public void setNotification(NotificationObj notification) {
-		this.notification = notification;
-	}
+    /**
+     * Sets the notification.
+     *
+     * @param notification
+     *            the new notification
+     */
+    public final void setNotification(final NotificationObj notification) {
+        this.notification = notification;
+    }
 
-	/**
-	 * Gets the user id.
-	 *
-	 * @return the user id
-	 */
-	public String getUserId() {
-		return userId;
-	}
+    /**
+     * Gets the user id.
+     *
+     * @return the user id
+     */
+    public final String getUserId() {
+        return userId;
+    }
 
-	/**
-	 * Sets the user id.
-	 *
-	 * @param userId
-	 *            the new user id
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    /**
+     * Sets the user id.
+     *
+     * @param userId
+     *            the new user id
+     */
+    public final void setUserId(final String userId) {
+        this.userId = userId;
+    }
 
-	/**
-	 * Gets the email.
-	 *
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * Gets the email.
+     *
+     * @return the email
+     */
+    public final String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Sets the email.
-	 *
-	 * @param email
-	 *            the new email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * Sets the email.
+     *
+     * @param email
+     *            the new email
+     */
+    public final void setEmail(final String email) {
+        this.email = email;
+    }
 
 }

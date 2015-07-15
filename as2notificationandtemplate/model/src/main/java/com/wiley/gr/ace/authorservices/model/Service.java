@@ -14,7 +14,6 @@ package com.wiley.gr.ace.authorservices.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-
 /**
  * This is the generic service VO object which is returned by every service.
  * Data from the service is wrapped into this and returned.
@@ -23,68 +22,71 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class Service {
-    
+
     /** The status. */
     private String status = "SUCCESS";
-    
+
     /** The payload. */
     private Object payload;
-    
+
     /** The error. */
     private ErrorPOJO error;
-    
+
     /**
      * Gets the status.
      *
      * @return the status
      */
-    public String getStatus() {
+    public final String getStatus() {
         return status;
     }
-    
+
     /**
      * Sets the status.
      *
-     * @param status the new status
+     * @param status
+     *            the new status
      */
-    public void setStatus(String status) {
+    public final void setStatus(final String status) {
         this.status = status;
     }
-    
+
     /**
      * Gets the payload.
      *
      * @return the payload
      */
-    public Object getPayload() {
+    public final Object getPayload() {
         return payload;
     }
-    
+
     /**
      * Sets the payload.
      *
-     * @param payload the new payload
+     * @param payload
+     *            the new payload
      */
-    public void setPayload(Object payload) {
+    public final void setPayload(final Object payload) {
         this.payload = payload;
     }
-    
+
     /**
      * Gets the error.
      *
      * @return the error
      */
-    public ErrorPOJO getError() {
+    public final ErrorPOJO getError() {
         return error;
     }
-    
+
     /**
      * Sets the error.
      *
-     * @param error the new error
+     * @param error
+     *            the new error
      */
-    public void setError(ErrorPOJO error) {
+    public final void setError(final ErrorPOJO error) {
         this.error = error;
     }
-    
+
 }

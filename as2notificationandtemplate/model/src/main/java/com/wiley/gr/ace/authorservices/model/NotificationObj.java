@@ -24,224 +24,224 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class NotificationObj {
 
-	/** The id. */
-	private Integer id;
+    /** The id. */
+    private Integer id;
 
-	/** The template. */
-	private TemplateObj template;
+    /** The template. */
+    private TemplateObj template;
 
-	/** The app id. */
-	private String appId;
+    /** The app id. */
+    private String appId;
 
-	/** The sender id. */
-	private String senderId;
+    /** The sender id. */
+    private String senderId;
 
-	/** The sender email. */
-	private String senderEmail;
+    /** The sender email. */
+    private String senderEmail;
 
-	/** The content. */
-	private Clob content;
+    /** The content. */
+    private Clob content;
 
-	/** The type. */
-	private String type;
+    /** The type. */
+    private String type;
 
-	/** The sent on. */
-	private String sentOn;
+    /** The sent on. */
+    private String sentOn;
 
-	/** The unread. */
-	private Character unread;
+    /** The unread. */
+    private Character unread;
 
-	/** The notification recipients. */
-	private NotificationRecipientsObj notificationRecipients;
+    /** The notification recipients. */
+    private NotificationRecipientsObj notificationRecipients;
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public final Integer getId() {
+        return id;
+    }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id
-	 *            the new id
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * Sets the id.
+     *
+     * @param id
+     *            the new id
+     */
+    public final void setId(final Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * Gets the template.
-	 *
-	 * @return the template
-	 */
-	public TemplateObj getTemplate() {
-		return template;
-	}
+    /**
+     * Gets the template.
+     *
+     * @return the template
+     */
+    public final TemplateObj getTemplate() {
+        return template;
+    }
 
-	/**
-	 * Sets the template.
-	 *
-	 * @param template
-	 *            the new template
-	 */
-	public void setTemplate(TemplateObj template) {
-		this.template = template;
-	}
+    /**
+     * Sets the template.
+     *
+     * @param template
+     *            the new template
+     */
+    public final void setTemplate(final TemplateObj template) {
+        this.template = template;
+    }
 
-	/**
-	 * Gets the app id.
-	 *
-	 * @return the app id
-	 */
-	public String getAppId() {
-		return appId;
-	}
+    /**
+     * Gets the app id.
+     *
+     * @return the app id
+     */
+    public final String getAppId() {
+        return appId;
+    }
 
-	/**
-	 * Sets the app id.
-	 *
-	 * @param appId
-	 *            the new app id
-	 */
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
+    /**
+     * Sets the app id.
+     *
+     * @param appId
+     *            the new app id
+     */
+    public final void setAppId(final String appId) {
+        this.appId = appId;
+    }
 
-	/**
-	 * Gets the sender id.
-	 *
-	 * @return the sender id
-	 */
-	public String getSenderId() {
-		return senderId;
-	}
+    /**
+     * Gets the sender id.
+     *
+     * @return the sender id
+     */
+    public final String getSenderId() {
+        return senderId;
+    }
 
-	/**
-	 * Sets the sender id.
-	 *
-	 * @param senderId
-	 *            the new sender id
-	 */
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
-	}
+    /**
+     * Sets the sender id.
+     *
+     * @param senderId
+     *            the new sender id
+     */
+    public final void setSenderId(final String senderId) {
+        this.senderId = senderId;
+    }
 
-	/**
-	 * Gets the sender email.
-	 *
-	 * @return the sender email
-	 */
-	public String getSenderEmail() {
-		return senderEmail;
-	}
+    /**
+     * Gets the sender email.
+     *
+     * @return the sender email
+     */
+    public final String getSenderEmail() {
+        return senderEmail;
+    }
 
-	/**
-	 * Sets the sender email.
-	 *
-	 * @param senderEmail
-	 *            the new sender email
-	 */
-	public void setSenderEmail(String senderEmail) {
-		this.senderEmail = senderEmail;
-	}
+    /**
+     * Sets the sender email.
+     *
+     * @param senderEmail
+     *            the new sender email
+     */
+    public final void setSenderEmail(final String senderEmail) {
+        this.senderEmail = senderEmail;
+    }
 
-	/**
-	 * Gets the content.
-	 *
-	 * @return the content
-	 */
-	public Clob getContent() {
-		return content;
-	}
+    /**
+     * Gets the content.
+     *
+     * @return the content
+     */
+    public final Clob getContent() {
+        return content;
+    }
 
-	/**
-	 * Sets the content.
-	 *
-	 * @param content
-	 *            the new content
-	 */
-	public void setContent(Clob content) {
-		this.content = content;
-	}
+    /**
+     * Sets the content.
+     *
+     * @param content
+     *            the new content
+     */
+    public final void setContent(final Clob content) {
+        this.content = content;
+    }
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    public final String getType() {
+        return type;
+    }
 
-	/**
-	 * Sets the type.
-	 *
-	 * @param type
-	 *            the new type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Sets the type.
+     *
+     * @param type
+     *            the new type
+     */
+    public final void setType(final String type) {
+        this.type = type;
+    }
 
-	/**
-	 * Gets the sent on.
-	 *
-	 * @return the sent on
-	 */
-	public String getSentOn() {
-		return sentOn;
-	}
+    /**
+     * Gets the sent on.
+     *
+     * @return the sent on
+     */
+    public final String getSentOn() {
+        return sentOn;
+    }
 
-	/**
-	 * Sets the sent on.
-	 *
-	 * @param sentOn
-	 *            the new sent on
-	 */
-	public void setSentOn(String sentOn) {
-		this.sentOn = sentOn;
-	}
+    /**
+     * Sets the sent on.
+     *
+     * @param sentOn
+     *            the new sent on
+     */
+    public final void setSentOn(final String sentOn) {
+        this.sentOn = sentOn;
+    }
 
-	/**
-	 * Gets the unread.
-	 *
-	 * @return the unread
-	 */
-	public Character getUnread() {
-		return unread;
-	}
+    /**
+     * Gets the unread.
+     *
+     * @return the unread
+     */
+    public final Character getUnread() {
+        return unread;
+    }
 
-	/**
-	 * Sets the unread.
-	 *
-	 * @param unread
-	 *            the new unread
-	 */
-	public void setUnread(Character unread) {
-		this.unread = unread;
-	}
+    /**
+     * Sets the unread.
+     *
+     * @param unread
+     *            the new unread
+     */
+    public final void setUnread(final Character unread) {
+        this.unread = unread;
+    }
 
-	/**
-	 * Gets the notification recipients.
-	 *
-	 * @return the notification recipients
-	 */
-	public NotificationRecipientsObj getNotificationRecipients() {
-		return notificationRecipients;
-	}
+    /**
+     * Gets the notification recipients.
+     *
+     * @return the notification recipients
+     */
+    public final NotificationRecipientsObj getNotificationRecipients() {
+        return notificationRecipients;
+    }
 
-	/**
-	 * Sets the notification recipients.
-	 *
-	 * @param notificationRecipients
-	 *            the new notification recipients
-	 */
-	public void setNotificationRecipients(
-			NotificationRecipientsObj notificationRecipients) {
-		this.notificationRecipients = notificationRecipients;
-	}
+    /**
+     * Sets the notification recipients.
+     *
+     * @param notificationRecipients
+     *            the new notification recipients
+     */
+    public final void setNotificationRecipients(
+            final NotificationRecipientsObj notificationRecipients) {
+        this.notificationRecipients = notificationRecipients;
+    }
 }

@@ -18,7 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.rowset.serial.SerialClob;
 
 import org.apache.velocity.VelocityContext;
@@ -33,7 +34,6 @@ import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDAO;
 import com.wiley.gr.ace.authorservices.services.service.TemplateManagementService;
 
-
 /**
  * The Class TemplateManagementServiceImpl.
  * 
@@ -41,263 +41,317 @@ import com.wiley.gr.ace.authorservices.services.service.TemplateManagementServic
  */
 public class TemplateManagementServiceImpl implements TemplateManagementService {
 
-	/** The template management dao. */
-	@Autowired(required = true)
-	private TemplateManagementDAO templateManagementDAO;
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(TemplateManagementServiceImpl.class);
 
-	/**
-	 * Gets the template tags.
-	 *
-	 * @param applicationId the application id
-	 * @return the template tags
-	 * @throws Exception the exception
-	 */
-	@Override
-	public Tags getTemplateTags(String applicationId) throws Exception {
+    /** The template management dao. */
+    @Autowired(required = true)
+    private TemplateManagementDAO templateManagementDAO;
 
-		List<String> tag1 = new ArrayList<String>();
-		List<String> tag2 = new ArrayList<String>();
-		List<Template> templateEntityList = null;
-		Tags tags = null;
-		if (!StringUtils.isEmpty(applicationId)) {
-			templateEntityList = templateManagementDAO
-					.getTemplateTags(applicationId);
-			if (!StringUtils.isEmpty(templateEntityList)) {
-				for (Template te : templateEntityList) {
-					tag1.add(te.getTagl1());
-					tag2.add(te.getTagl2());
-				}
+    /**
+     * Gets the template tags.
+     *
+     * @param applicationId
+     *            the application id
+     * @return the template tags
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final Tags getTemplateTags(final String applicationId)
+            throws Exception {
+        LOGGER.info("inside getTemplateTags Method of TemplateManagementServiceImpl");
+        List<String> tag1 = new ArrayList<String>();
+        List<String> tag2 = new ArrayList<String>();
+        List<Template> templateEntityList = null;
+        Tags tags = null;
+        if (!StringUtils.isEmpty(applicationId)) {
+            templateEntityList = templateManagementDAO
+                    .getTemplateTags(applicationId);
+            if (!StringUtils.isEmpty(templateEntityList)) {
+                for (Template te : templateEntityList) {
+                    tag1.add(te.getTagl1());
+                    tag2.add(te.getTagl2());
+                }
 
-				tags = new Tags();
-				tags.setTag1List(tag1);
-				tags.setTag2List(tag2);
-			}
+                tags = new Tags();
+                tags.setTag1List(tag1);
+                tags.setTag2List(tag2);
+            }
 
-		}
-		return tags;
+        }
+        return tags;
 
-	}
+    }
 
-	/**
-	 * Gets the template.
-	 *
-	 * @param templateId the template id
-	 * @param applicationId the application id
-	 * @return the template
-	 * @throws Exception the exception
-	 */
-	@Override
-	public TemplateObj getTemplate(String templateId, String applicationId)
-			throws Exception {
-		TemplateObj template = null;
-		if (!StringUtils.isEmpty(templateId)
-				&& !StringUtils.isEmpty(applicationId)) {
+    /**
+     * Gets the template.
+     *
+     * @param templateId
+     *            the template id
+     * @param applicationId
+     *            the application id
+     * @return the template
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final TemplateObj getTemplate(final String templateId,
+            final String applicationId) throws Exception {
+        LOGGER.info("inside getTemplate Method of TemplateManagementServiceImpl");
+        TemplateObj template = null;
+        if (!StringUtils.isEmpty(templateId)
+                && !StringUtils.isEmpty(applicationId)) {
 
-			template = getTemplateVO(templateManagementDAO.getTemplate(templateId,
-					applicationId));
-		} 
-			return template;
+            template = getTemplateVO(templateManagementDAO.getTemplate(
+                    templateId, applicationId));
+        }
+        return template;
 
-	}
-	/**
-	 * Insert template.
-	 *
-	 * @param template the template
-	 * @return true, if successful
-	 * @throws Exception the exception
-	 */
-	@Override
-	public boolean insertTemplate(TemplateObj template) throws Exception {
-		boolean isInserted = false;
-		if (!StringUtils.isEmpty(template)) {
-			Template templateEntity = new Template();
-			templateEntity.setAppId(template.getAppId());
-			templateEntity.setBody(new SerialClob(template.getBody()
-					.toCharArray()));
-			templateEntity.setCreatedBy(template.getCreatedBy());
-			templateEntity.setCreatedOn(getDate(template.getCreatedOn()));
-			templateEntity.setDescription(template.getDescription());
-			templateEntity.setId(template.getId());
-			templateEntity.setLastModifiedOn(getDate(template.getLastModifiedOn()));
-			templateEntity.setModifiedBy(template.getModifiedBy());
-			templateEntity.setTagl1(template.getTagl1());
-			templateEntity.setTagl2(template.getTagl2());
-			isInserted = templateManagementDAO.saveOrUpdateTemplate(templateEntity);
-		} 
-			return isInserted;
-	}
+    }
 
-	/**
-	 * Update template.
-	 *
-	 * @param templateId the template id
-	 * @param applicationId the application id
-	 * @param templateObj the template obj
-	 * @return true, if successful
-	 * @throws Exception the exception
-	 */
-	@Override
-	public boolean updateTemplate(String templateId, String applicationId,
-			TemplateObj templateObj) throws Exception {
+    /**
+     * Insert template.
+     *
+     * @param template
+     *            the template
+     * @return true, if successful
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final boolean insertTemplate(final TemplateObj template)
+            throws Exception {
+        LOGGER.info("inside insertTemplate Method of TemplateManagementServiceImpl");
+        boolean isInserted = false;
+        if (!StringUtils.isEmpty(template)) {
+            Template templateEntity = new Template();
+            templateEntity.setAppId(template.getAppId());
+            templateEntity.setBody(new SerialClob(template.getBody()
+                    .toCharArray()));
+            templateEntity.setCreatedBy(template.getCreatedBy());
+            templateEntity.setCreatedOn(getDate(template.getCreatedOn()));
+            templateEntity.setDescription(template.getDescription());
+            templateEntity.setId(template.getId());
+            templateEntity.setLastModifiedOn(getDate(template
+                    .getLastModifiedOn()));
+            templateEntity.setModifiedBy(template.getModifiedBy());
+            templateEntity.setTagl1(template.getTagl1());
+            templateEntity.setTagl2(template.getTagl2());
+            isInserted = templateManagementDAO
+                    .saveOrUpdateTemplate(templateEntity);
+        }
+        return isInserted;
+    }
 
-		Template templateEntity = null;
-		templateEntity = templateManagementDAO.getTemplate(templateId,
-				applicationId);
+    /**
+     * Update template.
+     *
+     * @param templateId
+     *            the template id
+     * @param applicationId
+     *            the application id
+     * @param templateObj
+     *            the template obj
+     * @return true, if successful
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final boolean updateTemplate(final String templateId,
+            final String applicationId, final TemplateObj templateObj)
+            throws Exception {
+        LOGGER.info("inside updateTemplate Method of TemplateManagementServiceImpl");
+        Template templateEntity = null;
+        templateEntity = templateManagementDAO.getTemplate(templateId,
+                applicationId);
 
-		if (!StringUtils.isEmpty(templateObj)) {
-			if (!StringUtils.isEmpty(templateObj.getAppId()))
-				templateEntity.setAppId(templateObj.getAppId());
-			if (!StringUtils.isEmpty(templateObj.getBody()))
-				templateEntity.setBody(new SerialClob(templateObj.getBody()
-						.toCharArray()));
-			if (!StringUtils.isEmpty(templateObj.getDescription()))
-				templateEntity.setDescription(templateObj.getDescription());
-			if (!StringUtils.isEmpty(templateObj.getTagl1()))
-				templateEntity.setTagl1(templateObj.getTagl1());
-			if (!StringUtils.isEmpty(templateObj.getTagl2()))
-				templateEntity.setTagl2(templateObj.getTagl2());
-		}
+        if (!StringUtils.isEmpty(templateObj)) {
+            if (!StringUtils.isEmpty(templateObj.getAppId()))
+                templateEntity.setAppId(templateObj.getAppId());
+            if (!StringUtils.isEmpty(templateObj.getBody()))
+                templateEntity.setBody(new SerialClob(templateObj.getBody()
+                        .toCharArray()));
+            if (!StringUtils.isEmpty(templateObj.getDescription()))
+                templateEntity.setDescription(templateObj.getDescription());
+            if (!StringUtils.isEmpty(templateObj.getTagl1()))
+                templateEntity.setTagl1(templateObj.getTagl1());
+            if (!StringUtils.isEmpty(templateObj.getTagl2()))
+                templateEntity.setTagl2(templateObj.getTagl2());
+        }
 
-		return templateManagementDAO
-				.saveOrUpdateTemplate(templateEntity);
-	}
-	/**
-	 * Delete template.
-	 *
-	 * @param applicationId the application id
-	 * @param templateId the template id
-	 * @return true, if successful
-	 * @throws Exception the exception
-	 */
-	@Override
-	public boolean deleteTemplate(String applicationId, String templateId) throws Exception{
-		return templateManagementDAO.deleteTemplate(applicationId, templateId);
-	}
+        return templateManagementDAO.saveOrUpdateTemplate(templateEntity);
+    }
 
-	/**
-	 * Search template.
-	 *
-	 * @param applicationId the application id
-	 * @param tagL1 the tag l1
-	 * @param tagL2 the tag l2
-	 * @return the template obj
-	 * @throws Exception the exception
-	 */
-	@Override
-	public TemplateObj searchTemplate(String applicationId, String tagL1,
-			String tagL2) throws Exception {
-		TemplateObj template = null;
-		if (!StringUtils.isEmpty(applicationId)
-				&& !StringUtils.isEmpty(tagL1)
-				&& !StringUtils.isEmpty(tagL2)) {
-		Template templateEntity = templateManagementDAO.searchTemplate(applicationId, tagL1, tagL2);
-			template = getTemplateVO(templateEntity);
-		}
-		return template;
+    /**
+     * Delete template.
+     *
+     * @param applicationId
+     *            the application id
+     * @param templateId
+     *            the template id
+     * @return true, if successful
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final boolean deleteTemplate(final String applicationId,
+            final String templateId) throws Exception {
+        LOGGER.info("inside deleteTemplate Method of TemplateManagementServiceImpl");
+        return templateManagementDAO.deleteTemplate(applicationId, templateId);
+    }
 
+    /**
+     * Search template.
+     *
+     * @param applicationId
+     *            the application id
+     * @param tagL1
+     *            the tag l1
+     * @param tagL2
+     *            the tag l2
+     * @return the template obj
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final TemplateObj searchTemplate(final String applicationId,
+            final String tagL1, final String tagL2) throws Exception {
+        LOGGER.info("inside searchTemplate Method of TemplateManagementServiceImpl");
+        TemplateObj template = null;
+        if (!StringUtils.isEmpty(applicationId) && !StringUtils.isEmpty(tagL1)
+                && !StringUtils.isEmpty(tagL2)) {
+            Template templateEntity = templateManagementDAO.searchTemplate(
+                    applicationId, tagL1, tagL2);
+            template = getTemplateVO(templateEntity);
+        }
+        return template;
 
-	}
+    }
 
-	/**
-	 * Gets the template vo.
-	 *
-	 * @param templateEntity the template entity
-	 * @return the template vo
-	 * @throws Exception the exception
-	 */
-	private TemplateObj getTemplateVO(Template templateEntity)
-			throws Exception {
-		TemplateObj template = new TemplateObj();
-		if(!StringUtils.isEmpty(templateEntity.getAppId()))
-		template.setAppId(templateEntity.getAppId());
-		if(!StringUtils.isEmpty(templateEntity.getBody()))
-		template.setBody(clobStringConversion(templateEntity.getBody()));
-		if(!StringUtils.isEmpty(templateEntity.getCreatedBy()))
-		template.setCreatedBy(templateEntity.getCreatedBy());
-		if(!StringUtils.isEmpty(templateEntity.getCreatedOn()))
-		template.setCreatedOn(templateEntity.getCreatedOn().toString());
-		if(!StringUtils.isEmpty(templateEntity.getDescription()))
-		template.setDescription(templateEntity.getDescription());
-		if(!StringUtils.isEmpty(templateEntity.getId()))
-		template.setId(templateEntity.getId());
-		if(!StringUtils.isEmpty(templateEntity.getLastModifiedOn()))
-		template.setLastModifiedOn(templateEntity.getLastModifiedOn().toString());
-		if(!StringUtils.isEmpty(templateEntity.getModifiedBy()))
-		template.setModifiedBy(templateEntity.getModifiedBy());
-		if(!StringUtils.isEmpty(templateEntity.getTagl1()))
-		template.setTagl1(templateEntity.getTagl1());
-		if(!StringUtils.isEmpty(templateEntity.getTagl2()))
-		template.setTagl2(templateEntity.getTagl2());
-		return template;
-	}
+    /**
+     * Gets the template vo.
+     *
+     * @param templateEntity
+     *            the template entity
+     * @return the template vo
+     * @throws Exception
+     *             the exception
+     */
+    private TemplateObj getTemplateVO(final Template templateEntity)
+            throws Exception {
+        LOGGER.info("inside getTemplateVO Method of TemplateManagementServiceImpl");
+        TemplateObj template = new TemplateObj();
+        if (!StringUtils.isEmpty(templateEntity.getAppId()))
+            template.setAppId(templateEntity.getAppId());
+        if (!StringUtils.isEmpty(templateEntity.getBody()))
+            template.setBody(clobStringConversion(templateEntity.getBody()));
+        if (!StringUtils.isEmpty(templateEntity.getCreatedBy()))
+            template.setCreatedBy(templateEntity.getCreatedBy());
+        if (!StringUtils.isEmpty(templateEntity.getCreatedOn()))
+            template.setCreatedOn(templateEntity.getCreatedOn().toString());
+        if (!StringUtils.isEmpty(templateEntity.getDescription()))
+            template.setDescription(templateEntity.getDescription());
+        if (!StringUtils.isEmpty(templateEntity.getId()))
+            template.setId(templateEntity.getId());
+        if (!StringUtils.isEmpty(templateEntity.getLastModifiedOn()))
+            template.setLastModifiedOn(templateEntity.getLastModifiedOn()
+                    .toString());
+        if (!StringUtils.isEmpty(templateEntity.getModifiedBy()))
+            template.setModifiedBy(templateEntity.getModifiedBy());
+        if (!StringUtils.isEmpty(templateEntity.getTagl1()))
+            template.setTagl1(templateEntity.getTagl1());
+        if (!StringUtils.isEmpty(templateEntity.getTagl2()))
+            template.setTagl2(templateEntity.getTagl2());
+        return template;
+    }
 
-	/**
-	 * Render template.
-	 *
-	 * @param applicationId the application id
-	 * @param templateId the template id
-	 * @param templateDetails the template details
-	 * @return the template obj
-	 * @throws Exception the exception
-	 */
-	@Override
-	public TemplateObj renderTemplate(String applicationId, String templateId,
-			TemplateDetails templateDetails) throws Exception {
-		if (!StringUtils.isEmpty(templateId)
-				&& !StringUtils.isEmpty(applicationId)) {
-			Template templateEntity = null;
-			templateEntity = templateManagementDAO.getTemplate(templateId,
-					applicationId);
-			TemplateObj template = getTemplateVO(templateManagementDAO
-					.getTemplate(templateId, applicationId));
+    /**
+     * Render template.
+     *
+     * @param applicationId
+     *            the application id
+     * @param templateId
+     *            the template id
+     * @param templateDetails
+     *            the template details
+     * @return the template obj
+     * @throws Exception
+     *             the exception
+     */
+    @Override
+    public final TemplateObj renderTemplate(final String applicationId,
+            final String templateId, final TemplateDetails templateDetails)
+            throws Exception {
+        LOGGER.info("inside renderTemplate Method of TemplateManagementServiceImpl");
+        if (!StringUtils.isEmpty(templateId)
+                && !StringUtils.isEmpty(applicationId)) {
+            Template templateEntity = null;
+            templateEntity = templateManagementDAO.getTemplate(templateId,
+                    applicationId);
+            TemplateObj template = getTemplateVO(templateManagementDAO
+                    .getTemplate(templateId, applicationId));
 
-			VelocityContext vCtx = new VelocityContext();
+            VelocityContext vCtx = new VelocityContext();
 
-			for (int i = 0; i < templateDetails.getFieldList().size(); i++) {
-				String tempFieldIdentifier = "field" + String.valueOf(i);
-				vCtx.put(tempFieldIdentifier, templateDetails.getFieldList()
-						.get(i));
-			}
+            for (int i = 0; i < templateDetails.getFieldList().size(); i++) {
+                String tempFieldIdentifier = "field" + String.valueOf(i);
+                vCtx.put(tempFieldIdentifier, templateDetails.getFieldList()
+                        .get(i));
+            }
 
-			StringWriter sw = new StringWriter();
-			String templateStr = clobStringConversion(templateEntity.getBody());
+            StringWriter sw = new StringWriter();
+            String templateStr = clobStringConversion(templateEntity.getBody());
 
-			Velocity.evaluate(vCtx, sw, "template", templateStr);
+            Velocity.evaluate(vCtx, sw, "template", templateStr);
 
-			template.setBody(sw.toString());
+            template.setBody(sw.toString());
 
-			return template;
-		} else
-			return null;
-	}
+            return template;
+        } else
+            return null;
+    }
 
-	/**
-	 * Clob string conversion.
-	 *
-	 * @param clb the clb
-	 * @return the string
-	 * @throws Exception the exception
-	 */
-	private  String clobStringConversion(Clob clb) throws Exception
-			 {
-		if (clb == null)
-			return "";
+    /**
+     * Clob string conversion.
+     *
+     * @param clb
+     *            the clb
+     * @return the string
+     * @throws Exception
+     *             the exception
+     */
+    private String clobStringConversion(final Clob clb) throws Exception {
+        LOGGER.info("inside clobStringConversion Method of TemplateManagementServiceImpl");
+        if (clb == null)
+            return "";
 
-		StringBuilder str = new StringBuilder();
-		String strng;
+        StringBuilder str = new StringBuilder();
+        String strng;
 
-		BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
+        BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
 
-		while ((strng = bufferRead.readLine()) != null)
-			str.append(strng);
-		bufferRead.close();
-		return str.toString();
-		
-	}
-	private Date getDate(String strDate) throws Exception{
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		return formatter.parse(strDate);
-	}
-	
+        while ((strng = bufferRead.readLine()) != null)
+            str.append(strng);
+        bufferRead.close();
+        return str.toString();
+
+    }
+
+    /**
+     * Gets the date.
+     *
+     * @param strDate
+     *            the str date
+     * @return the date
+     * @throws Exception
+     *             the exception
+     */
+    private Date getDate(final String strDate) throws Exception {
+        LOGGER.info("inside strDate Method of TemplateManagementServiceImpl");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        return formatter.parse(strDate);
+    }
 
 }

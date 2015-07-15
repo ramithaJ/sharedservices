@@ -31,7 +31,7 @@ public class CrossRefServiceBeanConfig {
      * @return the cross ref service
      */
     @Bean(name = "CrossRefService")
-    public final CrossRefService crossRefService() {
+    public CrossRefService crossRefService() {
         return new CrossRefServiceImpl();
     }
 

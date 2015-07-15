@@ -42,135 +42,135 @@ import org.hibernate.annotations.CascadeType;
 @Table(name = "NOTIFICATION")
 public class Notification implements java.io.Serializable {
 
-	private Integer id;
-	private Template template;
-	private String appId;
-	private String senderId;
-	private String senderEmail;
-	private Clob content;
-	private String type;
-	private Date sentOn;
-	private Character unread;
-	private NotificationRecipients notificationRecipients;
+    private Integer id;
+    private Template template;
+    private String appId;
+    private String senderId;
+    private String senderEmail;
+    private Clob content;
+    private String type;
+    private Date sentOn;
+    private Character unread;
+    private NotificationRecipients notificationRecipients;
 
-	public Notification() {
-	}
+    public Notification() {
+    }
 
-	public Notification(Integer id) {
-		this.id = id;
-	}
+    public Notification(Integer id) {
+        this.id = id;
+    }
 
-	public Notification(Integer id, Template template, String appId,
-			String senderId, String senderEmail, Clob content, String type,
-			Date sentOn, Character unread,
-			NotificationRecipients notificationRecipients) {
-		this.id = id;
-		this.template = template;
-		this.appId = appId;
-		this.senderId = senderId;
-		this.senderEmail = senderEmail;
-		this.content = content;
-		this.type = type;
-		this.sentOn = sentOn;
-		this.unread = unread;
-		this.notificationRecipients = notificationRecipients;
-	}
+    public Notification(Integer id, Template template, String appId,
+            String senderId, String senderEmail, Clob content, String type,
+            Date sentOn, Character unread,
+            NotificationRecipients notificationRecipients) {
+        this.id = id;
+        this.template = template;
+        this.appId = appId;
+        this.senderId = senderId;
+        this.senderEmail = senderEmail;
+        this.content = content;
+        this.type = type;
+        this.sentOn = sentOn;
+        this.unread = unread;
+        this.notificationRecipients = notificationRecipients;
+    }
 
-	@Id
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTIFICATION_SEQ")
-	@SequenceGenerator(name = "NOTIFICATION_SEQ", sequenceName = "NOTIFICATION_SEQ", allocationSize = 1)
-	public Integer getId() {
-		return this.id;
-	}
+    @Id
+    @Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTIFICATION_SEQ")
+    @SequenceGenerator(name = "NOTIFICATION_SEQ", sequenceName = "NOTIFICATION_SEQ", allocationSize = 1)
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ORIG_TMPL_ID")
-	public Template getTemplate() {
-		return this.template;
-	}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ORIG_TMPL_ID")
+    public Template getTemplate() {
+        return this.template;
+    }
 
-	public void setTemplate(Template template) {
-		this.template = template;
-	}
+    public void setTemplate(Template template) {
+        this.template = template;
+    }
 
-	@Column(name = "APP_ID", length = 25)
-	public String getAppId() {
-		return this.appId;
-	}
+    @Column(name = "APP_ID", length = 25)
+    public String getAppId() {
+        return this.appId;
+    }
 
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
-	@Column(name = "SENDER_ID")
-	public String getSenderId() {
-		return this.senderId;
-	}
+    @Column(name = "SENDER_ID")
+    public String getSenderId() {
+        return this.senderId;
+    }
 
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
-	}
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
 
-	@Column(name = "SENDER_EMAIL")
-	public String getSenderEmail() {
-		return this.senderEmail;
-	}
+    @Column(name = "SENDER_EMAIL")
+    public String getSenderEmail() {
+        return this.senderEmail;
+    }
 
-	public void setSenderEmail(String senderEmail) {
-		this.senderEmail = senderEmail;
-	}
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
+    }
 
-	@Column(name = "CONTENT")
-	public Clob getContent() {
-		return this.content;
-	}
+    @Column(name = "CONTENT")
+    public Clob getContent() {
+        return this.content;
+    }
 
-	public void setContent(Clob content) {
-		this.content = content;
-	}
+    public void setContent(Clob content) {
+        this.content = content;
+    }
 
-	@Column(name = "TYPE", length = 25)
-	public String getType() {
-		return this.type;
-	}
+    @Column(name = "TYPE", length = 25)
+    public String getType() {
+        return this.type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "SENT_ON", length = 7)
-	public Date getSentOn() {
-		return this.sentOn;
-	}
+    @Temporal(TemporalType.DATE)
+    @Column(name = "SENT_ON", length = 7)
+    public Date getSentOn() {
+        return this.sentOn;
+    }
 
-	public void setSentOn(Date sentOn) {
-		this.sentOn = sentOn;
-	}
+    public void setSentOn(Date sentOn) {
+        this.sentOn = sentOn;
+    }
 
-	@Column(name = "UNREAD", length = 1)
-	public Character getUnread() {
-		return this.unread;
-	}
+    @Column(name = "UNREAD", length = 1)
+    public Character getUnread() {
+        return this.unread;
+    }
 
-	public void setUnread(Character unread) {
-		this.unread = unread;
-	}
+    public void setUnread(Character unread) {
+        this.unread = unread;
+    }
 
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "notification")
-	@Cascade(CascadeType.ALL)
-	public NotificationRecipients getNotificationRecipients() {
-		return this.notificationRecipients;
-	}
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "notification")
+    @Cascade(CascadeType.ALL)
+    public NotificationRecipients getNotificationRecipients() {
+        return this.notificationRecipients;
+    }
 
-	public void setNotificationRecipients(
-			NotificationRecipients notificationRecipients) {
-		this.notificationRecipients = notificationRecipients;
-	}
+    public void setNotificationRecipients(
+            NotificationRecipients notificationRecipients) {
+        this.notificationRecipients = notificationRecipients;
+    }
 
 }

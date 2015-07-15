@@ -20,70 +20,70 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class ScheduleTemplateObj {
 
-	/** The template by onscreen tmpl id. */
-	private String email;
+    /** The template by onscreen tmpl id. */
+    private String email;
 
-	/** The template by email tmpl id. */
-	private String onscreen;
+    /** The template by email tmpl id. */
+    private String onscreen;
 
-	/** The delay. */
-	private Integer delay;
+    /** The delay. */
+    private Integer delay;
 
-	/**
-	 * Gets the template by onscreen tmpl id.
-	 *
-	 * @return the template by onscreen tmpl id
-	 */
-	public String getOnscreen() {
-		return onscreen;
-	}
+    /**
+     * Gets the template by onscreen tmpl id.
+     *
+     * @return the template by onscreen tmpl id
+     */
+    public final String getOnscreen() {
+        return onscreen;
+    }
 
-	/**
-	 * Sets the template by onscreen tmpl id.
-	 *
-	 * @param templateByOnscreenTmplId
-	 *            the new template by onscreen tmpl id
-	 */
-	public void setOnscreen(String onscreen) {
-		this.onscreen = onscreen;
-	}
+    /**
+     * Sets the onscreen.
+     *
+     * @param onscreen
+     *            the new onscreen
+     */
+    public final void setOnscreen(final String onscreen) {
+        this.onscreen = onscreen;
+    }
 
-	/**
-	 * Gets the template by email tmpl id.
-	 *
-	 * @return the template by email tmpl id
-	 */
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * Gets the template by email tmpl id.
+     *
+     * @return the template by email tmpl id
+     */
+    public final String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Sets the template by email tmpl id.
-	 *
-	 * @param templateByEmailTmplId
-	 *            the new template by email tmpl id
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * Sets the template by email tmpl id.
+     *
+     * @param email
+     *            the new email
+     */
+    public final void setEmail(final String email) {
+        this.email = email;
+    }
 
-	/**
-	 * Gets the delay.
-	 *
-	 * @return the delay
-	 */
-	public Integer getDelay() {
-		return delay;
-	}
+    /**
+     * Gets the delay.
+     *
+     * @return the delay
+     */
+    public final Integer getDelay() {
+        return delay;
+    }
 
-	/**
-	 * Sets the delay.
-	 *
-	 * @param delay
-	 *            the new delay
-	 */
-	public void setDelay(Integer delay) {
-		this.delay = delay;
-	}
+    /**
+     * Sets the delay.
+     *
+     * @param delay
+     *            the new delay
+     */
+    public final void setDelay(final Integer delay) {
+        this.delay = delay;
+    }
 
 }

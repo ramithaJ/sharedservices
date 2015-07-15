@@ -13,6 +13,7 @@ package com.wiley.gr.ace.authorservices.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * The Class TemplateObj.
  * 
@@ -20,216 +21,225 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class TemplateObj {
-	
-	/** The id. */
-	private String id;
-	
-	/** The app id. */
-	private String appId;
-	
-	/** The description. */
-	private String description;
-	
-	/** The tagl1. */
-	private String tagl1;
-	
-	/** The tagl2. */
-	private String tagl2;
-	
-	/** The body. */
-	private String body;
-	
-	/** The created by. */
-	private String createdBy;
-	
-	/** The modified by. */
-	private String modifiedBy;
-	
-	/** The created on. */
-	private String createdOn;
-	
-	/** The last modified on. */
-	private String lastModifiedOn;
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
+    /** The id. */
+    private String id;
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
+    /** The app id. */
+    private String appId;
 
-	/**
-	 * Gets the app id.
-	 *
-	 * @return the app id
-	 */
-	public String getAppId() {
-		return appId;
-	}
+    /** The description. */
+    private String description;
 
-	/**
-	 * Sets the app id.
-	 *
-	 * @param appId the new app id
-	 */
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
+    /** The tagl1. */
+    private String tagl1;
 
-	/**
-	 * Gets the description.
-	 *
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /** The tagl2. */
+    private String tagl2;
 
-	/**
-	 * Sets the description.
-	 *
-	 * @param description the new description
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /** The body. */
+    private String body;
 
-	/**
-	 * Gets the tagl1.
-	 *
-	 * @return the tagl1
-	 */
-	public String getTagl1() {
-		return tagl1;
-	}
+    /** The created by. */
+    private String createdBy;
 
-	/**
-	 * Sets the tagl1.
-	 *
-	 * @param tagl1 the new tagl1
-	 */
-	public void setTagl1(String tagl1) {
-		this.tagl1 = tagl1;
-	}
+    /** The modified by. */
+    private String modifiedBy;
 
-	/**
-	 * Gets the tagl2.
-	 *
-	 * @return the tagl2
-	 */
-	public String getTagl2() {
-		return tagl2;
-	}
+    /** The created on. */
+    private String createdOn;
 
-	/**
-	 * Sets the tagl2.
-	 *
-	 * @param tagl2 the new tagl2
-	 */
-	public void setTagl2(String tagl2) {
-		this.tagl2 = tagl2;
-	}
+    /** The last modified on. */
+    private String lastModifiedOn;
 
-	/**
-	 * Gets the body.
-	 *
-	 * @return the body
-	 */
-	public String getBody() {
-		return body;
-	}
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public final String getId() {
+        return id;
+    }
 
-	/**
-	 * Sets the body.
-	 *
-	 * @param body the new body
-	 */
-	public void setBody(String body) {
-		this.body = body;
-	}
+    /**
+     * Sets the id.
+     *
+     * @param id
+     *            the new id
+     */
+    public final void setId(final String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Gets the created by.
-	 *
-	 * @return the created by
-	 */
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    /**
+     * Gets the app id.
+     *
+     * @return the app id
+     */
+    public final String getAppId() {
+        return appId;
+    }
 
-	/**
-	 * Sets the created by.
-	 *
-	 * @param createdBy the new created by
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    /**
+     * Sets the app id.
+     *
+     * @param appId
+     *            the new app id
+     */
+    public final void setAppId(final String appId) {
+        this.appId = appId;
+    }
 
-	/**
-	 * Gets the created on.
-	 *
-	 * @return the created on
-	 */
-	public String getCreatedOn() {
-		return createdOn;
-	}
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
+    public final String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Sets the created on.
-	 *
-	 * @param createdOn the new created on
-	 */
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+    /**
+     * Sets the description.
+     *
+     * @param description
+     *            the new description
+     */
+    public final void setDescription(final String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Gets the last modified on.
-	 *
-	 * @return the last modified on
-	 */
-	public String getLastModifiedOn() {
-		return lastModifiedOn;
-	}
+    /**
+     * Gets the tagl1.
+     *
+     * @return the tagl1
+     */
+    public final String getTagl1() {
+        return tagl1;
+    }
 
-	/**
-	 * Sets the last modified on.
-	 *
-	 * @param lastModifiedOn the new last modified on
-	 */
-	public void setLastModifiedOn(String lastModifiedOn) {
-		this.lastModifiedOn = lastModifiedOn;
-	}
+    /**
+     * Sets the tagl1.
+     *
+     * @param tagl1
+     *            the new tagl1
+     */
+    public final void setTagl1(final String tagl1) {
+        this.tagl1 = tagl1;
+    }
 
-	/**
-	 * Gets the modified by.
-	 *
-	 * @return the modified by
-	 */
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
+    /**
+     * Gets the tagl2.
+     *
+     * @return the tagl2
+     */
+    public final String getTagl2() {
+        return tagl2;
+    }
 
-	/**
-	 * Sets the modified by.
-	 *
-	 * @param modifiedBy the new modified by
-	 */
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    /**
+     * Sets the tagl2.
+     *
+     * @param tagl2
+     *            the new tagl2
+     */
+    public final void setTagl2(final String tagl2) {
+        this.tagl2 = tagl2;
+    }
 
+    /**
+     * Gets the body.
+     *
+     * @return the body
+     */
+    public final String getBody() {
+        return body;
+    }
+
+    /**
+     * Sets the body.
+     *
+     * @param body
+     *            the new body
+     */
+    public final void setBody(final String body) {
+        this.body = body;
+    }
+
+    /**
+     * Gets the created by.
+     *
+     * @return the created by
+     */
+    public final String getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * Sets the created by.
+     *
+     * @param createdBy
+     *            the new created by
+     */
+    public final void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * Gets the created on.
+     *
+     * @return the created on
+     */
+    public final String getCreatedOn() {
+        return createdOn;
+    }
+
+    /**
+     * Sets the created on.
+     *
+     * @param createdOn
+     *            the new created on
+     */
+    public final void setCreatedOn(final String createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    /**
+     * Gets the last modified on.
+     *
+     * @return the last modified on
+     */
+    public final String getLastModifiedOn() {
+        return lastModifiedOn;
+    }
+
+    /**
+     * Sets the last modified on.
+     *
+     * @param lastModifiedOn
+     *            the new last modified on
+     */
+    public final void setLastModifiedOn(final String lastModifiedOn) {
+        this.lastModifiedOn = lastModifiedOn;
+    }
+
+    /**
+     * Gets the modified by.
+     *
+     * @return the modified by
+     */
+    public final String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    /**
+     * Sets the modified by.
+     *
+     * @param modifiedBy
+     *            the new modified by
+     */
+    public final void setModifiedBy(final String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 
 }
