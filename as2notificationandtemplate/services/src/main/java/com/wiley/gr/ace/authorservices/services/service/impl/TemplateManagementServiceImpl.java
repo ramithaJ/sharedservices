@@ -332,8 +332,9 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
 
         BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
 
-        while ((strng = bufferRead.readLine()) != null)
+        while ((strng = bufferRead.readLine()) != null) {
             str.append(strng);
+        }
         bufferRead.close();
         return str.toString();
 
