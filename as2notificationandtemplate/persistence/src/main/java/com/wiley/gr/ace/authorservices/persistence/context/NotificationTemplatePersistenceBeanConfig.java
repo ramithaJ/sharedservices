@@ -14,7 +14,7 @@ package com.wiley.gr.ace.authorservices.persistence.context;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.wiley.gr.ace.authorservices.persistence.connection.NotificationTemplateHibernateConnection;
+import com.wiley.gr.ace.authorservices.persistence.connection.NotificationHibernateConnection;
 import com.wiley.gr.ace.authorservices.persistence.services.NotificationManagementDAO;
 import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDAO;
 import com.wiley.gr.ace.authorservices.persistence.services.impl.NotificationManagementDAOImpl;
@@ -34,8 +34,8 @@ public class NotificationTemplatePersistenceBeanConfig {
      * @return the notification template hibernate connection
      */
     @Bean(name = "NotificationTemplateHibernateConnection")
-    public NotificationTemplateHibernateConnection notificationTemplateHibernateConnection() {
-        return new NotificationTemplateHibernateConnection();
+    public NotificationHibernateConnection notificationTemplateHibernateConnection() {
+        return new NotificationHibernateConnection();
     }
 
     /**

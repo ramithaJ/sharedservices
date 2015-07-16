@@ -162,19 +162,9 @@ public interface NotificationManagementDAO {
     /**
      * Creates the notification history.
      *
-     * @param applicationId
-     *            the application id
-     * @param templateId
-     *            the template id
-     * @param senderEmail
-     *            the sender email
-     * @param recipientEmail
-     *            the recipient email
-     * @param content
-     *            the content
-     * @param type
-     *            the type
-     * @return true, if successful
+     * @param notification
+     *            the notification
+     * @return the integer
      * @throws Exception
      *             the exception
      */

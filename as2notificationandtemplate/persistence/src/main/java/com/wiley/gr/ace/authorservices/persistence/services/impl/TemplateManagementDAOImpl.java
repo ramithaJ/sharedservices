@@ -11,12 +11,14 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.persistence.services.impl;
 
-import static com.wiley.gr.ace.authorservices.persistence.connection.NotificationTemplateHibernateConnection.getSessionFactory;
+import static com.wiley.gr.ace.authorservices.persistence.connection.NotificationHibernateConnection.getSessionFactory;
 
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
@@ -28,6 +30,10 @@ import com.wiley.gr.ace.authorservices.persistence.services.TemplateManagementDA
  * @author virtusa version 1.0
  */
 public class TemplateManagementDAOImpl implements TemplateManagementDAO {
+
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(TemplateManagementDAOImpl.class);
 
     /**
      * Gets the template tags.
@@ -41,6 +47,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
     @Override
     public final List<Template> getTemplateTags(final String applicationId)
             throws Exception {
+        LOGGER.info("inside getTemplateTags method of TemplateManagementDAOImpl");
         Session session = null;
         List<Template> templateEntityList = null;
         try {
@@ -74,7 +81,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
     @Override
     public final Template getTemplate(final String templateId,
             final String applicationId) throws Exception {
-
+        LOGGER.info("inside getTemplate method of TemplateManagementDAOImpl");
         Session session = null;
         Template template = null;
         if (!StringUtils.isEmpty(templateId)
@@ -110,6 +117,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
     @Override
     public final boolean saveOrUpdateTemplate(final Template template)
             throws Exception {
+        LOGGER.info("inside saveOrUpdateTemplate method of TemplateManagementDAOImpl");
         Session session = null;
         boolean isSaved = false;
         try {
@@ -120,9 +128,11 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
             isSaved = true;
 
         } catch (Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             isSaved = false;
-            if (null != session)
+            if (null != session) {
                 session.getTransaction().rollback();
+            }
         } finally {
             if (session != null) {
                 session.flush();
@@ -146,6 +156,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
     @Override
     public final boolean deleteTemplate(final String applicationId,
             final String templateId) throws Exception {
+        LOGGER.info("inside deleteTemplate method of TemplateManagementDAOImpl");
         Session session = null;
         boolean deleteStatus = false;
         if (!StringUtils.isEmpty(templateId)) {
@@ -159,9 +170,11 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
                 txn.commit();
                 deleteStatus = true;
             } catch (Exception e) {
+                LOGGER.error("Print Stack Trace- ", e);
                 deleteStatus = false;
-                if (null != session)
+                if (null != session) {
                     session.getTransaction().rollback();
+                }
             } finally {
                 if (session != null) {
                     session.flush();
@@ -189,6 +202,7 @@ public class TemplateManagementDAOImpl implements TemplateManagementDAO {
     @Override
     public final Template searchTemplate(final String applicationId,
             final String tagL1, final String tagL2) throws Exception {
+        LOGGER.info("inside searchTemplate method of TemplateManagementDAOImpl");
         Session session = null;
         Template template = null;
         try {

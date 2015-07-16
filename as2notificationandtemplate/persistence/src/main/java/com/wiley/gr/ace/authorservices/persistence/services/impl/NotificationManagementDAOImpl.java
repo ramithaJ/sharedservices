@@ -11,11 +11,13 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.persistence.services.impl;
 
-import static com.wiley.gr.ace.authorservices.persistence.connection.NotificationTemplateHibernateConnection.getSessionFactory;
+import static com.wiley.gr.ace.authorservices.persistence.connection.NotificationHibernateConnection.getSessionFactory;
 
 import java.util.List;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.persistence.entity.Notification;
@@ -32,6 +34,10 @@ import com.wiley.gr.ace.authorservices.persistence.services.NotificationManageme
  */
 public class NotificationManagementDAOImpl implements NotificationManagementDAO {
 
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(NotificationManagementDAOImpl.class);
+
     /**
      * Gets the schedule.
      *
@@ -46,6 +52,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final Schedule getSchedule(final String applicationId,
             final String scheduleId) throws Exception {
+        LOGGER.info("inside getScedule method of NotificationManagementDAOImpl");
         Session session = null;
         Schedule schedule = null;
         if (!StringUtils.isEmpty(applicationId)
@@ -79,6 +86,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final boolean saveOrUpdateSchedule(final Schedule schedule)
             throws Exception {
+        LOGGER.info("inside saveOrUpdateSchedule method of NotificationManagementDAOImpl");
         Session session = null;
         boolean isSaved = false;
         try {
@@ -88,10 +96,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
             session.getTransaction().commit();
             isSaved = true;
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
             isSaved = false;
-            if (null != session)
+            if (null != session) {
                 session.getTransaction().rollback();
+            }
         } finally {
             if (session != null) {
                 session.flush();
@@ -116,6 +126,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final boolean deleteSchedule(final String applicationId,
             final String scheduleId) throws Exception {
+        LOGGER.info("inside deleteSchedule method of NotificationManagementDAOImpl");
         Session session = null;
         boolean isDeleted = false;
         if (!StringUtils.isEmpty(applicationId)
@@ -127,10 +138,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                 session.delete(schedule);
                 session.getTransaction().commit();
                 isDeleted = true;
-            } catch (Exception e) {
+            } catch (final Exception e) {
+                LOGGER.error("Print Stack Trace- ", e);
                 isDeleted = false;
-                if (null != session)
+                if (null != session) {
                     session.getTransaction().rollback();
+                }
             } finally {
                 if (session != null) {
                     session.flush();
@@ -157,6 +170,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final List<Schedule> templateLookup(final String applicationId,
             final String templateId, final String type) throws Exception {
+        LOGGER.info("inside templateLookup method of NotificationManagementDAOImpl");
         Session session = null;
         List<Schedule> scheduleList = null;
         if (!StringUtils.isEmpty(applicationId)
@@ -176,15 +190,18 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                     Template template = null;
                     if ("onscreen".equalsIgnoreCase(type)) {
                         template = scheduleTemplate.getTemplateByOnscreenTmpl();
-                        if (!templateId.equalsIgnoreCase(template.getId()))
+                        if (!templateId.equalsIgnoreCase(template.getId())) {
                             scheduleList.remove(s);
+                        }
                     } else if ("email".equalsIgnoreCase(type)) {
                         template = scheduleTemplate.getTemplateByOnscreenTmpl();
-                        if (!templateId.equalsIgnoreCase(template.getId()))
+                        if (!templateId.equalsIgnoreCase(template.getId())) {
                             scheduleList.remove(s);
+                        }
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
+                LOGGER.error("Print Stack Trace- ", e);
                 scheduleList = null;
             } finally {
                 if (session != null) {
@@ -210,7 +227,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final Template getTemplate(final String templateId,
             final String applicationId) throws Exception {
-
+        LOGGER.info("inside getTemplate method of NotificationManagementDAOImpl");
         Session session = null;
         Template template = null;
         if (!StringUtils.isEmpty(templateId)) {
@@ -247,6 +264,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final Notification getNotification(final String applicationId,
             final Integer notificationId) throws Exception {
+        LOGGER.info("inside getNotification method of NotificationManagementDAOImpl");
         Notification notification = null;
         Session session = null;
         if (!StringUtils.isEmpty(applicationId)
@@ -282,6 +300,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final boolean setNotificationFlag(final String applicationId,
             final Integer notificationId) throws Exception {
+        LOGGER.info("inside setNotificationFlag method of NotificationManagementDAOImpl");
         boolean isSet = false;
         Session session = null;
         if (!StringUtils.isEmpty(applicationId)
@@ -299,10 +318,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                     session.getTransaction().commit();
                     isSet = true;
 
-                } catch (Exception e) {
+                } catch (final Exception e) {
+                    LOGGER.error("Print Stack Trace- ", e);
                     isSet = false;
-                    if (null != session)
+                    if (null != session) {
                         session.getTransaction().rollback();
+                    }
                 } finally {
                     if (!StringUtils.isEmpty(session)) {
                         session.flush();
@@ -328,6 +349,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final List<Notification> getNotificationList(
             final String applicationId) throws Exception {
+        LOGGER.info("inside getNotificationList method of NotificationManagementDAOImpl");
         List<Notification> notificationList = null;
         Session session = null;
         if (!StringUtils.isEmpty(applicationId)) {
@@ -359,6 +381,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final NotificationRecipients getNotificationRecipients(
             final Integer notificationId) throws Exception {
+        LOGGER.info("inside getNotificationRecipients method of NotificationManagementDAOImpl");
         NotificationRecipients notificationRecipients = null;
         Session session = null;
         if (!StringUtils.isEmpty(notificationId)) {
@@ -391,6 +414,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final Integer createNotificationHistory(
             final Notification notification) throws Exception {
+        LOGGER.info("inside createNotificationHistory method of NotificationManagementDAOImpl");
         Session session = null;
         Integer notificationId = null;
         try {
@@ -400,11 +424,12 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
             session.getTransaction().commit();
             notificationId = notification.getId();
 
-        } catch (Exception e) {
-            if (null != session)
+        } catch (final Exception e) {
+            LOGGER.error("Print Stack Trace- ", e);
+            if (null != session) {
                 session.getTransaction().rollback();
+            }
         } finally {
-
             if (session != null) {
                 session.flush();
                 session.close();
@@ -426,6 +451,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
     @Override
     public final ScheduleTemplate getScheduleTemplateEntity(
             final String scheduleId) throws Exception {
+        LOGGER.info("inside getScheduleTemplateEntity method of NotificationManagementDAOImpl");
         ScheduleTemplate scheduleTemplate = null;
         Session session = null;
         if (!StringUtils.isEmpty(scheduleId)) {

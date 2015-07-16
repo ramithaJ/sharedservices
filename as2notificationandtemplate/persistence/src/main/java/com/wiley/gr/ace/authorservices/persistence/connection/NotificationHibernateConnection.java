@@ -22,11 +22,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author virtusa version 1.0
  */
-public class NotificationTemplateHibernateConnection {
+public class NotificationHibernateConnection {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(NotificationTemplateHibernateConnection.class);
+            .getLogger(NotificationHibernateConnection.class);
 
     /** The Constant sessionFactory. */
     private static final SessionFactory sessionFactory = buildSessionFactory();
