@@ -55,12 +55,12 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 	 * @see com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService#getConfirmationCatalog(java.lang.String, java.lang.String)
 	 */
 	@Override
-    public ConfirmationCatalogDotcmsResponse getConfirmationCatalog(String contentTiltle,String moduleName,
+    public ConfirmationCatalogDotcmsResponse getConfirmationCatalog(String contentTitle,String moduleName,
             String locale) throws Exception {
 
       
-        String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +ConfirmationTexts.contentTiltle:*"
-                + contentTiltle
+        String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +ConfirmationTexts.contentTitle:*"
+                + contentTitle
                 +"+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +ConfirmationTexts.moduleName:*"
                 + moduleName
                 + "* +ConfirmationTexts.locale:*"

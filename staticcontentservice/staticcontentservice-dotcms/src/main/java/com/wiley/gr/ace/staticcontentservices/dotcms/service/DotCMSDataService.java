@@ -26,13 +26,13 @@ public interface DotCMSDataService {
 	/**
 	 * Gets the confirmation catalog.
 	 *
-	 * @param contentTiltle the content tiltle
+	 * @param contentTiltle the content title
 	 * @param moduleName the module name
 	 * @param locale the locale
 	 * @return the confirmation catalog
 	 * @throws Exception the exception
 	 */
-	ConfirmationCatalogDotcmsResponse getConfirmationCatalog(String contentTiltle, String moduleName, String locale) throws Exception;
+	ConfirmationCatalogDotcmsResponse getConfirmationCatalog(String contentTitle, String moduleName, String locale) throws Exception;
 
 	/**
 	 * Gets the status catalog.

@@ -26,13 +26,13 @@ public interface StaticContentFetchService {
     /**
      * Gets the confirmation message content.
      *
-     * @param contentTiltle the content tiltle
+     * @param contentTiltle the content title
      * @param moduleName the module name
      * @param locale the locale
      * @return the confirmation message content
      * @throws Exception the exception
      */
-    ConfirmationContent getConfirmationMessageContent(String contentTiltle, String moduleName, String locale)
+    ConfirmationContent getConfirmationMessageContent(String contentTitle, String moduleName, String locale)
             throws Exception;
 	
 	/**

@@ -9,26 +9,26 @@ import java.util.HashMap;
  */
 public class ConfirmationContent {
 
-    /** The content tiltle. */
-    private String contentTiltle;
+    /** The content title. */
+    private String contentTitle;
     
     
 	/**
-	 * Gets the content tiltle.
+	 * Gets the content title.
 	 *
-	 * @return the content tiltle
+	 * @return the content title
 	 */
-	public final String getContentTiltle() {
-        return contentTiltle;
+	public final String getContentTitle() {
+        return contentTitle;
     }
 
     /**
-     * Sets the content tiltle.
+     * Sets the content title.
      *
-     * @param contentTiltle the new content tiltle
+     * @param contentTiltle the new content title
      */
-    public final void setContentTiltle(String contentTiltle) {
-        this.contentTiltle = contentTiltle;
+    public final void setContentTiltle(String contentTitle) {
+        this.contentTitle = contentTitle;
     }
 
     /** The module name. */

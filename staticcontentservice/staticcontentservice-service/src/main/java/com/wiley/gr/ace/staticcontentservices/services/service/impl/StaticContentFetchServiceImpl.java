@@ -65,11 +65,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
  	 * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getConfirmationMessageContent(java.lang.String, java.lang.String)
  	 */
  	@Override
-	    public ConfirmationContent getConfirmationMessageContent(String contentTiltle, String moduleName, String locale)
+	    public ConfirmationContent getConfirmationMessageContent(String contentTitle, String moduleName, String locale)
 	            throws Exception {
 
 	        ConfirmationCatalogDotcmsResponse confirmationCatalogDotcmsResponse = dotCMSDataService
-	                .getConfirmationCatalog(contentTiltle,moduleName, locale);
+	                .getConfirmationCatalog(contentTitle,moduleName, locale);
 	        ConfirmationContent confirmationContent = null;
 	        if (!StringUtils.isEmpty(confirmationCatalogDotcmsResponse)) {
 	            confirmationContent = new ConfirmationContent();
@@ -77,7 +77,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	                    .getContentlets().get(0);
 	            confirmationContent.setConfirmationMessages(confirmationCatalog
 	                    .getConfirmationMessages());
-	            confirmationContent.setContentTiltle(contentTiltle);
+	            confirmationContent.setContentTiltle(contentTitle);
 	            confirmationContent.setLocale(locale);
 	            confirmationContent.setModuleName(moduleName);
 

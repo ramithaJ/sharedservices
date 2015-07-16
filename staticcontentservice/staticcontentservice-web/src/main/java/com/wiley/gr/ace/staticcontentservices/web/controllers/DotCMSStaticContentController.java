@@ -70,14 +70,14 @@ public class DotCMSStaticContentController {
 	   /**
    	 * Gets the confirmation catalog.
    	 *
-   	 * @param contentTiltle the content tiltle
+   	 * @param contentTiltle the content title
    	 * @param moduleName the module name
    	 * @param locale the locale
    	 * @return the confirmation catalog
    	 */
-   	@RequestMapping(value = "/confirmation/{contentTiltle}/{moduleName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+   	@RequestMapping(value = "/confirmation/{contentTitle}/{moduleName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	    public @ResponseBody Service getConfirmationCatalog(
-	            @PathVariable("contentTiltle") String contentTiltle,
+	            @PathVariable("contentTitle") String contentTitle,
 	            @PathVariable("moduleName") String moduleName,
 	            @PathVariable("locale") String locale) {
 	        ConfirmationContent confirmationContent = null;
@@ -85,7 +85,7 @@ public class DotCMSStaticContentController {
 
 	        try {
 	            confirmationContent = staticContentFetchService.getConfirmationMessageContent(
-	                    contentTiltle,moduleName, locale);
+	                    contentTitle,moduleName, locale);
 	            if (!StringUtils.isEmpty(confirmationContent)) {
 	                service.setStatus("SUCCESS");
 	                service.setPayload(confirmationContent);
