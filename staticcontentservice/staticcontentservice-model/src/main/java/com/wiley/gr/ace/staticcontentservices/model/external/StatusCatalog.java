@@ -244,7 +244,7 @@ public class StatusCatalog {
     /**
      * Gets the   dotname.
      *
-     * @return the   dotname
+     * @return the   prescribeddotname
      */
     public String get__DOTNAME__ ()
     {
@@ -252,7 +252,7 @@ public class StatusCatalog {
     }
 
     /**
-     * Sets the   dotname.
+     * Sets the   prescribed dotname.
      *
      * @param __DOTNAME__ the new   dotname
      */
