@@ -133,11 +133,11 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 	 * @see com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService#getStaticCatalog(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-    public StaticCatalogDotcmsResponse getStaticCatalog(String contentTitle, String pageName,  String locale) throws Exception {
+    public StaticCatalogDotcmsResponse getStaticCatalog(String contentUniqueKey, String pageName,  String locale) throws Exception {
 
        
-        String dotQuery = "+structureName:StaticAdBlock +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +StaticAdBlock.contentTitle:*"
-                + contentTitle
+        String dotQuery = "+structureName:StaticAdBlock +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +StaticAdBlock.contentUniqueKey:*"
+                + contentUniqueKey
                 +"* +StaticAdBlock.pageName:*"
                 +pageName
                 +"* +StaticAdBlock.locale:*"

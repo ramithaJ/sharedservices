@@ -63,5 +63,5 @@ public interface DotCMSDataService {
 	 * @return the static catalog
 	 * @throws Exception the exception
 	 */
-	StaticCatalogDotcmsResponse getStaticCatalog(String contentTitle, String pageName,  String locale) throws Exception;
+	StaticCatalogDotcmsResponse getStaticCatalog(String contentUniqueKey, String pageName,  String locale) throws Exception;
 }
