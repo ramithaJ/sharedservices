@@ -1,15 +1,17 @@
 package com.wiley.gr.ace.staticcontentservices.model.external;
 
-import java.util.HashMap;
-
-
 
 /**
- * The Class StatusCatalog.
+ * The Class StaticCatalog.
  */
-public class StatusCatalog {
+public class StaticCatalog {
     
- 
+    /** The image content asset. */
+    private String imageContentAsset;
+
+    /** The page name. */
+    private String pageName;
+
     /** The host. */
     private String host;
 
@@ -18,31 +20,12 @@ public class StatusCatalog {
 
     /** The locale. */
     private String locale;
-    
-    /** The title. */
-    private String title;
-
-    /**
-     * Gets the title.
-     *
-     * @return the title
-     */
-    public final String getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets the title.
-     *
-     * @param title the new title
-     */
-    public final void setTitle(String title) {
-        this.title = title;
-    }
-
 
     /** The st inode. */
     private String stInode;
+
+    /** The image. */
+    private String image;
 
     /** The last review. */
     private String lastReview;
@@ -50,14 +33,17 @@ public class StatusCatalog {
     /** The language id. */
     private String languageId;
 
+    /** The content unique key. */
+    private String contentUniqueKey;
+
     /** The folder. */
     private String folder;
 
-    /** The status message type. */
-    private String statusMessageType;
-
     /** The   dotname. */
     private String __DOTNAME__;
+
+    /** The title. */
+    private String title;
 
     /** The mod date. */
     private String modDate;
@@ -68,6 +54,9 @@ public class StatusCatalog {
     /** The owner. */
     private String owner;
 
+    /** The ad block content. */
+    private String adBlockContent;
+
     /** The mod user. */
     private String modUser;
 
@@ -77,10 +66,46 @@ public class StatusCatalog {
     /** The identifier. */
     private String identifier;
 
-    /**  The status messages. */
-    private HashMap<String, String> statusMessages;
-    
-    
+    /**
+     * Gets the image content asset.
+     *
+     * @return the image content asset
+     */
+    public String getImageContentAsset ()
+    {
+        return imageContentAsset;
+    }
+
+    /**
+     * Sets the image content asset.
+     *
+     * @param imageContentAsset the new image content asset
+     */
+    public void setImageContentAsset (String imageContentAsset)
+    {
+        this.imageContentAsset = imageContentAsset;
+    }
+
+    /**
+     * Gets the page name.
+     *
+     * @return the page name
+     */
+    public String getPageName ()
+    {
+        return pageName;
+    }
+
+    /**
+     * Sets the page name.
+     *
+     * @param pageName the new page name
+     */
+    public void setPageName (String pageName)
+    {
+        this.pageName = pageName;
+    }
+
     /**
      * Gets the host.
      *
@@ -162,6 +187,26 @@ public class StatusCatalog {
     }
 
     /**
+     * Gets the image.
+     *
+     * @return the image
+     */
+    public String getImage ()
+    {
+        return image;
+    }
+
+    /**
+     * Sets the image.
+     *
+     * @param image the new image
+     */
+    public void setImage (String image)
+    {
+        this.image = image;
+    }
+
+    /**
      * Gets the last review.
      *
      * @return the last review
@@ -202,6 +247,26 @@ public class StatusCatalog {
     }
 
     /**
+     * Gets the content unique key.
+     *
+     * @return the content unique key
+     */
+    public String getContentUniqueKey ()
+    {
+        return contentUniqueKey;
+    }
+
+    /**
+     * Sets the content unique key.
+     *
+     * @param contentUniqueKey the new content unique key
+     */
+    public void setContentUniqueKey (String contentUniqueKey)
+    {
+        this.contentUniqueKey = contentUniqueKey;
+    }
+
+    /**
      * Gets the folder.
      *
      * @return the folder
@@ -222,26 +287,6 @@ public class StatusCatalog {
     }
 
     /**
-     * Gets the status message type.
-     *
-     * @return the status message type
-     */
-    public String getStatusMessageType ()
-    {
-        return statusMessageType;
-    }
-
-    /**
-     * Sets the status message type.
-     *
-     * @param statusMessageType the new status message type
-     */
-    public void setStatusMessageType (String statusMessageType)
-    {
-        this.statusMessageType = statusMessageType;
-    }
-
-    /**
      * Gets the   dotname.
      *
      * @return the   dotname
@@ -259,6 +304,26 @@ public class StatusCatalog {
     public void set__DOTNAME__ (String __DOTNAME__)
     {
         this.__DOTNAME__ = __DOTNAME__;
+    }
+
+    /**
+     * Gets the title.
+     *
+     * @return the title
+     */
+    public String getTitle ()
+    {
+        return title;
+    }
+
+    /**
+     * Sets the title.
+     *
+     * @param title the new title
+     */
+    public void setTitle (String title)
+    {
+        this.title = title;
     }
 
     /**
@@ -322,6 +387,26 @@ public class StatusCatalog {
     }
 
     /**
+     * Gets the ad block content.
+     *
+     * @return the ad block content
+     */
+    public String getAdBlockContent ()
+    {
+        return adBlockContent;
+    }
+
+    /**
+     * Sets the ad block content.
+     *
+     * @param adBlockContent the new ad block content
+     */
+    public void setAdBlockContent (String adBlockContent)
+    {
+        this.adBlockContent = adBlockContent;
+    }
+
+    /**
      * Gets the mod user.
      *
      * @return the mod user
@@ -379,26 +464,6 @@ public class StatusCatalog {
     public void setIdentifier (String identifier)
     {
         this.identifier = identifier;
-    }
-
-    /**
-     * Gets the error messages option2.
-     *
-     * @return the error messages option2
-     */
-    public final HashMap<String, String> getStatusMessages() {
-        return statusMessages;
-    }
-
-    
-    /**
-     * Sets the .
-     *
-     * @param statusMessages the 
-     */
-    public final void setStatusMessages(
-            HashMap<String, String> statusMessages) {
-        this.statusMessages = statusMessages;
     }
 
 

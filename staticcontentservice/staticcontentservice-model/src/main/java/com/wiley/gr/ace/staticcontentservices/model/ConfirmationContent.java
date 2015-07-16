@@ -3,12 +3,35 @@ package com.wiley.gr.ace.staticcontentservices.model;
 import java.util.HashMap;
 
 
+
 /**
  * The Class ConfirmationContent.
  */
 public class ConfirmationContent {
 
-	/** The module name. */
+    /** The content title. */
+    private String contentTitle;
+    
+    
+	/**
+	 * Gets the content title.
+	 *
+	 * @return the content title
+	 */
+	public final String getContentTitle() {
+        return contentTitle;
+    }
+
+    /**
+     * Sets the content title.
+     *
+     * @param contentTiltle the new content title
+     */
+    public final void setContentTiltle(String contentTitle) {
+        this.contentTitle = contentTitle;
+    }
+
+    /** The module name. */
 	private String moduleName;
 	
 	/** The locale. */
@@ -31,7 +54,7 @@ public class ConfirmationContent {
 	/**
 	 * Sets the page name.
 	 *
-	 * @param pageName the new page name
+	 * @param moduleName the new module name
 	 */
 	public final void setModuleName(String moduleName) {
 		this.moduleName = moduleName;

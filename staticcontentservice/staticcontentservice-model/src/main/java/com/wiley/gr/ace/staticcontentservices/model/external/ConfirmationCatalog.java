@@ -3,6 +3,7 @@ package com.wiley.gr.ace.staticcontentservices.model.external;
 import java.util.HashMap;
 
 
+
 /**
  * The Class ConfirmationCatalog.
  */
@@ -53,8 +54,8 @@ public class ConfirmationCatalog {
     /** The language id. */
     private String languageId;
 
-    /** The content tiltle. */
-    private String contentTiltle;
+    /** The content title. */
+    private String contentTitle;
 
     /** The folder. */
     private String folder;
@@ -223,21 +224,21 @@ public class ConfirmationCatalog {
     }
 
     /**
-     * Gets the content tiltle.
+     * Gets the content title.
      *
-     * @return the content tiltle
+     * @return the content title
      */
-    public String getContentTiltle() {
-        return contentTiltle;
+    public String getContentTitle() {
+        return contentTitle;
     }
 
     /**
-     * Sets the content tiltle.
+     * Sets the content title.
      *
-     * @param contentTiltle the new content tiltle
+     * @param contentTiltle the new content title
      */
-    public void setContentTiltle(String contentTiltle) {
-        this.contentTiltle = contentTiltle;
+    public void setContentTiltle(String contentTitle) {
+        this.contentTitle = contentTitle;
     }
 
     /**

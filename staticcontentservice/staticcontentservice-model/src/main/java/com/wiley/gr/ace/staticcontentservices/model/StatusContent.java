@@ -3,12 +3,16 @@ package com.wiley.gr.ace.staticcontentservices.model;
 import java.util.HashMap;
 
 
+
 /**
  * The Class ConfirmationContent.
  */
 public class StatusContent {
 
-    /** The page name. */
+    /** The content title. */
+    private String contentTitle;
+
+    /** The status messageType. */
     private String statusMessageType;
     
     /** The locale. */
@@ -18,6 +22,24 @@ public class StatusContent {
     private HashMap<String, String> statusMessages;
     
         
+    
+    /**
+     * Gets the content title.
+     *
+     * @return the content title
+     */
+    public final String getContentTitle() {
+        return contentTitle;
+    }
+
+    /**
+     * Sets the content title.
+     *
+     * @param contentTitle the new content title
+     */
+    public final void setContentTitle(String contentTitle) {
+        this.contentTitle = contentTitle;
+    }
 
     /**
      * Gets the status message.
@@ -31,7 +53,7 @@ public class StatusContent {
     /**
      * Sets the page name.
      *
-     * @param pageName the new page name
+     * @param statusMessageType the new status message type
      */
     public final void setStatusMessageType(String statusMessageType) {
         this.statusMessageType = statusMessageType;
@@ -67,7 +89,7 @@ public class StatusContent {
     /**
      * Sets the confirmation messages.
      *
-     * @param confirmationMessages the messages
+     * @param statusMessages the status messages
      */
     public final void setStatusMessages(HashMap<String, String> statusMessages) {
         this.statusMessages = statusMessages;
