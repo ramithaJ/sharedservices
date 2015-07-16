@@ -1,5 +1,7 @@
 package com.wiley.gr.ace.sharedservices.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.List;
 
@@ -128,6 +130,7 @@ public class Permission {
      *
      * @return the createdOn
      */
+    @JsonIgnore
     public Date getCreatedOn() {
         return createdOn;
     }
@@ -147,6 +150,7 @@ public class Permission {
      *
      * @return the updatedOn
      */
+    @JsonIgnore
     public Date getUpdatedOn() {
         return updatedOn;
     }
@@ -166,6 +170,7 @@ public class Permission {
      *
      * @return the createdBy
      */
+    @JsonIgnore
     public Integer getCreatedBy() {
         return createdBy;
     }
@@ -185,6 +190,7 @@ public class Permission {
      *
      * @return the updatedBy
      */
+    @JsonIgnore
     public Integer getUpdatedBy() {
         return updatedBy;
     }

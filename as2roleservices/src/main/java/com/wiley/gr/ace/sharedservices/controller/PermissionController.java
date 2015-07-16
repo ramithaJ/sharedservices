@@ -42,15 +42,13 @@ public class PermissionController extends AbstractController {
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public List<Permission> getPermissions(
+    public List<PermissionResource> getPermissions(
             @RequestParam(value = "group", required = false) final String permissionGroupCd)
             throws SharedServiceException {
         if (permissionGroupCd != null) {
-            return permissionRepository.findPermissions(permissionGroupCd);
-        }
-
-        else {
-            return permissionRepository.findPermissions();
+            return permissionResourceAssembler.toResources(permissionRepository.findPermissions(permissionGroupCd));
+        } else {
+            return permissionResourceAssembler.toResources(permissionRepository.findPermissions());
         }
     }
 
@@ -79,9 +77,9 @@ public class PermissionController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public List<Permission> getPermission(@PathVariable("roleId") int roleId)
+    public List<PermissionResource> getPermission(@PathVariable("roleId") int roleId)
             throws SharedServiceException {
-        return permissionRepository.findPermission(roleId);
+        return permissionResourceAssembler.toResources(permissionRepository.findPermission(roleId));
     }
 
     /**
@@ -135,10 +133,10 @@ public class PermissionController extends AbstractController {
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
-    public List<Permission> getPermissionOfUser(
+    public List<PermissionResource> getPermissionOfUser(
             @RequestParam("objectId") int objectId,
             @RequestParam("userId") int userId) throws SharedServiceException {
-        return permissionRepository.findAdditionalPermissions(userId, objectId);
+        return permissionResourceAssembler.toResources(permissionRepository.findAdditionalPermissions(userId, objectId));
     }
 
     /**

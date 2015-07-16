@@ -62,8 +62,8 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<Role> getRoles() throws SharedServiceException {
-        return permissionRepository.findRoles();
+    public List<RoleResource> getRoles() throws SharedServiceException {
+        return roleResourceAssembler.toResources(permissionRepository.findRoles());
     }
 
     /**
@@ -75,9 +75,9 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public Role getRole(@PathVariable("roleId") int roleId) {
+    public RoleResource getRole(@PathVariable("roleId") int roleId) {
         try {
-            return permissionRepository.findRole(roleId);
+            return roleResourceAssembler.toResource(permissionRepository.findRole(roleId));
         } catch (final SharedServiceException e) {
             e.printStackTrace();
         }
@@ -126,9 +126,9 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
-    public Role getRolesOfUser(@RequestParam("userId") int userId) {
+    public RoleResource getRolesOfUser(@RequestParam("userId") int userId) {
         try {
-            return permissionRepository.findRoleOfUser(userId);
+            return roleResourceAssembler.toResource(permissionRepository.findRoleByUser(userId));
         } catch (final SharedServiceException e) {
             e.printStackTrace();
         }

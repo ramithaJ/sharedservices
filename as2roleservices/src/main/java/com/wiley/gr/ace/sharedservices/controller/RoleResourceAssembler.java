@@ -47,6 +47,6 @@ public class RoleResourceAssembler extends
      */
     @Override
     protected RoleResource instantiateResource(Role role) {
-        return new RoleResource(role.getRoleId(), role.getRoleName());
+        return new RoleResource(role);
     }
 }

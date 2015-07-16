@@ -1,72 +1,80 @@
 package com.wiley.gr.ace.sharedservices.controller;
 
+import com.wiley.gr.ace.sharedservices.service.Permission;
+import com.wiley.gr.ace.sharedservices.service.Role;
 import org.springframework.hateoas.ResourceSupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class RoleResource.
  */
 public class RoleResource extends ResourceSupport {
 
-    /** The role id. */
+    /**
+     * The role id.
+     */
     private int roleId;
 
-    /** The name. */
-    private String name;
+    private String roleName;
 
-    /**
-     * Instantiates a new role resource.
-     */
+    private String roleDescription;
+
+    private String roleType;
+
+    private List<Permission> permissions = new ArrayList<>();
+
     public RoleResource() {
     }
 
-    /**
-     * Instantiates a new role resource.
-     *
-     * @param roleId
-     *            the role id
-     * @param name
-     *            the name
-     */
-    public RoleResource(int roleId, String name) {
-        this.roleId = roleId;
-        this.name = name;
+    public RoleResource(Role role) {
+        if (null != role) {
+            this.roleId = role.getRoleId();
+            this.roleName = role.getRoleName();
+            this.roleDescription = role.getRoleDescription();
+            this.roleType = role.getRoleType();
+            this.permissions = role.getPermissions();
+        }
     }
 
-    /**
-     * Gets the role id.
-     *
-     * @return the role id
-     */
     public int getRoleId() {
         return roleId;
     }
 
-    /**
-     * Sets the role id.
-     *
-     * @param roleId
-     *            the new role id
-     */
     public void setRoleId(int roleId) {
         this.roleId = roleId;
     }
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    /**
-     * Sets the name.
-     *
-     * @param name
-     *            the new name
-     */
-    public void setName(String name) {
-        this.name = name;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getRoleDescription() {
+        return roleDescription;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
+    }
+
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 }

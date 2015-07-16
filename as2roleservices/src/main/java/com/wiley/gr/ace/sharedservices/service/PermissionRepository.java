@@ -70,7 +70,7 @@ public interface PermissionRepository {
      * @throws SharedServiceException
      *             the shared service exception
      */
-    Role findRoleOfUser(int userId) throws SharedServiceException;
+    Role findRoleByUser(int userId) throws SharedServiceException;
 
     /**
      * Find additional permissions.

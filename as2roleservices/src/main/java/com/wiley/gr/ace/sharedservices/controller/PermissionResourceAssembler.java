@@ -35,14 +35,13 @@ ResourceAssemblerSupport<Permission, PermissionResource> {
     public PermissionResource toResource(Permission permission) {
         final PermissionResource permissionResource = createResourceWithId(
                 permission.getPermissionCd(), permission);
-        permissionResource.setCode(permission.getPermissionCd());
-        permissionResource.setName(permission.getPermissionName());
-        /*
-         * permissionResource.setGroup(permission.getGroup());
-         * permissionResource.setPublishingDate(permission.getPublishingDate());
-         * permissionResource
-         * .setRole(roleResourceAssembler.toResource(permission.getRole()));
-         */
+        permissionResource.setPermissionCd(permission.getPermissionCd());
+        permissionResource.setPermissionName(permission.getPermissionName());
+        /*permissionResource.setRole(roleResourceAssembler.toResource(permission.getRole()));*/
+        /*permissionResource.add(ControllerLinkBuilder.linkTo(
+                ControllerLinkBuilder.methodOn(PermissionController.class)
+                        .getPermissions()).withRel(
+                "permissions"));*/
         return permissionResource;
     }
 }
