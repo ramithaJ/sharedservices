@@ -1,7 +1,10 @@
 package com.wiley.gr.ace.sharedservices.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wiley.gr.ace.sharedservices.exceptions.ResourceNotFoundException;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.service.Permission;
 import com.wiley.gr.ace.sharedservices.service.PermissionRepository;
 import com.wiley.gr.ace.sharedservices.service.Role;
 
@@ -22,6 +26,10 @@ import com.wiley.gr.ace.sharedservices.service.Role;
 @Controller
 @RequestMapping("/roles")
 public class RoleController extends AbstractController {
+
+    /** The Constant LOGGER. */
+    public static final Logger LOGGER = LoggerFactory
+            .getLogger(RoleController.class);
 
     /** The permission repository. */
     @Autowired
@@ -44,12 +52,14 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void createNewRole(@RequestBody Role role) {
+    public boolean createNewRole(@RequestBody Role role) {
         try {
             permissionRepository.createNewRole(role);
+            return true;
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            RoleController.LOGGER.error("create cannot be performed", e);
         }
+        return false;
 
     }
 
@@ -57,13 +67,18 @@ public class RoleController extends AbstractController {
      * Gets the roles.
      *
      * @return the roles
-     * @throws SharedServiceException
-     *             the shared service exception
      */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<RoleResource> getRoles() throws SharedServiceException {
-        return roleResourceAssembler.toResources(permissionRepository.findRoles());
+    public List<RoleResource> getRoles() {
+        try {
+            return roleResourceAssembler.toResources(permissionRepository
+                    .findRoles());
+        } catch (final SharedServiceException e) {
+            RoleController.LOGGER.error("Get cannot be performed", e);
+        }
+
+        return new ArrayList<>();
     }
 
     /**
@@ -77,9 +92,10 @@ public class RoleController extends AbstractController {
     @ResponseBody
     public RoleResource getRole(@PathVariable("roleId") int roleId) {
         try {
-            return roleResourceAssembler.toResource(permissionRepository.findRole(roleId));
+            return roleResourceAssembler.toResource(permissionRepository
+                    .findRole(roleId));
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            RoleController.LOGGER.error("Get cannot be performed", e);
         }
         return null;
     }
@@ -91,15 +107,19 @@ public class RoleController extends AbstractController {
      *            the role id
      * @param role
      *            the role
+     * @return true, if successful
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.PUT)
-    public void updateRoleId(@PathVariable("roleId") int roleId,
+    @ResponseBody
+    public boolean updateRoleId(@PathVariable("roleId") int roleId,
             @RequestBody Role role) {
         try {
             permissionRepository.updateRole(roleId, role);
+            return true;
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            RoleController.LOGGER.error("Update cannot be performed", e);
         }
+        return false;
     }
 
     /**
@@ -107,14 +127,19 @@ public class RoleController extends AbstractController {
      *
      * @param roleId
      *            the role id
+     * @return true, if successful
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
-    public void deleteRoleId(@PathVariable("roleId") int roleId) {
+    @ResponseBody
+    public boolean deleteRoleId(@PathVariable("roleId") int roleId) {
         try {
             permissionRepository.deleteRole(roleId);
+            return true;
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            RoleController.LOGGER.error("Delete cannot be performed", e);
         }
+
+        return false;
     }
 
     /**
@@ -128,9 +153,10 @@ public class RoleController extends AbstractController {
     @ResponseBody
     public RoleResource getRolesOfUser(@RequestParam("userId") int userId) {
         try {
-            return roleResourceAssembler.toResource(permissionRepository.findRoleByUser(userId));
+            return roleResourceAssembler.toResource(permissionRepository
+                    .findRoleByUser(userId));
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            RoleController.LOGGER.error("get cannot be performed", e);
         }
         return null;
     }
@@ -150,7 +176,7 @@ public class RoleController extends AbstractController {
             return permissionResourceAssembler.toResources(findRoleAndValidate(
                     roleId).getPermissions());
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            RoleController.LOGGER.error("Get cannot be performed", e);
         }
         return null;
     }
@@ -173,4 +199,47 @@ public class RoleController extends AbstractController {
         return role;
     }
 
+    /**
+     * Gets the permission.
+     *
+     * @param permissionList
+     *            the permission list
+     * @param roleId
+     *            the role id
+     * @return the permission
+     */
+    @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.PUT)
+    @ResponseBody
+    public boolean updatePermission(
+            @RequestBody List<Permission> permissionList,
+            @PathVariable("roleId") int roleId) {
+
+        try {
+            permissionRepository.updatePermission(permissionList, roleId);
+            return true;
+        } catch (final SharedServiceException e) {
+            RoleController.LOGGER.error("Update cannot be performed", e);
+        }
+        return false;
+    }
+
+    /**
+     * Delete permissions.
+     *
+     * @param roleId
+     *            the role id
+     * @return true, if successful
+     */
+    @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.DELETE)
+    @ResponseBody
+    public boolean deletePermissions(@PathVariable("roleId") int roleId) {
+        try {
+            permissionRepository.deletePermission(roleId);
+            return true;
+        } catch (final SharedServiceException e) {
+            RoleController.LOGGER.error("Delete cannot be performed", e);
+        }
+
+        return false;
+    }
 }

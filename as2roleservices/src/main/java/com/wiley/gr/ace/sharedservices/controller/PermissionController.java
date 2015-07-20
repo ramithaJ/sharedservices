@@ -1,7 +1,10 @@
 package com.wiley.gr.ace.sharedservices.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,10 @@ import com.wiley.gr.ace.sharedservices.service.PermissionRepository;
 @RequestMapping("/permissions")
 public class PermissionController extends AbstractController {
 
+    /** The Constant LOGGER. */
+    public static final Logger LOGGER = LoggerFactory
+            .getLogger(PermissionController.class);
+
     /** The permission repository. */
     @Autowired
     private PermissionRepository permissionRepository;
@@ -37,19 +44,25 @@ public class PermissionController extends AbstractController {
      * @param permissionGroupCd
      *            the permission group cd
      * @return the permissions
-     * @throws SharedServiceException
-     *             the shared service exception
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public List<PermissionResource> getPermissions(
-            @RequestParam(value = "group", required = false) final String permissionGroupCd)
-            throws SharedServiceException {
-        if (permissionGroupCd != null) {
-            return permissionResourceAssembler.toResources(permissionRepository.findPermissions(permissionGroupCd));
-        } else {
-            return permissionResourceAssembler.toResources(permissionRepository.findPermissions());
+            @RequestParam(value = "group", required = false) final String permissionGroupCd) {
+        try {
+            if (permissionGroupCd != null) {
+                return permissionResourceAssembler
+                        .toResources(permissionRepository
+                                .findPermissions(permissionGroupCd));
+            } else {
+                return permissionResourceAssembler
+                        .toResources(permissionRepository.findPermissions());
+            }
+        } catch (final SharedServiceException e) {
+            PermissionController.LOGGER.error("get cannot be performed", e);
         }
+        return new ArrayList<>();
+
     }
 
     /**
@@ -57,67 +70,37 @@ public class PermissionController extends AbstractController {
      *
      * @param permission
      *            the permission
-     * @throws SharedServiceException
-     *             the shared service exception
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public void createNewPermission(@RequestBody Permission permission)
-            throws SharedServiceException {
-        permissionRepository.createNewPermission(permission);
-    }
-
-    /**
-     * Gets the permission.
-     *
-     * @param roleId
-     *            the role id
-     * @return the permission
-     * @throws SharedServiceException
-     *             the shared service exception
-     */
-    @RequestMapping(value = "/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public List<PermissionResource> getPermission(@PathVariable("roleId") int roleId)
-            throws SharedServiceException {
-        return permissionResourceAssembler.toResources(permissionRepository.findPermission(roleId));
-    }
-
-    /**
-     * Gets the permission.
-     *
-     * @param permissionList
-     *            the permission list
-     * @param roleId
-     *            the role id
-     * @return the permission
-     * @throws SharedServiceException
-     *             the shared service exception
-     */
-    @RequestMapping(value = "/{roleId}", method = RequestMethod.PUT)
-    @ResponseBody
-    public void updatePermission(@RequestBody List<Permission> permissionList,
-            @PathVariable("roleId") int roleId) throws SharedServiceException {
-
+    public void createNewPermission(@RequestBody Permission permission) {
         try {
-            permissionRepository.updatePermission(permissionList, roleId);
+            permissionRepository.createNewPermission(permission);
         } catch (final SharedServiceException e) {
-            e.printStackTrace();
+            // TODO Auto-generated catch block
+            PermissionController.LOGGER.error("create cannot be performed", e);
+        }
+    }
+
+    /**
+     * Gets the permission.
+     *
+     * @param permissionCd
+     *            the permission cd
+     * @return the permission
+     */
+    @RequestMapping(value = "/{permissionCd}", method = RequestMethod.GET)
+    @ResponseBody
+    public PermissionResource getPermission(
+            @PathVariable("permissionCd") String permissionCd) {
+        try {
+            return permissionResourceAssembler.toResource(permissionRepository
+                    .findPermission(permissionCd));
+        } catch (final SharedServiceException e) {
+            PermissionController.LOGGER.error("get cannot be performed", e);
         }
 
-    }
-
-    /**
-     * Delete permissions.
-     *
-     * @param roleId
-     *            the role id
-     * @throws SharedServiceException
-     *             the shared service exception
-     */
-    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
-    public void deletePermissions(@PathVariable("roleId") int roleId)
-            throws SharedServiceException {
-        permissionRepository.deletePermission(roleId);
+        return null;
     }
 
     /**
@@ -128,15 +111,20 @@ public class PermissionController extends AbstractController {
      * @param userId
      *            the user id
      * @return the permission of user
-     * @throws SharedServiceException
-     *             the shared service exception
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public List<PermissionResource> getPermissionOfUser(
             @RequestParam("objectId") int objectId,
-            @RequestParam("userId") int userId) throws SharedServiceException {
-        return permissionResourceAssembler.toResources(permissionRepository.findAdditionalPermissions(userId, objectId));
+            @RequestParam("userId") int userId) {
+        try {
+            return permissionResourceAssembler.toResources(permissionRepository
+                    .findAdditionalPermissions(userId, objectId));
+        } catch (final SharedServiceException e) {
+            PermissionController.LOGGER.error("get cannot be performed", e);
+        }
+
+        return new ArrayList<>();
     }
 
     /**
@@ -149,16 +137,21 @@ public class PermissionController extends AbstractController {
      * @param additionalPermission
      *            the additional permission
      * @return the permission of user
-     * @throws SharedServiceException
-     *             the shared service exception
      */
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
-    public void updatePermissionOfUser(@RequestParam("objectId") int objectId,
+    @ResponseBody
+    public boolean updatePermissionOfUser(
+            @RequestParam("objectId") int objectId,
             @RequestParam("userId") int userId,
-            @RequestBody AdditionalPermission additionalPermission)
-                    throws SharedServiceException {
-        permissionRepository.updateAdditionalPermissions(userId, objectId,
-                additionalPermission);
+            @RequestBody AdditionalPermission additionalPermission) {
+        try {
+            permissionRepository.updateAdditionalPermissions(userId, objectId,
+                    additionalPermission);
+            return true;
+        } catch (final SharedServiceException e) {
+            PermissionController.LOGGER.error("update cannot be performed", e);
+        }
+        return false;
     }
 
     /**
@@ -168,13 +161,20 @@ public class PermissionController extends AbstractController {
      *            the object id
      * @param userId
      *            the user id
-     * @throws SharedServiceException
-     *             the shared service exception
+     * @return true, if successful
      */
     @RequestMapping(value = "/user", method = RequestMethod.DELETE)
-    public void deletePermissionsOfUser(@RequestParam("objectId") int objectId,
-            @RequestParam("userId") int userId) throws SharedServiceException {
-        permissionRepository.deletePermissionOfUser(userId, objectId);
+    @ResponseBody
+    public boolean deletePermissionsOfUser(
+            @RequestParam("objectId") int objectId,
+            @RequestParam("userId") int userId) {
+        try {
+            permissionRepository.deletePermissionOfUser(userId, objectId);
+            return true;
+        } catch (final SharedServiceException e) {
+            PermissionController.LOGGER.error("delete cannot be performed", e);
+        }
+        return false;
     }
 
 }

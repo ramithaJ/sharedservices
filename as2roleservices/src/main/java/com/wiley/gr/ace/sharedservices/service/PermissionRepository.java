@@ -12,9 +12,11 @@ public interface PermissionRepository {
     /**
      * Creates the new role.
      *
-     * @param name
-     *            the name
+     * @param role
+     *            the role
      * @return the role
+     * @throws SharedServiceException
+     *             the shared service exception
      */
     void createNewRole(Role role) throws SharedServiceException;
 
@@ -41,13 +43,14 @@ public interface PermissionRepository {
     /**
      * Find permission.
      *
-     * @param roleId
-     *            the role id
+     * @param permissionCd
+     *            the permission cd
      * @return the list
      * @throws SharedServiceException
      *             the shared service exception
      */
-    List<Permission> findPermission(int roleId) throws SharedServiceException;
+    Permission findPermission(String permissionCd)
+            throws SharedServiceException;
 
     /**
      * Find permissions.
@@ -132,31 +135,51 @@ public interface PermissionRepository {
     void updateRole(int roleId, Role role) throws SharedServiceException;
 
     /**
-     * @param role
+     * Update permission.
+     *
+     * @param permissionList
+     *            the permission list
+     * @param roleId
+     *            the role id
      * @throws SharedServiceException
+     *             the shared service exception
      */
     void updatePermission(List<Permission> permissionList, int roleId)
             throws SharedServiceException;
 
     /**
+     * Update additional permissions.
+     *
      * @param userId
+     *            the user id
      * @param articleId
+     *            the article id
+     * @param additionalPermission
+     *            the additional permission
      * @throws SharedServiceException
+     *             the shared service exception
      */
     void updateAdditionalPermissions(int userId, int articleId,
             AdditionalPermission additionalPermission)
-            throws SharedServiceException;
+                    throws SharedServiceException;
 
     /**
-     * @param role
+     * Creates the new permission.
+     *
+     * @param permission
+     *            the permission
      * @throws SharedServiceException
+     *             the shared service exception
      */
     void createNewPermission(Permission permission)
             throws SharedServiceException;
 
     /**
+     * Find permissions.
+     *
      * @return List of roles
      * @throws SharedServiceException
+     *             the shared service exception
      */
     List<Permission> findPermissions() throws SharedServiceException;
 }

@@ -67,11 +67,13 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                     groupList = new ArrayList<>();
                     permissions = rolePermissions.getPermissions();
                     if (null != permissions) {
-                        permissionList.add(new Permission(
-                                permissions.getPermissionCd(), permissions
+                        permissionList.add(new Permission(permissions
+                                .getPermissionCd(), permissions
                                 .getPermissionName(), groupList));
-                        for (final PermissionGroups groupsSet : permissions.getPermissionGroupses()) {
-                            groupList.add(groupsSet.getId().getPermissionGroupCd());
+                        for (final PermissionGroups groupsSet : permissions
+                                .getPermissionGroupses()) {
+                            groupList.add(groupsSet.getId()
+                                    .getPermissionGroupCd());
                         }
                     }
                 }
@@ -196,11 +198,11 @@ public class PermissionRepositoryImpl implements PermissionRepository {
             Permissions permissions;
             for (final RolePermissions rolePermissions : rolePermissionsSet) {
                 groups = new ArrayList<>();
-                permissions = rolePermissions
-                        .getPermissions();
+                permissions = rolePermissions.getPermissions();
                 if (null != permissions) {
-                    permission.add(new Permission(permissions.getPermissionCd(),
-                            permissions.getPermissionName(), groups));
+                    permission.add(new Permission(
+                            permissions.getPermissionCd(), permissions
+                                    .getPermissionName(), groups));
                     for (final PermissionGroups groupsSet : permissions
                             .getPermissionGroupses()) {
                         groups.add(groupsSet.getId().getPermissionGroupCd());
@@ -370,41 +372,32 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (int)
      */
     @Override
-    public List<Permission> findPermission(int roleId)
+    public Permission findPermission(String permissionId)
             throws SharedServiceException {
+        Permission permission = new Permission();
         Session session = null;
-        final List<Permission> permission = new ArrayList<Permission>();
-        List<String> groups;
         try {
             session = sessionFactory.openSession();
             // Begin the transaction.
             session.beginTransaction();
 
-            final Roles roles = (Roles) session.createCriteria(Roles.class)
-                    .add(Restrictions.eq("roleId", roleId)).uniqueResult();
-            if (null == roles) {
+            final Permissions permissions = (Permissions) session
+                    .createCriteria(Permissions.class)
+                    .add(Restrictions.eq("permissionCd", permissionId))
+                    .uniqueResult();
+            if (null == permissions) {
                 return permission;
             }
-            final Set<RolePermissions> rolePermissionsSet = roles
-                    .getRolePermissionses();
 
-            for (final RolePermissions rolePermissions : rolePermissionsSet) {
-                groups = new ArrayList<String>();
-                final Permissions permissions = rolePermissions
-                        .getPermissions();
-                for (final PermissionGroups groupsSet : permissions
-                        .getPermissionGroupses()) {
-                    groups.add(groupsSet.getId().getPermissionGroupCd());
-                }
-                permission.add(new Permission(permissions.getPermissionCd(),
-                        permissions.getPermissionName(), groups));
-
+            final List<String> groups = new ArrayList<String>();
+            for (final PermissionGroups groupsSet : permissions
+                    .getPermissionGroupses()) {
+                groups.add(groupsSet.getId().getPermissionGroupCd());
             }
 
-            /*
-             * roles = new Permission(null, role.getPermissionCd(),
-             * role.getPermissionName(), role.getPermissionGroup(), new Date());
-             */
+            permission = new Permission(permissions.getPermissionCd(),
+                    permissions.getPermissionName(), groups);
+
             // Flush the session.
             session.flush();
             // Clear the session object.
@@ -571,6 +564,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 session.close();
             }
         }
+
     }
 
     /*
@@ -759,6 +753,13 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.sharedservices.service.PermissionRepository#updatePermission
+     * (java.util.List, int)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void updatePermission(List<Permission> permissionList, int roleId)
@@ -813,6 +814,13 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
+     * updateAdditionalPermissions(int, int,
+     * com.wiley.gr.ace.sharedservices.service.AdditionalPermission)
+     */
     @Override
     public void updateAdditionalPermissions(int userId, int objectId,
             AdditionalPermission permission) throws SharedServiceException {
