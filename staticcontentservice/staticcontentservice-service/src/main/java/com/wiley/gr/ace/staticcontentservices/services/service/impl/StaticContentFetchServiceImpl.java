@@ -140,11 +140,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
        	 * @see com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService#getStaticContent(java.lang.String, java.lang.String, java.lang.String)
        	 */
        	@Override
-	        public StaticContent getStaticContent(String contentTitle, String pageName,  String locale)
+	        public StaticContent getStaticContent(String contentUniqueKey, String pageName,  String locale)
 	                throws Exception {
 
 	            StaticCatalogDotcmsResponse staticCatalogDotcmsResponse = dotCMSDataService
-	                    .getStaticCatalog(contentTitle,pageName,locale);
+	                    .getStaticCatalog(contentUniqueKey,pageName,locale);
 	            StaticContent staticContent = null;
 	            if (!StringUtils.isEmpty(staticCatalogDotcmsResponse)) {
 	                staticContent = new StaticContent();
@@ -153,7 +153,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	                staticContent.setContentTitle(staticCatalog
 	                        .getContentTitle());
 
-	                staticContent.setContentTitle(contentTitle);
+	                staticContent.setContentTitle(contentUniqueKey);
 	                staticContent.setPageName(pageName);
 	                staticContent.setLocale(locale);
 	                staticContent.setAdBlockBody(staticCatalog.getAdBlockContent());

@@ -182,7 +182,7 @@ public class DotCMSStaticContentController {
 	/**
 	 * Gets the static content.
 	 *
-	 * @param contentTitle
+	 * @param contentUniqueKey
 	 *            the content title
 	 * @param pageName
 	 *            the page name
@@ -192,7 +192,7 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/static", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getStaticContent(
-			@RequestParam("contentTitle") String contentTitle,
+			@RequestParam("contentUniqueKey") String contentUniqueKey,
 			@RequestParam("pageName") String pageName,
 			@RequestParam("locale") String locale) {
 		StaticContent staticContent = null;
@@ -200,7 +200,7 @@ public class DotCMSStaticContentController {
 
 		try {
 			staticContent = staticContentFetchService.getStaticContent(
-					contentTitle, pageName, locale);
+					contentUniqueKey, pageName, locale);
 			if (!StringUtils.isEmpty(staticContent)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(staticContent);
