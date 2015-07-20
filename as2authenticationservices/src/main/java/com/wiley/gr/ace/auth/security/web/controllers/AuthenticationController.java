@@ -134,7 +134,7 @@ public class AuthenticationController {
 						null, HttpStatus.OK);
 			}
 
-			authResponse = this.authenticationService.userLogin(request);
+			authResponse = authenticationService.userLogin(request);
 
 			if (null != authResponse
 					&& authResponse.getStatus().equalsIgnoreCase(
@@ -180,7 +180,7 @@ public class AuthenticationController {
 			@Valid @RequestBody final TokenRequest request) {
 
 		try {
-			User user = this.authenticationService.searchUser(request
+			User user = authenticationService.searchUser(request
 					.getUserId());
 			return new ResponseEntity<>(user, null, HttpStatus.OK);
 		} catch (NameNotFoundException nameNotFoundException) {
