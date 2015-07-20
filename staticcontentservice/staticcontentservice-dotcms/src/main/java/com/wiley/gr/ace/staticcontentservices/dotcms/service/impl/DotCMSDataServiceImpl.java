@@ -36,11 +36,17 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 	public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
 			String locale) throws Exception {
 
-		String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST) +UiMessageCatalog.pageName:*"
-				+ pageName
-				+ "* +UiMessageCatalog.locale:*"
-				+ locale
-				+ "* +languageId:1* +deleted:false +working:true";
+		String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+				
+		if (!StringUtils.isEmpty(pageName)) {
+            dotQuery = dotQuery + " +StatusMessages.pageName:*" + pageName + "*";
+        }
+		
+		if (!StringUtils.isEmpty(locale)) {
+            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+        }
+		
+		dotQuery = dotQuery+"* +languageId:1* +deleted:false +working:true";
 		String dotUrl = contentUrl + dotQuery;
 		String dotUrlEncoded = UriEncoder.encode(dotUrl);
 		ResponseEntity<String> responseEntity = new RestTemplate()
@@ -65,13 +71,21 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 			String contentTitle, String moduleName, String locale)
 			throws Exception {
 
-		String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +ConfirmationTexts.contentTitle:*"
-				+ contentTitle
-				+ "* +ConfirmationTexts.moduleName:*"
-				+ moduleName
-				+ "* +ConfirmationTexts.locale:*"
-				+ locale
-				+ "* +languageId:1* +deleted:false +working:true";
+		String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
+		
+		if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +StatusMessages.contentTitle:*" + contentTitle + "*";
+        }
+		
+		if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +StatusMessages.moduleName:*" + moduleName + "*";
+        }
+		
+		if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+        }        
+		       
+		dotQuery = dotQuery+ "* +languageId:1* +deleted:false +working:true";
 		String dotUrl = contentUrl + dotQuery;
 		String dotUrlEncoded = UriEncoder.encode(dotUrl);
 		ResponseEntity<String> responseEntity = new RestTemplate()
@@ -95,14 +109,23 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 	public StatusCatalogDotcmsResponse getStatusCatalog(String contentTitle,
 			String statusMessageType, String locale) throws Exception {
 
-		String dotQuery = "+structureName:StatusMessages +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +StatusMessages.contentTitle:*"
-				+ contentTitle
-				+ "*+StatusMessages.statusMessageType:*"
-				+ statusMessageType
-				+ "* +StatusMessages.locale:*"
-				+ locale
-				+ "* +languageId:1* +deleted:false +working:true";
-		String dotUrl = contentUrl + dotQuery;
+		String dotQuery = "+structureName:StatusMessages +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
+	     
+		if (!StringUtils.isEmpty(contentTitle)) {
+	            dotQuery = dotQuery + " +StatusMessages.contentTitle:*" + contentTitle + "*";
+	        }
+
+		if (!StringUtils.isEmpty(statusMessageType)) {
+            dotQuery = dotQuery + " +StatusMessages.locale:" + statusMessageType + "*";
+        }
+        
+		if (!StringUtils.isEmpty(locale)) {
+            dotQuery = dotQuery + " +StatusMessages.statusMessageType:*" + locale + "*";
+        }
+        		        
+	    dotQuery = dotQuery + "* +languageId:1* +deleted:false +working:true";
+	
+	    String dotUrl = contentUrl + dotQuery;
 		String dotUrlEncoded = UriEncoder.encode(dotUrl);
 		ResponseEntity<String> responseEntity = new RestTemplate()
 				.getForEntity(new URI(dotUrlEncoded), String.class);
@@ -124,9 +147,13 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 	public EmailCatalogDotcmsResponse getEmailCatalog(String contentTitle)
 			throws Exception {
 
-		String dotQuery = "+structureName:EmailSurveyLink +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST) +EmailSurveyLink.contentTitle:*"
-				+ contentTitle
-				+ "* +languageId:1* +deleted:false +working:true";
+		String dotQuery = "+structureName:EmailSurveyLink +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
+		if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +StaticAdBlock.contentTitle:*"
+                    + contentTitle + "*";
+        }
+      
+		dotQuery = dotQuery	+ "* +languageId:1* +deleted:false +working:true";
 		String dotUrl = contentUrl + dotQuery;
 		String dotUrlEncoded = UriEncoder.encode(dotUrl);
 		ResponseEntity<String> responseEntity = new RestTemplate()

@@ -3,7 +3,7 @@ package com.wiley.gr.ace.staticcontentservices.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,8 +41,8 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/uimessage/{pageName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getUiMessageCatalog(
-			@PathVariable("pageName") String pageName,
-			@PathVariable("locale") String locale) {
+	        @RequestParam("pageName") String pageName,
+			@RequestParam("locale") String locale) {
 		UIMessageContent uiMessageContent = null;
 		Service service = new Service();
 
@@ -80,9 +80,9 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/confirmation/{contentTitle}/{moduleName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getConfirmationCatalog(
-			@PathVariable("contentTitle") String contentTitle,
-			@PathVariable("moduleName") String moduleName,
-			@PathVariable("locale") String locale) {
+	        @RequestParam("contentTitle") String contentTitle,
+			@RequestParam("moduleName") String moduleName,
+			@RequestParam("locale") String locale) {
 		ConfirmationContent confirmationContent = null;
 		Service service = new Service();
 
@@ -120,9 +120,9 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/status/{contentTitle}/{statusMessageType}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getStatusContent(
-			@PathVariable("contentTitle") String contentTitle,
-			@PathVariable("statusMessageType") String statusMessageType,
-			@PathVariable("locale") String locale) {
+	        @RequestParam("contentTitle") String contentTitle,
+			@RequestParam("statusMessageType") String statusMessageType,
+			@RequestParam("locale") String locale) {
 		StatusContent statusContent = null;
 		Service service = new Service();
 
@@ -155,7 +155,7 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/email/{contentTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getEmailContent(
-			@PathVariable("contentTitle") String contentTitle) {
+	        @RequestParam("contentTitle") String contentTitle) {
 		EmailContent emailContent = null;
 		Service service = new Service();
 
