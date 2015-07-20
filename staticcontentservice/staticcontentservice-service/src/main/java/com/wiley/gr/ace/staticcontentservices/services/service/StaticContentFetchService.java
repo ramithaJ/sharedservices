@@ -61,11 +61,11 @@ public interface StaticContentFetchService {
 	/**
 	 * Gets the static content.
 	 *
-	 * @param contentTitle the content title
+	 * @param contentUniqueKey the content title
 	 * @param pageName the page name
 	 * @param locale the locale
 	 * @return the static content
 	 * @throws Exception the exception
 	 */
-	StaticContent getStaticContent (String contentTitle, String pageName,  String locale) throws Exception;
+	StaticContent getStaticContent (String contentUniqueKey, String pageName,  String locale) throws Exception;
 }
