@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.util.UriEncoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService;
 import com.wiley.gr.ace.staticcontentservices.model.external.ConfirmationCatalogDotcmsResponse;
+import com.wiley.gr.ace.staticcontentservices.model.external.ServerCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.StaticCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.StatusCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
@@ -204,4 +205,25 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 				staticCatalogDotcmsResponseJsonString,
 				StaticCatalogDotcmsResponse.class);
 	}
+	
+	
+	@Override
+    public ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
+            String contentIdentifier)
+            throws Exception {
+
+        String dotQuery = "+structureName:ServerApplicationMessages +Parent_UiMessageCatalog-Child_ServerApplicationMessages:" + contentIdentifier; 
+        
+        
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String staticCatalogDotcmsResponseJsonString = responseEntity.getBody();
+
+        return new ObjectMapper().readValue(
+                staticCatalogDotcmsResponseJsonString,
+                ServerCatalogDotcmsResponse.class);
+    }
+	
 }

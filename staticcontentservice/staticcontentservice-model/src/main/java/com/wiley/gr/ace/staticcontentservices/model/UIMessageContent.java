@@ -2,6 +2,8 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
+import com.wiley.gr.ace.staticcontentservices.model.external.ServerCatalog;
+
 
 /**
  * The Class UIMessageContent.
@@ -13,8 +15,8 @@ public class UIMessageContent {
 	
 	/** The locale. */
 	private String locale;
-	
-	/** The error messages. */
+
+    /** The error messages. */
 	private HashMap<String, String> errorMessages;
 	
 	/** The ui label messages. */
@@ -23,6 +25,8 @@ public class UIMessageContent {
 	/** The inline help. */
 	private HashMap<String, String> inlineHelp;
 
+	private ServerCatalog serverCatalog;
+	
 	/**
 	 * Gets the page name.
 	 *
@@ -112,5 +116,13 @@ public class UIMessageContent {
 	public final void setErrorMessages(HashMap<String, String> errorMessages) {
 		this.errorMessages = errorMessages;
 	}
+
+    public final ServerCatalog getServerCatalog() {
+        return serverCatalog;
+    }
+
+    public final void setServerCatalog(ServerCatalog serverCatalog) {
+        this.serverCatalog = serverCatalog;
+    }
 
 }
