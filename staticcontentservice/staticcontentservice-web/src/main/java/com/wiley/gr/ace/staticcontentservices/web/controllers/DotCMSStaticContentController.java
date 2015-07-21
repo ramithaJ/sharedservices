@@ -78,7 +78,7 @@ public class DotCMSStaticContentController {
 	 *            the locale
 	 * @return the confirmation catalog
 	 */
-	@RequestMapping(value = "/confirmation/{contentTitle}/{moduleName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/confirmation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getConfirmationCatalog(
 	        @RequestParam("contentTitle") String contentTitle,
 			@RequestParam("moduleName") String moduleName,
@@ -118,7 +118,7 @@ public class DotCMSStaticContentController {
 	 *            the locale
 	 * @return the status content
 	 */
-	@RequestMapping(value = "/status/{contentTitle}/{statusMessageType}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getStatusContent(
 	        @RequestParam("contentTitle") String contentTitle,
 			@RequestParam("statusMessageType") String statusMessageType,
@@ -153,7 +153,7 @@ public class DotCMSStaticContentController {
 	 *            the content title
 	 * @return the email content
 	 */
-	@RequestMapping(value = "/email/{contentTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/email", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getEmailContent(
 	        @RequestParam("contentTitle") String contentTitle) {
 		EmailContent emailContent = null;

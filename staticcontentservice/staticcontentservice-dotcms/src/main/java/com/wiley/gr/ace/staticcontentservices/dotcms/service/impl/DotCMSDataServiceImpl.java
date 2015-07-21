@@ -75,15 +75,15 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 		String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
 		
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.contentTitle:*" + contentTitle + "*";
+            dotQuery = dotQuery + " +ConfirmationTexts.contentTitle:*" + contentTitle + "*";
         }
 		
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.moduleName:*" + moduleName + "*";
+            dotQuery = dotQuery + " +ConfirmationTexts.moduleName:*" + moduleName + "*";
         }
 		
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+            dotQuery = dotQuery + " +ConfirmationTexts.locale:*" + locale + "*";
         }        
 		       
 		dotQuery = dotQuery+ "* +languageId:1* +deleted:false +working:true";
@@ -150,7 +150,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 
 		String dotQuery = "+structureName:EmailSurveyLink +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StaticAdBlock.contentTitle:*"
+            dotQuery = dotQuery + " +EmailSurveyLink.contentTitle:*"
                     + contentTitle + "*";
         }
       
@@ -207,6 +207,9 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService#getRelatedServerApplicationMessage(java.lang.String)
+	 */
 	@Override
     public ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
             String contentIdentifier)

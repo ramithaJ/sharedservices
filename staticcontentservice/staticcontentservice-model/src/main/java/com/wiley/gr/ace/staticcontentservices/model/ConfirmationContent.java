@@ -2,8 +2,6 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
-
-
 /**
  * The Class ConfirmationContent.
  */

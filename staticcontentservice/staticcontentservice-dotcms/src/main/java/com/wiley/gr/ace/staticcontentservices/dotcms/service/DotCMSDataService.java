@@ -29,15 +29,11 @@ public interface DotCMSDataService {
     /**
      * Gets the confirmation catalog.
      *
-     * @param contentTiltle
-     *            the content title
-     * @param moduleName
-     *            the module name
-     * @param locale
-     *            the locale
+     * @param contentTitle the content title
+     * @param moduleName            the module name
+     * @param locale            the locale
      * @return the confirmation catalog
-     * @throws Exception
-     *             the exception
+     * @throws Exception             the exception
      */
     ConfirmationCatalogDotcmsResponse getConfirmationCatalog(
             String contentTitle, String moduleName, String locale)
@@ -74,19 +70,22 @@ public interface DotCMSDataService {
     /**
      * Gets the static catalog.
      *
-     * @param contentTitle
-     *            the content title
-     * @param pageName
-     *            the page name
-     * @param locale
-     *            the locale
+     * @param contentUniqueKey the content unique key
+     * @param pageName            the page name
+     * @param locale            the locale
      * @return the static catalog
-     * @throws Exception
-     *             the exception
+     * @throws Exception             the exception
      */
     StaticCatalogDotcmsResponse getStaticCatalog(String contentUniqueKey,
             String pageName, String locale) throws Exception;
 
+    /**
+     * Gets the related server application message.
+     *
+     * @param contentIdentifier the content identifier
+     * @return the related server application message
+     * @throws Exception the exception
+     */
     ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
             String contentIdentifier) throws Exception;
 

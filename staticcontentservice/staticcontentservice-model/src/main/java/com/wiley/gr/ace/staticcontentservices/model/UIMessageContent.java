@@ -2,7 +2,7 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
-import com.wiley.gr.ace.staticcontentservices.model.external.ServerCatalog;
+//import com.wiley.gr.ace.staticcontentservices.model.external.ServerCatalog;
 
 
 /**
@@ -25,6 +25,7 @@ public class UIMessageContent {
 	/** The inline help. */
 	private HashMap<String, String> inlineHelp;
 
+	/** The server content. */
 	private ServerContent serverContent;
 	
 	/**
@@ -117,10 +118,20 @@ public class UIMessageContent {
 		this.errorMessages = errorMessages;
 	}
 
+	/**
+	 * Gets the server content.
+	 *
+	 * @return the server content
+	 */
 	public final ServerContent getServerContent() {
 		return serverContent;
 	}
 
+	/**
+	 * Sets the server content.
+	 *
+	 * @param serverContent the new server content
+	 */
 	public final void setServerContent(ServerContent serverContent) {
 		this.serverContent = serverContent;
 	}
