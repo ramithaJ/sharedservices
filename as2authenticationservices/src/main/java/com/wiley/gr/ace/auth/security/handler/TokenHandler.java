@@ -286,8 +286,9 @@ public class TokenHandler {
 		 */
 		// here instead of generating complex value we can use any Sting value
 		// like AuthorServices.
-		JWSSigner signer = new MACSigner(this.sharedSecretKey(tokenRequest
-				.getUserId()));
+		String sharedSecretKey = this.sharedSecretKey(tokenRequest.getUserId());
+		System.err.println(sharedSecretKey);
+		JWSSigner signer = new MACSigner(sharedSecretKey);
 
 		JWTClaimsSet claimsSet = this.hmacClaimsSet(tokenRequest.getAppKey(),
 				tokenRequest.getRoles(), tokenSubject, tokenAudience,
@@ -323,30 +324,42 @@ public class TokenHandler {
 		return jwtClaimsSet;
 	}
 
-	public boolean hmacTokenVerifies(String hmacToken, String SharedSeceretKey)
-			throws ParseException, JOSEException {
+	public boolean hmacTokenVerifies(String hmacToken) throws ParseException,
+			JOSEException, JoseException, IOException {
 
+		JsonWebSignature jws = new JsonWebSignature();
+		jws.setCompactSerialization(hmacToken);
+		final String userId = this.getTokenNodeValue(hmacToken,
+				CommonConstant.USER_ID, jws);
+		System.err.println("userId " + userId);
+		String SharedSeceretKey = this.sharedSecretKey(userId);
 		SignedJWT signedJWT = SignedJWT.parse(hmacToken);
 		JWSVerifier verifier = new MACVerifier(SharedSeceretKey);
 		return signedJWT.verify(verifier);
 	}
 
-	/*
-	 * public static void main(String[] args) { TokenHandler a = new
-	 * TokenHandler(); try { System.err .println(a .hmacTokenVerifies(
-	 * "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQUFTIiwic3ViIjoiREFBUyBUb2tlbiIsImF1ZCI6W10sIm5iZiI6MTQzNzQ1ODUyMSwiZXhwIjoxNDM3NDU4NTIxLCJ1c2VyaWQiOiJSYW1pdGhhLnN1QGdtYWlsLmNvbSJ9.r_dZFaCr-R8nAChGzkZk_4C9kQazShFyC9qmIJY-b6c"
-	 * , "4c20cbeb0a423c665c9029860ca8a2f14020959c41a6efc3d3cf16f6edc20e53"));
-	 * 
-	 * } catch (ParseException e) { e.printStackTrace(); } catch (JOSEException
-	 * e) { e.printStackTrace(); } }
-	 */
+	/*public static void main(String[] args) throws JoseException, IOException {
+		TokenHandler a = new TokenHandler();
+		try {
+			System.err
+					.println(a
+							.hmacTokenVerifies("eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQUFTIiwic3ViIjoiREFBUyBUb2tlbiIsImF1ZCI6W10sIm5iZiI6MTQzNzQ3NTQ1OSwiZXhwIjoxNDM3NDc1NDU5LCJ1c2VyaWQiOiJSYW1pdGhhLnN1QGdtYWlsLmNvbSJ9.8pD-bX46_IxDTGRgHwM9FJ87PoFCZuzIJt3kQ2ItyfY"));
 
-	public String sharedSecretKey(final String userId) {
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (JOSEException e) {
+			e.printStackTrace();
+		}
+	}
+*/
+	private String sharedSecretKey(final String userId) {
 
-		SecureRandom random = new SecureRandom();
-		byte[] sharedSecret = new byte[32];
-		random.nextBytes(sharedSecret);
-		String salt = sharedSecret.toString();
+		/*
+		 * SecureRandom random = new SecureRandom(); byte[] sharedSecret = new
+		 * byte[32]; random.nextBytes(sharedSecret); String salt =
+		 * sharedSecret.toString();
+		 */
+		String salt = "[B@5c5f0b5f";
 		String sharedSecretKey = null;
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -361,9 +374,14 @@ public class TokenHandler {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		System.err.println(sharedSecretKey);
+		// System.err.println(sharedSecretKey);
 		return sharedSecretKey;
 	}
+
+	/*
+	 * public static void main(String[] args) { TokenHandler a = new
+	 * TokenHandler(); a.sharedSecretKey("Ramitha.su@gmail.com"); }
+	 */
 
 	public String hmacRefreshToken(final String token) throws JoseException,
 			InvalidJwtException, IOException {
@@ -373,10 +391,10 @@ public class TokenHandler {
 		jws.setCompactSerialization(token);
 		final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
 				jws);
-		System.err.println("issuer "+ issuer);
+		System.err.println("issuer " + issuer);
 		final String userId = this.getTokenNodeValue(token,
 				CommonConstant.USER_ID, jws);
-		System.err.println("userId "+userId);
+		System.err.println("userId " + userId);
 		final TokenRequest request = new TokenRequest();
 		request.setUserId(userId);
 		request.setAppKey(issuer);
@@ -387,14 +405,13 @@ public class TokenHandler {
 		return refreshToken;
 	}
 
-	/*public static void main(String[] args) {
-
-		TokenHandler a = new TokenHandler();
-		try {
-			a.hmacRefreshToken("eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQUFTIiwic3ViIjoiREFBUyBUb2tlbiIsImF1ZCI6W10sIm5iZiI6MTQzNzQ1ODUyMSwiZXhwIjoxNDM3NDU4NTIxLCJ1c2VyaWQiOiJSYW1pdGhhLnN1QGdtYWlsLmNvbSJ9.r_dZFaCr-R8nAChGzkZk_4C9kQazShFyC9qmIJY-b6c");
-		} catch (JoseException | InvalidJwtException | IOException e) {
-			e.printStackTrace();
-		}
-	}*/
+	/*
+	 * public static void main(String[] args) {
+	 * 
+	 * TokenHandler a = new TokenHandler(); try { a.hmacRefreshToken(
+	 * "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQUFTIiwic3ViIjoiREFBUyBUb2tlbiIsImF1ZCI6W10sIm5iZiI6MTQzNzQ1ODUyMSwiZXhwIjoxNDM3NDU4NTIxLCJ1c2VyaWQiOiJSYW1pdGhhLnN1QGdtYWlsLmNvbSJ9.r_dZFaCr-R8nAChGzkZk_4C9kQazShFyC9qmIJY-b6c"
+	 * ); } catch (JoseException | InvalidJwtException | IOException e) {
+	 * e.printStackTrace(); } }
+	 */
 
 }
