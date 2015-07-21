@@ -11,12 +11,23 @@ public class UIMessageCatalog {
 	/** The page name. */
 	private String pageName;
 	
+	/** The title. */
 	private String title;
 
+	/**
+	 * Gets the title.
+	 *
+	 * @return the title
+	 */
 	public final String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the title.
+     *
+     * @param title the new title
+     */
     public final void setTitle(String title) {
         this.title = title;
     }
