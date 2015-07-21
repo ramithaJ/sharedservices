@@ -41,9 +41,9 @@ public class TokenServiceImpl implements TokenService {
 	 * @throws JoseException
 	 */
 	@Override
-	public String generateToken(final TokenRequest tokenRequest)
-			throws JoseException {
-		return this.tokenHandler.createToken(tokenRequest);
+	public String generateToken(final TokenRequest tokenRequest) {
+		//return this.tokenHandler.createToken(tokenRequest);
+		return this.tokenHandler.hmacTokenGenerator(tokenRequest);
 	}
 
 	/**

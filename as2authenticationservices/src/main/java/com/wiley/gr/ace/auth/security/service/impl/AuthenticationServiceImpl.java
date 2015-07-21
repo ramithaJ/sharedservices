@@ -196,7 +196,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		Response response = null;
 		String filterPath = null;
-		final AndFilter filter = new AndFilter();
+		AndFilter filter = new AndFilter();
 
 		// If Authentication Type is provided as AUTO. Do a domain check.
 		if (StringUtils.isNotEmpty(authenticationType)
