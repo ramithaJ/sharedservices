@@ -29,160 +29,167 @@ import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetc
  */
 public class StaticContentFetchServiceImpl implements StaticContentFetchService {
 
-    /** The dot cms data service. */
-    @Autowired(required = true)
-    private DotCMSDataService dotCMSDataService;
+	/** The dot cms data service. */
+	@Autowired(required = true)
+	private DotCMSDataService dotCMSDataService;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wiley.gr.ace.staticcontentservices.services.service.
-     * StaticContentFetchService#getUiMessageContent(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public UIMessageContent getUiMessageContent(String pageName, String locale)
-            throws Exception {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wiley.gr.ace.staticcontentservices.services.service.
+	 * StaticContentFetchService#getUiMessageContent(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public UIMessageContent getUiMessageContent(String pageName, String locale)
+			throws Exception {
 
-        UIMessageCatalogDotcmsResponse uiMessageCatalogDotcmsResponse = dotCMSDataService
-                .getUiMessageCatalog(pageName, locale);
-        UIMessageContent uiMessageContent = null;
-        if (!StringUtils.isEmpty(uiMessageCatalogDotcmsResponse)) {
-            uiMessageContent = new UIMessageContent();
-            UIMessageCatalog uiMessageCatalog = uiMessageCatalogDotcmsResponse
-                    .getContentlets().get(0);
-            uiMessageContent.setErrorMessages(uiMessageCatalog
-                    .getErrorMessagesOption2());
-            uiMessageContent.setInlineHelp(uiMessageCatalog
-                    .getInlineHelpOption2());
-            uiMessageContent.setLocale(locale);
-            uiMessageContent.setPageName(pageName);
-            uiMessageContent.setUiLabelMessages(uiMessageCatalog
-                    .getUiLabelMessages());
+		UIMessageCatalogDotcmsResponse uiMessageCatalogDotcmsResponse = dotCMSDataService
+				.getUiMessageCatalog(pageName, locale);
+		UIMessageContent uiMessageContent = null;
+		if (!StringUtils.isEmpty(uiMessageCatalogDotcmsResponse)) {
+			uiMessageContent = new UIMessageContent();
+			UIMessageCatalog uiMessageCatalog = uiMessageCatalogDotcmsResponse
+					.getContentlets().get(0);
+			uiMessageContent.setErrorMessages(uiMessageCatalog
+					.getErrorMessagesOption2());
+			uiMessageContent.setInlineHelp(uiMessageCatalog
+					.getInlineHelpOption2());
+			uiMessageContent.setLocale(locale);
+			uiMessageContent.setPageName(pageName);
+			uiMessageContent.setUiLabelMessages(uiMessageCatalog
+					.getUiLabelMessages());
 
-            ServerCatalogDotcmsResponse serverCatalogDotcmsResponse = dotCMSDataService
-                    .getRelatedServerApplicationMessage(uiMessageCatalog
-                            .getIdentifier());
-            ServerCatalog serverCatalog = new ServerCatalog();
-            ServerContent serverContent = new ServerContent();
-            
-            
-            
-        }
+			ServerCatalogDotcmsResponse serverCatalogDotcmsResponse = dotCMSDataService
+					.getRelatedServerApplicationMessage(uiMessageCatalog
+							.getIdentifier());
+			ServerCatalog serverCatalog = serverCatalogDotcmsResponse
+					.getContentlets().get(0);
+			if (!StringUtils.isEmpty(serverCatalog)) {
+				ServerContent serverContent = new ServerContent();
+				serverContent.setContentTitle(serverCatalog.getContentTitle());
+				serverContent.setLocale(serverCatalog.getLocale());
+				serverContent.setModuleName(serverCatalog.getModuleName());
+				serverContent.setServerMessages(serverCatalog
+						.getServerMessages());
+				uiMessageContent.setServerContent(serverContent);
+			}
 
-        return uiMessageContent;
-    }
+		}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wiley.gr.ace.staticcontentservices.services.service.
-     * StaticContentFetchService#getConfirmationMessageContent(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public ConfirmationContent getConfirmationMessageContent(
-            String contentTitle, String moduleName, String locale)
-            throws Exception {
+		return uiMessageContent;
+	}
 
-        ConfirmationCatalogDotcmsResponse confirmationCatalogDotcmsResponse = dotCMSDataService
-                .getConfirmationCatalog(contentTitle, moduleName, locale);
-        ConfirmationContent confirmationContent = null;
-        if (!StringUtils.isEmpty(confirmationCatalogDotcmsResponse)) {
-            confirmationContent = new ConfirmationContent();
-            ConfirmationCatalog confirmationCatalog = confirmationCatalogDotcmsResponse
-                    .getContentlets().get(0);
-            confirmationContent.setConfirmationMessages(confirmationCatalog
-                    .getConfirmationMessages());
-            confirmationContent.setContentTiltle(contentTitle);
-            confirmationContent.setLocale(locale);
-            confirmationContent.setModuleName(moduleName);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wiley.gr.ace.staticcontentservices.services.service.
+	 * StaticContentFetchService#getConfirmationMessageContent(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public ConfirmationContent getConfirmationMessageContent(
+			String contentTitle, String moduleName, String locale)
+			throws Exception {
 
-        }
+		ConfirmationCatalogDotcmsResponse confirmationCatalogDotcmsResponse = dotCMSDataService
+				.getConfirmationCatalog(contentTitle, moduleName, locale);
+		ConfirmationContent confirmationContent = null;
+		if (!StringUtils.isEmpty(confirmationCatalogDotcmsResponse)) {
+			confirmationContent = new ConfirmationContent();
+			ConfirmationCatalog confirmationCatalog = confirmationCatalogDotcmsResponse
+					.getContentlets().get(0);
+			confirmationContent.setConfirmationMessages(confirmationCatalog
+					.getConfirmationMessages());
+			confirmationContent.setContentTiltle(contentTitle);
+			confirmationContent.setLocale(locale);
+			confirmationContent.setModuleName(moduleName);
 
-        return confirmationContent;
-    }
+		}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wiley.gr.ace.staticcontentservices.services.service.
-     * StaticContentFetchService#getStatusContent(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public StatusContent getStatusContent(String contentTitle,
-            String statusMessageType, String locale) throws Exception {
+		return confirmationContent;
+	}
 
-        StatusCatalogDotcmsResponse statusCatalogDotcmsResponse = dotCMSDataService
-                .getStatusCatalog(contentTitle, statusMessageType, locale);
-        StatusContent statusContent = null;
-        if (!StringUtils.isEmpty(statusCatalogDotcmsResponse)) {
-            statusContent = new StatusContent();
-            StatusCatalog statusCatalog = statusCatalogDotcmsResponse
-                    .getContentlets().get(0);
-            statusContent.setStatusMessages(statusCatalog.getStatusMessages());
-            statusContent.setContentTitle(contentTitle);
-            statusContent.setLocale(locale);
-            statusContent.setStatusMessageType(statusMessageType);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wiley.gr.ace.staticcontentservices.services.service.
+	 * StaticContentFetchService#getStatusContent(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public StatusContent getStatusContent(String contentTitle,
+			String statusMessageType, String locale) throws Exception {
 
-        }
+		StatusCatalogDotcmsResponse statusCatalogDotcmsResponse = dotCMSDataService
+				.getStatusCatalog(contentTitle, statusMessageType, locale);
+		StatusContent statusContent = null;
+		if (!StringUtils.isEmpty(statusCatalogDotcmsResponse)) {
+			statusContent = new StatusContent();
+			StatusCatalog statusCatalog = statusCatalogDotcmsResponse
+					.getContentlets().get(0);
+			statusContent.setStatusMessages(statusCatalog.getStatusMessages());
+			statusContent.setContentTitle(contentTitle);
+			statusContent.setLocale(locale);
+			statusContent.setStatusMessageType(statusMessageType);
 
-        return statusContent;
-    }
+		}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wiley.gr.ace.staticcontentservices.services.service.
-     * StaticContentFetchService#getEmailContent(java.lang.String)
-     */
-    @Override
-    public EmailContent getEmailContent(String contentTitle) throws Exception {
+		return statusContent;
+	}
 
-        EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
-                .getEmailCatalog(contentTitle);
-        EmailContent emailContent = null;
-        if (!StringUtils.isEmpty(emailCatalogDotcmsResponse)) {
-            emailContent = new EmailContent();
-            EmailCatalog emailCatalog = emailCatalogDotcmsResponse
-                    .getContentlets().get(0);
-            emailContent.setContentTitle(emailCatalog.getContentTitle());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wiley.gr.ace.staticcontentservices.services.service.
+	 * StaticContentFetchService#getEmailContent(java.lang.String)
+	 */
+	@Override
+	public EmailContent getEmailContent(String contentTitle) throws Exception {
 
-            emailContent.setContentTitle(contentTitle);
+		EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
+				.getEmailCatalog(contentTitle);
+		EmailContent emailContent = null;
+		if (!StringUtils.isEmpty(emailCatalogDotcmsResponse)) {
+			emailContent = new EmailContent();
+			EmailCatalog emailCatalog = emailCatalogDotcmsResponse
+					.getContentlets().get(0);
+			emailContent.setContentTitle(emailCatalog.getContentTitle());
 
-        }
+			emailContent.setContentTitle(contentTitle);
 
-        return emailContent;
-    }
+		}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wiley.gr.ace.staticcontentservices.services.service.
-     * StaticContentFetchService#getStaticContent(java.lang.String,
-     * java.lang.String, java.lang.String)
-     */
-    @Override
-    public StaticContent getStaticContent(String contentUniqueKey,
-            String pageName, String locale) throws Exception {
+		return emailContent;
+	}
 
-        StaticCatalogDotcmsResponse staticCatalogDotcmsResponse = dotCMSDataService
-                .getStaticCatalog(contentUniqueKey, pageName, locale);
-        StaticContent staticContent = null;
-        if (!StringUtils.isEmpty(staticCatalogDotcmsResponse)) {
-            staticContent = new StaticContent();
-            StaticCatalog staticCatalog = staticCatalogDotcmsResponse
-                    .getContentlets().get(0);
-            staticContent.setContentTitle(staticCatalog.getContentTitle());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wiley.gr.ace.staticcontentservices.services.service.
+	 * StaticContentFetchService#getStaticContent(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public StaticContent getStaticContent(String contentUniqueKey,
+			String pageName, String locale) throws Exception {
 
-            staticContent.setContentTitle(contentUniqueKey);
-            staticContent.setPageName(pageName);
-            staticContent.setLocale(locale);
-            staticContent.setAdBlockBody(staticCatalog.getAdBlockContent());
+		StaticCatalogDotcmsResponse staticCatalogDotcmsResponse = dotCMSDataService
+				.getStaticCatalog(contentUniqueKey, pageName, locale);
+		StaticContent staticContent = null;
+		if (!StringUtils.isEmpty(staticCatalogDotcmsResponse)) {
+			staticContent = new StaticContent();
+			StaticCatalog staticCatalog = staticCatalogDotcmsResponse
+					.getContentlets().get(0);
+			staticContent.setContentTitle(staticCatalog.getContentTitle());
 
-        }
+			staticContent.setContentTitle(contentUniqueKey);
+			staticContent.setPageName(pageName);
+			staticContent.setLocale(locale);
+			staticContent.setAdBlockBody(staticCatalog.getAdBlockContent());
 
-        return staticContent;
-    }
+		}
+
+		return staticContent;
+	}
 }

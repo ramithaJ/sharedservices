@@ -39,7 +39,7 @@ public class DotCMSStaticContentController {
 	 *            the locale
 	 * @return the ui message catalog
 	 */
-	@RequestMapping(value = "/uimessage/{pageName}/{locale}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/uimessage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getUiMessageCatalog(
 	        @RequestParam("pageName") String pageName,
 			@RequestParam("locale") String locale) {

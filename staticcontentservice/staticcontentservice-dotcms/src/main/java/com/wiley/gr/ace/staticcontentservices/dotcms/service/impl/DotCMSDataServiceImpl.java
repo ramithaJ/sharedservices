@@ -40,11 +40,11 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 		String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 				
 		if (!StringUtils.isEmpty(pageName)) {
-            dotQuery = dotQuery + " +StatusMessages.pageName:*" + pageName + "*";
+            dotQuery = dotQuery + " +UiMessageCatalog.pageName:*" + pageName + "*";
         }
 		
 		if (!StringUtils.isEmpty(locale)) {
-            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+            dotQuery = dotQuery + " +UiMessageCatalog.locale:*" + locale + "*";
         }
 		
 		dotQuery = dotQuery+"* +languageId:1* +deleted:false +working:true";

@@ -25,7 +25,7 @@ public class UIMessageContent {
 	/** The inline help. */
 	private HashMap<String, String> inlineHelp;
 
-	private ServerCatalog serverCatalog;
+	private ServerContent serverContent;
 	
 	/**
 	 * Gets the page name.
@@ -117,12 +117,13 @@ public class UIMessageContent {
 		this.errorMessages = errorMessages;
 	}
 
-    public final ServerCatalog getServerCatalog() {
-        return serverCatalog;
-    }
+	public final ServerContent getServerContent() {
+		return serverContent;
+	}
 
-    public final void setServerCatalog(ServerCatalog serverCatalog) {
-        this.serverCatalog = serverCatalog;
-    }
+	public final void setServerContent(ServerContent serverContent) {
+		this.serverContent = serverContent;
+	}
+
 
 }
