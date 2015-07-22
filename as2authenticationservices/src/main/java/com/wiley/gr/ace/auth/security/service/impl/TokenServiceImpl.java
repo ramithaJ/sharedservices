@@ -12,11 +12,13 @@
 package com.wiley.gr.ace.auth.security.service.impl;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.nimbusds.jose.JOSEException;
 import com.wiley.gr.ace.auth.security.handler.TokenHandler;
 import com.wiley.gr.ace.auth.security.model.TokenRequest;
 import com.wiley.gr.ace.auth.security.service.TokenService;
@@ -41,9 +43,9 @@ public class TokenServiceImpl implements TokenService {
 	 * @throws JoseException
 	 */
 	@Override
-	public String generateToken(final TokenRequest tokenRequest)
-			throws JoseException {
-		return this.tokenHandler.createToken(tokenRequest);
+	public String generateToken(final TokenRequest tokenRequest) {
+		//return this.tokenHandler.createToken(tokenRequest);
+		return this.tokenHandler.hmacTokenGenerator(tokenRequest);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public String refreshToken(final String token) throws IOException,
 	JoseException, InvalidJwtException {
-		return this.tokenHandler.refreshToken(token);
+		return this.tokenHandler.hmacRefreshToken(token);
 	}
 
 	/**
@@ -70,6 +72,12 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public boolean validateToken(final String token)
 			throws InvalidJwtException, JoseException, IOException {
-		return this.tokenHandler.validateToken(token);
+		try {
+			return this.tokenHandler.hmacTokenVerifies(token);
+		} catch (ParseException | JOSEException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

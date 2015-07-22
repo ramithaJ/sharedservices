@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.util.UriEncoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService;
 import com.wiley.gr.ace.staticcontentservices.model.external.ConfirmationCatalogDotcmsResponse;
+import com.wiley.gr.ace.staticcontentservices.model.external.ServerCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.StaticCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.StatusCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
@@ -39,11 +40,11 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 		String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 				
 		if (!StringUtils.isEmpty(pageName)) {
-            dotQuery = dotQuery + " +StatusMessages.pageName:*" + pageName + "*";
+            dotQuery = dotQuery + " +UiMessageCatalog.pageName:*" + pageName + "*";
         }
 		
 		if (!StringUtils.isEmpty(locale)) {
-            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+            dotQuery = dotQuery + " +UiMessageCatalog.locale:*" + locale + "*";
         }
 		
 		dotQuery = dotQuery+"* +languageId:1* +deleted:false +working:true";
@@ -74,15 +75,15 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 		String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
 		
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.contentTitle:*" + contentTitle + "*";
+            dotQuery = dotQuery + " +ConfirmationTexts.contentTitle:*" + contentTitle + "*";
         }
 		
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.moduleName:*" + moduleName + "*";
+            dotQuery = dotQuery + " +ConfirmationTexts.moduleName:*" + moduleName + "*";
         }
 		
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+            dotQuery = dotQuery + " +ConfirmationTexts.locale:*" + locale + "*";
         }        
 		       
 		dotQuery = dotQuery+ "* +languageId:1* +deleted:false +working:true";
@@ -149,7 +150,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 
 		String dotQuery = "+structureName:EmailSurveyLink +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
 		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StaticAdBlock.contentTitle:*"
+            dotQuery = dotQuery + " +EmailSurveyLink.contentTitle:*"
                     + contentTitle + "*";
         }
       
@@ -204,4 +205,28 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 				staticCatalogDotcmsResponseJsonString,
 				StaticCatalogDotcmsResponse.class);
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService#getRelatedServerApplicationMessage(java.lang.String)
+	 */
+	@Override
+    public ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
+            String contentIdentifier)
+            throws Exception {
+
+        String dotQuery = "+structureName:ServerApplicationMessages +Parent_UiMessageCatalog-Child_ServerApplicationMessages:" + contentIdentifier; 
+        
+        
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String staticCatalogDotcmsResponseJsonString = responseEntity.getBody();
+
+        return new ObjectMapper().readValue(
+                staticCatalogDotcmsResponseJsonString,
+                ServerCatalogDotcmsResponse.class);
+    }
+	
 }
