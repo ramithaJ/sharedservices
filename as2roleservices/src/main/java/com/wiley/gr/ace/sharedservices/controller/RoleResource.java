@@ -1,11 +1,12 @@
 package com.wiley.gr.ace.sharedservices.controller;
 
-import com.wiley.gr.ace.sharedservices.service.Permission;
-import com.wiley.gr.ace.sharedservices.service.Role;
-import org.springframework.hateoas.ResourceSupport;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.hateoas.ResourceSupport;
+
+import com.wiley.gr.ace.sharedservices.service.Permission;
+import com.wiley.gr.ace.sharedservices.service.Role;
 
 /**
  * The Class RoleResource.
@@ -25,16 +26,19 @@ public class RoleResource extends ResourceSupport {
 
     private List<Permission> permissions = new ArrayList<>();
 
+    private List<UserRole> users = new ArrayList<>();
+
     public RoleResource() {
     }
 
     public RoleResource(Role role) {
         if (null != role) {
-            this.roleId = role.getRoleId();
-            this.roleName = role.getRoleName();
-            this.roleDescription = role.getRoleDescription();
-            this.roleType = role.getRoleType();
-            this.permissions = role.getPermissions();
+            roleId = role.getRoleId();
+            roleName = role.getRoleName();
+            roleDescription = role.getRoleDescription();
+            roleType = role.getRoleType();
+            permissions = role.getPermissions();
+            users = role.getUsers();
         }
     }
 
@@ -76,5 +80,20 @@ public class RoleResource extends ResourceSupport {
 
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    /**
+     * @return the userRole
+     */
+    public List<UserRole> getUsers() {
+        return users;
+    }
+
+    /**
+     * @param userRole
+     *            the userRole to set
+     */
+    public void setUsers(List<UserRole> userRole) {
+        users = userRole;
     }
 }

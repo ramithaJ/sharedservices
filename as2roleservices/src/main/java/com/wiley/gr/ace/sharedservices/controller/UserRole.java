@@ -3,15 +3,15 @@ package com.wiley.gr.ace.sharedservices.controller;
 /**
  * The Class NewRole.
  */
-public class NewRole {
+public class UserRole {
 
     /** The name. */
-    private String name;
+    private int userId;
 
     /**
      * Instantiates a new new role.
      */
-    public NewRole() {
+    public UserRole() {
     }
 
     /**
@@ -20,8 +20,8 @@ public class NewRole {
      * @param name
      *            the name
      */
-    public NewRole(String name) {
-        this.name = name;
+    public UserRole(int userId) {
+        this.userId = userId;
     }
 
     /**
@@ -29,8 +29,8 @@ public class NewRole {
      *
      * @return the name
      */
-    public String getName() {
-        return name;
+    public int getUserId() {
+        return userId;
     }
 
     /**
@@ -39,7 +39,7 @@ public class NewRole {
      * @param name
      *            the new name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

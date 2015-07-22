@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.wiley.gr.ace.sharedservices.controller.UserRole;
+
 /**
  * The Class Role.
  */
@@ -36,10 +38,31 @@ public class Role {
     /** The permissions. */
     private List<Permission> permissions = new ArrayList<Permission>();
 
+    /** The permissions. */
+    private List<UserRole> users = new ArrayList<UserRole>();
+
     /**
      * Instantiates a new role.
      */
     public Role() {
+    }
+
+    /**
+     * Instantiates a new role.
+     *
+     * @param roleId
+     *            the role id
+     * @param roleName
+     *            the role name
+     * @param permissions
+     *            the permissions
+     */
+    public Role(int roleId, String roleName, List<Permission> permissions,
+            List<UserRole> usersList) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+        this.permissions = permissions;
+        users = usersList;
     }
 
     /**
@@ -227,6 +250,21 @@ public class Role {
      */
     public final void setUpdatedBy(int updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    /**
+     * @return the usersList
+     */
+    public List<UserRole> getUsers() {
+        return users;
+    }
+
+    /**
+     * @param usersList
+     *            the usersList to set
+     */
+    public void setUsers(List<UserRole> usersList) {
+        users = usersList;
     }
 
 }

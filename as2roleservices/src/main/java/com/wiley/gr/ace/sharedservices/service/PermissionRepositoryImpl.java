@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.wiley.gr.ace.sharedservices.controller.UserRole;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.persistence.entity.AdditionalPermissions;
 import com.wiley.gr.ace.sharedservices.persistence.entity.ObjectTypes;
@@ -58,7 +59,10 @@ public class PermissionRepositoryImpl implements PermissionRepository {
             Permissions permissions;
             List<String> groupList;
             List<Permission> permissionList;
+            List<UserRole> usersList = null;
             Set<RolePermissions> rolePermissionsSet;
+            Set<UserRoles> userRolesSet;
+            UserRole userRole = null;
 
             for (final Roles role : rolesList) {
                 permissionList = new ArrayList<>();
@@ -76,9 +80,16 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                                     .getPermissionGroupCd());
                         }
                     }
+
+                }
+                usersList = new ArrayList<>();
+                userRolesSet = role.getUserRoleses();
+                for (final UserRoles userRoles : userRolesSet) {
+                    userRole = new UserRole(userRoles.getId().getUserId());
+                    usersList.add(userRole);
                 }
                 roleList.add(new Role(role.getRoleId(), role.getRoleName(),
-                        permissionList));
+                        permissionList, usersList));
             }
 
             // Flush the session.
@@ -195,6 +206,9 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
             final Set<RolePermissions> rolePermissionsSet = roles
                     .getRolePermissionses();
+            final Set<UserRoles> userRolesSet = roles.getUserRoleses();
+            final List<UserRole> usersList = new ArrayList<UserRole>();
+            UserRole userRole = null;
             Permissions permissions;
             for (final RolePermissions rolePermissions : rolePermissionsSet) {
                 groups = new ArrayList<>();
@@ -210,7 +224,13 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 }
             }
 
-            role = new Role(roles.getRoleId(), roles.getRoleName(), permission);
+            for (final UserRoles userRoles : userRolesSet) {
+                userRole = new UserRole(userRoles.getId().getUserId());
+                usersList.add(userRole);
+            }
+
+            role = new Role(roles.getRoleId(), roles.getRoleName(), permission,
+                    usersList);
 
             // Flush the session.
             session.flush();
@@ -872,4 +892,5 @@ public class PermissionRepositoryImpl implements PermissionRepository {
             }
         }
     }
+
 }
