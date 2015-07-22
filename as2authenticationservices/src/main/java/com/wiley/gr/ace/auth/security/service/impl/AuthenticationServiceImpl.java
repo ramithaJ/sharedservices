@@ -40,11 +40,16 @@ import com.wiley.gr.ace.auth.security.constants.CommonConstant;
 import com.wiley.gr.ace.auth.security.dao.LockedAccountDetails;
 import com.wiley.gr.ace.auth.security.dao.UserLoginDAO;
 import com.wiley.gr.ace.auth.security.model.AuthenticateRequest;
+import com.wiley.gr.ace.auth.security.model.AuthenticationObject;
+import com.wiley.gr.ace.auth.security.model.ErrorPayLoad;
 import com.wiley.gr.ace.auth.security.model.Response;
+import com.wiley.gr.ace.auth.security.model.ResponseStatus;
 import com.wiley.gr.ace.auth.security.model.SecurityRequest;
 import com.wiley.gr.ace.auth.security.model.SecurityResponse;
 import com.wiley.gr.ace.auth.security.model.TokenRequest;
 import com.wiley.gr.ace.auth.security.model.User;
+import com.wiley.gr.ace.auth.security.model.UserSecurityAttributes;
+import com.wiley.gr.ace.auth.security.model.UserServiceRequest;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 import com.wiley.gr.ace.auth.security.service.TokenService;
 import com.wiley.gr.ace.auth.security.utils.StubInvoker;
@@ -161,13 +166,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * This field holds the value of lockUser
 	 */
 	@Value("${as.lock.url}")
-	private String lockUser;
+	private String lockUserurl;
 
 	/**
 	 * This field holds the value of unlockUser
 	 */
 	@Value("${as.unlock.url}")
-	private String unlockUser;
+	private String unlockUserurl;
 
 	/**
 	 * This field holds the value of authenticationType
@@ -394,11 +399,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final long minutes = TimeUnit.MILLISECONDS.toMinutes(new Date()
 				.getTime() - loginAttemptTime.getTime());
 		if (this.unlockTime < minutes) {
-			final SecurityRequest requestEntityClass = new SecurityRequest();
-			requestEntityClass.setUserId(request.getUserId());
+			
+			UserServiceRequest userServiceRequest = new UserServiceRequest();
+			UserSecurityAttributes userSecurityAttributes = new UserSecurityAttributes();
+			
+			userSecurityAttributes.setExistingEmail(request.getUserId());
+			userSecurityAttributes.setSourceSystem(CommonConstant.SOURCESYSTEM);
+			
+			AuthenticationObject authenticationObject = new AuthenticationObject();
+	        authenticationObject
+	                .setAuthusername(CommonConstant.AUTHUSERNAME);
+	        authenticationObject
+	                .setAuthpassword(CommonConstant.AUTHPASSWORD);
+	        userSecurityAttributes.setAuthenticationObject(authenticationObject);
+	        
+	        userServiceRequest.setUpdateUserSecurityAttributes(userSecurityAttributes);
+	        
 			if (null != lockedAccountDetails.getLockedTime()) {
-				StubInvoker.restServiceInvoker(this.unlockUser,
-						requestEntityClass, SecurityResponse.class);
+				ResponseStatus responseStatus = (ResponseStatus) StubInvoker.restServiceInvoker(this.unlockUserurl,
+						userServiceRequest, ResponseStatus.class);
+				if ("success".equalsIgnoreCase(responseStatus.getStatus())) {
+		            System.out.println("User is unLocked");
+		        }
+		        if ("failure".equalsIgnoreCase(responseStatus.getStatus())) {
+		            System.out.println("User is already unLocked");
+		        }
 			}
 			this.userLoginDao.removeUser(request.getUserId());
 			return this.processAuthenticatedUser(request);
@@ -414,10 +439,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// will update the count in table.
 		if (this.lockAttempts == lockedAccountDetails.getInvalidLoginCount()) {
 			// lock user esb service
-			final SecurityRequest requestEntityClass = new SecurityRequest();
-			requestEntityClass.setUserId(request.getUserId());
-			StubInvoker.restServiceInvoker(this.lockUser, requestEntityClass,
-					SecurityResponse.class);
+			UserServiceRequest userServiceRequest = new UserServiceRequest();
+			UserSecurityAttributes userSecurityAttributes = new UserSecurityAttributes();
+			
+			userSecurityAttributes.setExistingEmail(request.getUserId());
+			userSecurityAttributes.setSourceSystem(CommonConstant.SOURCESYSTEM);
+			
+			AuthenticationObject authenticationObject = new AuthenticationObject();
+	        authenticationObject
+	                .setAuthusername(CommonConstant.AUTHUSERNAME);
+	        authenticationObject
+	                .setAuthpassword(CommonConstant.AUTHPASSWORD);
+	        userSecurityAttributes.setAuthenticationObject(authenticationObject);
+	        
+	        userServiceRequest.setUpdateUserSecurityAttributes(userSecurityAttributes);
+	        
+			ResponseStatus responseStatus = (ResponseStatus) StubInvoker.restServiceInvoker(this.lockUserurl,
+					userServiceRequest, ResponseStatus.class);
+			if ("success".equalsIgnoreCase(responseStatus.getStatus())) {
+	            System.out.println("User is locked");
+	        }
+	        if ("failure".equalsIgnoreCase(responseStatus.getStatus())) {
+	            System.out.println("User is already locked");
+	        }
 			// update the locked time in the table
 			this.userLoginDao.updateTimeStamp(request.getUserId());
 			response.setStatus(String.valueOf(Response.STATUS.LOCKED));

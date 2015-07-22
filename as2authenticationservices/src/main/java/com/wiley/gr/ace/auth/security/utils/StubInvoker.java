@@ -31,6 +31,11 @@ import com.wiley.gr.ace.auth.security.model.SecurityResponse;
 public class StubInvoker {
 
 	/**
+	 * This field holds the value of LOGGER
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(StubInvoker.class);
+	/**
 	 * This method is restServiceInvoker
 	 *
 	 * @param url
@@ -59,9 +64,4 @@ public class StubInvoker {
 		return response;
 	}
 
-	/**
-	 * This field holds the value of LOGGER
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(StubInvoker.class);
 }

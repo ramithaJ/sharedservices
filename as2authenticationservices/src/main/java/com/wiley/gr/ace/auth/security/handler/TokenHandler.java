@@ -354,12 +354,13 @@ public class TokenHandler {
 */
 	private String sharedSecretKey(final String userId) {
 
-		/*
-		 * SecureRandom random = new SecureRandom(); byte[] sharedSecret = new
-		 * byte[32]; random.nextBytes(sharedSecret); String salt =
-		 * sharedSecret.toString();
-		 */
-		String salt = "[B@5c5f0b5f";
+		
+		 SecureRandom random = new SecureRandom(); 
+		 byte[] sharedSecret = new byte[32]; 
+		 random.nextBytes(sharedSecret); 
+		 String salt = sharedSecret.toString();
+		 System.err.println(salt);
+		//String salt = "[B@5c5f0b5f";
 		String sharedSecretKey = null;
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -374,14 +375,16 @@ public class TokenHandler {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		// System.err.println(sharedSecretKey);
+		System.err.println(sharedSecretKey);
 		return sharedSecretKey;
 	}
 
-	/*
-	 * public static void main(String[] args) { TokenHandler a = new
-	 * TokenHandler(); a.sharedSecretKey("Ramitha.su@gmail.com"); }
-	 */
+	
+	 public static void main(String[] args) { 
+		 TokenHandler a = new TokenHandler(); 
+		 a.sharedSecretKey("Ramitha.su@gmail.com"); 
+	}
+	 
 
 	public String hmacRefreshToken(final String token) throws JoseException,
 			InvalidJwtException, IOException {

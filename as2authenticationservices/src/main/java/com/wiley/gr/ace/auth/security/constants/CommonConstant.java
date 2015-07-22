@@ -138,4 +138,19 @@ public interface CommonConstant {
 	 * This field holds the value of WILEY_DOMAIN
 	 */
 	static String WILEY_DOMAIN = "wiley.com";
+	
+	/**
+     * This field holds the value of AUTHUSERNAME
+     */
+    public static final String AUTHUSERNAME = "as2admin";
+
+    /**
+     * This field holds the value of AUTHPASSWORD
+     */
+    public static final String AUTHPASSWORD = "hgdJbhjrnfY9KFs3KPpddQ==";
+
+    /**
+     * This field holds the value of SOURCESYSTEM
+     */
+    public static final String SOURCESYSTEM = "AS";
 }
