@@ -17,12 +17,8 @@ import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-import com.wiley.gr.ace.auth.security.model.SecurityResponse;
 
 /**
  * @author Virtusa
@@ -48,20 +44,13 @@ public class StubInvoker {
 
 		ResponseEntity<T> response = null;
 		try {
-			final HttpHeaders requestHeaders = new HttpHeaders();
-			requestHeaders.setContentType(MediaType.APPLICATION_JSON);
 			response = new RestTemplate().postForEntity(new URI(url),
 					requestEntityClass, responseEntityClass);
 
-			if (null == response) {
-				return new SecurityResponse();
-			}
 		} catch (final Exception e) {
-
 			StubInvoker.LOGGER.error("RestServiceInvoke stub exception", e);
 		}
-
-		return response;
+		return response.getBody();
 	}
 
 }

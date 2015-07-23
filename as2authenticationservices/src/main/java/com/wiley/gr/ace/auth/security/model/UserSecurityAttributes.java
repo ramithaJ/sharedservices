@@ -33,55 +33,34 @@ public class UserSecurityAttributes {
     @JsonProperty("SourceSystem")
     private String sourceSystem;
 
-    /**
-     * This field holds the value of authenticationObject
-     */
-    @JsonProperty("AuthenticationObject")
-    private AuthenticationObject authenticationObject;
+	/**
+	 * @return the existingEmail
+	 */
+	public final String getExistingEmail() {
+		return existingEmail;
+	}
 
-    /**
-     * @return the authenticationObject
-     */
-    public final AuthenticationObject getAuthenticationObject() {
-        return authenticationObject;
-    }
+	/**
+	 * @param existingEmail the existingEmail to set
+	 */
+	public final void setExistingEmail(String existingEmail) {
+		this.existingEmail = existingEmail;
+	}
 
-    /**
-     * @param authenticationObject
-     *            the authenticationObject to set
-     */
-    public final void setAuthenticationObject(
-            final AuthenticationObject authenticationObject) {
-        this.authenticationObject = authenticationObject;
-    }
+	/**
+	 * @return the sourceSystem
+	 */
+	public final String getSourceSystem() {
+		return sourceSystem;
+	}
 
-    /**
-     * @return the existingEmail
-     */
-    public final String getExistingEmail() {
-        return existingEmail;
-    }
+	/**
+	 * @param sourceSystem the sourceSystem to set
+	 */
+	public final void setSourceSystem(String sourceSystem) {
+		this.sourceSystem = sourceSystem;
+	}
 
-    /**
-     * @param existingEmail
-     *            the existingEmail to set
-     */
-    public final void setExistingEmail(final String existingEmail) {
-        this.existingEmail = existingEmail;
-    }
-
-    /**
-     * @return the sourceSystem
-     */
-    public final String getSourceSystem() {
-        return sourceSystem;
-    }
-
-    /**
-     * @param sourceSystem
-     *            the sourceSystem to set
-     */
-    public final void setSourceSystem(final String sourceSystem) {
-        this.sourceSystem = sourceSystem;
-    }
+    
+    
 }

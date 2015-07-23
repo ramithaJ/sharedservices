@@ -180,8 +180,7 @@ public class AuthenticationController {
 			@Valid @RequestBody final TokenRequest request) {
 
 		try {
-			User user = authenticationService.searchUser(request
-					.getUserId());
+			User user = authenticationService.searchUser(request.getUserId());
 			return new ResponseEntity<>(user, null, HttpStatus.OK);
 		} catch (NameNotFoundException nameNotFoundException) {
 			return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,

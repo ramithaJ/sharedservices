@@ -399,32 +399,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final long minutes = TimeUnit.MILLISECONDS.toMinutes(new Date()
 				.getTime() - loginAttemptTime.getTime());
 		if (this.unlockTime < minutes) {
-			
-			UserServiceRequest userServiceRequest = new UserServiceRequest();
-			UserSecurityAttributes userSecurityAttributes = new UserSecurityAttributes();
-			
-			userSecurityAttributes.setExistingEmail(request.getUserId());
-			userSecurityAttributes.setSourceSystem(CommonConstant.SOURCESYSTEM);
-			
-			AuthenticationObject authenticationObject = new AuthenticationObject();
-	        authenticationObject
-	                .setAuthusername(CommonConstant.AUTHUSERNAME);
-	        authenticationObject
-	                .setAuthpassword(CommonConstant.AUTHPASSWORD);
-	        userSecurityAttributes.setAuthenticationObject(authenticationObject);
-	        
-	        userServiceRequest.setUpdateUserSecurityAttributes(userSecurityAttributes);
-	        
+			//if user is Locked
 			if (null != lockedAccountDetails.getLockedTime()) {
-				ResponseStatus responseStatus = (ResponseStatus) StubInvoker.restServiceInvoker(this.unlockUserurl,
-						userServiceRequest, ResponseStatus.class);
-				if ("success".equalsIgnoreCase(responseStatus.getStatus())) {
-		            System.out.println("User is unLocked");
-		        }
-		        if ("failure".equalsIgnoreCase(responseStatus.getStatus())) {
-		            System.out.println("User is already unLocked");
-		        }
+				// call the unLock external ALM service
+				this.lockUnlockUser(request.getUserId(), unlockUserurl);
 			}
+			// removing the record in the temporary table.
 			this.userLoginDao.removeUser(request.getUserId());
 			return this.processAuthenticatedUser(request);
 		}
@@ -438,30 +418,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// if not we will proceed for authentication. if authentication fail we
 		// will update the count in table.
 		if (this.lockAttempts == lockedAccountDetails.getInvalidLoginCount()) {
-			// lock user esb service
-			UserServiceRequest userServiceRequest = new UserServiceRequest();
-			UserSecurityAttributes userSecurityAttributes = new UserSecurityAttributes();
-			
-			userSecurityAttributes.setExistingEmail(request.getUserId());
-			userSecurityAttributes.setSourceSystem(CommonConstant.SOURCESYSTEM);
-			
-			AuthenticationObject authenticationObject = new AuthenticationObject();
-	        authenticationObject
-	                .setAuthusername(CommonConstant.AUTHUSERNAME);
-	        authenticationObject
-	                .setAuthpassword(CommonConstant.AUTHPASSWORD);
-	        userSecurityAttributes.setAuthenticationObject(authenticationObject);
-	        
-	        userServiceRequest.setUpdateUserSecurityAttributes(userSecurityAttributes);
-	        
-			ResponseStatus responseStatus = (ResponseStatus) StubInvoker.restServiceInvoker(this.lockUserurl,
-					userServiceRequest, ResponseStatus.class);
-			if ("success".equalsIgnoreCase(responseStatus.getStatus())) {
-	            System.out.println("User is locked");
-	        }
-	        if ("failure".equalsIgnoreCase(responseStatus.getStatus())) {
-	            System.out.println("User is already locked");
-	        }
+			// calling the Lock ALM service 
+			this.lockUnlockUser(request.getUserId(), lockUserurl);
 			// update the locked time in the table
 			this.userLoginDao.updateTimeStamp(request.getUserId());
 			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
@@ -475,5 +433,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 
 		return response;
+	}
+	
+	/**
+	 * @param userId
+	 * @param url
+	 */
+	private void lockUnlockUser(String userId, String url) {
+		
+		UserServiceRequest userServiceRequest = new UserServiceRequest();
+		UserSecurityAttributes userSecurityAttributes = new UserSecurityAttributes();
+		
+		userSecurityAttributes.setExistingEmail(userId);
+		userSecurityAttributes.setSourceSystem(CommonConstant.SOURCESYSTEM);
+		
+        userServiceRequest.setUpdateUserSecurityAttributes(userSecurityAttributes);
+	
+		ResponseStatus responseStatus = (ResponseStatus) StubInvoker.restServiceInvoker(url,
+				userServiceRequest, ResponseStatus.class);
+		if ("success".equalsIgnoreCase(responseStatus.getStatus())) {
+			LOGGER.info("User is locked/unLocked");
+        }
+        if ("failure".equalsIgnoreCase(responseStatus.getStatus())) {
+        	LOGGER.info("User is already locked/unLocked");
+        }
 	}
 }
