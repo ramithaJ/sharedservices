@@ -162,7 +162,7 @@ public class TokenHandler {
 						TokenHandler.keyMap.get(tokenRequest.getAppKey())
 								.getPrivateKey(),
 						AlgorithmIdentifiers.RSA_USING_SHA256);
-
+		System.err.println("token------------"+ token);
 		return token;
 	}
 
@@ -331,11 +331,15 @@ public class TokenHandler {
 		jws.setCompactSerialization(hmacToken);
 		final String userId = this.getTokenNodeValue(hmacToken,
 				CommonConstant.USER_ID, jws);
-		System.err.println("userId " + userId);
+		System.err.println("userId------ " + userId);
 		String SharedSeceretKey = this.sharedSecretKey(userId);
 		SignedJWT signedJWT = SignedJWT.parse(hmacToken);
 		JWSVerifier verifier = new MACVerifier(SharedSeceretKey);
-		return signedJWT.verify(verifier);
+		System.err.println("verifier-------"+ signedJWT.verify(verifier));
+		if(signedJWT.verify(verifier)) {
+			return true;
+		}
+		return false;
 	}
 
 	/*public static void main(String[] args) throws JoseException, IOException {
@@ -355,12 +359,12 @@ public class TokenHandler {
 	private String sharedSecretKey(final String userId) {
 
 		
-		 SecureRandom random = new SecureRandom(); 
+		 /*SecureRandom random = new SecureRandom(); 
 		 byte[] sharedSecret = new byte[32]; 
 		 random.nextBytes(sharedSecret); 
 		 String salt = sharedSecret.toString();
-		 System.err.println(salt);
-		//String salt = "[B@5c5f0b5f";
+		 System.err.println(salt);*/
+		String salt = "[B@5c5f0b5f";
 		String sharedSecretKey = null;
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -394,10 +398,10 @@ public class TokenHandler {
 		jws.setCompactSerialization(token);
 		final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
 				jws);
-		System.err.println("issuer " + issuer);
+		System.err.println("issuer----------- " + issuer);
 		final String userId = this.getTokenNodeValue(token,
 				CommonConstant.USER_ID, jws);
-		System.err.println("userId " + userId);
+		System.err.println("userId----------- " + userId);
 		final TokenRequest request = new TokenRequest();
 		request.setUserId(userId);
 		request.setAppKey(issuer);

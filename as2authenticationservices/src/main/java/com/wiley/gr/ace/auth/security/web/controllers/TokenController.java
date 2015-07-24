@@ -209,13 +209,13 @@ public class TokenController {
 			} else {
 				return new ResponseEntity<>(new Response(
 						this.messageProp.getProperty(this.tokenMessage009)),
-						null, HttpStatus.CREATED);
+						null, HttpStatus.CONFLICT);
 			}
 		} catch (final Exception e) {
 			TokenController.LOGGER.error(
 					"Exception Occurred during refresh token...", e);
 			return new ResponseEntity<>(new Response(
-					this.messageProp.getProperty(this.tokenMessage009)), null,
+					CommonConstant.FAIL_CODE,this.messageProp.getProperty(this.tokenMessage009),CommonConstant.FAILURE_STATUS), null,
 					HttpStatus.CONFLICT);
 		}
 	}
