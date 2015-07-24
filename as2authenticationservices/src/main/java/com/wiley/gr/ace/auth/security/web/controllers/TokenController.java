@@ -209,7 +209,7 @@ public class TokenController {
 			} else {
 				return new ResponseEntity<>(new Response(
 						this.messageProp.getProperty(this.tokenMessage009)),
-						null, HttpStatus.CONFLICT);
+						null, HttpStatus.CREATED);
 			}
 		} catch (final Exception e) {
 			TokenController.LOGGER.error(
