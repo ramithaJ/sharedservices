@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
      * @param userId             Author Services Unique Id
      * @throws SharedServiceException
      */
-    public void updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
-        userRepository.updateUserRepository(userServiceRequest, userId);
+    public UserServiceRequest updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+        return userRepository.updateUserRepository(userServiceRequest, userId);
     }
 
     /**

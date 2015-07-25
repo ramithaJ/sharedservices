@@ -268,13 +268,23 @@ public class UserRepositoryImpl extends Property implements UserRepository {
     public UserServiceRequest getUserRepository(String userId) throws SharedServiceException {
         //Get the session from sessionFactory pool.
         Session session = null;
+        Users user = null;
         UserServiceRequest userResponse = new UserServiceRequest();
         try {
             LOGGER.info("Get User Profile..");
             if (null == userId) {
                 throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
             }
-            Users user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
+
+            if (UserServiceHelper.isNumeric(userId)) {
+                //Check with user id first
+                user = (Users) getEntityById(CommonConstants.USER_ID, userId, Users.class);
+            } else {
+                //Check with email address
+                user = (Users) getEntity(CommonConstants.PRIMARY_EMAIL_ID, userId, Users.class, false);
+            }
+
+
             //Throw Error if user is not found.
             if (null == user) {
                 throw new SharedServiceException(CommonConstants.ERROR_CODE_102, userServiceError102);
@@ -424,8 +434,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 if (null != alertsSet && alertsSet.size() > 0) {
                     LOGGER.debug("Get UserAlerts...");
                     for (UserAlerts userAlerts : alertsSet) {
+                        List<AlertType> alertTypeList=new LinkedList<>();
                         Alerts userAlert = userAlerts.getAlerts();
                         Alert alert = UserServiceHelper.getAlert(userAlert);
+                        AlertType alertType = new AlertType();
+                        alertType.setEmail(userAlerts.getEmailFlg());
+                        alertType.setOnScreen(userAlerts.getOnScreenFlg());
+                        alertTypeList.add(alertType);
+                        alert.setAlertTypes(alertTypeList);
                         alerts.add(alert);
                     }
                     userProfile.setAlerts(alerts);
@@ -615,7 +631,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
      * @throws SharedServiceException
      */
 
-    public void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
+    public UserServiceRequest updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException {
         //Get the session from sessionFactory pool.
         Session session = null;
         try {
@@ -1079,6 +1095,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             }
         }
 
+        return getUserRepository(userId);
+
     }
 
 
@@ -1415,6 +1433,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 userProfileAttribVisible.setId(userProfileAttribVisibleId);
                 userProfileAttribVisible.setProfileVisibilityFlg(profileVisible.getTitleValue());
                 userProfileAttribVisible.setCreatedDate(UserServiceHelper.getDate());
+                userProfileAttribVisible.setUpdatedDate(UserServiceHelper.getDate());
                 userProfileAttribVisible.setUsersByCreatedBy(user);
                 userProfileAttribVisible.setUsersByUpdatedBy(user);
                 session.save(userProfileAttribVisible);
@@ -1518,6 +1537,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             ResearchFunders researchFunders = new ResearchFunders();
             researchFunders = UserServiceHelper.setResearchFunders(researchFunders, funder);
             researchFunders.setCreatedDate(UserServiceHelper.getDate());
+            researchFunders.setUpdatedDate(UserServiceHelper.getDate());
             researchFunders.setUsersByCreatedBy(user);
             researchFunders.setUsersByUpdatedBy(user);
             session.save(researchFunders);
@@ -1536,6 +1556,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 UserFunderGrants userFunderGrants = new UserFunderGrants();
                 userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, grantNumber.getGrantNumber());
                 userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
+                userFunderGrants.setUpdatedDate(UserServiceHelper.getDate());
                 userFunderGrants.setUsersByCreatedBy(user);
                 userFunderGrants.setUsersByUpdatedBy(user);
                 userFunderGrants.setUserFunders(userFunders);
@@ -1568,6 +1589,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
                 userSocietyDetails.setSocieties(societies);
                 userSocietyDetails.setCreatedDate(UserServiceHelper.getDate());
+                userSocietyDetails.setUpdatedDate(UserServiceHelper.getDate());
                 userSocietyDetails.setUsersByCreatedBy(user);
                 userSocietyDetails.setUsersByUpdatedBy(user);
                 userSocietyDetails.setUserProfile(userProfile);
@@ -1599,6 +1621,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
                 userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
                 userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
+                userAreaOfInterest.setUpdatedDate(UserServiceHelper.getDate());
                 userAreaOfInterest.setUsersByCreatedBy(user);
                 userAreaOfInterest.setUsersByUpdatedBy(user);
                 userAreaOfInterest.setAreaOfInterest(areaOfInterest);
@@ -1625,6 +1648,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
             authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
             authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
+            authCoauthDetails.setUpdatedDate(UserServiceHelper.getDate());
             authCoauthDetails.setUserProfileByAuthorUserId(userProfile);
             authCoauthDetails.setAuthCoauthId(user.getUserId());
             //TODO: Set CoAuthor ID
@@ -1660,6 +1684,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 userPreferredJournals.setUserProfile(userProfile);
                 userPreferredJournals.setUsersByCreatedBy(user);
                 userPreferredJournals.setUsersByUpdatedBy(user);
+                userPreferredJournals.setCreatedDate(UserServiceHelper.getDate());
+                userPreferredJournals.setUpdatedDate(UserServiceHelper.getDate());
                 session.save(userPreferredJournals);
                 userPreferredJournalsSet.add(userPreferredJournals);
             }
@@ -1699,6 +1725,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     alerts.setAlerts(alertsObj);
                     alerts.setUsersByCreatedBy(user);
                     alerts.setUsersByUpdatedBy(user);
+                    alerts.setCreatedDate(UserServiceHelper.getDate());
+                    alerts.setUpdatedDate(UserServiceHelper.getDate());
                     session.save(alerts);
                     userAlertsHashSet.add(alerts);
                 }

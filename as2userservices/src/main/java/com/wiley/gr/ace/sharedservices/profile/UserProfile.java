@@ -33,7 +33,7 @@ public class UserProfile implements Serializable {
     private String recieveEmailsFlag;
     private String ecid;
     private String password;
-    private String picture;
+    private String profilePic;
     private char profileVisibleFlag;
     private String primaryEmailAddress;
     private String recoveryEmailAddress;
@@ -239,12 +239,12 @@ public class UserProfile implements Serializable {
         this.password = password;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getProfilePic() {
+        return profilePic;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     @Override
@@ -262,7 +262,7 @@ public class UserProfile implements Serializable {
                 ", recieveEmailsFlag='" + recieveEmailsFlag + '\'' +
                 ", ecid='" + ecid + '\'' +
                 ", password='" + password + '\'' +
-                ", picture='" + picture + '\'' +
+                ", profilePic='" + profilePic + '\'' +
                 ", profileVisibleFlag=" + profileVisibleFlag +
                 ", primaryEmailAddress='" + primaryEmailAddress + '\'' +
                 ", recoveryEmailAddress='" + recoveryEmailAddress + '\'' +

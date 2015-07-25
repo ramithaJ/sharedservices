@@ -21,12 +21,10 @@ import com.wiley.gr.ace.sharedservices.persistence.entity.Address;
 import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
 
+import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author kkalyan
@@ -67,6 +65,7 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd())) {
             userProfile.setTitleCd(userServiceRequest.getUserProfile().getTitleCd());
         }
+        //TODO: Profile Pic
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName())) {
             userProfile.setMiddleName(userServiceRequest.getUserProfile().getMiddleName());
         }
@@ -372,6 +371,9 @@ public class UserServiceHelper {
      * @return
      */
     public static AuthCoauthDetails setAuthCoauthDetails(AuthCoauthDetails authCoauthDetails, CoAuthor coAuthor) {
+        if (!StringUtils.isEmpty(coAuthor.getTitle())) {
+            authCoauthDetails.setCoauthTitle(coAuthor.getTitle());
+        }
         if (!StringUtils.isEmpty(coAuthor.getFirstName())) {
             authCoauthDetails.setCoauthFirstName(coAuthor.getFirstName());
         }
@@ -411,6 +413,9 @@ public class UserServiceHelper {
 
         if (authCoauthDetails.getAuthCoauthId() > 0) {
             coAuthor.setId("" + authCoauthDetails.getAuthCoauthId());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthTitle())) {
+            coAuthor.setTitle(authCoauthDetails.getCoauthTitle());
         }
         if (!StringUtils.isEmpty(authCoauthDetails.getCoauthFirstName())) {
             coAuthor.setFirstName(authCoauthDetails.getCoauthFirstName());
@@ -654,8 +659,9 @@ public class UserServiceHelper {
             affiliation.setCity(userAffiliations.getTownOrCityName());
         }
         if (!StringUtils.isEmpty(userAffiliations.getStateOrProvinceName())) {
-            affiliation.setCountryCd(userAffiliations.getStateOrProvinceName());
+            affiliation.setStateCd(userAffiliations.getStateOrProvinceName());
         }
+        //TODO: Country is missing the DB
         if (null != userAffiliations.getStartDt()) {
             affiliation.setFromDate("" + userAffiliations.getStartDt());
         }
@@ -725,7 +731,7 @@ public class UserServiceHelper {
         PreferredJournal preferredJournal = new PreferredJournal();
         preferredJournal.setId("" + journal.getJournalId());
         preferredJournal.setJournalTitle(journal.getJouTitle());
-        //preferredJournal.setJournalId(journal.getJournalId());
+        preferredJournal.setJournalId("" + journal.getJournalId());
         return preferredJournal;
     }
 
@@ -739,7 +745,23 @@ public class UserServiceHelper {
         Alert alert = new Alert();
         alert.setId(userAlert.getAlertCd());
         alert.setAlertName(userAlert.getAlertName());
+        alert.setAlertCd(userAlert.getAlertCd());
         return alert;
+    }
+
+    /**
+     * Helper method to check whether String is number or not.
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
 
