@@ -203,8 +203,8 @@ public class TokenController {
 				responseHeaders.set(TokenController.AUTH_HEADER_NAME,
 						refreshToken);
 				responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-				return new ResponseEntity<>(new Response(
-						this.messageProp.getProperty(this.tokenMessage008)),
+				return new ResponseEntity<>(new Response(CommonConstant.STATUS_CODE,
+						this.messageProp.getProperty(this.tokenMessage008),CommonConstant.SUCCESS_STATUS),
 						responseHeaders, HttpStatus.CREATED);
 			} else {
 				return new ResponseEntity<>(new Response(
