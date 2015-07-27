@@ -434,7 +434,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 if (null != alertsSet && alertsSet.size() > 0) {
                     LOGGER.debug("Get UserAlerts...");
                     for (UserAlerts userAlerts : alertsSet) {
-                        List<AlertType> alertTypeList=new LinkedList<>();
+                        List<AlertType> alertTypeList = new LinkedList<>();
                         Alerts userAlert = userAlerts.getAlerts();
                         Alert alert = UserServiceHelper.getAlert(userAlert);
                         AlertType alertType = new AlertType();
@@ -548,17 +548,6 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     session.delete(userAffiliations);
                 }
 
-
-                //Delete Addresses
-                Set<UserAddresses> userAddressesesForUserId = user.getUserAddressesesForUserId();
-                for (UserAddresses userAddresses : userAddressesesForUserId) {
-                    com.wiley.gr.ace.sharedservices.persistence.entity.Address address = userAddresses.getAddress();
-                    if (null != address) {
-                        session.delete(address);
-                    }
-                    session.delete(userAddresses);
-                }
-
                 //Delete Society
                 Set<UserSocietyDetails> userSocietyDetailsSet = authorProfile.getUserSocietyDetailses();
                 for (UserSocietyDetails userSocietyDetails : userSocietyDetailsSet) {
@@ -574,6 +563,16 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 //Delete user reference data
                 session.delete(authorProfile);
             }//End of if condition
+
+            //Delete Addresses
+            Set<UserAddresses> userAddressesesForUserId = user.getUserAddressesesForUserId();
+            for (UserAddresses userAddresses : userAddressesesForUserId) {
+                com.wiley.gr.ace.sharedservices.persistence.entity.Address address = userAddresses.getAddress();
+                if (null != address) {
+                    session.delete(address);
+                }
+                session.delete(userAddresses);
+            }
 
             //Delete Reference data
             UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
@@ -651,38 +650,40 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             //Begin the transaction.
             session.beginTransaction();
 
-
-            user = UserServiceHelper.setUserInformation(userServiceRequest, user);
+            if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) {
+                user = UserServiceHelper.setUserInformation(userServiceRequest, user);
+            }
             //Create AuthorProfile Object
             UserProfile authorProfile = user.getUserProfileByUserId();
-            LOGGER.info("Update Author Profile...");
-            authorProfile = UserServiceHelper.setUserProfileInformation(userServiceRequest, authorProfile);
 
 
             //Update User Secondary Email Address
+            if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecoveryEmailAddress())) {
+                Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
+                if (null != secondaryEmailAddrs && secondaryEmailAddrs.size() > 0) {
 
-            Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
-            if (null != secondaryEmailAddrs && secondaryEmailAddrs.size() > 0) {
+                    for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrs) {
+                        secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
+                        if (null != secondaryEmailAddr) {
+                            LOGGER.info("Set Secondary Email Addr...");
+                            //Set the secondary email address to the user object
+                            secondaryEmailAddr.setUsersByUserId(user);
+                            session.update(secondaryEmailAddr);
+                        }
 
-                for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrs) {
-                    secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
-                    if (null != secondaryEmailAddr) {
-                        LOGGER.info("Set Secondary Email Addr...");
-                        //Set the secondary email address to the user object
-                        secondaryEmailAddr.setUsersByUserId(user);
-                        session.update(secondaryEmailAddr);
                     }
-
                 }
             }
 
-            //Set Orcid id information
-            UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
-            if (null != userReferenceData) {
-                LOGGER.debug("Update UserReferenceData...");
-                userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
-                userReferenceData.setUsersByUserId(user);
-                session.update(userReferenceData);
+            //Update Orcid id & Ecid information
+            if ((!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) || (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid()))) {
+                UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
+                if (null != userReferenceData) {
+                    LOGGER.debug("Update UserReferenceData...");
+                    userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
+                    userReferenceData.setUsersByUserId(user);
+                    session.update(userReferenceData);
+                }
             }
 
             //Update user Address Object
@@ -1065,12 +1066,17 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             }
 
+            LOGGER.info("Update Author Profile...");
+            if (UserServiceHelper.isUserProfileDataExists(userServiceRequest)) {
+                authorProfile = UserServiceHelper.setUserProfileInformation(userServiceRequest, authorProfile);
+                session.saveOrUpdate(authorProfile);
+            }
+
 
             //Set Author Profile to user
             authorProfile.setUsersByUserId(user);
             LOGGER.debug("Update session...");
             session.saveOrUpdate(user);
-            session.saveOrUpdate(authorProfile);
             LOGGER.debug("Flush...");
             session.flush();
             LOGGER.debug("Clear...");
@@ -1470,6 +1476,9 @@ public class UserRepositoryImpl extends Property implements UserRepository {
      */
     private void addAddress(Session session, Users user, Set<UserAddresses> userAddressesSet, List<Address> addressList) throws SharedServiceException {
         for (Address addressProfile : addressList) {
+            if (StringUtils.isEmpty(addressProfile.getType())) {
+                throw new SharedServiceException(CommonConstants.ERROR_CODE_115, userServiceError115);
+            }
             UserAddresses userAddresses = new UserAddresses();
             com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
             address = UserServiceHelper.setAddress(address, addressProfile);

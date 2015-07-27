@@ -92,6 +92,22 @@ public class UserServiceHelper {
         return userProfile;
     }
 
+
+    /**
+     * Method to validate the request against user profile.
+     *
+     * @param userServiceRequest
+     * @return
+     */
+    public static boolean isUserProfileDataExists(UserServiceRequest userServiceRequest) {
+        boolean isDataExists = false;
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getSuffixCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getAlternativeName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getIndustryCd()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getJobCategoryCd()) || (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') ||
+                !StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
+            isDataExists = true;
+        }
+        return isDataExists;
+    }
+
     /**
      * Setter method for UserSecondaryEmailAddr data.
      *

@@ -62,6 +62,9 @@ public class Property {
     @Value("${USER_SERVICE_ERROR_114}")
     public String userServiceError114;
 
+    @Value("${USER_SERVICE_ERROR_115}")
+    public String userServiceError115;
+
     @Value("${USER_SERVICE_ERROR_301}")
     public String userSearchServiceError301;
 
