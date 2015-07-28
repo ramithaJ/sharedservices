@@ -35,7 +35,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRoles()
      */
@@ -89,7 +89,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                     usersList.add(userRole);
                 }
                 roleList.add(new Role(role.getRoleId(), role.getRoleName(),
-                        permissionList, usersList));
+                        permissionList, usersList, role.getRoleType()));
             }
 
             // Flush the session.
@@ -117,7 +117,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRoles()
      */
@@ -181,7 +181,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRole
      * (int)
@@ -216,7 +216,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 if (null != permissions) {
                     permission.add(new Permission(
                             permissions.getPermissionCd(), permissions
-                                    .getPermissionName(), groups));
+                            .getPermissionName(), groups));
                     for (final PermissionGroups groupsSet : permissions
                             .getPermissionGroupses()) {
                         groups.add(groupsSet.getId().getPermissionGroupCd());
@@ -230,7 +230,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
             }
 
             role = new Role(roles.getRoleId(), roles.getRoleName(), permission,
-                    usersList);
+                    usersList, roles.getRoleType());
 
             // Flush the session.
             session.flush();
@@ -256,7 +256,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRoleByUser
      * (int)
@@ -296,7 +296,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
             }
 
-            role = new Role(roles.getRoleId(), roles.getRoleName(), permission);
+            role = new Role(roles.getRoleId(), roles.getRoleName(), permission,
+                    roles.getRoleType());
 
             // Flush the session.
             session.flush();
@@ -322,7 +323,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findPermissions
      * (java.lang.String)
@@ -386,7 +387,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findPermission
      * (int)
@@ -442,7 +443,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * findAdditionalPermissions(int, int)
      */
@@ -504,7 +505,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#deleteRole
      * (int)
@@ -544,7 +545,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#deletePermission
      * (int)
@@ -589,7 +590,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * deletePermissionOfUser(int, int)
      */
@@ -632,7 +633,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#createNewRole
      * (java.lang.String)
@@ -681,7 +682,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * createNewPermission (java.lang.String)
      */
@@ -729,7 +730,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#updateRole
      * (int, com.wiley.gr.ace.sharedservices.service.Role)
@@ -775,7 +776,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#updatePermission
      * (java.util.List, int)
@@ -836,7 +837,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * updateAdditionalPermissions(int, int,
      * com.wiley.gr.ace.sharedservices.service.AdditionalPermission)

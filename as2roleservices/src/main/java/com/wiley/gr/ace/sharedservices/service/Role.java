@@ -58,11 +58,12 @@ public class Role {
      *            the permissions
      */
     public Role(int roleId, String roleName, List<Permission> permissions,
-            List<UserRole> usersList) {
+            List<UserRole> usersList, String roleType) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.permissions = permissions;
         users = usersList;
+        this.roleType = roleType;
     }
 
     /**
@@ -75,10 +76,12 @@ public class Role {
      * @param permissions
      *            the permissions
      */
-    public Role(int roleId, String roleName, List<Permission> permissions) {
+    public Role(int roleId, String roleName, List<Permission> permissions,
+            String roleType) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.permissions = permissions;
+        this.roleType = roleType;
     }
 
     /**
