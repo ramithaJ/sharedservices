@@ -881,18 +881,17 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         }
 
                     } else if (null != alert.getId() && alert.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        if (null != alertTypeList && alertTypeList.size() > 0) {
-                            int alertListSize = alertTypeList.size();
-                            for (int j = 0; j < alertListSize; j++) {
-                                UserAlertsId userAlertsId = new UserAlertsId();
-                                userAlertsId.setUserId(user.getUserId());
-                                userAlertsId.setAlertCd(alert.getAlertCd());
-                                UserAlerts userAlerts = (UserAlerts) session.get(UserAlerts.class, userAlertsId);
-                                if (null != userAlerts) {
-                                    session.delete(userAlerts);
-                                }
-                            }
+
+                        Criteria alertCriteria = session.createCriteria(UserAlerts.class, "userAlerts");
+                        alertCriteria.createAlias("userAlerts.alerts", "alert");
+                        alertCriteria.createAlias("userAlerts.userProfile", "profile");
+                        alertCriteria.add(Restrictions.eq("alert.alertCd", alert.getId()));
+                        alertCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                        UserAlerts userAlerts = (UserAlerts) alertCriteria.uniqueResult();
+                        if (null != userAlerts) {
+                            session.delete(userAlerts);
                         }
+
                     } else if (null != alert.getStatus() && alert.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         //Get Alerts Object.
                         Alerts alertsObj = (Alerts) getEntity(CommonConstants.ALERT_CD, alert.getAlertCd(), Alerts.class, false);
