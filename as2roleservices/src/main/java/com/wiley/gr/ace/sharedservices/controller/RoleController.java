@@ -54,14 +54,14 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public boolean createNewRole(@RequestBody Role role) {
+    public StatusPayload createNewRole(@RequestBody final Role role) {
         try {
             permissionRepository.createNewRole(role);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             RoleController.LOGGER.error("create cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
-        return false;
 
     }
 
@@ -92,7 +92,7 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public RoleResource getRole(@PathVariable("roleId") int roleId) {
+    public RoleResource getRole(@PathVariable("roleId") final int roleId) {
         try {
             return roleResourceAssembler.toResource(permissionRepository
                     .findRole(roleId));
@@ -113,15 +113,15 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.PUT)
     @ResponseBody
-    public boolean updateRoleId(@PathVariable("roleId") int roleId,
-            @RequestBody Role role) {
+    public StatusPayload updateRoleId(@PathVariable("roleId") final int roleId,
+            @RequestBody final Role role) {
         try {
             permissionRepository.updateRole(roleId, role);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             RoleController.LOGGER.error("Update cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
-        return false;
     }
 
     /**
@@ -133,7 +133,7 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public StatusPayload deleteRoleId(@PathVariable("roleId") int roleId) {
+    public StatusPayload deleteRoleId(@PathVariable("roleId") final int roleId) {
         try {
             permissionRepository.deleteRole(roleId);
             return new StatusPayload();
@@ -153,7 +153,7 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
-    public RoleResource getRolesOfUser(@RequestParam("userId") int userId) {
+    public RoleResource getRolesOfUser(@RequestParam("userId") final int userId) {
         try {
             return roleResourceAssembler.toResource(permissionRepository
                     .findRoleByUser(userId));
@@ -173,7 +173,7 @@ public class RoleController extends AbstractController {
     @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.GET)
     @ResponseBody
     public List<PermissionResource> getRolePermissions(
-            @PathVariable("roleId") int roleId) {
+            @PathVariable("roleId") final int roleId) {
         try {
             return permissionResourceAssembler.toResources(findRoleAndValidate(
                     roleId).getPermissions());
@@ -192,7 +192,7 @@ public class RoleController extends AbstractController {
      * @throws SharedServiceException
      *             the shared service exception
      */
-    private Role findRoleAndValidate(int roleId) throws SharedServiceException {
+    private Role findRoleAndValidate(final int roleId) throws SharedServiceException {
         final Role role = permissionRepository.findRole(roleId);
         if (role == null) {
             throw new ResourceNotFoundException("Unable to find role with id="
@@ -213,8 +213,8 @@ public class RoleController extends AbstractController {
     @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.PUT)
     @ResponseBody
     public StatusPayload updatePermission(
-            @RequestBody List<Permission> permissionList,
-            @PathVariable("roleId") int roleId) {
+            @RequestBody final List<Permission> permissionList,
+            @PathVariable("roleId") final int roleId) {
 
         try {
             permissionRepository.updatePermission(permissionList, roleId);
@@ -234,7 +234,7 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.DELETE)
     @ResponseBody
-    public StatusPayload deletePermissions(@PathVariable("roleId") int roleId) {
+    public StatusPayload deletePermissions(@PathVariable("roleId") final int roleId) {
         try {
             permissionRepository.deletePermission(roleId);
             return new StatusPayload();
