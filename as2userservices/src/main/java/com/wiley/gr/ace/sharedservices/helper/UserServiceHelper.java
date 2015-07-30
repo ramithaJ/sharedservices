@@ -231,6 +231,9 @@ public class UserServiceHelper {
      * @return affiliations entity object
      */
     public static UserAffiliations setUserAffiliations(UserAffiliations affiliations, Affiliation affiliation) {
+        if (!StringUtils.isEmpty(affiliation.getCountryCd())) {
+            affiliations.setCountryCd(affiliation.getCountryCd());
+        }
         if (!StringUtils.isEmpty(affiliation.getInstitutionCd())) {
             affiliations.setInstitutionCd(affiliation.getInstitutionCd());
         }
