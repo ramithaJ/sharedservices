@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.model.StatusPayload;
+import com.wiley.gr.ace.sharedservices.model.StatusPayload.Status;
 import com.wiley.gr.ace.sharedservices.service.AdditionalPermission;
 import com.wiley.gr.ace.sharedservices.service.Permission;
 import com.wiley.gr.ace.sharedservices.service.PermissionRepository;
@@ -73,12 +75,14 @@ public class PermissionController extends AbstractController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public void createNewPermission(@RequestBody Permission permission) {
+    public StatusPayload createNewPermission(@RequestBody Permission permission) {
         try {
             permissionRepository.createNewPermission(permission);
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             // TODO Auto-generated catch block
             PermissionController.LOGGER.error("create cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
     }
 
@@ -140,18 +144,18 @@ public class PermissionController extends AbstractController {
      */
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     @ResponseBody
-    public boolean updatePermissionOfUser(
+    public StatusPayload updatePermissionOfUser(
             @RequestParam("objectId") int objectId,
             @RequestParam("userId") int userId,
             @RequestBody AdditionalPermission additionalPermission) {
         try {
             permissionRepository.updateAdditionalPermissions(userId, objectId,
                     additionalPermission);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             PermissionController.LOGGER.error("update cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
-        return false;
     }
 
     /**
@@ -165,16 +169,16 @@ public class PermissionController extends AbstractController {
      */
     @RequestMapping(value = "/user", method = RequestMethod.DELETE)
     @ResponseBody
-    public boolean deletePermissionsOfUser(
+    public StatusPayload deletePermissionsOfUser(
             @RequestParam("objectId") int objectId,
             @RequestParam("userId") int userId) {
         try {
             permissionRepository.deletePermissionOfUser(userId, objectId);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             PermissionController.LOGGER.error("delete cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
-        return false;
     }
 
 }

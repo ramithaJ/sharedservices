@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wiley.gr.ace.sharedservices.exceptions.ResourceNotFoundException;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
+import com.wiley.gr.ace.sharedservices.model.StatusPayload;
+import com.wiley.gr.ace.sharedservices.model.StatusPayload.Status;
 import com.wiley.gr.ace.sharedservices.service.Permission;
 import com.wiley.gr.ace.sharedservices.service.PermissionRepository;
 import com.wiley.gr.ace.sharedservices.service.Role;
@@ -131,15 +133,15 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public boolean deleteRoleId(@PathVariable("roleId") int roleId) {
+    public StatusPayload deleteRoleId(@PathVariable("roleId") int roleId) {
         try {
             permissionRepository.deleteRole(roleId);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             RoleController.LOGGER.error("Delete cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
 
-        return false;
     }
 
     /**
@@ -210,17 +212,17 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.PUT)
     @ResponseBody
-    public boolean updatePermission(
+    public StatusPayload updatePermission(
             @RequestBody List<Permission> permissionList,
             @PathVariable("roleId") int roleId) {
 
         try {
             permissionRepository.updatePermission(permissionList, roleId);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             RoleController.LOGGER.error("Update cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
-        return false;
     }
 
     /**
@@ -232,14 +234,14 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.DELETE)
     @ResponseBody
-    public boolean deletePermissions(@PathVariable("roleId") int roleId) {
+    public StatusPayload deletePermissions(@PathVariable("roleId") int roleId) {
         try {
             permissionRepository.deletePermission(roleId);
-            return true;
+            return new StatusPayload();
         } catch (final SharedServiceException e) {
             RoleController.LOGGER.error("Delete cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
         }
 
-        return false;
     }
 }
