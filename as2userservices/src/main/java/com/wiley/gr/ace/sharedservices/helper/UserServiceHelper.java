@@ -662,6 +662,9 @@ public class UserServiceHelper {
         if (null != userAffiliations.getAffiliationId() && userAffiliations.getAffiliationId() > 0) {
             affiliation.setId("" + userAffiliations.getAffiliationId());
         }
+        if (!StringUtils.isEmpty(userAffiliations.getCountryCd())) {
+            affiliation.setCountryCd(userAffiliations.getCountryCd());
+        }
         if (!StringUtils.isEmpty(userAffiliations.getInstitutionCd())) {
             affiliation.setInstitutionCd(userAffiliations.getInstitutionCd());
         }
