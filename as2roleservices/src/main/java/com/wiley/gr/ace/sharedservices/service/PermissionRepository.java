@@ -110,6 +110,16 @@ public interface PermissionRepository {
     void deletePermission(int roleId) throws SharedServiceException;
 
     /**
+     * Delete permission of a role.
+     *
+     * @param roleId
+     * @param permissionCd
+     * @throws SharedServiceException
+     */
+    void deletePermissionOfRole(int roleId, String permissionCd)
+            throws SharedServiceException;
+
+    /**
      * Delete permission of user.
      *
      * @param userId
@@ -161,7 +171,7 @@ public interface PermissionRepository {
      */
     void updateAdditionalPermissions(int userId, int articleId,
             AdditionalPermission additionalPermission)
-                    throws SharedServiceException;
+            throws SharedServiceException;
 
     /**
      * Creates the new permission.

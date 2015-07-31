@@ -35,7 +35,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRoles()
      */
@@ -117,7 +117,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRoles()
      */
@@ -181,7 +181,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRole
      * (int)
@@ -216,7 +216,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 if (null != permissions) {
                     permission.add(new Permission(
                             permissions.getPermissionCd(), permissions
-                            .getPermissionName(), groups));
+                                    .getPermissionName(), groups));
                     for (final PermissionGroups groupsSet : permissions
                             .getPermissionGroupses()) {
                         groups.add(groupsSet.getId().getPermissionGroupCd());
@@ -256,7 +256,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findRoleByUser
      * (int)
@@ -323,7 +323,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findPermissions
      * (java.lang.String)
@@ -387,7 +387,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#findPermission
      * (int)
@@ -443,7 +443,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * findAdditionalPermissions(int, int)
      */
@@ -505,7 +505,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#deleteRole
      * (int)
@@ -545,7 +545,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#deletePermission
      * (int)
@@ -590,7 +590,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * deletePermissionOfUser(int, int)
      */
@@ -633,7 +633,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#createNewRole
      * (java.lang.String)
@@ -682,7 +682,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * createNewPermission (java.lang.String)
      */
@@ -730,7 +730,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#updateRole
      * (int, com.wiley.gr.ace.sharedservices.service.Role)
@@ -776,7 +776,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.wiley.gr.ace.sharedservices.service.PermissionRepository#updatePermission
      * (java.util.List, int)
@@ -837,7 +837,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
      * updateAdditionalPermissions(int, int,
      * com.wiley.gr.ace.sharedservices.service.AdditionalPermission)
@@ -894,4 +894,51 @@ public class PermissionRepositoryImpl implements PermissionRepository {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
+     * deletePermissionOfRole(int, java.lang.String)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void deletePermissionOfRole(int roleId, String permissionCd)
+            throws SharedServiceException {
+
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            // Begin the transaction.
+            session.beginTransaction();
+
+            final List<RolePermissions> roles = session
+                    .createCriteria(RolePermissions.class)
+                    .add(Restrictions.eq("id.roleId", roleId))
+                    .add(Restrictions.eq("permissions.permissionCd",
+                            permissionCd)).list();
+            for (final RolePermissions rolePermission : roles) {
+                session.delete(rolePermission);
+            }
+
+            // Flush the session.
+            session.flush();
+            // Clear the session object.
+            session.clear();
+            // Commit the transaction.
+            session.getTransaction().commit();
+
+        } catch (final Exception e) {
+            // Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
+            throw new SharedServiceException("Error :" + e.toString());
+        } finally {
+            if (null != session) {
+                // Close the session
+                session.close();
+            }
+        }
+
+    }
 }

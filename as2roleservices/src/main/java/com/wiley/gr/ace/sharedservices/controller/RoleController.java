@@ -184,6 +184,29 @@ public class RoleController extends AbstractController {
     }
 
     /**
+     * Gets the role permissions.
+     *
+     * @param roleId
+     *            the role id
+     * @param permissionCd
+     *            the permission Cd
+     * @return the role permissions
+     */
+    @RequestMapping(value = "/{roleId}/permissions/{permissionCd}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public StatusPayload deleteRolePermissions(
+            @PathVariable("roleId") final int roleId,
+            @PathVariable("permissionCd") final String permissionCd) {
+        try {
+            permissionRepository.deletePermissionOfRole(roleId, permissionCd);
+            return new StatusPayload();
+        } catch (final SharedServiceException e) {
+            RoleController.LOGGER.error("Get cannot be performed", e);
+            return new StatusPayload(Status.FAILURE, e.getMessage());
+        }
+    }
+
+    /**
      * Find role and validate.
      *
      * @param roleId
@@ -192,7 +215,8 @@ public class RoleController extends AbstractController {
      * @throws SharedServiceException
      *             the shared service exception
      */
-    private Role findRoleAndValidate(final int roleId) throws SharedServiceException {
+    private Role findRoleAndValidate(final int roleId)
+            throws SharedServiceException {
         final Role role = permissionRepository.findRole(roleId);
         if (role == null) {
             throw new ResourceNotFoundException("Unable to find role with id="
@@ -234,7 +258,8 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.DELETE)
     @ResponseBody
-    public StatusPayload deletePermissions(@PathVariable("roleId") final int roleId) {
+    public StatusPayload deletePermissions(
+            @PathVariable("roleId") final int roleId) {
         try {
             permissionRepository.deletePermission(roleId);
             return new StatusPayload();
