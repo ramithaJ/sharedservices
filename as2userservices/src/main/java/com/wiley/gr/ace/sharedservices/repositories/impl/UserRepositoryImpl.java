@@ -693,56 +693,58 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 Set<UserAddresses> userAddressesSet = new HashSet<>();
                 for (Address addressProfile : addressList) {
                     com.wiley.gr.ace.sharedservices.persistence.entity.Address addressObj;
-                    if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById(CommonConstants.ADDRESS_ID, addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
-                        if (null != addressObj) {
+                    if (null != addressProfile.getId() && null != addressProfile.getStatus()) {
+                        if (addressProfile.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById(CommonConstants.ADDRESS_ID, addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
+                            if (null != addressObj) {
+                                Criteria addrCriteria = session.createCriteria(UserAddresses.class, "userAddress");
+                                addrCriteria.createAlias("userAddress.address", "addr");
+                                addrCriteria.createAlias("userAddress.usersByUserId", "profile");
+                                addrCriteria.add(Restrictions.eq("addr.addressId", Integer.parseInt(addressProfile.getId())));
+                                addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                                UserAddresses userAddress = (UserAddresses) addrCriteria.uniqueResult();
+                                if (null != userAddress) {
+                                    AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
+                                    if (null == addressType) {
+                                        throw new SharedServiceException(CommonConstants.ERROR_CODE_109, addressProfile.getType() + "-" + userServiceError109);
+                                    }
+                                    userAddress.setAddressType(addressType);
+                                    session.update(userAddress);
+                                }
+                                session.flush();
+                                session.clear();
+                                addressObj = UserServiceHelper.setAddress(addressObj, addressProfile);
+                                session.update(addressObj);
+                            }
+                        } else if (addressProfile.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
                             Criteria addrCriteria = session.createCriteria(UserAddresses.class, "userAddress");
                             addrCriteria.createAlias("userAddress.address", "addr");
-                            addrCriteria.createAlias("userAddress.usersByUserId", "profile");
                             addrCriteria.add(Restrictions.eq("addr.addressId", Integer.parseInt(addressProfile.getId())));
-                            addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
                             UserAddresses userAddress = (UserAddresses) addrCriteria.uniqueResult();
                             if (null != userAddress) {
-                                AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
-                                if (null == addressType) {
-                                    throw new SharedServiceException(CommonConstants.ERROR_CODE_109, addressProfile.getType() + "-" + userServiceError109);
-                                }
-                                userAddress.setAddressType(addressType);
-                                session.update(userAddress);
+                                session.delete(userAddress);
                             }
-                            session.flush();
-                            session.clear();
-                            addressObj = UserServiceHelper.setAddress(addressObj, addressProfile);
-                            session.update(addressObj);
-                        }
-                    } else if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        Criteria addrCriteria = session.createCriteria(UserAddresses.class, "userAddress");
-                        addrCriteria.createAlias("userAddress.address", "addr");
-                        addrCriteria.add(Restrictions.eq("addr.addressId", Integer.parseInt(addressProfile.getId())));
-                        UserAddresses userAddress = (UserAddresses) addrCriteria.uniqueResult();
-                        if (null != userAddress) {
-                            session.delete(userAddress);
-                        }
 
-                    } else if (addressProfile.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        userAddresses = new UserAddresses();
-                        com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
-                        address = UserServiceHelper.setAddress(address, addressProfile);
-                        address.setCreatedDate(UserServiceHelper.getDate());
-                        address.setUpdatedDate(UserServiceHelper.getDate());
-                        address.setUsersByUpdatedBy(user);
-                        session.save(address);
-                        AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
-                        if (null == addressType) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_109, addressProfile.getType() + "-" + userServiceError109);
+                        } else if (addressProfile.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            userAddresses = new UserAddresses();
+                            com.wiley.gr.ace.sharedservices.persistence.entity.Address address = new com.wiley.gr.ace.sharedservices.persistence.entity.Address();
+                            address = UserServiceHelper.setAddress(address, addressProfile);
+                            address.setCreatedDate(UserServiceHelper.getDate());
+                            address.setUpdatedDate(UserServiceHelper.getDate());
+                            address.setUsersByUpdatedBy(user);
+                            session.save(address);
+                            AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
+                            if (null == addressType) {
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_109, addressProfile.getType() + "-" + userServiceError109);
+                            }
+                            userAddresses.setAddressType(addressType);
+                            userAddresses.setAddress(address);
+                            userAddresses.setUsersByCreatedBy(user);
+                            userAddresses.setUsersByUpdatedBy(user);
+                            userAddresses.setUsersByUserId(user);
+                            session.save(userAddresses);
+                            userAddressesSet.add(userAddresses);
                         }
-                        userAddresses.setAddressType(addressType);
-                        userAddresses.setAddress(address);
-                        userAddresses.setUsersByCreatedBy(user);
-                        userAddresses.setUsersByUpdatedBy(user);
-                        userAddresses.setUsersByUserId(user);
-                        session.save(userAddresses);
-                        userAddressesSet.add(userAddresses);
                     }
                     //Set only if there are new address are getting added.
                     if (userAddressesSet.size() > 0) {
@@ -758,29 +760,31 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 Set<UserAffiliations> userAffiliationsSet = new HashSet<>();
                 for (Affiliation affiliation : affiliationList) {
                     UserAffiliations userAffiliations;
-                    if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        userAffiliations = (UserAffiliations) getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
-                        if (null != userAffiliations) {
+                    if (null != affiliation.getId() && null != affiliation.getStatus()) {
+                        if (affiliation.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            userAffiliations = (UserAffiliations) getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
+                            if (null != userAffiliations) {
+                                userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
+                                session.update(userAffiliations);
+                            }
+                        } else if (affiliation.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            Criteria affCriteria = session.createCriteria(UserAffiliations.class, "userAffiliations");
+                            affCriteria.createAlias("userAffiliations.userProfile", "prof");
+                            affCriteria.add(Restrictions.eq("userAffiliations.affiliationId", Integer.parseInt(affiliation.getId())));
+                            affCriteria.add(Restrictions.eq("prof.userId", Integer.parseInt(userId)));
+                            UserAffiliations userAffiliationsDelete = (UserAffiliations) affCriteria.uniqueResult();
+                            if (null != userAffiliationsDelete) {
+                                session.delete(userAffiliationsDelete);
+                            }
+                        } else if (affiliation.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            userAffiliations = new UserAffiliations();
                             userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
-                            session.update(userAffiliations);
+                            userAffiliations.setCreatedDate(UserServiceHelper.getDate());
+                            userAffiliations.setUsersByUpdatedBy(user);
+                            userAffiliations.setUserProfile(authorProfile);
+                            session.save(userAffiliations);
+                            userAffiliationsSet.add(userAffiliations);
                         }
-                    } else if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        Criteria affCriteria = session.createCriteria(UserAffiliations.class, "userAffiliations");
-                        affCriteria.createAlias("userAffiliations.userProfile", "prof");
-                        affCriteria.add(Restrictions.eq("userAffiliations.affiliationId", Integer.parseInt(affiliation.getId())));
-                        affCriteria.add(Restrictions.eq("prof.userId", Integer.parseInt(userId)));
-                        UserAffiliations userAffiliationsDelete = (UserAffiliations) affCriteria.uniqueResult();
-                        if (null != userAffiliationsDelete) {
-                            session.delete(userAffiliationsDelete);
-                        }
-                    } else if (affiliation.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        userAffiliations = new UserAffiliations();
-                        userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
-                        userAffiliations.setCreatedDate(UserServiceHelper.getDate());
-                        userAffiliations.setUsersByUpdatedBy(user);
-                        userAffiliations.setUserProfile(authorProfile);
-                        session.save(userAffiliations);
-                        userAffiliationsSet.add(userAffiliations);
                     }
                 }
                 if (userAffiliationsSet.size() > 0) {
@@ -796,40 +800,42 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 Set<UserSocietyDetails> societyDetailsSet = new HashSet<>();
                 for (Society society : societyList) {
                     UserSocietyDetails userSocietyDetails;
-                    if (null != society.getId() && society.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        userSocietyDetails = (UserSocietyDetails) getEntityById(CommonConstants.USER_SOCIETY_ID, society.getId(), UserSocietyDetails.class);
-                        if (null != userSocietyDetails) {
-                            userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
-                            session.update(userSocietyDetails);
-                        }
-                    } else if (null != society.getId() && society.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        session.clear();
-                        session.flush();
-                        Criteria addrCriteria = session.createCriteria(UserSocietyDetails.class, "userSocietyDetails");
-                        addrCriteria.createAlias("userSocietyDetails.societies", "soc");
-                        addrCriteria.createAlias("userSocietyDetails.userProfile", "profile");
-                        addrCriteria.add(Restrictions.eq("soc.societyId", Integer.parseInt(society.getId())));
-                        addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
-                        UserSocietyDetails userSociety = (UserSocietyDetails) addrCriteria.uniqueResult();
-                        if (null != userSociety) {
-                            session.delete(userSociety);
-                        }
+                    if (null != society.getId() && null != society.getStatus()) {
+                        if (society.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            userSocietyDetails = (UserSocietyDetails) getEntityById(CommonConstants.USER_SOCIETY_ID, society.getId(), UserSocietyDetails.class);
+                            if (null != userSocietyDetails) {
+                                userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
+                                session.update(userSocietyDetails);
+                            }
+                        } else if (society.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            session.clear();
+                            session.flush();
+                            Criteria addrCriteria = session.createCriteria(UserSocietyDetails.class, "userSocietyDetails");
+                            addrCriteria.createAlias("userSocietyDetails.societies", "soc");
+                            addrCriteria.createAlias("userSocietyDetails.userProfile", "profile");
+                            addrCriteria.add(Restrictions.eq("soc.societyId", Integer.parseInt(society.getId())));
+                            addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                            UserSocietyDetails userSociety = (UserSocietyDetails) addrCriteria.uniqueResult();
+                            if (null != userSociety) {
+                                session.delete(userSociety);
+                            }
 
-                    } else if (null != society.getStatus() && society.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        //Get Societies
-                        Societies societies = (Societies) getEntity(CommonConstants.SOCIETY_CD, society.getSocietyCd(), Societies.class, false);
-                        if (null == societies) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_110, society.getSocietyCd() + "-" + userServiceError110);
-                        } else {
-                            userSocietyDetails = new UserSocietyDetails();
-                            userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
-                            userSocietyDetails.setSocieties(societies);
-                            userSocietyDetails.setCreatedDate(UserServiceHelper.getDate());
-                            userSocietyDetails.setUsersByCreatedBy(user);
-                            userSocietyDetails.setUsersByUpdatedBy(user);
-                            userSocietyDetails.setUserProfile(authorProfile);
-                            session.save(userSocietyDetails);
-                            societyDetailsSet.add(userSocietyDetails);
+                        } else if (society.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            //Get Societies
+                            Societies societies = (Societies) getEntity(CommonConstants.SOCIETY_CD, society.getSocietyCd(), Societies.class, false);
+                            if (null == societies) {
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_110, society.getSocietyCd() + "-" + userServiceError110);
+                            } else {
+                                userSocietyDetails = new UserSocietyDetails();
+                                userSocietyDetails = UserServiceHelper.setUserSocietyDetails(userSocietyDetails, society);
+                                userSocietyDetails.setSocieties(societies);
+                                userSocietyDetails.setCreatedDate(UserServiceHelper.getDate());
+                                userSocietyDetails.setUsersByCreatedBy(user);
+                                userSocietyDetails.setUsersByUpdatedBy(user);
+                                userSocietyDetails.setUserProfile(authorProfile);
+                                session.save(userSocietyDetails);
+                                societyDetailsSet.add(userSocietyDetails);
+                            }
                         }
                     }
                 }//End of for loop
@@ -844,34 +850,37 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Update CoAuthor...");
                 Set<AuthCoauthDetails> authCoauthDetailsSet = new HashSet<>();
                 for (CoAuthor coAuthor : coAuthorList) {
-                    if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class);
-                        if (null != authCoauthDetails) {
+
+                    if (null != coAuthor.getId() && null != coAuthor.getStatus()) {
+                        if (coAuthor.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class);
+                            if (null != authCoauthDetails) {
+                                authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
+                                authCoauthDetails.setUsersByUpdatedBy(user);
+                                session.update(authCoauthDetails);
+                            }
+                        } else if (coAuthor.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            session.clear();
+                            session.flush();
+                            Criteria addrCriteria = session.createCriteria(AuthCoauthDetails.class, "authCoauthDetails");
+                            addrCriteria.createAlias("authCoauthDetails.userProfileByAuthorUserId", "profile");
+                            addrCriteria.add(Restrictions.eq("authCoauthDetails.authCoauthId", Integer.parseInt(coAuthor.getId())));
+                            addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                            AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) addrCriteria.uniqueResult();
+                            if (null != authCoauthDetails) {
+                                session.delete(authCoauthDetails);
+                            }
+                        } else if (coAuthor.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
                             authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
+                            authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
+                            authCoauthDetails.setUserProfileByAuthorUserId(authorProfile);
+                            authCoauthDetails.setAuthCoauthId(user.getUserId());
+                            authCoauthDetails.setUsersByCreatedBy(user);
                             authCoauthDetails.setUsersByUpdatedBy(user);
-                            session.update(authCoauthDetails);
+                            session.save(authCoauthDetails);
+                            authCoauthDetailsSet.add(authCoauthDetails);
                         }
-                    } else if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        session.clear();
-                        session.flush();
-                        Criteria addrCriteria = session.createCriteria(AuthCoauthDetails.class, "authCoauthDetails");
-                        addrCriteria.createAlias("authCoauthDetails.userProfileByAuthorUserId", "profile");
-                        addrCriteria.add(Restrictions.eq("authCoauthDetails.authCoauthId", Integer.parseInt(coAuthor.getId())));
-                        addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
-                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) addrCriteria.uniqueResult();
-                        if (null != authCoauthDetails) {
-                            session.delete(authCoauthDetails);
-                        }
-                    } else if (null != coAuthor.getStatus() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        AuthCoauthDetails authCoauthDetails = new AuthCoauthDetails();
-                        authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
-                        authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
-                        authCoauthDetails.setUserProfileByAuthorUserId(authorProfile);
-                        authCoauthDetails.setAuthCoauthId(user.getUserId());
-                        authCoauthDetails.setUsersByCreatedBy(user);
-                        authCoauthDetails.setUsersByUpdatedBy(user);
-                        session.save(authCoauthDetails);
-                        authCoauthDetailsSet.add(authCoauthDetails);
                     }
                 }//End of for loop
                 if (authCoauthDetailsSet.size() > 0) {
@@ -886,56 +895,59 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.info("Set Alerts...");
                 for (Alert alert : alertList) {
                     List<AlertType> alertTypeList = alert.getAlertTypes();
-                    if (null != alert.getId() && alert.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        if (null != alertTypeList && alertTypeList.size() > 0) {
-                            for (AlertType alertType : alertTypeList) {
-                                UserAlertsId userAlertsId = new UserAlertsId();
-                                userAlertsId.setUserId(user.getUserId());
-                                userAlertsId.setAlertCd(alert.getAlertCd());
-                                UserAlerts userAlerts = (UserAlerts) session.get(UserAlerts.class, userAlertsId);
-                                userAlerts.setEmailFlg(alertType.getEmail());
-                                userAlerts.setOnScreenFlg(alertType.getOnScreen());
-                                userAlerts.setUsersByUpdatedBy(user);
-                                userAlerts.setUpdatedDate(UserServiceHelper.getDate());
-                                if (null != userAlerts) {
+                    if (null != alert.getId() && null != alert.getStatus()) {
+                        if (alert.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            Criteria alertCriteria = session.createCriteria(UserAlerts.class, "userAlerts");
+                            alertCriteria.createAlias("userAlerts.alerts", "alerts");
+                            alertCriteria.createAlias("userAlerts.userProfile", "profile");
+                            alertCriteria.add(Restrictions.eq("alerts.alertCd", alert.getAlertCd()));
+                            alertCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                            UserAlerts userAlerts = (UserAlerts) alertCriteria.uniqueResult();
+                            if (null != userAlerts) {
+                                if (null != alertTypeList && alertTypeList.size() > 0) {
+                                    for (AlertType alertType : alertTypeList) {
+                                        userAlerts.setEmailFlg(alertType.getEmail());
+                                        userAlerts.setOnScreenFlg(alertType.getOnScreen());
+                                    }
+                                    userAlerts.setUsersByUpdatedBy(user);
+                                    userAlerts.setUpdatedDate(UserServiceHelper.getDate());
                                     session.update(userAlerts);
                                 }
                             }
-                        }
+                        } else if (alert.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
 
-                    } else if (null != alert.getId() && alert.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            Criteria alertCriteria = session.createCriteria(UserAlerts.class, "userAlerts");
+                            alertCriteria.createAlias("userAlerts.alerts", "alert");
+                            alertCriteria.createAlias("userAlerts.userProfile", "profile");
+                            alertCriteria.add(Restrictions.eq("alert.alertCd", alert.getId()));
+                            alertCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                            UserAlerts userAlerts = (UserAlerts) alertCriteria.uniqueResult();
+                            if (null != userAlerts) {
+                                session.delete(userAlerts);
+                            }
 
-                        Criteria alertCriteria = session.createCriteria(UserAlerts.class, "userAlerts");
-                        alertCriteria.createAlias("userAlerts.alerts", "alert");
-                        alertCriteria.createAlias("userAlerts.userProfile", "profile");
-                        alertCriteria.add(Restrictions.eq("alert.alertCd", alert.getId()));
-                        alertCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
-                        UserAlerts userAlerts = (UserAlerts) alertCriteria.uniqueResult();
-                        if (null != userAlerts) {
-                            session.delete(userAlerts);
-                        }
-
-                    } else if (null != alert.getStatus() && alert.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        //Get Alerts Object.
-                        Alerts alertsObj = (Alerts) getEntity(CommonConstants.ALERT_CD, alert.getAlertCd(), Alerts.class, false);
-                        if (null == alertsObj) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_113, alert.getAlertCd() + "-" + userServiceError113);
-                        }
-                        if (null != alertTypeList && alertTypeList.size() > 0) {
-                            for (AlertType alertType : alertTypeList) {
-                                UserAlertsId userAlertsId = new UserAlertsId();
-                                userAlertsId.setUserId(user.getUserId());
-                                userAlertsId.setAlertCd(alert.getAlertCd());
-                                alerts = new UserAlerts();
-                                alerts.setId(userAlertsId);
-                                alerts.setEmailFlg(alertType.getEmail());
-                                alerts.setOnScreenFlg(alertType.getOnScreen());
-                                alerts.setAlerts(alertsObj);
-                                alerts.setUsersByCreatedBy(user);
-                                alerts.setUsersByUpdatedBy(user);
-                                alerts.setCreatedDate(UserServiceHelper.getDate());
-                                alerts.setUpdatedDate(UserServiceHelper.getDate());
-                                session.save(alerts);
+                        } else if (alert.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            //Get Alerts Object.
+                            Alerts alertsObj = (Alerts) getEntity(CommonConstants.ALERT_CD, alert.getAlertCd(), Alerts.class, false);
+                            if (null == alertsObj) {
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_113, alert.getAlertCd() + "-" + userServiceError113);
+                            }
+                            if (null != alertTypeList && alertTypeList.size() > 0) {
+                                for (AlertType alertType : alertTypeList) {
+                                    UserAlertsId userAlertsId = new UserAlertsId();
+                                    userAlertsId.setUserId(user.getUserId());
+                                    userAlertsId.setAlertCd(alert.getAlertCd());
+                                    alerts = new UserAlerts();
+                                    alerts.setId(userAlertsId);
+                                    alerts.setEmailFlg(alertType.getEmail());
+                                    alerts.setOnScreenFlg(alertType.getOnScreen());
+                                    alerts.setAlerts(alertsObj);
+                                    alerts.setUsersByCreatedBy(user);
+                                    alerts.setUsersByUpdatedBy(user);
+                                    alerts.setCreatedDate(UserServiceHelper.getDate());
+                                    alerts.setUpdatedDate(UserServiceHelper.getDate());
+                                    session.save(alerts);
+                                }
                             }
                         }
                     }
@@ -949,41 +961,43 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Update preferredJournalList...");
                 Set<UserPreferredJournals> userPreferredJournalsSet = new HashSet<>();
                 for (PreferredJournal preferredJournal : preferredJournalList) {
-                    if (null != preferredJournal.getId() && preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
-                        userPreferredJournalsId.setUserId(user.getUserId());
-                        userPreferredJournalsId.setJournalId(Integer.parseInt(preferredJournal.getId()));
-                        UserPreferredJournals userPreferredJournal = (UserPreferredJournals) session.get(UserPreferredJournals.class, userPreferredJournalsId);
-                        if (null != userPreferredJournal) {
-                            session.update(userPreferredJournal);
+                    if (null != preferredJournal.getId() && null != preferredJournal.getStatus()) {
+                        if (preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
+                            userPreferredJournalsId.setUserId(user.getUserId());
+                            userPreferredJournalsId.setJournalId(Integer.parseInt(preferredJournal.getId()));
+                            UserPreferredJournals userPreferredJournal = (UserPreferredJournals) session.get(UserPreferredJournals.class, userPreferredJournalsId);
+                            if (null != userPreferredJournal) {
+                                session.update(userPreferredJournal);
+                            }
+                        } else if (preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
+                            userPreferredJournalsId.setUserId(user.getUserId());
+                            userPreferredJournalsId.setJournalId(Integer.parseInt(preferredJournal.getId()));
+                            UserPreferredJournals userPreferredJournal = (UserPreferredJournals) session.get(UserPreferredJournals.class, userPreferredJournalsId);
+                            if (null != userPreferredJournal) {
+                                session.delete(userPreferredJournal);
+                            }
+                        } else if (preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
+                            userPreferredJournals = new UserPreferredJournals();
+                            Journals journals = new Journals();
+                            journals.setJouTitle(preferredJournal.getJournalTitle());
+                            journals.setCreatedDate(UserServiceHelper.getDate());
+                            journals.setUpdatedDate(UserServiceHelper.getDate());
+                            session.save(journals);
+                            userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
+                            userPreferredJournalsId.setUserId(user.getUserId());
+                            userPreferredJournalsId.setJournalId(journals.getJournalId());
+                            userPreferredJournals.setId(userPreferredJournalsId);
+                            userPreferredJournals.setUserProfile(authorProfile);
+                            userPreferredJournals.setUsersByCreatedBy(user);
+                            userPreferredJournals.setUsersByUpdatedBy(user);
+                            userPreferredJournals.setCreatedDate(UserServiceHelper.getDate());
+                            userPreferredJournals.setUpdatedDate(UserServiceHelper.getDate());
+                            session.save(userPreferredJournals);
+                            userPreferredJournalsSet.add(userPreferredJournals);
                         }
-                    } else if (null != preferredJournal.getId() && preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
-                        userPreferredJournalsId.setUserId(user.getUserId());
-                        userPreferredJournalsId.setJournalId(Integer.parseInt(preferredJournal.getId()));
-                        UserPreferredJournals userPreferredJournal = (UserPreferredJournals) session.get(UserPreferredJournals.class, userPreferredJournalsId);
-                        if (null != userPreferredJournal) {
-                            session.delete(userPreferredJournal);
-                        }
-                    } else if (null != preferredJournal.getStatus() && preferredJournal.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
-                        userPreferredJournals = new UserPreferredJournals();
-                        Journals journals = new Journals();
-                        journals.setJouTitle(preferredJournal.getJournalTitle());
-                        journals.setCreatedDate(UserServiceHelper.getDate());
-                        journals.setUpdatedDate(UserServiceHelper.getDate());
-                        session.save(journals);
-                        userPreferredJournals = UserServiceHelper.setUserPreferredJournals(userPreferredJournals, journals);
-                        userPreferredJournalsId.setUserId(user.getUserId());
-                        userPreferredJournalsId.setJournalId(journals.getJournalId());
-                        userPreferredJournals.setId(userPreferredJournalsId);
-                        userPreferredJournals.setUserProfile(authorProfile);
-                        userPreferredJournals.setUsersByCreatedBy(user);
-                        userPreferredJournals.setUsersByUpdatedBy(user);
-                        userPreferredJournals.setCreatedDate(UserServiceHelper.getDate());
-                        userPreferredJournals.setUpdatedDate(UserServiceHelper.getDate());
-                        session.save(userPreferredJournals);
-                        userPreferredJournalsSet.add(userPreferredJournals);
                     }
                 }//End of For Loop
                 if (userPreferredJournalsSet.size() > 0) {
@@ -999,55 +1013,57 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 Set<UserAreaOfInterest> userAreaOfInterestHashSet = new HashSet<>();
                 LOGGER.debug("Set MyInterest...");
                 for (MyInterest myInterest : myInterestList) {
-                    if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getId(), AreaOfInterest.class, false);
-                        if (null == areaOfInterest) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_111, myInterest.getId() + "-" + userServiceError111);
-                        } else {
-                            UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
-                            userAreaOfInterestId.setUserId(user.getUserId());
-                            userAreaOfInterestId.setAreaOfInterestCd(myInterest.getId());
-                            userAreaOfInterest = new UserAreaOfInterest();
-                            userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
-                            userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
-                            userAreaOfInterest.setUpdatedDate(UserServiceHelper.getDate());
-                            userAreaOfInterest.setUsersByCreatedBy(user);
-                            userAreaOfInterest.setUsersByUpdatedBy(user);
-                            userAreaOfInterest.setAreaOfInterest(areaOfInterest);
-                            userAreaOfInterest.setUserProfile(authorProfile);
-                            userAreaOfInterest.setId(userAreaOfInterestId);
-                            session.save(userAreaOfInterest);
-                            userAreaOfInterestHashSet.add(userAreaOfInterest);
-                        }
-                    } else if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        Criteria areaCriteria = session.createCriteria(UserAreaOfInterest.class, "userAreaOfInterest");
-                        areaCriteria.createAlias("userAreaOfInterest.areaOfInterest", "area");
-                        areaCriteria.createAlias("userAreaOfInterest.userProfile", "profile");
-                        areaCriteria.add(Restrictions.eq("area.areaOfInterestCd", myInterest.getId()));
-                        areaCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
-                        UserAreaOfInterest userAreaInt = (UserAreaOfInterest) areaCriteria.uniqueResult();
-                        if (null != userAreaInt) {
-                            session.delete(userAreaInt);
-                        }
+                    if (null != myInterest.getId() && null != myInterest.getStatus()) {
+                        if (myInterest.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                            AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getId(), AreaOfInterest.class, false);
+                            if (null == areaOfInterest) {
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_111, myInterest.getId() + "-" + userServiceError111);
+                            } else {
+                                UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
+                                userAreaOfInterestId.setUserId(user.getUserId());
+                                userAreaOfInterestId.setAreaOfInterestCd(myInterest.getId());
+                                userAreaOfInterest = new UserAreaOfInterest();
+                                userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
+                                userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
+                                userAreaOfInterest.setUpdatedDate(UserServiceHelper.getDate());
+                                userAreaOfInterest.setUsersByCreatedBy(user);
+                                userAreaOfInterest.setUsersByUpdatedBy(user);
+                                userAreaOfInterest.setAreaOfInterest(areaOfInterest);
+                                userAreaOfInterest.setUserProfile(authorProfile);
+                                userAreaOfInterest.setId(userAreaOfInterestId);
+                                session.save(userAreaOfInterest);
+                                userAreaOfInterestHashSet.add(userAreaOfInterest);
+                            }
+                        } else if (myInterest.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            Criteria areaCriteria = session.createCriteria(UserAreaOfInterest.class, "userAreaOfInterest");
+                            areaCriteria.createAlias("userAreaOfInterest.areaOfInterest", "area");
+                            areaCriteria.createAlias("userAreaOfInterest.userProfile", "profile");
+                            areaCriteria.add(Restrictions.eq("area.areaOfInterestCd", myInterest.getId()));
+                            areaCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                            UserAreaOfInterest userAreaInt = (UserAreaOfInterest) areaCriteria.uniqueResult();
+                            if (null != userAreaInt) {
+                                session.delete(userAreaInt);
+                            }
 
-                    } else if (null != myInterest.getStatus() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-                        userAreaOfInterest = new UserAreaOfInterest();
-                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
-                        if (null == areaOfInterest) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_111, myInterest.getAreaofInterestCd() + "-" + userServiceError111);
-                        } else {
-                            UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
-                            userAreaOfInterestId.setUserId(user.getUserId());
-                            userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
-                            userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
-                            userAreaOfInterest.setUpdatedDate(UserServiceHelper.getDate());
-                            userAreaOfInterest.setUsersByCreatedBy(user);
-                            userAreaOfInterest.setUsersByUpdatedBy(user);
-                            userAreaOfInterest.setAreaOfInterest(areaOfInterest);
-                            userAreaOfInterest.setUserProfile(authorProfile);
-                            userAreaOfInterest.setId(userAreaOfInterestId);
-                            session.save(userAreaOfInterest);
-                            userAreaOfInterestHashSet.add(userAreaOfInterest);
+                        } else if (myInterest.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+                            userAreaOfInterest = new UserAreaOfInterest();
+                            AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
+                            if (null == areaOfInterest) {
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_111, myInterest.getAreaofInterestCd() + "-" + userServiceError111);
+                            } else {
+                                UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
+                                userAreaOfInterestId.setUserId(user.getUserId());
+                                userAreaOfInterestId.setAreaOfInterestCd(areaOfInterest.getAreaOfInterestCd());
+                                userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
+                                userAreaOfInterest.setUpdatedDate(UserServiceHelper.getDate());
+                                userAreaOfInterest.setUsersByCreatedBy(user);
+                                userAreaOfInterest.setUsersByUpdatedBy(user);
+                                userAreaOfInterest.setAreaOfInterest(areaOfInterest);
+                                userAreaOfInterest.setUserProfile(authorProfile);
+                                userAreaOfInterest.setId(userAreaOfInterestId);
+                                session.save(userAreaOfInterest);
+                                userAreaOfInterestHashSet.add(userAreaOfInterest);
+                            }
                         }
                     }
                 }
@@ -1062,26 +1078,27 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             if (null != funders && funders.size() > 0) {
                 LOGGER.debug("Update Funder...");
                 for (Funder funder : funders) {
-                    if (null != funder.getId() && funder.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+                    if (null != funder.getId() && null != funder.getStatus()) {
+                        if (funder.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
 
-                        //Delete Funders
-                        Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
-                        for (UserFunders userFunders : userFundersSet) {
-                            ResearchFunders researchFunders = userFunders.getResearchFunders();
-                            if (null != researchFunders) {
-                                session.delete(researchFunders);
-                            }
+                            //Delete Funders
+                            Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
+                            for (UserFunders userFunders : userFundersSet) {
+                                ResearchFunders researchFunders = userFunders.getResearchFunders();
+                                if (null != researchFunders) {
+                                    session.delete(researchFunders);
+                                }
 
-                            Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
-                            for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
-                                session.delete(userFunderGrants);
+                                Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                                for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                                    session.delete(userFunderGrants);
+                                }
+                                session.delete(userFunders);
                             }
-                            session.delete(userFunders);
-                        }
-                        session.flush();
-                        session.clear();
-                        List<GrantNumber> grantList = funder.getGrantNumbers();
-                        //addFunder(session, user, authorProfile, funders, Set < UserFunders > grants);
+                            session.flush();
+                            session.clear();
+                            List<GrantNumber> grantList = funder.getGrantNumbers();
+                            //addFunder(session, user, authorProfile, funders, Set < UserFunders > grants);
                        /* ResearchFunders researchFunders = (ResearchFunders) getEntity("resfunderid", funder.getId(), ResearchFunders.class, true);
                         if (null == researchFunders) {
                             throw new SharedServiceException(CommonConstants.ERROR_CODE_116, funder.getId() + "-" + userServiceError116);
@@ -1111,49 +1128,50 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                             }
                         }*/
 
-                    } else if (null != funder.getId() && funder.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
-                        for (UserFunders userFunders : userFundersSet) {
-                            ResearchFunders researchFunders = userFunders.getResearchFunders();
+                        } else if (funder.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
+                            Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
+                            for (UserFunders userFunders : userFundersSet) {
+                                ResearchFunders researchFunders = userFunders.getResearchFunders();
+                                if (null != researchFunders) {
+                                    session.delete(researchFunders);
+                                }
+
+                                Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                                for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                                    session.delete(userFunderGrants);
+                                }
+                                session.delete(userFunders);
+                            }
+                        } else if (funder.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
+
+                            List<GrantNumber> grantList = funder.getGrantNumbers();
+                            ResearchFunders researchFunders = new ResearchFunders();
+                            researchFunders.setFunderName(funder.getResearchFunderName());
+                            researchFunders.setFunderDoi(funder.getResearchFunderDoi());
+                            researchFunders.setCreatedDate(UserServiceHelper.getDate());
+                            researchFunders.setUpdatedDate(UserServiceHelper.getDate());
+                            session.save(researchFunders);
                             if (null != researchFunders) {
-                                session.delete(researchFunders);
-                            }
+                                UserFunders userFunders = new UserFunders();
+                                userFunders.setResearchFunders(researchFunders);
+                                userFunders.setUserProfile(authorProfile);
+                                userFunders.setCreatedDate(UserServiceHelper.getDate());
+                                userFunders.setUpdatedDate(UserServiceHelper.getDate());
+                                userFunders.setUsersByCreatedBy(user);
+                                userFunders.setUsersByUpdatedBy(user);
+                                userFunders.setUserProfile(authorProfile);
+                                session.save(userFunders);
 
-                            Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
-                            for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
-                                session.delete(userFunderGrants);
-                            }
-                            session.delete(userFunders);
-                        }
-                    } else if (null != funder.getStatus() && funder.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
-
-                        List<GrantNumber> grantList = funder.getGrantNumbers();
-                        ResearchFunders researchFunders = new ResearchFunders();
-                        researchFunders.setFunderName(funder.getResearchFunderName());
-                        researchFunders.setFunderDoi(funder.getResearchFunderDoi());
-                        researchFunders.setCreatedDate(UserServiceHelper.getDate());
-                        researchFunders.setUpdatedDate(UserServiceHelper.getDate());
-                        session.save(researchFunders);
-                        if (null != researchFunders) {
-                            UserFunders userFunders = new UserFunders();
-                            userFunders.setResearchFunders(researchFunders);
-                            userFunders.setUserProfile(authorProfile);
-                            userFunders.setCreatedDate(UserServiceHelper.getDate());
-                            userFunders.setUpdatedDate(UserServiceHelper.getDate());
-                            userFunders.setUsersByCreatedBy(user);
-                            userFunders.setUsersByUpdatedBy(user);
-                            userFunders.setUserProfile(authorProfile);
-                            session.save(userFunders);
-
-                            for (GrantNumber grantNumber : grantList) {
-                                UserFunderGrants userFunderGrants = new UserFunderGrants();
-                                userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, grantNumber.getGrantNumber());
-                                userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
-                                userFunderGrants.setUsersByCreatedBy(user);
-                                userFunderGrants.setUsersByUpdatedBy(user);
-                                userFunderGrants.setUserFunders(userFunders);
-                                session.save(userFunderGrants);
-                                //researchFunders.getUserFunderGrantses().add(userFunderGrants);
+                                for (GrantNumber grantNumber : grantList) {
+                                    UserFunderGrants userFunderGrants = new UserFunderGrants();
+                                    userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, grantNumber.getGrantNumber());
+                                    userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
+                                    userFunderGrants.setUsersByCreatedBy(user);
+                                    userFunderGrants.setUsersByUpdatedBy(user);
+                                    userFunderGrants.setUserFunders(userFunders);
+                                    session.save(userFunderGrants);
+                                    //researchFunders.getUserFunderGrantses().add(userFunderGrants);
+                                }
                             }
                         }
                     }
@@ -1212,6 +1230,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
      * @return
      * @throws SharedServiceException
      */
+
     public LookupResponse userlookUpRepository(String firstName, String lastName, String emailId)
             throws SharedServiceException {
         LOGGER.info("Lookup User Profile..");
