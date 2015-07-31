@@ -696,6 +696,22 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     if (null != addressProfile.getId() && addressProfile.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
                         addressObj = (com.wiley.gr.ace.sharedservices.persistence.entity.Address) getEntityById(CommonConstants.ADDRESS_ID, addressProfile.getId(), com.wiley.gr.ace.sharedservices.persistence.entity.Address.class);
                         if (null != addressObj) {
+                            Criteria addrCriteria = session.createCriteria(UserAddresses.class, "userAddress");
+                            addrCriteria.createAlias("userAddress.address", "addr");
+                            addrCriteria.createAlias("userAddress.usersByUserId", "profile");
+                            addrCriteria.add(Restrictions.eq("addr.addressId", Integer.parseInt(addressProfile.getId())));
+                            addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                            UserAddresses userAddress = (UserAddresses) addrCriteria.uniqueResult();
+                            if (null != userAddress) {
+                                AddressType addressType = (AddressType) getEntity(CommonConstants.ADDRESS_TYPE_CD, addressProfile.getType(), AddressType.class, false);
+                                if (null == addressType) {
+                                    throw new SharedServiceException(CommonConstants.ERROR_CODE_109, addressProfile.getType() + "-" + userServiceError109);
+                                }
+                                userAddress.setAddressType(addressType);
+                                session.update(userAddress);
+                            }
+                            session.flush();
+                            session.clear();
                             addressObj = UserServiceHelper.setAddress(addressObj, addressProfile);
                             session.update(addressObj);
                         }
@@ -749,10 +765,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                             session.update(userAffiliations);
                         }
                     } else if (null != affiliation.getId() && affiliation.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        userAffiliations = (UserAffiliations) getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
-                        if (null != userAffiliations) {
-                            userAffiliations = UserServiceHelper.setUserAffiliations(userAffiliations, affiliation);
-                            session.delete(userAffiliations);
+                        Criteria affCriteria = session.createCriteria(UserAffiliations.class, "userAffiliations");
+                        affCriteria.createAlias("userAffiliations.userProfile", "prof");
+                        affCriteria.add(Restrictions.eq("userAffiliations.affiliationId", Integer.parseInt(affiliation.getId())));
+                        affCriteria.add(Restrictions.eq("prof.userId", Integer.parseInt(userId)));
+                        UserAffiliations userAffiliationsDelete = (UserAffiliations) affCriteria.uniqueResult();
+                        if (null != userAffiliationsDelete) {
+                            session.delete(userAffiliationsDelete);
                         }
                     } else if (affiliation.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
                         userAffiliations = new UserAffiliations();
@@ -833,9 +852,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                             session.update(authCoauthDetails);
                         }
                     } else if (null != coAuthor.getId() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) getEntityById(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class);
+                        session.clear();
+                        session.flush();
+                        Criteria addrCriteria = session.createCriteria(AuthCoauthDetails.class, "authCoauthDetails");
+                        addrCriteria.createAlias("authCoauthDetails.userProfileByAuthorUserId", "profile");
+                        addrCriteria.add(Restrictions.eq("authCoauthDetails.authCoauthId", Integer.parseInt(coAuthor.getId())));
+                        addrCriteria.add(Restrictions.eq("profile.userId", Integer.parseInt(userId)));
+                        AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) addrCriteria.uniqueResult();
                         if (null != authCoauthDetails) {
-                            authCoauthDetails = UserServiceHelper.setAuthCoauthDetails(authCoauthDetails, coAuthor);
                             session.delete(authCoauthDetails);
                         }
                     } else if (null != coAuthor.getStatus() && coAuthor.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
@@ -844,7 +868,6 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         authCoauthDetails.setCreatedDate(UserServiceHelper.getDate());
                         authCoauthDetails.setUserProfileByAuthorUserId(authorProfile);
                         authCoauthDetails.setAuthCoauthId(user.getUserId());
-                        //TODO: Set CoAuthor ID
                         authCoauthDetails.setUsersByCreatedBy(user);
                         authCoauthDetails.setUsersByUpdatedBy(user);
                         session.save(authCoauthDetails);
@@ -977,14 +1000,24 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Set MyInterest...");
                 for (MyInterest myInterest : myInterestList) {
                     if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
-                        userAreaOfInterestId.setUserId(user.getUserId());
-                        userAreaOfInterestId.setAreaOfInterestCd(myInterest.getId());
-                        UserAreaOfInterestId userArea = (UserAreaOfInterestId) session.get(UserAreaOfInterestId.class, userAreaOfInterestId);
-                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getAreaofInterestCd(), AreaOfInterest.class, false);
-                        if (null != areaOfInterest) {
+                        AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getId(), AreaOfInterest.class, false);
+                        if (null == areaOfInterest) {
+                            throw new SharedServiceException(CommonConstants.ERROR_CODE_111, myInterest.getId() + "-" + userServiceError111);
+                        } else {
+                            UserAreaOfInterestId userAreaOfInterestId = new UserAreaOfInterestId();
+                            userAreaOfInterestId.setUserId(user.getUserId());
+                            userAreaOfInterestId.setAreaOfInterestCd(myInterest.getId());
+                            userAreaOfInterest = new UserAreaOfInterest();
                             userAreaOfInterest = UserServiceHelper.setUserAreaOfInterest(userAreaOfInterest, areaOfInterest);
-                            session.update(userArea);
+                            userAreaOfInterest.setCreatedDate(UserServiceHelper.getDate());
+                            userAreaOfInterest.setUpdatedDate(UserServiceHelper.getDate());
+                            userAreaOfInterest.setUsersByCreatedBy(user);
+                            userAreaOfInterest.setUsersByUpdatedBy(user);
+                            userAreaOfInterest.setAreaOfInterest(areaOfInterest);
+                            userAreaOfInterest.setUserProfile(authorProfile);
+                            userAreaOfInterest.setId(userAreaOfInterestId);
+                            session.save(userAreaOfInterest);
+                            userAreaOfInterestHashSet.add(userAreaOfInterest);
                         }
                     } else if (null != myInterest.getId() && myInterest.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
                         Criteria areaCriteria = session.createCriteria(UserAreaOfInterest.class, "userAreaOfInterest");
@@ -1030,25 +1063,53 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 LOGGER.debug("Update Funder...");
                 for (Funder funder : funders) {
                     if (null != funder.getId() && funder.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
-                        List<GrantNumber> grantList = funder.getGrantNumbers();
-                        ResearchFunders researchFunders = (ResearchFunders) getEntity(CommonConstants.FUNDER_NAME, funder.getResearchFunderName(), ResearchFunders.class, false);
-                        UserFunders userFunders = new UserFunders();
-                        userFunders.setResearchFunders(researchFunders);
-                        userFunders.setUserProfile(authorProfile);
-                        userFunders.setCreatedDate(UserServiceHelper.getDate());
-                        userFunders.setUpdatedDate(UserServiceHelper.getDate());
-                        userFunders.setUsersByCreatedBy(user);
-                        userFunders.setUsersByUpdatedBy(user);
-                        userFunders.setUserProfile(authorProfile);
-                        session.save(userFunders);
-                        for (GrantNumber grantNumber : grantList) {
-                            UserFunderGrants userFunderGrants = (UserFunderGrants) getEntity(CommonConstants.FUNDER_NAME, grantNumber.getGrantNumber(), UserFunderGrants.class, false);
-                            userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
-                            userFunderGrants.setUsersByCreatedBy(user);
-                            userFunderGrants.setUsersByUpdatedBy(user);
-                            userFunderGrants.setUserFunders(userFunders);
-                            session.save(userFunderGrants);
+
+                        //Delete Funders
+                        Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
+                        for (UserFunders userFunders : userFundersSet) {
+                            ResearchFunders researchFunders = userFunders.getResearchFunders();
+                            if (null != researchFunders) {
+                                session.delete(researchFunders);
+                            }
+
+                            Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                            for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                                session.delete(userFunderGrants);
+                            }
+                            session.delete(userFunders);
                         }
+                        session.flush();
+                        session.clear();
+                        List<GrantNumber> grantList = funder.getGrantNumbers();
+                        //addFunder(session, user, authorProfile, funders, Set < UserFunders > grants);
+                       /* ResearchFunders researchFunders = (ResearchFunders) getEntity("resfunderid", funder.getId(), ResearchFunders.class, true);
+                        if (null == researchFunders) {
+                            throw new SharedServiceException(CommonConstants.ERROR_CODE_116, funder.getId() + "-" + userServiceError116);
+                        } else {
+                            UserFunders userFunders = new UserFunders();
+                            userFunders.setResearchFunders(researchFunders);
+                            userFunders.setUserProfile(authorProfile);
+                            userFunders.setCreatedDate(UserServiceHelper.getDate());
+                            userFunders.setUpdatedDate(UserServiceHelper.getDate());
+                            userFunders.setUsersByCreatedBy(user);
+                            userFunders.setUsersByUpdatedBy(user);
+                            userFunders.setUserProfile(authorProfile);
+                            session.save(userFunders);
+                            for (GrantNumber grantNumber : grantList) {
+                                session.flush();
+                                session.clear();
+                                Criteria grantCriteria = session.createCriteria(UserFunderGrants.class, "userFunderGrants");
+                                grantCriteria.createAlias("userFunderGrants.userFunders", "funder");
+                                grantCriteria.add(Restrictions.eq("funder.userFunderId", funder.getId()));
+                                grantCriteria.add(Restrictions.eq("funder.grantNum", grantNumber.getGrantNumber()));
+                                UserFunderGrants userFunderGrants = (UserFunderGrants) grantCriteria.uniqueResult();
+                                if (null != userFunderGrants) {
+                                    userFunderGrants.setUsersByUpdatedBy(user);
+                                    userFunderGrants.setUserFunders(userFunders);
+                                    session.save(userFunderGrants);
+                                }
+                            }
+                        }*/
 
                     } else if (null != funder.getId() && funder.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
                         Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
@@ -1264,11 +1325,12 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             if (!StringUtils.isEmpty(email)) {
 
-                Criterion primary = Restrictions.eq("users.primaryEmailAddr", email.toLowerCase()).ignoreCase();
+              /*  Criterion primary = Restrictions.eq("users.primaryEmailAddr", email.toLowerCase()).ignoreCase();
                 Criterion secondary = Restrictions.eq("userSecondaryEmail.secondaryEmailAddr", email.toLowerCase()).ignoreCase();
                 // To get records matching with OR conditions
                 LogicalExpression orExp = Restrictions.or(primary, secondary);
-                userCriteria.add(orExp);
+                userCriteria.add(orExp);*/
+                userCriteria.add(Restrictions.eq("users.primaryEmailAddr", email.toLowerCase()).ignoreCase());
             }
             if (!StringUtils.isEmpty(firstName)) {
                 userCriteria.add(Restrictions.eq("users.firstName", firstName.toLowerCase()).ignoreCase());

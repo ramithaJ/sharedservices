@@ -314,9 +314,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(myInterest.getAreaofInterestCd())) {
             areaOfInterest.setAreaOfInterestCd(myInterest.getAreaofInterestCd());
         }
-        if (!StringUtils.isEmpty(myInterest.getInterestName())) {
-            areaOfInterest.setInterestName(myInterest.getInterestName());
-        }
 
         areaOfInterest.setUpdatedDate(getDate());
         return areaOfInterest;
@@ -331,7 +328,6 @@ public class UserServiceHelper {
      */
     public static UserAreaOfInterest setUserAreaOfInterest(UserAreaOfInterest userAreaOfInterest, AreaOfInterest areaOfInterest) {
         userAreaOfInterest.setAreaOfInterest(areaOfInterest);
-
         userAreaOfInterest.setUpdatedDate(getDate());
         return userAreaOfInterest;
     }
@@ -737,9 +733,7 @@ public class UserServiceHelper {
             myInterest.setId(areaOfInterest.getAreaOfInterestCd());
             myInterest.setAreaofInterestCd(areaOfInterest.getAreaOfInterestCd());
         }
-        if (!StringUtils.isEmpty(areaOfInterest.getInterestName())) {
-            myInterest.setInterestName(areaOfInterest.getInterestName());
-        }
+
         return myInterest;
     }
 
