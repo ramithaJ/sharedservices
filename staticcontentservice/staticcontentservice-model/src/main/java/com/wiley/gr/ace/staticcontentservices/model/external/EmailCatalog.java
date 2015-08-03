@@ -2,335 +2,327 @@ package com.wiley.gr.ace.staticcontentservices.model.external;
 
 import java.util.HashMap;
 
-
 /**
  * The Class EmailCatalog.
  */
 public class EmailCatalog {
-    
-    /** The host. */
-    private String host;
 
-    /** The sort order. */
-    private String sortOrder;
+	/** The host. */
+	private String host;
 
-    /** The st inode. */
-    private String stInode;
+	/** The sort order. */
+	private String sortOrder;
 
-    /** The last review. */
-    private String lastReview;
+	/** The st inode. */
+	private String stInode;
 
-    /** The language id. */
-    private String languageId;
+	/** The last review. */
+	private String lastReview;
 
-    /** The folder. */
-    private String folder;
+	/** The language id. */
+	private String languageId;
 
-    /** The   dotname. */
-    private String __DOTNAME__;
+	/** The folder. */
+	private String folder;
 
-    /** The mod date. */
-    private String modDate;
+	/** The dotname. */
+	private String __DOTNAME__;
 
-    /** The content title. */
-    private String contentTitle;
+	/** The mod date. */
+	private String modDate;
 
-    /** The owner. */
-    private String owner;
+	/** The content title. */
+	private String contentTitle;
 
-    /** The mod user. */
-    private String modUser;
+	/** The owner. */
+	private String owner;
 
-    /** The inode. */
-    private String inode;
+	/** The mod user. */
+	private String modUser;
 
-    /** The survey link. */
-    private HashMap<String, String> surveyLink;
+	/** The inode. */
+	private String inode;
 
-    /** The identifier. */
-    private String identifier;
+	/** The survey link. */
+	private HashMap<String, String> surveyLink;
 
-    /**
-     * Gets the host.
-     *
-     * @return the host
-     */
-    public String getHost ()
-    {
-        return host;
-    }
+	/** The identifier. */
+	private String identifier;
 
-    /**
-     * Sets the host.
-     *
-     * @param host the new host
-     */
-    public void setHost (String host)
-    {
-        this.host = host;
-    }
+	private String title;
 
-    /**
-     * Gets the sort order.
-     *
-     * @return the sort order
-     */
-    public String getSortOrder ()
-    {
-        return sortOrder;
-    }
+	public final String getTitle() {
+		return title;
+	}
 
-    /**
-     * Sets the sort order.
-     *
-     * @param sortOrder the new sort order
-     */
-    public void setSortOrder (String sortOrder)
-    {
-        this.sortOrder = sortOrder;
-    }
+	public final void setTitle(String title) {
+		this.title = title;
+	}
 
-    /**
-     * Gets the st inode.
-     *
-     * @return the st inode
-     */
-    public String getStInode ()
-    {
-        return stInode;
-    }
+	/**
+	 * Gets the host.
+	 *
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
 
-    /**
-     * Sets the st inode.
-     *
-     * @param stInode the new st inode
-     */
-    public void setStInode (String stInode)
-    {
-        this.stInode = stInode;
-    }
+	/**
+	 * Sets the host.
+	 *
+	 * @param host
+	 *            the new host
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
 
-    /**
-     * Gets the last review.
-     *
-     * @return the last review
-     */
-    public String getLastReview ()
-    {
-        return lastReview;
-    }
+	/**
+	 * Gets the sort order.
+	 *
+	 * @return the sort order
+	 */
+	public String getSortOrder() {
+		return sortOrder;
+	}
 
-    /**
-     * Sets the last review.
-     *
-     * @param lastReview the new last review
-     */
-    public void setLastReview (String lastReview)
-    {
-        this.lastReview = lastReview;
-    }
+	/**
+	 * Sets the sort order.
+	 *
+	 * @param sortOrder
+	 *            the new sort order
+	 */
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 
-    /**
-     * Gets the language id.
-     *
-     * @return the language id
-     */
-    public String getLanguageId ()
-    {
-        return languageId;
-    }
+	/**
+	 * Gets the st inode.
+	 *
+	 * @return the st inode
+	 */
+	public String getStInode() {
+		return stInode;
+	}
 
-    /**
-     * Sets the language id.
-     *
-     * @param languageId the new language id
-     */
-    public void setLanguageId (String languageId)
-    {
-        this.languageId = languageId;
-    }
+	/**
+	 * Sets the st inode.
+	 *
+	 * @param stInode
+	 *            the new st inode
+	 */
+	public void setStInode(String stInode) {
+		this.stInode = stInode;
+	}
 
-    /**
-     * Gets the folder.
-     *
-     * @return the folder
-     */
-    public String getFolder ()
-    {
-        return folder;
-    }
+	/**
+	 * Gets the last review.
+	 *
+	 * @return the last review
+	 */
+	public String getLastReview() {
+		return lastReview;
+	}
 
-    /**
-     * Sets the folder.
-     *
-     * @param folder the new folder
-     */
-    public void setFolder (String folder)
-    {
-        this.folder = folder;
-    }
+	/**
+	 * Sets the last review.
+	 *
+	 * @param lastReview
+	 *            the new last review
+	 */
+	public void setLastReview(String lastReview) {
+		this.lastReview = lastReview;
+	}
 
-    /**
-     * Gets the   dotname.
-     *
-     * @return the   dotname
-     */
-    public String get__DOTNAME__ ()
-    {
-        return __DOTNAME__;
-    }
+	/**
+	 * Gets the language id.
+	 *
+	 * @return the language id
+	 */
+	public String getLanguageId() {
+		return languageId;
+	}
 
-    /**
-     * Sets the   dotname.
-     *
-     * @param __DOTNAME__ the new   dotname
-     */
-    public void set__DOTNAME__ (String __DOTNAME__)
-    {
-        this.__DOTNAME__ = __DOTNAME__;
-    }
+	/**
+	 * Sets the language id.
+	 *
+	 * @param languageId
+	 *            the new language id
+	 */
+	public void setLanguageId(String languageId) {
+		this.languageId = languageId;
+	}
 
-    /**
-     * Gets the mod date.
-     *
-     * @return the mod date
-     */
-    public String getModDate ()
-    {
-        return modDate;
-    }
+	/**
+	 * Gets the folder.
+	 *
+	 * @return the folder
+	 */
+	public String getFolder() {
+		return folder;
+	}
 
-    /**
-     * Sets the mod date.
-     *
-     * @param modDate the new mod date
-     */
-    public void setModDate (String modDate)
-    {
-        this.modDate = modDate;
-    }
+	/**
+	 * Sets the folder.
+	 *
+	 * @param folder
+	 *            the new folder
+	 */
+	public void setFolder(String folder) {
+		this.folder = folder;
+	}
 
-    /**
-     * Gets the content title.
-     *
-     * @return the content title
-     */
-    public String getContentTitle ()
-    {
-        return contentTitle;
-    }
+	/**
+	 * Gets the dotname.
+	 *
+	 * @return the dotname
+	 */
+	public String get__DOTNAME__() {
+		return __DOTNAME__;
+	}
 
-    /**
-     * Sets the content title.
-     *
-     * @param contentTitle the new content title
-     */
-    public void setContentTitle (String contentTitle)
-    {
-        this.contentTitle = contentTitle;
-    }
+	/**
+	 * Sets the dotname.
+	 *
+	 * @param __DOTNAME__
+	 *            the new dotname
+	 */
+	public void set__DOTNAME__(String __DOTNAME__) {
+		this.__DOTNAME__ = __DOTNAME__;
+	}
 
-    /**
-     * Gets the owner.
-     *
-     * @return the owner
-     */
-    public String getOwner ()
-    {
-        return owner;
-    }
+	/**
+	 * Gets the mod date.
+	 *
+	 * @return the mod date
+	 */
+	public String getModDate() {
+		return modDate;
+	}
 
-    /**
-     * Sets the owner.
-     *
-     * @param owner the new owner
-     */
-    public void setOwner (String owner)
-    {
-        this.owner = owner;
-    }
+	/**
+	 * Sets the mod date.
+	 *
+	 * @param modDate
+	 *            the new mod date
+	 */
+	public void setModDate(String modDate) {
+		this.modDate = modDate;
+	}
 
-    /**
-     * Gets the mod user.
-     *
-     * @return the mod user
-     */
-    public String getModUser ()
-    {
-        return modUser;
-    }
+	/**
+	 * Gets the content title.
+	 *
+	 * @return the content title
+	 */
+	public String getContentTitle() {
+		return contentTitle;
+	}
 
-    /**
-     * Sets the mod user.
-     *
-     * @param modUser the new mod user
-     */
-    public void setModUser (String modUser)
-    {
-        this.modUser = modUser;
-    }
+	/**
+	 * Sets the content title.
+	 *
+	 * @param contentTitle
+	 *            the new content title
+	 */
+	public void setContentTitle(String contentTitle) {
+		this.contentTitle = contentTitle;
+	}
 
-    /**
-     * Gets the inode.
-     *
-     * @return the inode
-     */
-    public String getInode ()
-    {
-        return inode;
-    }
+	/**
+	 * Gets the owner.
+	 *
+	 * @return the owner
+	 */
+	public String getOwner() {
+		return owner;
+	}
 
-    /**
-     * Sets the inode.
-     *
-     * @param inode the new inode
-     */
-    public void setInode (String inode)
-    {
-        this.inode = inode;
-    }
+	/**
+	 * Sets the owner.
+	 *
+	 * @param owner
+	 *            the new owner
+	 */
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
 
-    
-    /**
-     * Gets the survey link.
-     *
-     * @return the survey link
-     */
-    public final HashMap<String, String> getSurveyLink() {
-        return surveyLink;
-    }
+	/**
+	 * Gets the mod user.
+	 *
+	 * @return the mod user
+	 */
+	public String getModUser() {
+		return modUser;
+	}
 
- 
-    /**
-     * Sets the survey link.
-     *
-     * @param surveyLink the survey link
-     */
-    public final void setSurveyLink(
-            HashMap<String, String> surveyLink) {
-        this.surveyLink = surveyLink;
-    }
-    
-   
+	/**
+	 * Sets the mod user.
+	 *
+	 * @param modUser
+	 *            the new mod user
+	 */
+	public void setModUser(String modUser) {
+		this.modUser = modUser;
+	}
 
-    /**
-     * Gets the identifier.
-     *
-     * @return the identifier
-     */
-    public String getIdentifier ()
-    {
-        return identifier;
-    }
+	/**
+	 * Gets the inode.
+	 *
+	 * @return the inode
+	 */
+	public String getInode() {
+		return inode;
+	}
 
-    /**
-     * Sets the identifier.
-     *
-     * @param identifier the new identifier
-     */
-    public void setIdentifier (String identifier)
-    {
-        this.identifier = identifier;
-    }
+	/**
+	 * Sets the inode.
+	 *
+	 * @param inode
+	 *            the new inode
+	 */
+	public void setInode(String inode) {
+		this.inode = inode;
+	}
+
+	/**
+	 * Gets the survey link.
+	 *
+	 * @return the survey link
+	 */
+	public final HashMap<String, String> getSurveyLink() {
+		return surveyLink;
+	}
+
+	/**
+	 * Sets the survey link.
+	 *
+	 * @param surveyLink
+	 *            the survey link
+	 */
+	public final void setSurveyLink(HashMap<String, String> surveyLink) {
+		this.surveyLink = surveyLink;
+	}
+
+	/**
+	 * Gets the identifier.
+	 *
+	 * @return the identifier
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Sets the identifier.
+	 *
+	 * @param identifier
+	 *            the new identifier
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
 }
