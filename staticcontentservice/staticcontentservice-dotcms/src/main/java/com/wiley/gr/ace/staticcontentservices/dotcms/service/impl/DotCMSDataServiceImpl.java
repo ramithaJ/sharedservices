@@ -22,202 +22,210 @@ import com.wiley.gr.ace.staticcontentservices.model.external.EmailCatalogDotcmsR
  */
 public class DotCMSDataServiceImpl implements DotCMSDataService {
 
-	/** The content url. */
-	@Value("${dotcms-rest.url}")
-	private String contentUrl;
+    /** The content url. */
+    @Value("${dotcms-rest.url}")
+    private String contentUrl;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
-	 * #getUiMessageCatalog(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
-			String locale) throws Exception {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
+     * #getUiMessageCatalog(java.lang.String, java.lang.String)
+     */
+    @Override
+    public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
+            String locale) throws Exception {
 
-		String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
-				
-		if (!StringUtils.isEmpty(pageName)) {
-            dotQuery = dotQuery + " +UiMessageCatalog.pageName:*" + pageName + "*";
+        String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+
+        if (!StringUtils.isEmpty(pageName)) {
+            dotQuery = dotQuery + " +UiMessageCatalog.pageName:*" + pageName
+                    + "*";
         }
-		
-		if (!StringUtils.isEmpty(locale)) {
+
+        if (!StringUtils.isEmpty(locale)) {
             dotQuery = dotQuery + " +UiMessageCatalog.locale:*" + locale + "*";
         }
-		
-		dotQuery = dotQuery+"* +languageId:1* +deleted:false +working:true";
-		String dotUrl = contentUrl + dotQuery;
-		String dotUrlEncoded = UriEncoder.encode(dotUrl);
-		ResponseEntity<String> responseEntity = new RestTemplate()
-				.getForEntity(new URI(dotUrlEncoded), String.class);
-		String uiMessageCatalogDotcmsResponseJsonString = responseEntity
-				.getBody();
 
-		return new ObjectMapper().readValue(
-				uiMessageCatalogDotcmsResponseJsonString,
-				UIMessageCatalogDotcmsResponse.class);
-	}
+        dotQuery = dotQuery + "* +languageId:1* +deleted:false +working:true";
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String uiMessageCatalogDotcmsResponseJsonString = responseEntity
+                .getBody();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
-	 * #getConfirmationCatalog(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public ConfirmationCatalogDotcmsResponse getConfirmationCatalog(
-			String contentTitle, String moduleName, String locale)
-			throws Exception {
+        return new ObjectMapper().readValue(
+                uiMessageCatalogDotcmsResponseJsonString,
+                UIMessageCatalogDotcmsResponse.class);
+    }
 
-		String dotQuery = "+structureName:ConfirmationTexts +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
-		
-		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +ConfirmationTexts.contentTitle:*" + contentTitle + "*";
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
+     * #getConfirmationCatalog(java.lang.String, java.lang.String)
+     */
+    @Override
+    public ConfirmationCatalogDotcmsResponse getConfirmationCatalog(
+            String contentTitle, String moduleName, String locale)
+            throws Exception {
+
+        String dotQuery = "+structureName:ConfirmationTexts +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+
+        if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +ConfirmationTexts.contentTitle:*"
+                    + contentTitle + "*";
         }
-		
-		if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +ConfirmationTexts.moduleName:*" + moduleName + "*";
+
+        if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +ConfirmationTexts.moduleName:*"
+                    + moduleName + "*";
         }
-		
-		if (!StringUtils.isEmpty(contentTitle)) {
+
+        if (!StringUtils.isEmpty(contentTitle)) {
+
             dotQuery = dotQuery + " +ConfirmationTexts.locale:*" + locale + "*";
-        }        
-		       
-		dotQuery = dotQuery+ "* +languageId:1* +deleted:false +working:true";
-		String dotUrl = contentUrl + dotQuery;
-		String dotUrlEncoded = UriEncoder.encode(dotUrl);
-		ResponseEntity<String> responseEntity = new RestTemplate()
-				.getForEntity(new URI(dotUrlEncoded), String.class);
-		String confirmationCatalogDotcmsResponseJsonString = responseEntity
-				.getBody();
-
-		return new ObjectMapper().readValue(
-				confirmationCatalogDotcmsResponseJsonString,
-				ConfirmationCatalogDotcmsResponse.class);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
-	 * #getStatusCatalog(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public StatusCatalogDotcmsResponse getStatusCatalog(String contentTitle,
-			String statusMessageType, String locale) throws Exception {
-
-		String dotQuery = "+structureName:StatusMessages +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
-	     
-		if (!StringUtils.isEmpty(contentTitle)) {
-	            dotQuery = dotQuery + " +StatusMessages.contentTitle:*" + contentTitle + "*";
-	        }
-
-		if (!StringUtils.isEmpty(statusMessageType)) {
-            dotQuery = dotQuery + " +StatusMessages.locale:" + statusMessageType + "*";
         }
-        
-		if (!StringUtils.isEmpty(locale)) {
-            dotQuery = dotQuery + " +StatusMessages.statusMessageType:*" + locale + "*";
+
+        dotQuery = dotQuery + "* +languageId:1* +deleted:false +working:true";
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String confirmationCatalogDotcmsResponseJsonString = responseEntity
+                .getBody();
+        System.err.println(responseEntity.getBody());
+        return new ObjectMapper().readValue(
+                confirmationCatalogDotcmsResponseJsonString,
+                ConfirmationCatalogDotcmsResponse.class);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
+     * #getStatusCatalog(java.lang.String, java.lang.String)
+     */
+    @Override
+    public StatusCatalogDotcmsResponse getStatusCatalog(String contentTitle,
+            String statusMessageType, String locale) throws Exception {
+
+        String dotQuery = "+structureName:StatusMessages +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+
+        if (!StringUtils.isEmpty(contentTitle)) {
+            dotQuery = dotQuery + " +StatusMessages.contentTitle:*"
+                    + contentTitle + "*";
         }
-        		        
-	    dotQuery = dotQuery + "* +languageId:1* +deleted:false +working:true";
-	
-	    String dotUrl = contentUrl + dotQuery;
-		String dotUrlEncoded = UriEncoder.encode(dotUrl);
-		ResponseEntity<String> responseEntity = new RestTemplate()
-				.getForEntity(new URI(dotUrlEncoded), String.class);
-		String statusCatalogDotcmsResponseJsonString = responseEntity.getBody();
 
-		return new ObjectMapper().readValue(
-				statusCatalogDotcmsResponseJsonString,
-				StatusCatalogDotcmsResponse.class);
-	}
+        if (!StringUtils.isEmpty(statusMessageType)) {
+            dotQuery = dotQuery + " +StatusMessages.statusMessageType:"
+                    + statusMessageType + "*";
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
-	 * #getEmailCatalog(java.lang.String)
-	 */
-	@Override
-	public EmailCatalogDotcmsResponse getEmailCatalog(String contentTitle)
-			throws Exception {
+        if (!StringUtils.isEmpty(locale)) {
+            dotQuery = dotQuery + " +StatusMessages.locale:*" + locale + "*";
+        }
 
-		String dotQuery = "+structureName:EmailSurveyLink +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
-		if (!StringUtils.isEmpty(contentTitle)) {
+        dotQuery = dotQuery + "* +languageId:1* +deleted:false +working:true";
+
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String statusCatalogDotcmsResponseJsonString = responseEntity.getBody();
+
+        return new ObjectMapper().readValue(
+                statusCatalogDotcmsResponseJsonString,
+                StatusCatalogDotcmsResponse.class);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
+     * #getEmailCatalog(java.lang.String)
+     */
+    @Override
+    public EmailCatalogDotcmsResponse getEmailCatalog(String contentTitle)
+            throws Exception {
+
+        String dotQuery = "+structureName:EmailSurveyLink +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+        if (!StringUtils.isEmpty(contentTitle)) {
             dotQuery = dotQuery + " +EmailSurveyLink.contentTitle:*"
                     + contentTitle + "*";
         }
-      
-		dotQuery = dotQuery	+ "* +languageId:1* +deleted:false +working:true";
-		String dotUrl = contentUrl + dotQuery;
-		String dotUrlEncoded = UriEncoder.encode(dotUrl);
-		ResponseEntity<String> responseEntity = new RestTemplate()
-				.getForEntity(new URI(dotUrlEncoded), String.class);
-		String emailCatalogDotcmsResponseJsonString = responseEntity.getBody();
 
-		return new ObjectMapper().readValue(
-				emailCatalogDotcmsResponseJsonString,
-				EmailCatalogDotcmsResponse.class);
-	}
+        dotQuery = dotQuery + "* +languageId:1* +deleted:false +working:true";
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String emailCatalogDotcmsResponseJsonString = responseEntity.getBody();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
-	 * #getStaticCatalog(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public StaticCatalogDotcmsResponse getStaticCatalog(
-			String contentUniqueKey, String pageName, String locale)
-			throws Exception {
+        return new ObjectMapper().readValue(
+                emailCatalogDotcmsResponseJsonString,
+                EmailCatalogDotcmsResponse.class);
+    }
 
-		String dotQuery = "+structureName:StaticAdBlock +(conhost:23836f6d-6a92-446f-b147-29e4724eedd8 conhost:SYSTEM_HOST)";
-		
-		if (!StringUtils.isEmpty(contentUniqueKey)) {
-			dotQuery = dotQuery + " +StaticAdBlock.contentUniqueKey:*"
-					+ contentUniqueKey + "*";
-		}
-
-		if (!StringUtils.isEmpty(pageName)) {
-			dotQuery = dotQuery + " +StaticAdBlock.pageName:*" + pageName + "*";
-		}
-
-		if (!StringUtils.isEmpty(locale)) {
-			dotQuery = dotQuery + " +StaticAdBlock.locale:*" + locale + "*";
-		}
-
-		dotQuery = dotQuery + " +languageId:1* +deleted:false +working:true";
-
-		String dotUrl = contentUrl + dotQuery;
-		String dotUrlEncoded = UriEncoder.encode(dotUrl);
-		ResponseEntity<String> responseEntity = new RestTemplate()
-				.getForEntity(new URI(dotUrlEncoded), String.class);
-		String staticCatalogDotcmsResponseJsonString = responseEntity.getBody();
-
-		return new ObjectMapper().readValue(
-				staticCatalogDotcmsResponseJsonString,
-				StaticCatalogDotcmsResponse.class);
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService#getRelatedServerApplicationMessage(java.lang.String)
-	 */
-	@Override
-    public ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
-            String contentIdentifier)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
+     * #getStaticCatalog(java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    public StaticCatalogDotcmsResponse getStaticCatalog(
+            String contentUniqueKey, String pageName, String locale)
             throws Exception {
 
-        String dotQuery = "+structureName:ServerApplicationMessages +Parent_UiMessageCatalog-Child_ServerApplicationMessages:" + contentIdentifier; 
-        
-        
+        String dotQuery = "+structureName:StaticAdBlock +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+
+        if (!StringUtils.isEmpty(contentUniqueKey)) {
+            dotQuery = dotQuery + " +StaticAdBlock.contentUniqueKey:*"
+                    + contentUniqueKey + "*";
+        }
+
+        if (!StringUtils.isEmpty(pageName)) {
+            dotQuery = dotQuery + " +StaticAdBlock.pageName:*" + pageName + "*";
+        }
+
+        if (!StringUtils.isEmpty(locale)) {
+            dotQuery = dotQuery + " +StaticAdBlock.locale:*" + locale + "*";
+        }
+
+        dotQuery = dotQuery + " +languageId:1* +deleted:false +working:true";
+
+        String dotUrl = contentUrl + dotQuery;
+        String dotUrlEncoded = UriEncoder.encode(dotUrl);
+        ResponseEntity<String> responseEntity = new RestTemplate()
+                .getForEntity(new URI(dotUrlEncoded), String.class);
+        String staticCatalogDotcmsResponseJsonString = responseEntity.getBody();
+
+        return new ObjectMapper().readValue(
+                staticCatalogDotcmsResponseJsonString,
+                StaticCatalogDotcmsResponse.class);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.staticcontentservices.dotcms.service.DotCMSDataService
+     * #getRelatedServerApplicationMessage(java.lang.String)
+     */
+    @Override
+    public ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
+            String contentIdentifier) throws Exception {
+
+        String dotQuery = "+structureName:ServerApplicationMessages +Parent_UiMessageCatalog-Child_ServerApplicationMessages:"
+                + contentIdentifier;
+
         String dotUrl = contentUrl + dotQuery;
         String dotUrlEncoded = UriEncoder.encode(dotUrl);
         ResponseEntity<String> responseEntity = new RestTemplate()
@@ -228,5 +236,5 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
                 staticCatalogDotcmsResponseJsonString,
                 ServerCatalogDotcmsResponse.class);
     }
-	
+
 }
