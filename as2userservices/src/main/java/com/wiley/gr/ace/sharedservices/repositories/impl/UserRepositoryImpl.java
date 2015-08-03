@@ -1015,6 +1015,15 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 for (MyInterest myInterest : myInterestList) {
                     if (null != myInterest.getId() && null != myInterest.getStatus()) {
                         if (myInterest.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
+
+                            //Delete MyInterests
+                            Set<UserAreaOfInterest> userAreaOfInterestSet = authorProfile.getUserAreaOfInterests();
+                            for (UserAreaOfInterest userAreaOfInterestDelete : userAreaOfInterestSet) {
+                                session.delete(userAreaOfInterestDelete);
+                            }
+                            session.flush();
+                            session.clear();
+
                             AreaOfInterest areaOfInterest = (AreaOfInterest) getEntity(CommonConstants.AREA_OF_INTEREST_CD, myInterest.getId(), AreaOfInterest.class, false);
                             if (null == areaOfInterest) {
                                 throw new SharedServiceException(CommonConstants.ERROR_CODE_111, myInterest.getId() + "-" + userServiceError111);
@@ -1082,65 +1091,79 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         if (funder.getStatus().equalsIgnoreCase(CommonConstants.EDIT)) {
 
                             //Delete Funders
-                            Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
-                            for (UserFunders userFunders : userFundersSet) {
-                                ResearchFunders researchFunders = userFunders.getResearchFunders();
-                                if (null != researchFunders) {
-                                    session.delete(researchFunders);
-                                }
+                            Criteria fundCriteria = session.createCriteria(ResearchFunders.class, "researchFunders");
+                            fundCriteria.createAlias("researchFunders.userFunderses", "userFunderses");
+                            fundCriteria.add(Restrictions.eq("researchFunders.resfunderid", Integer.parseInt(funder.getId())));
+                            ResearchFunders researchFund = (ResearchFunders) fundCriteria.uniqueResult();
+                            if (null != researchFund) {
+                                Set<UserFunders> userFundersSet = researchFund.getUserFunderses();
+                                for (UserFunders userFunders : userFundersSet) {
+                                    ResearchFunders researchFunders = userFunders.getResearchFunders();
+                                    if (null != researchFunders) {
+                                        session.delete(researchFunders);
+                                    }
 
-                                Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
-                                for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
-                                    session.delete(userFunderGrants);
+                                    Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                                    for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                                        session.delete(userFunderGrants);
+                                    }
+                                    session.delete(userFunders);
                                 }
-                                session.delete(userFunders);
                             }
+
                             session.flush();
                             session.clear();
+
                             List<GrantNumber> grantList = funder.getGrantNumbers();
-                            //addFunder(session, user, authorProfile, funders, Set < UserFunders > grants);
-                       /* ResearchFunders researchFunders = (ResearchFunders) getEntity("resfunderid", funder.getId(), ResearchFunders.class, true);
-                        if (null == researchFunders) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_116, funder.getId() + "-" + userServiceError116);
-                        } else {
-                            UserFunders userFunders = new UserFunders();
-                            userFunders.setResearchFunders(researchFunders);
-                            userFunders.setUserProfile(authorProfile);
-                            userFunders.setCreatedDate(UserServiceHelper.getDate());
-                            userFunders.setUpdatedDate(UserServiceHelper.getDate());
-                            userFunders.setUsersByCreatedBy(user);
-                            userFunders.setUsersByUpdatedBy(user);
-                            userFunders.setUserProfile(authorProfile);
-                            session.save(userFunders);
-                            for (GrantNumber grantNumber : grantList) {
-                                session.flush();
-                                session.clear();
-                                Criteria grantCriteria = session.createCriteria(UserFunderGrants.class, "userFunderGrants");
-                                grantCriteria.createAlias("userFunderGrants.userFunders", "funder");
-                                grantCriteria.add(Restrictions.eq("funder.userFunderId", funder.getId()));
-                                grantCriteria.add(Restrictions.eq("funder.grantNum", grantNumber.getGrantNumber()));
-                                UserFunderGrants userFunderGrants = (UserFunderGrants) grantCriteria.uniqueResult();
-                                if (null != userFunderGrants) {
+                            ResearchFunders researchFunders = new ResearchFunders();
+                            researchFunders.setFunderName(funder.getResearchFunderName());
+                            researchFunders.setFunderDoi(funder.getResearchFunderDoi());
+                            researchFunders.setCreatedDate(UserServiceHelper.getDate());
+                            researchFunders.setUpdatedDate(UserServiceHelper.getDate());
+                            session.save(researchFunders);
+                            if (null != researchFunders) {
+                                UserFunders userFunders = new UserFunders();
+                                userFunders.setResearchFunders(researchFunders);
+                                userFunders.setUserProfile(authorProfile);
+                                userFunders.setCreatedDate(UserServiceHelper.getDate());
+                                userFunders.setUpdatedDate(UserServiceHelper.getDate());
+                                userFunders.setUsersByCreatedBy(user);
+                                userFunders.setUsersByUpdatedBy(user);
+                                userFunders.setUserProfile(authorProfile);
+                                session.save(userFunders);
+
+                                for (GrantNumber grantNumber : grantList) {
+                                    UserFunderGrants userFunderGrants = new UserFunderGrants();
+                                    userFunderGrants = UserServiceHelper.setUserFunderGrants(userFunderGrants, grantNumber.getGrantNumber());
+                                    userFunderGrants.setCreatedDate(UserServiceHelper.getDate());
+                                    userFunderGrants.setUsersByCreatedBy(user);
                                     userFunderGrants.setUsersByUpdatedBy(user);
                                     userFunderGrants.setUserFunders(userFunders);
                                     session.save(userFunderGrants);
+                                    //researchFunders.getUserFunderGrantses().add(userFunderGrants);
                                 }
                             }
-                        }*/
+
 
                         } else if (funder.getStatus().equalsIgnoreCase(CommonConstants.DELETE)) {
-                            Set<UserFunders> userFundersSet = authorProfile.getUserFunderses();
-                            for (UserFunders userFunders : userFundersSet) {
-                                ResearchFunders researchFunders = userFunders.getResearchFunders();
-                                if (null != researchFunders) {
-                                    session.delete(researchFunders);
-                                }
+                            Criteria fundCriteria = session.createCriteria(ResearchFunders.class, "researchFunders");
+                            fundCriteria.createAlias("researchFunders.userFunderses", "userFunderses");
+                            fundCriteria.add(Restrictions.eq("researchFunders.resfunderid", Integer.parseInt(funder.getId())));
+                            ResearchFunders researchFund = (ResearchFunders) fundCriteria.uniqueResult();
+                            if (null != researchFund) {
+                                Set<UserFunders> userFundersSet = researchFund.getUserFunderses();
+                                for (UserFunders userFunders : userFundersSet) {
+                                    ResearchFunders researchFunders = userFunders.getResearchFunders();
+                                    if (null != researchFunders) {
+                                        session.delete(researchFunders);
+                                    }
 
-                                Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
-                                for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
-                                    session.delete(userFunderGrants);
+                                    Set<UserFunderGrants> userFunderGrantsSet = userFunders.getUserFunderGrantses();
+                                    for (UserFunderGrants userFunderGrants : userFunderGrantsSet) {
+                                        session.delete(userFunderGrants);
+                                    }
+                                    session.delete(userFunders);
                                 }
-                                session.delete(userFunders);
                             }
                         } else if (funder.getStatus().equalsIgnoreCase(CommonConstants.ADD)) {
 
