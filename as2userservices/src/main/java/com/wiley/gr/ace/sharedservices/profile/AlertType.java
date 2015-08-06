@@ -20,17 +20,8 @@ import java.io.Serializable;
  */
 public class AlertType implements Serializable {
 
-    private String id;
     private char onScreen;
     private char email;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public char getOnScreen() {
         return onScreen;
@@ -51,7 +42,6 @@ public class AlertType implements Serializable {
     @Override
     public String toString() {
         return "AlertType{" +
-                "id='" + id + '\'' +
                 ", onScreen=" + onScreen +
                 ", email=" + email +
                 '}';

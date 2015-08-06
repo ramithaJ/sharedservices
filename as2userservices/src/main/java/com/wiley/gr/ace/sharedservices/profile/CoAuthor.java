@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class CoAuthor implements Serializable {
 
     private String id;
-    private String titleCd;
+    private String title;
     private String firstName;
     private String lastName;
     private String email;
@@ -32,12 +32,12 @@ public class CoAuthor implements Serializable {
     private String departmentName;
     private String status;
 
-    public String getTitleCd() {
-        return titleCd;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTitleCd(String titleCd) {
-        this.titleCd = titleCd;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getFirstName() {
@@ -124,7 +124,7 @@ public class CoAuthor implements Serializable {
     public String toString() {
         return "CoAuthor{" +
                 "id='" + id + '\'' +
-                ", titleCd='" + titleCd + '\'' +
+                ", title='" + title + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

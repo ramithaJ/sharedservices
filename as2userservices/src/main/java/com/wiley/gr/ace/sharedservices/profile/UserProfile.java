@@ -33,6 +33,7 @@ public class UserProfile implements Serializable {
     private String recieveEmailsFlag;
     private String ecid;
     private String password;
+    private String profilePic;
     private char profileVisibleFlag;
     private String primaryEmailAddress;
     private String recoveryEmailAddress;
@@ -236,5 +237,44 @@ public class UserProfile implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    @Override
+    public String toString() {
+        return "UserProfile{" +
+                "titleCd='" + titleCd + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", suffixCd='" + suffixCd + '\'' +
+                ", alternativeName='" + alternativeName + '\'' +
+                ", industryCd='" + industryCd + '\'' +
+                ", jobCategoryCd='" + jobCategoryCd + '\'' +
+                ", orcidId='" + orcidId + '\'' +
+                ", recieveEmailsFlag='" + recieveEmailsFlag + '\'' +
+                ", ecid='" + ecid + '\'' +
+                ", password='" + password + '\'' +
+                ", profilePic='" + profilePic + '\'' +
+                ", profileVisibleFlag=" + profileVisibleFlag +
+                ", primaryEmailAddress='" + primaryEmailAddress + '\'' +
+                ", recoveryEmailAddress='" + recoveryEmailAddress + '\'' +
+                ", profileVisible=" + profileVisible +
+                ", addresses=" + addresses +
+                ", affiliations=" + affiliations +
+                ", funders=" + funders +
+                ", societies=" + societies +
+                ", myInterests=" + myInterests +
+                ", coAuthors=" + coAuthors +
+                ", journals=" + journals +
+                ", alerts=" + alerts +
+                '}';
     }
 }

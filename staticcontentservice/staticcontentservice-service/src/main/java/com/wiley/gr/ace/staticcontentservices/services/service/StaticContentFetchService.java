@@ -20,7 +20,7 @@ public interface StaticContentFetchService {
 	 * @return the ui message content
 	 * @throws Exception the exception
 	 */
-	UIMessageContent getUiMessageContent(String pageName, String locale)
+	UIMessageContent getUiMessageContent(String pageName, String locale, String fetchServerMessages)
 			throws Exception;
     
     /**

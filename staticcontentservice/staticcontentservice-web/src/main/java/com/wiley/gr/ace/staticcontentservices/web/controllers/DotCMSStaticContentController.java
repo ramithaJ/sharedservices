@@ -42,13 +42,14 @@ public class DotCMSStaticContentController {
 	@RequestMapping(value = "/uimessage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getUiMessageCatalog(
 	        @RequestParam("pageName") String pageName,
-			@RequestParam("locale") String locale) {
+			@RequestParam("locale") String locale,
+			@RequestParam("fetchServerMessages") String fetchServerMessages) {
 		UIMessageContent uiMessageContent = null;
 		Service service = new Service();
 
 		try {
 			uiMessageContent = staticContentFetchService.getUiMessageContent(
-					pageName, locale);
+					pageName, locale, fetchServerMessages);
 			if (!StringUtils.isEmpty(uiMessageContent)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(uiMessageContent);
@@ -97,6 +98,7 @@ public class DotCMSStaticContentController {
 				service.setStatus("FAILURE");
 			}
 		} catch (Exception e) {
+		    e.printStackTrace();
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
 			err.setCode(209);

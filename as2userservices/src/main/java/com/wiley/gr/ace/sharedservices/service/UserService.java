@@ -23,7 +23,7 @@ public interface UserService {
 
     String createUserService(UserServiceRequest userServiceRequest) throws SharedServiceException;
 
-    void updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    UserServiceRequest updateUserProfileService(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
     void deleteUserService(String userId) throws SharedServiceException;
 

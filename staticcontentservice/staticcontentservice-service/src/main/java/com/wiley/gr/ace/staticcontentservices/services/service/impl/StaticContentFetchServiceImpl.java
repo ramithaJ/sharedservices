@@ -41,8 +41,8 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 * java.lang.String)
 	 */
 	@Override
-	public UIMessageContent getUiMessageContent(String pageName, String locale)
-			throws Exception {
+	public UIMessageContent getUiMessageContent(String pageName, String locale,
+			String fetchServerMessages) throws Exception {
 
 		UIMessageCatalogDotcmsResponse uiMessageCatalogDotcmsResponse = dotCMSDataService
 				.getUiMessageCatalog(pageName, locale);
@@ -60,19 +60,23 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 			uiMessageContent.setUiLabelMessages(uiMessageCatalog
 					.getUiLabelMessages());
 
-			ServerCatalogDotcmsResponse serverCatalogDotcmsResponse = dotCMSDataService
-					.getRelatedServerApplicationMessage(uiMessageCatalog
-							.getIdentifier());
-			ServerCatalog serverCatalog = serverCatalogDotcmsResponse
-					.getContentlets().get(0);
-			if (!StringUtils.isEmpty(serverCatalog)) {
-				ServerContent serverContent = new ServerContent();
-				serverContent.setContentTitle(serverCatalog.getContentTitle());
-				serverContent.setLocale(serverCatalog.getLocale());
-				serverContent.setModuleName(serverCatalog.getModuleName());
-				serverContent.setServerMessages(serverCatalog
-						.getServerMessages());
-				uiMessageContent.setServerContent(serverContent);
+			if ("true".equalsIgnoreCase(fetchServerMessages)) {
+
+				ServerCatalogDotcmsResponse serverCatalogDotcmsResponse = dotCMSDataService
+						.getRelatedServerApplicationMessage(uiMessageCatalog
+								.getIdentifier());
+				ServerCatalog serverCatalog = serverCatalogDotcmsResponse
+						.getContentlets().get(0);
+				if (!StringUtils.isEmpty(serverCatalog)) {
+					ServerContent serverContent = new ServerContent();
+					serverContent.setContentTitle(serverCatalog
+							.getContentTitle());
+					serverContent.setLocale(serverCatalog.getLocale());
+					serverContent.setModuleName(serverCatalog.getModuleName());
+					serverContent.setServerMessages(serverCatalog
+							.getServerMessages());
+					uiMessageContent.setServerContent(serverContent);
+				}
 			}
 
 		}
@@ -97,6 +101,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 		ConfirmationContent confirmationContent = null;
 		if (!StringUtils.isEmpty(confirmationCatalogDotcmsResponse)) {
 			confirmationContent = new ConfirmationContent();
+
 			ConfirmationCatalog confirmationCatalog = confirmationCatalogDotcmsResponse
 					.getContentlets().get(0);
 			confirmationContent.setConfirmationMessages(confirmationCatalog
@@ -123,11 +128,14 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 
 		StatusCatalogDotcmsResponse statusCatalogDotcmsResponse = dotCMSDataService
 				.getStatusCatalog(contentTitle, statusMessageType, locale);
+
 		StatusContent statusContent = null;
 		if (!StringUtils.isEmpty(statusCatalogDotcmsResponse)) {
 			statusContent = new StatusContent();
+
 			StatusCatalog statusCatalog = statusCatalogDotcmsResponse
 					.getContentlets().get(0);
+
 			statusContent.setStatusMessages(statusCatalog.getStatusMessages());
 			statusContent.setContentTitle(contentTitle);
 			statusContent.setLocale(locale);
@@ -146,18 +154,16 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 */
 	@Override
 	public EmailContent getEmailContent(String contentTitle) throws Exception {
-
 		EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
 				.getEmailCatalog(contentTitle);
+
 		EmailContent emailContent = null;
 		if (!StringUtils.isEmpty(emailCatalogDotcmsResponse)) {
 			emailContent = new EmailContent();
 			EmailCatalog emailCatalog = emailCatalogDotcmsResponse
 					.getContentlets().get(0);
 			emailContent.setContentTitle(emailCatalog.getContentTitle());
-
-			emailContent.setContentTitle(contentTitle);
-
+			emailContent.setSurveyLink(emailCatalog.getSurveyLink());
 		}
 
 		return emailContent;

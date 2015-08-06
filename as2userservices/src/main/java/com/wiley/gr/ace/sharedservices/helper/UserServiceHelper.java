@@ -22,9 +22,9 @@ import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import org.apache.commons.lang.StringUtils;
 
+import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * @author kkalyan
@@ -38,7 +38,7 @@ public class UserServiceHelper {
      * @param user               Entity Object
      * @return user entity object
      */
-    public static Users setUserProfileInformation(UserServiceRequest userServiceRequest, Users user) {
+    public static Users setUserInformation(UserServiceRequest userServiceRequest, Users user) {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) {
             user.setFirstName(userServiceRequest.getUserProfile().getFirstName());
         }
@@ -57,37 +57,55 @@ public class UserServiceHelper {
      * Setter method for Author Profile data.
      *
      * @param userServiceRequest Request JSON Information
-     * @param authorProfile      Entity Object
-     * @return authorProfile entity
+     * @param userProfile        Entity Object
+     * @return userProfile entity
      */
-    public static UserProfile setAuthorProfile(UserServiceRequest userServiceRequest, UserProfile authorProfile) {
+    public static UserProfile setUserProfileInformation(UserServiceRequest userServiceRequest, UserProfile userProfile) {
 
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd())) {
-            authorProfile.setTitleCd(userServiceRequest.getUserProfile().getTitleCd());
+            userProfile.setTitleCd(userServiceRequest.getUserProfile().getTitleCd());
         }
+        //TODO: Profile Pic
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName())) {
-            authorProfile.setMiddleName(userServiceRequest.getUserProfile().getMiddleName());
+            userProfile.setMiddleName(userServiceRequest.getUserProfile().getMiddleName());
         }
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getSuffixCd())) {
-            authorProfile.setSuffixCd(userServiceRequest.getUserProfile().getSuffixCd());
+            userProfile.setSuffixCd(userServiceRequest.getUserProfile().getSuffixCd());
         }
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getAlternativeName())) {
-            authorProfile.setAlternativeName(userServiceRequest.getUserProfile().getAlternativeName());
+            userProfile.setAlternativeName(userServiceRequest.getUserProfile().getAlternativeName());
         }
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getIndustryCd())) {
-            authorProfile.setIndustryCd(userServiceRequest.getUserProfile().getIndustryCd());
+            userProfile.setIndustryCd(userServiceRequest.getUserProfile().getIndustryCd());
         }
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getJobCategoryCd())) {
-            authorProfile.setJobCategoryCd(userServiceRequest.getUserProfile().getJobCategoryCd());
+            userProfile.setJobCategoryCd(userServiceRequest.getUserProfile().getJobCategoryCd());
         }
         if (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') {
-            authorProfile.setProfileVisibleFlg(userServiceRequest.getUserProfile().getProfileVisibleFlag());
+            userProfile.setProfileVisibleFlg(userServiceRequest.getUserProfile().getProfileVisibleFlag());
         }
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
-            authorProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
+            userProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
         }
-        authorProfile.setUpdatedDate(getDate());
-        return authorProfile;
+
+        userProfile.setUpdatedDate(getDate());
+        return userProfile;
+    }
+
+
+    /**
+     * Method to validate the request against user profile.
+     *
+     * @param userServiceRequest
+     * @return
+     */
+    public static boolean isUserProfileDataExists(UserServiceRequest userServiceRequest) {
+        boolean isDataExists = false;
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getSuffixCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getAlternativeName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getIndustryCd()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getJobCategoryCd()) || (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') ||
+                !StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
+            isDataExists = true;
+        }
+        return isDataExists;
     }
 
     /**
@@ -112,6 +130,7 @@ public class UserServiceHelper {
 
     /**
      * Setter method to UserAlerts data.
+     *
      * @param alerts
      * @param alertType
      * @return
@@ -167,8 +186,14 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(addressProfile.getInstitutionCd())) {
             address.setInstitutionCd(addressProfile.getInstitutionCd());
         }
+        if (!StringUtils.isEmpty(addressProfile.getInstitutionName())) {
+            address.setInstitutionName(addressProfile.getInstitutionName());
+        }
         if (!StringUtils.isEmpty(addressProfile.getDepartmentCd())) {
             address.setDepartmentCd(addressProfile.getDepartmentCd());
+        }
+        if (!StringUtils.isEmpty(addressProfile.getDepartmentName())) {
+            address.setDepartmentName(addressProfile.getDepartmentName());
         }
         if (!StringUtils.isEmpty(addressProfile.getAddress_01())) {
             address.setAddressLine1(addressProfile.getAddress_01());
@@ -206,6 +231,9 @@ public class UserServiceHelper {
      * @return affiliations entity object
      */
     public static UserAffiliations setUserAffiliations(UserAffiliations affiliations, Affiliation affiliation) {
+        if (!StringUtils.isEmpty(affiliation.getCountryCd())) {
+            affiliations.setCountryCd(affiliation.getCountryCd());
+        }
         if (!StringUtils.isEmpty(affiliation.getInstitutionCd())) {
             affiliations.setInstitutionCd(affiliation.getInstitutionCd());
         }
@@ -286,9 +314,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(myInterest.getAreaofInterestCd())) {
             areaOfInterest.setAreaOfInterestCd(myInterest.getAreaofInterestCd());
         }
-        if (!StringUtils.isEmpty(myInterest.getInterestName())) {
-            areaOfInterest.setInterestName(myInterest.getInterestName());
-        }
 
         areaOfInterest.setUpdatedDate(getDate());
         return areaOfInterest;
@@ -303,7 +328,6 @@ public class UserServiceHelper {
      */
     public static UserAreaOfInterest setUserAreaOfInterest(UserAreaOfInterest userAreaOfInterest, AreaOfInterest areaOfInterest) {
         userAreaOfInterest.setAreaOfInterest(areaOfInterest);
-
         userAreaOfInterest.setUpdatedDate(getDate());
         return userAreaOfInterest;
     }
@@ -346,9 +370,11 @@ public class UserServiceHelper {
     public static UserReferenceData setUserReference(UserReferenceData userReferenceData, UserServiceRequest userServiceRequest) {
         if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
             userReferenceData.setOrcidId(userServiceRequest.getUserProfile().getOrcidId());
-            userReferenceData.setUpdatedDate(getDate());
         }
-
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid())) {
+            userReferenceData.setEcid(userServiceRequest.getUserProfile().getEcid());
+        }
+        userReferenceData.setUpdatedDate(getDate());
         return userReferenceData;
     }
 
@@ -360,6 +386,9 @@ public class UserServiceHelper {
      * @return
      */
     public static AuthCoauthDetails setAuthCoauthDetails(AuthCoauthDetails authCoauthDetails, CoAuthor coAuthor) {
+        if (!StringUtils.isEmpty(coAuthor.getTitle())) {
+            authCoauthDetails.setCoauthTitle(coAuthor.getTitle());
+        }
         if (!StringUtils.isEmpty(coAuthor.getFirstName())) {
             authCoauthDetails.setCoauthFirstName(coAuthor.getFirstName());
         }
@@ -399,6 +428,9 @@ public class UserServiceHelper {
 
         if (authCoauthDetails.getAuthCoauthId() > 0) {
             coAuthor.setId("" + authCoauthDetails.getAuthCoauthId());
+        }
+        if (!StringUtils.isEmpty(authCoauthDetails.getCoauthTitle())) {
+            coAuthor.setTitle(authCoauthDetails.getCoauthTitle());
         }
         if (!StringUtils.isEmpty(authCoauthDetails.getCoauthFirstName())) {
             coAuthor.setFirstName(authCoauthDetails.getCoauthFirstName());
@@ -495,19 +527,26 @@ public class UserServiceHelper {
      */
     public static com.wiley.gr.ace.sharedservices.profile.UserProfile getUserProfileInfo(Users user) {
         com.wiley.gr.ace.sharedservices.profile.UserProfile userProfile = new com.wiley.gr.ace.sharedservices.profile.UserProfile();
+
+        if (!StringUtils.isEmpty(user.getFirstName())) {
+            userProfile.setFirstName(user.getFirstName());
+        }
+        if (!StringUtils.isEmpty(user.getLastName())) {
+            userProfile.setLastName(user.getLastName());
+        }
+        if (!StringUtils.isEmpty(user.getPrimaryEmailAddr())) {
+            userProfile.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
+        }
+
         if (null != user.getUserProfileByUserId()) {
             if (!StringUtils.isEmpty(user.getUserProfileByUserId().getTitleCd())) {
                 userProfile.setTitleCd(user.getUserProfileByUserId().getTitleCd());
             }
-            if (!StringUtils.isEmpty(user.getFirstName())) {
-                userProfile.setFirstName(user.getFirstName());
-            }
+
             if (!StringUtils.isEmpty(user.getUserProfileByUserId().getMiddleName())) {
                 userProfile.setMiddleName(user.getUserProfileByUserId().getMiddleName());
             }
-            if (!StringUtils.isEmpty(user.getLastName())) {
-                userProfile.setLastName(user.getLastName());
-            }
+
             if (!StringUtils.isEmpty(user.getUserProfileByUserId().getSuffixCd())) {
                 userProfile.setSuffixCd(user.getUserProfileByUserId().getSuffixCd());
             }
@@ -521,21 +560,22 @@ public class UserServiceHelper {
                 userProfile.setJobCategoryCd(user.getUserProfileByUserId().getJobCategoryCd());
             }
 
-            UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
-            if (!StringUtils.isEmpty(userReferenceData.getOrcidId())) {
-                userProfile.setOrcidId(userReferenceData.getOrcidId());
-            }
             if (!StringUtils.isEmpty(user.getUserProfileByUserId().getOptInPromoteFlg())) {
                 userProfile.setRecieveEmailsFlag(user.getUserProfileByUserId().getOptInPromoteFlg());
             }
             if (user.getUserProfileByUserId().getProfileVisibleFlg() != null) {
                 userProfile.setProfileVisibleFlag(user.getUserProfileByUserId().getProfileVisibleFlg());
             }
-            if (!StringUtils.isEmpty(user.getPrimaryEmailAddr())) {
-                userProfile.setPrimaryEmailAddress(user.getPrimaryEmailAddr());
-            }
+
             if (null != user.getUserProfileByUserId().getUserSecondaryEmailAddr() && !StringUtils.isEmpty(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr())) {
                 userProfile.setRecoveryEmailAddress(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            }
+        }
+
+        UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
+        if (null != userReferenceData) {
+            if (!StringUtils.isEmpty(userReferenceData.getOrcidId())) {
+                userProfile.setOrcidId(userReferenceData.getOrcidId());
             }
             if (!StringUtils.isEmpty(userReferenceData.getEcid())) {
                 userProfile.setEcid(userReferenceData.getEcid());
@@ -603,21 +643,7 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(addressEntity.getFax())) {
             address.setFaxNo(addressEntity.getFax());
         }
-        if (!StringUtils.isEmpty(addressEntity.getInstitutionCd())) {
-            address.setInstitutionCd(addressEntity.getInstitutionCd());
-        }
-        if (!StringUtils.isEmpty(addressEntity.getInstitutionName())) {
-            address.setInstitutionName(addressEntity.getInstitutionName());
-        }
-        if (!StringUtils.isEmpty(addressEntity.getDepartmentCd())) {
-            address.setDepartmentCd(addressEntity.getDepartmentCd());
-        }
-        if (!StringUtils.isEmpty(addressEntity.getDepartmentName())) {
-            address.setDepartmentName(addressEntity.getDepartmentName());
-        }
-        if (!StringUtils.isEmpty(addressEntity.getSuffixCd())) {
-            address.setSuffixCd(addressEntity.getSuffixCd());
-        }
+
         return address;
     }
 
@@ -631,6 +657,9 @@ public class UserServiceHelper {
         Affiliation affiliation = new Affiliation();
         if (null != userAffiliations.getAffiliationId() && userAffiliations.getAffiliationId() > 0) {
             affiliation.setId("" + userAffiliations.getAffiliationId());
+        }
+        if (!StringUtils.isEmpty(userAffiliations.getCountryCd())) {
+            affiliation.setCountryCd(userAffiliations.getCountryCd());
         }
         if (!StringUtils.isEmpty(userAffiliations.getInstitutionCd())) {
             affiliation.setInstitutionCd(userAffiliations.getInstitutionCd());
@@ -648,8 +677,9 @@ public class UserServiceHelper {
             affiliation.setCity(userAffiliations.getTownOrCityName());
         }
         if (!StringUtils.isEmpty(userAffiliations.getStateOrProvinceName())) {
-            affiliation.setCountryCd(userAffiliations.getStateOrProvinceName());
+            affiliation.setStateCd(userAffiliations.getStateOrProvinceName());
         }
+        //TODO: Country is missing the DB
         if (null != userAffiliations.getStartDt()) {
             affiliation.setFromDate("" + userAffiliations.getStartDt());
         }
@@ -671,7 +701,7 @@ public class UserServiceHelper {
             society.setId("" + userSocietyDetails.getSocieties().getSocietyId());
         }
         if (!StringUtils.isEmpty(userSocietyDetails.getSocieties().getSocietyName())) {
-            society.setMembershipNumber(userSocietyDetails.getSocieties().getSocietyName());
+            society.setSocietyName(userSocietyDetails.getSocieties().getSocietyName());
         }
         if (!StringUtils.isEmpty(userSocietyDetails.getMembershipNo())) {
             society.setMembershipNumber(userSocietyDetails.getMembershipNo());
@@ -703,9 +733,7 @@ public class UserServiceHelper {
             myInterest.setId(areaOfInterest.getAreaOfInterestCd());
             myInterest.setAreaofInterestCd(areaOfInterest.getAreaOfInterestCd());
         }
-        if (!StringUtils.isEmpty(areaOfInterest.getInterestName())) {
-            myInterest.setInterestName(areaOfInterest.getInterestName());
-        }
+
         return myInterest;
     }
 
@@ -719,7 +747,7 @@ public class UserServiceHelper {
         PreferredJournal preferredJournal = new PreferredJournal();
         preferredJournal.setId("" + journal.getJournalId());
         preferredJournal.setJournalTitle(journal.getJouTitle());
-        //preferredJournal.setJournalId(journal.getJournalId());
+        preferredJournal.setJournalId("" + journal.getJournalId());
         return preferredJournal;
     }
 
@@ -733,7 +761,24 @@ public class UserServiceHelper {
         Alert alert = new Alert();
         alert.setId(userAlert.getAlertCd());
         alert.setAlertName(userAlert.getAlertName());
+        alert.setAlertCd(userAlert.getAlertCd());
         return alert;
     }
+
+    /**
+     * Helper method to check whether String is number or not.
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

@@ -52,6 +52,15 @@ public interface CommonConstants {
     String ERROR_CODE_104 = "1004";
     String ERROR_CODE_105 = "1005";
     String ERROR_CODE_107 = "1007";
+    String ERROR_CODE_109 = "1009";
+    String ERROR_CODE_110 = "1010";
+    String ERROR_CODE_111 = "1011";
+    String ERROR_CODE_112 = "1012";
+    String ERROR_CODE_113 = "1013";
+    String ERROR_CODE_114 = "1014";
+    String ERROR_CODE_115 = "1015";
+    String ERROR_CODE_116 = "1016";
+
     String ERROR_CODE_201 = "2001";
     String ERROR_CODE_304 = "3004";
 

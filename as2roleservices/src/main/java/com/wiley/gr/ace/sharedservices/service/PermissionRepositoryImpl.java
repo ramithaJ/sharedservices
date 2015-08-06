@@ -89,7 +89,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                     usersList.add(userRole);
                 }
                 roleList.add(new Role(role.getRoleId(), role.getRoleName(),
-                        permissionList, usersList));
+                        permissionList, usersList, role.getRoleType()));
             }
 
             // Flush the session.
@@ -230,7 +230,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
             }
 
             role = new Role(roles.getRoleId(), roles.getRoleName(), permission,
-                    usersList);
+                    usersList, roles.getRoleType());
 
             // Flush the session.
             session.flush();
@@ -296,7 +296,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
             }
 
-            role = new Role(roles.getRoleId(), roles.getRoleName(), permission);
+            role = new Role(roles.getRoleId(), roles.getRoleName(), permission,
+                    roles.getRoleType());
 
             // Flush the session.
             session.flush();
@@ -893,4 +894,51 @@ public class PermissionRepositoryImpl implements PermissionRepository {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wiley.gr.ace.sharedservices.service.PermissionRepository#
+     * deletePermissionOfRole(int, java.lang.String)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void deletePermissionOfRole(int roleId, String permissionCd)
+            throws SharedServiceException {
+
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            // Begin the transaction.
+            session.beginTransaction();
+
+            final List<RolePermissions> roles = session
+                    .createCriteria(RolePermissions.class)
+                    .add(Restrictions.eq("id.roleId", roleId))
+                    .add(Restrictions.eq("permissions.permissionCd",
+                            permissionCd)).list();
+            for (final RolePermissions rolePermission : roles) {
+                session.delete(rolePermission);
+            }
+
+            // Flush the session.
+            session.flush();
+            // Clear the session object.
+            session.clear();
+            // Commit the transaction.
+            session.getTransaction().commit();
+
+        } catch (final Exception e) {
+            // Rollback the session if any exception occurs.
+            if (null != session) {
+                session.getTransaction().rollback();
+            }
+            throw new SharedServiceException("Error :" + e.toString());
+        } finally {
+            if (null != session) {
+                // Close the session
+                session.close();
+            }
+        }
+
+    }
 }

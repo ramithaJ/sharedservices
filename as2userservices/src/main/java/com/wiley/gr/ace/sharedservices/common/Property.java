@@ -44,6 +44,30 @@ public class Property {
     @Value("${USER_SERVICE_ERROR_108}")
     public String userlookUpServiceError108;
 
+    @Value("${USER_SERVICE_ERROR_109}")
+    public String userServiceError109;
+
+    @Value("${USER_SERVICE_ERROR_110}")
+    public String userServiceError110;
+
+    @Value("${USER_SERVICE_ERROR_111}")
+    public String userServiceError111;
+
+    @Value("${USER_SERVICE_ERROR_112}")
+    public String userServiceError112;
+
+    @Value("${USER_SERVICE_ERROR_113}")
+    public String userServiceError113;
+
+    @Value("${USER_SERVICE_ERROR_114}")
+    public String userServiceError114;
+
+    @Value("${USER_SERVICE_ERROR_115}")
+    public String userServiceError115;
+
+    @Value("${USER_SERVICE_ERROR_116}")
+    public String userServiceError116;
+
     @Value("${USER_SERVICE_ERROR_301}")
     public String userSearchServiceError301;
 

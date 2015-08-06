@@ -27,7 +27,7 @@ public interface UserRepository {
 
     void deleteUserRepository(String userId) throws SharedServiceException;
 
-    void updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
+    UserServiceRequest updateUserRepository(UserServiceRequest userServiceRequest, String userId) throws SharedServiceException;
 
     LookupResponse userlookUpRepository(String firstName, String lastName, String emailId) throws SharedServiceException;
 

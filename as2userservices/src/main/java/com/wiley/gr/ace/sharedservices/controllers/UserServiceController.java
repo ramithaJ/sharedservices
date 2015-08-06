@@ -94,46 +94,22 @@ public class UserServiceController extends Property {
     @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
+        Service service = new Service();
         try {
+            UserServiceRequest userServiceResponse = null;
             //Validate user id
             if (StringUtils.isEmpty(userId)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
             }
-            userService.updateUserProfileService(userServiceRequest, userId);
+            userServiceResponse = userService.updateUserProfileService(userServiceRequest, userId);
+            service.setPayload(userServiceResponse);
             LOGGER.debug("Update User Service:", userId);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in Update User Service", e);
             return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
-        return new Service();
-    }
-
-    /**
-     * Controller method for get user service.
-     *
-     * @param userId Author Services Unique id of the User
-     * @return Returns Service response Object
-     */
-    @RequestMapping(value = CommonConstants.REQUEST_PATH, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Service getUserService(@PathVariable(CommonConstants.USER_ID) String userId) {
-        Service service = new Service();
-        UserServiceRequest userServiceRequest = null;
-        try {
-            //Validate user id
-            if (StringUtils.isEmpty(userId)) {
-                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
-            }
-            LOGGER.debug("Get User Service:", userId);
-            userServiceRequest = userService.getUserProfileService(userId);
-        } catch (SharedServiceException e) {
-            LOGGER.error("Error Occurred in Get User Service", e);
-            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
-        }
-        service.setPayload(userServiceRequest);
         return service;
     }
-
 
     /**
      * Controller method for user lookup.
@@ -166,6 +142,7 @@ public class UserServiceController extends Property {
      * Controller method for search user.
      *
      * @param semail Either Primary Email (or) Secondary Email of the user
+     * @param userId User Id (or) User Primary Email Address
      * @param fn     FirstName
      * @param ln     LastName
      * @param oid    Orcid Id
@@ -173,21 +150,39 @@ public class UserServiceController extends Property {
      */
     @RequestMapping(value = CommonConstants.USER_SERVICE_REQUEST_PATH, method = RequestMethod.GET)
     @ResponseBody
-    public Service searchUserService(@RequestParam(value = "semail", required = false) String semail, @RequestParam(value = "fn", required = false) String fn, @RequestParam(value = "ln", required = false) String ln, @RequestParam(value = "oid", required = false) String oid) {
+    public Service searchUserService(@RequestParam(value = CommonConstants.USER_ID, required = false) String userId, @RequestParam(value = "semail", required = false) String semail, @RequestParam(value = "fn", required = false) String fn, @RequestParam(value = "ln", required = false) String ln, @RequestParam(value = "oid", required = false) String oid) {
         Service service = new Service();
-        try {
 
-            //Check whether atleast one input parameter is
-            if (StringUtils.isEmpty(semail) && StringUtils.isEmpty(fn) && StringUtils.isEmpty(ln) && StringUtils.isEmpty(oid)) {
-                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_304, userSearchServiceError304, CommonConstants.ERROR);
+
+        if (!StringUtils.isEmpty(userId)) {
+            UserServiceRequest userServiceRequest = null;
+            try {
+                //Validate user id
+                if (StringUtils.isEmpty(userId)) {
+                    return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
+                }
+                LOGGER.debug("Get User Service:", userId);
+                userServiceRequest = userService.getUserProfileService(userId);
+            } catch (SharedServiceException e) {
+                LOGGER.error("Error Occurred in Get User Service", e);
+                return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
             }
+            service.setPayload(userServiceRequest);
+        } else {
+            try {
 
-            //Search user with the input parameters.
-            service = userService.searchUserService(semail, fn, ln, oid);
+                //Check whether atleast one input parameter is
+                if (StringUtils.isEmpty(semail) && StringUtils.isEmpty(fn) && StringUtils.isEmpty(ln) && StringUtils.isEmpty(oid)) {
+                    return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_304, userSearchServiceError304, CommonConstants.ERROR);
+                }
 
-        } catch (SharedServiceException e) {
-            LOGGER.error("Error Occurred in Search User Service", e);
-            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+                //Search user with the input parameters.
+                service = userService.searchUserService(semail, fn, ln, oid);
+
+            } catch (SharedServiceException e) {
+                LOGGER.error("Error Occurred in Search User Service", e);
+                return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+            }
         }
 
         return service;

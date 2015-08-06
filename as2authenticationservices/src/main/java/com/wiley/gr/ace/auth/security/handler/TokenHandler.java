@@ -114,59 +114,6 @@ public class TokenHandler {
 	}
 
 	/**
-	 * Method to create token.
-	 *
-	 * @param tokenRequest
-	 * @return String
-	 * @throws JoseException
-	 */
-	public String createToken(final TokenRequest tokenRequest)
-			throws JoseException {
-		TokenHandler.LOGGER.info("Creating Token...");
-		RsaJsonWebKey rsaJsonWebKey = null;
-
-		final String tokenKey = tokenRequest.getAppKey().toLowerCase()
-				+ CommonConstant.DOT;
-		final String tokenSubject = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.SUBJECT);
-		final String tokenAudience = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.AUDIENCE);
-		final String tokenExpirationTime = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.EXPIRATION_TIME);
-		final String claimKey = this.applicationProperties.getProperty(tokenKey
-				+ CommonConstant.CLAIM_KEY);
-		final String minutesBefore = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.TIME_BEFORE);
-
-		if (null == TokenHandler.keyMap) {
-			TokenHandler.LOGGER.info("Checking Key Map...");
-			TokenHandler.keyMap = new HashMap<>();
-		}
-
-		if (null != TokenHandler.keyMap
-				&& !TokenHandler.keyMap.containsKey(tokenRequest.getAppKey())) {
-			TokenHandler.LOGGER.info("Generating Private and Public keys...");
-			final String tokenKeyId = this.applicationProperties
-					.getProperty(tokenKey + CommonConstant.KEY_ID);
-			rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
-			rsaJsonWebKey.setKeyId(tokenKeyId);
-			TokenHandler.keyMap.put(tokenRequest.getAppKey(), rsaJsonWebKey);
-		}
-
-		final JwtClaims claims = this.createClaims(tokenRequest.getAppKey(),
-				tokenRequest.getRoles(), tokenSubject, tokenAudience,
-				tokenExpirationTime, claimKey, tokenRequest.getUserId(),
-				minutesBefore);
-		final String token = this
-				.jwsSignature(claims,
-						TokenHandler.keyMap.get(tokenRequest.getAppKey())
-								.getPrivateKey(),
-						AlgorithmIdentifiers.RSA_USING_SHA256);
-
-		return token;
-	}
-
-	/**
 	 * Method to extract values from the token.
 	 *
 	 * @param token
@@ -228,7 +175,7 @@ public class TokenHandler {
 		request.setUserId(userId);
 		request.setAppKey(issuer);
 		request.setRoles(this.authenticationService.getRoles(userId));
-		final String refreshToken = this.createToken(request);
+		final String refreshToken = this.hmacTokenGenerator(request);
 		TokenHandler.LOGGER.debug("Refreshed Token..." + refreshToken);
 
 		return refreshToken;
@@ -279,13 +226,6 @@ public class TokenHandler {
 		final String minutesBefore = this.applicationProperties
 				.getProperty(tokenKey + CommonConstant.TIME_BEFORE);
 
-		/*
-		 * String tokenSubject = "AS Token"; String tokenAudience = ""; String
-		 * tokenExpirationTime = ""; String claimKey = "userId"; String
-		 * minutesBefore = "";
-		 */
-		// here instead of generating complex value we can use any Sting value
-		// like AuthorServices.
 		String sharedSecretKey = this.sharedSecretKey(tokenRequest.getUserId());
 		System.err.println(sharedSecretKey);
 		JWSSigner signer = new MACSigner(sharedSecretKey);
@@ -307,6 +247,17 @@ public class TokenHandler {
 		return signedJWT.serialize();
 	}
 
+	/**
+	 * @param appKey
+	 * @param roles
+	 * @param tokenSubject
+	 * @param tokenAudience
+	 * @param tokenExpirationTime
+	 * @param claimKey
+	 * @param userId
+	 * @param minutesBefore
+	 * @return
+	 */
 	public JWTClaimsSet hmacClaimsSet(String appKey, List<String> roles,
 			String tokenSubject, String tokenAudience,
 			String tokenExpirationTime, String claimKey, String userId,
@@ -321,9 +272,18 @@ public class TokenHandler {
 		jwtClaimsSet
 				.setNotBeforeTime(new Date(new Date().getTime() + 60 * 1000));
 		jwtClaimsSet.setClaim(claimKey, userId);// "userId", "8011047"
+		
 		return jwtClaimsSet;
 	}
 
+	/**
+	 * @param hmacToken
+	 * @return
+	 * @throws ParseException
+	 * @throws JOSEException
+	 * @throws JoseException
+	 * @throws IOException
+	 */
 	public boolean hmacTokenVerifies(String hmacToken) throws ParseException,
 			JOSEException, JoseException, IOException {
 
@@ -331,36 +291,29 @@ public class TokenHandler {
 		jws.setCompactSerialization(hmacToken);
 		final String userId = this.getTokenNodeValue(hmacToken,
 				CommonConstant.USER_ID, jws);
-		System.err.println("userId " + userId);
-		String SharedSeceretKey = this.sharedSecretKey(userId);
+		System.err.println("userId------ " + userId);
+		String sharedSecretKey = this.sharedSecretKey(userId);
 		SignedJWT signedJWT = SignedJWT.parse(hmacToken);
-		JWSVerifier verifier = new MACVerifier(SharedSeceretKey);
-		return signedJWT.verify(verifier);
-	}
-
-	/*public static void main(String[] args) throws JoseException, IOException {
-		TokenHandler a = new TokenHandler();
-		try {
-			System.err
-					.println(a
-							.hmacTokenVerifies("eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQUFTIiwic3ViIjoiREFBUyBUb2tlbiIsImF1ZCI6W10sIm5iZiI6MTQzNzQ3NTQ1OSwiZXhwIjoxNDM3NDc1NDU5LCJ1c2VyaWQiOiJSYW1pdGhhLnN1QGdtYWlsLmNvbSJ9.8pD-bX46_IxDTGRgHwM9FJ87PoFCZuzIJt3kQ2ItyfY"));
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (JOSEException e) {
-			e.printStackTrace();
+		JWSVerifier verifier = new MACVerifier(sharedSecretKey);
+		System.err.println("verifier-------"+ signedJWT.verify(verifier));
+		if(signedJWT.verify(verifier)) {
+			return true;
 		}
+		return false;
 	}
-*/
-	private String sharedSecretKey(final String userId) {
 
+	/**
+	 * @param userId
+	 * @return
+	 */
+	private String sharedSecretKey(final String userId) {
 		
-		 SecureRandom random = new SecureRandom(); 
+		 /*SecureRandom random = new SecureRandom(); 
 		 byte[] sharedSecret = new byte[32]; 
 		 random.nextBytes(sharedSecret); 
 		 String salt = sharedSecret.toString();
-		 System.err.println(salt);
-		//String salt = "[B@5c5f0b5f";
+		 System.err.println(salt);*/
+		String salt = "[B@5c5f0b5f";
 		String sharedSecretKey = null;
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -379,13 +332,13 @@ public class TokenHandler {
 		return sharedSecretKey;
 	}
 
-	
-	 public static void main(String[] args) { 
-		 TokenHandler a = new TokenHandler(); 
-		 a.sharedSecretKey("Ramitha.su@gmail.com"); 
-	}
-	 
-
+	/**
+	 * @param token
+	 * @return
+	 * @throws JoseException
+	 * @throws InvalidJwtException
+	 * @throws IOException
+	 */
 	public String hmacRefreshToken(final String token) throws JoseException,
 			InvalidJwtException, IOException {
 
@@ -394,27 +347,17 @@ public class TokenHandler {
 		jws.setCompactSerialization(token);
 		final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
 				jws);
-		System.err.println("issuer " + issuer);
+		System.err.println("issuer----------- " + issuer);
 		final String userId = this.getTokenNodeValue(token,
 				CommonConstant.USER_ID, jws);
-		System.err.println("userId " + userId);
+		System.err.println("userId----------- " + userId);
 		final TokenRequest request = new TokenRequest();
 		request.setUserId(userId);
 		request.setAppKey(issuer);
 		request.setRoles(this.authenticationService.getRoles(userId));
-		final String refreshToken = this.createToken(request);
+		final String refreshToken = this.hmacTokenGenerator(request);
 		TokenHandler.LOGGER.debug("Refreshed Token..." + refreshToken);
 
 		return refreshToken;
 	}
-
-	/*
-	 * public static void main(String[] args) {
-	 * 
-	 * TokenHandler a = new TokenHandler(); try { a.hmacRefreshToken(
-	 * "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQUFTIiwic3ViIjoiREFBUyBUb2tlbiIsImF1ZCI6W10sIm5iZiI6MTQzNzQ1ODUyMSwiZXhwIjoxNDM3NDU4NTIxLCJ1c2VyaWQiOiJSYW1pdGhhLnN1QGdtYWlsLmNvbSJ9.r_dZFaCr-R8nAChGzkZk_4C9kQazShFyC9qmIJY-b6c"
-	 * ); } catch (JoseException | InvalidJwtException | IOException e) {
-	 * e.printStackTrace(); } }
-	 */
-
 }

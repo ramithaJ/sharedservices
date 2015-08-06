@@ -203,8 +203,8 @@ public class TokenController {
 				responseHeaders.set(TokenController.AUTH_HEADER_NAME,
 						refreshToken);
 				responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-				return new ResponseEntity<>(new Response(
-						this.messageProp.getProperty(this.tokenMessage008)),
+				return new ResponseEntity<>(new Response(CommonConstant.STATUS_CODE,
+						this.messageProp.getProperty(this.tokenMessage008),CommonConstant.SUCCESS_STATUS),
 						responseHeaders, HttpStatus.CREATED);
 			} else {
 				return new ResponseEntity<>(new Response(
@@ -215,7 +215,7 @@ public class TokenController {
 			TokenController.LOGGER.error(
 					"Exception Occurred during refresh token...", e);
 			return new ResponseEntity<>(new Response(
-					this.messageProp.getProperty(this.tokenMessage009)), null,
+					CommonConstant.FAIL_CODE,this.messageProp.getProperty(this.tokenMessage009),CommonConstant.FAILURE_STATUS), null,
 					HttpStatus.CONFLICT);
 		}
 	}

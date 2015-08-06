@@ -24,8 +24,6 @@ public class MyInterest implements Serializable {
 
     private String areaofInterestCd;
 
-    private String interestName;
-
     private String status;
 
     public String getId() {
@@ -44,14 +42,6 @@ public class MyInterest implements Serializable {
         this.areaofInterestCd = areaofInterestCd;
     }
 
-    public String getInterestName() {
-        return interestName;
-    }
-
-    public void setInterestName(String interestName) {
-        this.interestName = interestName;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -65,7 +55,7 @@ public class MyInterest implements Serializable {
         return "MyInterest{" +
                 "id='" + id + '\'' +
                 ", areaofInterestCd='" + areaofInterestCd + '\'' +
-                ", interestName='" + interestName + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
