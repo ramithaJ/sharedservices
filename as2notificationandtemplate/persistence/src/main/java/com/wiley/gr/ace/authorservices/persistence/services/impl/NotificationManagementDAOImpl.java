@@ -460,7 +460,9 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                 String hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
                 scheduleTemplate = (ScheduleTemplate) session.createQuery(hql)
                         .setString("scheduleId", scheduleId).list().get(0);
-            } finally {
+            } catch(Exception e){
+            	e=null;
+            }finally {
                 if (!StringUtils.isEmpty(session)) {
                     session.flush();
                     session.close();

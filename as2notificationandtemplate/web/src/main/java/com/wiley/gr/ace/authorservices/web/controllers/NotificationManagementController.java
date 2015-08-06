@@ -197,7 +197,7 @@ public class NotificationManagementController {
     private int resendNotificationErrorCode;
 
     /** value from props file configured. */
-    @Value("${NotificationManagementController.sendNotification.message}")
+    @Value("${NotificationManagementController.resendNotification.message}")
     private String resendNotificationErrorMessage;
     
     /**
