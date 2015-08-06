@@ -309,7 +309,8 @@ public class NotificationManagementServiceImpl implements
 		if (!StringUtils.isEmpty(notificationEntity.getAppId()))
 			notification.setAppId(notificationEntity.getAppId());
 		if (!StringUtils.isEmpty(notificationEntity.getContent()))
-			notification.setContent(notificationEntity.getContent());
+			notification.setContent(clobStringConversion(notificationEntity
+					.getContent()));
 		if (!StringUtils.isEmpty(notificationEntity.getId()))
 			notification.setId(notificationEntity.getId());
 		if (!StringUtils
@@ -516,7 +517,7 @@ public class NotificationManagementServiceImpl implements
 			}
 			if (!StringUtils.isEmpty(from)) {
 				for (NotificationObj n : notificationList) {
-					if (!from.equalsIgnoreCase(n.getSenderId()))
+					if (!from.equalsIgnoreCase(n.getSenderEmail()))
 						notificationList.remove(n);
 				}
 
@@ -551,7 +552,6 @@ public class NotificationManagementServiceImpl implements
 				notificationList.retainAll(tempList);
 
 			}
-
 		}
 		return notificationList;
 	}
@@ -585,8 +585,7 @@ public class NotificationManagementServiceImpl implements
 		NotificationRecipientsObj notificationRecipientsObj = new NotificationRecipientsObj();
 
 		notificationObj.setAppId(applicationId);
-		notificationObj.setContent(new SerialClob(templateObj.getBody()
-				.toCharArray()));
+		notificationObj.setContent(templateObj.getBody());
 		notificationObj.setSenderEmail(notificationDetails.getFrom());
 		notificationObj.setTemplate(templateObj);
 		notificationObj.setType("email");
@@ -693,7 +692,8 @@ public class NotificationManagementServiceImpl implements
 		NotificationRecipients notificationRecipients = new NotificationRecipients();
 
 		notification.setAppId(notificationObj.getAppId());
-		notification.setContent(notificationObj.getContent());
+		notification.setContent(new SerialClob(notificationObj.getContent()
+				.toCharArray()));
 		notification.setSenderEmail(notificationObj.getSenderEmail());
 
 		Template template = new Template();

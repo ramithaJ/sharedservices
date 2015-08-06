@@ -517,6 +517,7 @@ public class NotificationManagementController {
                             offset, limit, unreadFlag);
             if (!StringUtils.isEmpty(notificationHistory)) {
                 service.setStatus("SUCCESS");
+                System.err.println(notificationHistory);
                 service.setPayload(notificationHistory);
             } else {
                 final ErrorPOJO error = new ErrorPOJO();
