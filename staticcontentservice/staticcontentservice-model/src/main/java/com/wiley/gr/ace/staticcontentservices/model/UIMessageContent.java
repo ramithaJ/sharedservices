@@ -28,6 +28,16 @@ public class UIMessageContent {
 	/** The server content. */
 	private ServerContent serverContent;
 	
+	private String uniqueKey;
+	
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+	
 	/**
 	 * Gets the page name.
 	 *

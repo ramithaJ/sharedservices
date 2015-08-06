@@ -56,6 +56,8 @@ public class UIMessageCatalog {
 	/** The   dotname. */
 	private String __DOTNAME__;
 
+	private String uniqueKey;
+	
 	/** The mod date. */
 	private String modDate;
 
@@ -173,6 +175,16 @@ public class UIMessageCatalog {
 		this.stInode = stInode;
 	}
 
+	 public String getUniqueKey ()
+	    {
+	        return uniqueKey;
+	    }
+
+	    public void setUniqueKey (String uniqueKey)
+	    {
+	        this.uniqueKey = uniqueKey;
+	    }
+	
 	/**
 	 * Gets the last review.
 	 *

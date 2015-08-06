@@ -34,11 +34,21 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
      * #getUiMessageCatalog(java.lang.String, java.lang.String)
      */
     @Override
-    public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
+    public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String contentTitle, String uniqueKey, String pageName,
             String locale) throws Exception {
 
         String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 
+        if (!StringUtils.isEmpty(pageName)) {
+            dotQuery = dotQuery + " +UiMessageCatalog.contentTitle:*" + contentTitle
+                    + "*";
+        }
+        
+        if (!StringUtils.isEmpty(pageName)) {
+            dotQuery = dotQuery + " +UiMessageCatalog.uniqueKey:*" + uniqueKey
+                    + "*";
+        }        
+        
         if (!StringUtils.isEmpty(pageName)) {
             dotQuery = dotQuery + " +UiMessageCatalog.pageName:*" + pageName
                     + "*";

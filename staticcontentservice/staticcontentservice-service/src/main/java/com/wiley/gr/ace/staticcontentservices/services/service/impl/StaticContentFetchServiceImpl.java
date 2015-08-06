@@ -41,11 +41,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 * java.lang.String)
 	 */
 	@Override
-	public UIMessageContent getUiMessageContent(String pageName, String locale,
+	public UIMessageContent getUiMessageContent(String contentTitle, String uniqueKey, String pageName, String locale,
 			String fetchServerMessages) throws Exception {
 
 		UIMessageCatalogDotcmsResponse uiMessageCatalogDotcmsResponse = dotCMSDataService
-				.getUiMessageCatalog(pageName, locale);
+				.getUiMessageCatalog(contentTitle, uniqueKey, pageName, locale);
 		UIMessageContent uiMessageContent = null;
 		if (!StringUtils.isEmpty(uiMessageCatalogDotcmsResponse)) {
 			uiMessageContent = new UIMessageContent();
@@ -57,6 +57,8 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 					.getInlineHelpOption2());
 			uiMessageContent.setLocale(locale);
 			uiMessageContent.setPageName(pageName);
+			uiMessageCatalog.setContentTitle(contentTitle);
+			uiMessageCatalog.setUniqueKey(uniqueKey);
 			uiMessageContent.setUiLabelMessages(uiMessageCatalog
 					.getUiLabelMessages());
 
@@ -135,7 +137,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 
 			StatusCatalog statusCatalog = statusCatalogDotcmsResponse
 					.getContentlets().get(0);
-
+			statusContent.setActionLables(statusCatalog.getActionLables());
 			statusContent.setStatusMessages(statusCatalog.getStatusMessages());
 			statusContent.setContentTitle(contentTitle);
 			statusContent.setLocale(locale);

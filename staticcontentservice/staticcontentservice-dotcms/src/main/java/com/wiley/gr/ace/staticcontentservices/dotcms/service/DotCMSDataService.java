@@ -23,7 +23,7 @@ public interface DotCMSDataService {
      * @throws Exception
      *             the exception
      */
-    UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
+    UIMessageCatalogDotcmsResponse getUiMessageCatalog(String contentTitle, String uniqueKey, String pageName,
             String locale) throws Exception;
 
     /**

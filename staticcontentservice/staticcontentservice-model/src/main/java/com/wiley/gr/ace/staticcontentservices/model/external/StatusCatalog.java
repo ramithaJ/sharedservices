@@ -55,6 +55,8 @@ public class StatusCatalog {
 
     /** The status message type. */
     private String statusMessageType;
+    
+    private HashMap<String, String> actionLabels;
 
     /** The   dotname. */
     private String __DOTNAME__;
@@ -221,6 +223,8 @@ public class StatusCatalog {
         this.folder = folder;
     }
 
+   
+    
     /**
      * Gets the status message type.
      *
@@ -401,5 +405,14 @@ public class StatusCatalog {
         this.statusMessages = statusMessages;
     }
 
+    public HashMap<String,String> getActionLables ()
+    {
+        return actionLabels;
+    }
 
+   
+    public void setActionLabels (HashMap<String, String> actionLabels)
+    {
+        this.actionLabels = actionLabels;
+    }
 }
