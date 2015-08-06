@@ -526,7 +526,7 @@ public class NotificationManagementServiceImpl implements
 				for (NotificationObj n : notificationList) {
 					notificationRecipients = getNotificationRecipientsVO(notificationManagementDAO
 							.getNotificationRecipients(n.getId()));
-					if (!to.equalsIgnoreCase(notificationRecipients.getUserId()))
+					if (!to.equalsIgnoreCase(notificationRecipients.getEmail()))
 						notificationList.remove(n);
 				}
 			}
