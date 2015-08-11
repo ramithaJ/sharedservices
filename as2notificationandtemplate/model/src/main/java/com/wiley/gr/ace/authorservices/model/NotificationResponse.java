@@ -11,9 +11,12 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.model;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class NotificationResponse.
  * 
@@ -22,69 +25,59 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class NotificationResponse {
 
-    /** The notification id. */
-   private String notificationId;
+	/** The notification id. */
+	private String notificationId;
 
-    /**
-     * Gets the notification id.
-     *
-     * @return the notification id
-     */
-    public final String getNotificationId() {
-        return notificationId;
-    }
+	/** The template id. */
+	private String templateId;
 
-    /**
-     * Sets the notification id.
-     *
-     * @param notificationId
-     *            the new notification id
-     */
-    public final void setNotificationId(final String notificationId) {
-        this.notificationId = notificationId;
-    }
+	/** The sent to. */
+	private ArrayList<String> sentToList;
 
-    /**
-     * Gets the template id.
-     *
-     * @return the template id
-     */
-    public final String getTemplateId() {
-        return templateId;
-    }
+	/** The sent cc list. */
+	private ArrayList<String> sentCCList;
 
-    /**
-     * Sets the template id.
-     *
-     * @param templateId
-     *            the new template id
-     */
-    public final void setTemplateID(final String templateId) {
-        this.templateId = templateId;
-    }
+	/** The sent bcc list. */
+	private ArrayList<String> sentBCCList;
 
-    /**
-     * Gets the sent to.
-     *
-     * @return the sent to
-     */
-    public final String getSentTo() {
-        return sentTo;
-    }
+	public final String getNotificationId() {
+		return notificationId;
+	}
 
-    /**
-     * Sets the sent to.
-     *
-     * @param sentTo
-     *            the new sent to
-     */
-    public final void setSentTo(final String sentTo) {
-        this.sentTo = sentTo;
-    }
+	public final void setNotificationId(final String notificationId) {
+		this.notificationId = notificationId;
+	}
 
-    /** The template id. */
-   private String templateId;
+	public final String getTemplateId() {
+		return templateId;
+	}
 
-    /** The sent to. */
-   private String sentTo;
+	public final void setTemplateId(final String templateId) {
+		this.templateId = templateId;
+	}
+
+	public final ArrayList<String> getSentToList() {
+		return sentToList;
+	}
+
+	public final void setSentToList(final ArrayList<String> sentToList) {
+		this.sentToList = sentToList;
+	}
+
+	public final ArrayList<String> getSentCCList() {
+		return sentCCList;
+	}
+
+	public final void setSentCCList(final ArrayList<String> sentCCList) {
+		this.sentCCList = sentCCList;
+	}
+
+	public final ArrayList<String> getSentBCCList() {
+		return sentBCCList;
+	}
+
+	public final void setSentBCCList(final ArrayList<String> sentBCCList) {
+		this.sentBCCList = sentBCCList;
+	}
+
 }

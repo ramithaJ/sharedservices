@@ -33,6 +33,9 @@ public class NotificationRecipientsObj {
 
     /** The email. */
     private String email;
+    
+    /** The recipient type. */
+    private String recipientType;
 
     /**
      * Gets the notification id.
@@ -109,5 +112,23 @@ public class NotificationRecipientsObj {
     public final void setEmail(final String email) {
         this.email = email;
     }
+
+	/**
+	 * Gets the recipient type.
+	 *
+	 * @return the recipient type
+	 */
+	public final String getRecipientType() {
+		return recipientType;
+	}
+
+	/**
+	 * Sets the recipient type.
+	 *
+	 * @param recipientType the new recipient type
+	 */
+	public final void setRecipientType(final String recipientType) {
+		this.recipientType = recipientType;
+	}
 
 }

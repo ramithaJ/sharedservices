@@ -11,6 +11,8 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.model;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -49,8 +51,8 @@ public class NotificationObj {
 	/** The unread. */
 	private Character unread;
 
-	/** The notification recipients. */
-	private NotificationRecipientsObj notificationRecipients;
+	/** The notification recipients objs. */
+	private ArrayList<NotificationRecipientsObj> notificationRecipientsObjs;
 
 	/**
 	 * Gets the id.
@@ -223,23 +225,13 @@ public class NotificationObj {
 		this.unread = unread;
 	}
 
-	/**
-	 * Gets the notification recipients.
-	 *
-	 * @return the notification recipients
-	 */
-	public final NotificationRecipientsObj getNotificationRecipients() {
-		return notificationRecipients;
+	public final ArrayList<NotificationRecipientsObj> getNotificationRecipientsObjs() {
+		return notificationRecipientsObjs;
 	}
 
-	/**
-	 * Sets the notification recipients.
-	 *
-	 * @param notificationRecipients
-	 *            the new notification recipients
-	 */
-	public final void setNotificationRecipients(
-			final NotificationRecipientsObj notificationRecipients) {
-		this.notificationRecipients = notificationRecipients;
+	public final void setNotificationRecipientsObjs(
+			final ArrayList<NotificationRecipientsObj> notificationRecipientsObjs) {
+		this.notificationRecipientsObjs = notificationRecipientsObjs;
 	}
+
 }

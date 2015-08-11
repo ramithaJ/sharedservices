@@ -11,12 +11,15 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.email.service.impl;
 
+import java.util.ArrayList;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.email.service.MailSenderService;
 
@@ -27,36 +30,43 @@ import com.wiley.gr.ace.authorservices.email.service.MailSenderService;
  */
 public class MailSenderServiceImpl implements MailSenderService {
 
-    /** The mail sender. */
-    @Autowired
-    private JavaMailSenderImpl mailSender;
+	/** The mail sender. */
+	@Autowired
+	private JavaMailSenderImpl mailSender;
 
-    /**
-     * Send email.
-     *
-     * @param from
-     *            the from
-     * @param to
-     *            the to
-     * @param subject
-     *            the subject
-     * @param body
-     *            the body
-     * @throws MessagingException
-     *             the messaging exception
-     */
-    @Override
-    public final void sendEmail(final String from, final String to,
-            final String subject, final String body) throws MessagingException {
+	/**
+	 * Send email.
+	 *
+	 * @param from
+	 *            the from
+	 * @param to
+	 *            the to
+	 * @param subject
+	 *            the subject
+	 * @param body
+	 *            the body
+	 * @throws MessagingException
+	 *             the messaging exception
+	 */
+	@Override
+	public final void sendEmail(final String from, final ArrayList<String> to,
+			final ArrayList<String> cc, final ArrayList<String> bcc,
+			final String subject, final String body) throws MessagingException {
 
-        MimeMessage message = mailSender.createMimeMessage();
+		MimeMessage message = mailSender.createMimeMessage();
 
-        MimeMessageHelper mailMsg = new MimeMessageHelper(message);
-        mailMsg.setFrom(from);
-        mailMsg.setTo(to);
-        mailMsg.setSubject(subject);
-        mailMsg.setText(body, true);
-        mailSender.send(message);
-    }
+		MimeMessageHelper mailMsg = new MimeMessageHelper(message);
+		mailMsg.setFrom(from);
+		mailMsg.setTo(to.toArray(new String[to.size()]));
+		if (!StringUtils.isEmpty(cc)) {
+			mailMsg.setCc(cc.toArray(new String[to.size()]));
+		}
+		if (!StringUtils.isEmpty(bcc)) {
+			mailMsg.setBcc(bcc.toArray(new String[to.size()]));
+		}
+		mailMsg.setSubject(subject);
+		mailMsg.setText(body, true);
+		mailSender.send(message);
+	}
 
 }
