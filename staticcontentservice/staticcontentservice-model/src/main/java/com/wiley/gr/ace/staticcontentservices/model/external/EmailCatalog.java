@@ -7,7 +7,27 @@ import java.util.HashMap;
  */
 public class EmailCatalog {
 
-	/** The host. */
+    private String mainItemAction;
+
+    private String menuType;
+	
+    public final String getMainItemAction() {
+        return mainItemAction;
+    }
+
+    public final void setMainItemAction(String mainItemAction) {
+        this.mainItemAction = mainItemAction;
+    }
+
+    public final String getMenuType() {
+        return menuType;
+    }
+
+    public final void setMenuType(String menuType) {
+        this.menuType = menuType;
+    }
+
+    /** The host. */
 	private String host;
 
 	/** The sort order. */
@@ -39,7 +59,7 @@ public class EmailCatalog {
 
 	/** The mod user. */
 	private String modUser;
-
+	
 	/** The inode. */
 	private String inode;
 

@@ -34,17 +34,12 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
      * #getUiMessageCatalog(java.lang.String, java.lang.String)
      */
     @Override
-    public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String contentTitle, String uniqueKey, String pageName,
+    public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String uniqueKey, String pageName,
             String locale) throws Exception {
 
         String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
-
-        if (!StringUtils.isEmpty(pageName)) {
-            dotQuery = dotQuery + " +UiMessageCatalog.contentTitle:*" + contentTitle
-                    + "*";
-        }
         
-        if (!StringUtils.isEmpty(pageName)) {
+        if (!StringUtils.isEmpty(uniqueKey)) {
             dotQuery = dotQuery + " +UiMessageCatalog.uniqueKey:*" + uniqueKey
                     + "*";
         }        
@@ -80,22 +75,18 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
      */
     @Override
     public ConfirmationCatalogDotcmsResponse getConfirmationCatalog(
-            String contentTitle, String moduleName, String locale)
+            String moduleName, String locale)
             throws Exception {
 
         String dotQuery = "+structureName:ConfirmationTexts +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 
-        if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +ConfirmationTexts.contentTitle:*"
-                    + contentTitle + "*";
-        }
-
-        if (!StringUtils.isEmpty(contentTitle)) {
+       
+        if (!StringUtils.isEmpty(moduleName)) {
             dotQuery = dotQuery + " +ConfirmationTexts.moduleName:*"
                     + moduleName + "*";
         }
 
-        if (!StringUtils.isEmpty(contentTitle)) {
+        if (!StringUtils.isEmpty(locale)) {
 
             dotQuery = dotQuery + " +ConfirmationTexts.locale:*" + locale + "*";
         }
@@ -121,15 +112,9 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
      * #getStatusCatalog(java.lang.String, java.lang.String)
      */
     @Override
-    public StatusCatalogDotcmsResponse getStatusCatalog(String contentTitle,
-            String statusMessageType, String locale) throws Exception {
+    public StatusCatalogDotcmsResponse getStatusCatalog(String statusMessageType, String locale) throws Exception {
 
         String dotQuery = "+structureName:StatusMessages +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
-
-        if (!StringUtils.isEmpty(contentTitle)) {
-            dotQuery = dotQuery + " +StatusMessages.contentTitle:*"
-                    + contentTitle + "*";
-        }
 
         if (!StringUtils.isEmpty(statusMessageType)) {
             dotQuery = dotQuery + " +StatusMessages.statusMessageType:"
@@ -190,25 +175,27 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
      * #getStaticCatalog(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public StaticCatalogDotcmsResponse getStaticCatalog(
-            String contentUniqueKey, String pageName, String locale)
-            throws Exception {
-
+    public StaticCatalogDotcmsResponse getStaticCatalog(String pageName, String contentUniqueKey, String locale) throws Exception {
+        
+        
+        System.out.println("You were first here !!!!");
         String dotQuery = "+structureName:StaticAdBlock +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
+
+        if (!StringUtils.isEmpty(pageName)) {
+            dotQuery = dotQuery + " +StaticAdBlock.pageName:*"
+                    + contentUniqueKey + "*";
+        }
 
         if (!StringUtils.isEmpty(contentUniqueKey)) {
             dotQuery = dotQuery + " +StaticAdBlock.contentUniqueKey:*"
                     + contentUniqueKey + "*";
         }
-
-        if (!StringUtils.isEmpty(pageName)) {
-            dotQuery = dotQuery + " +StaticAdBlock.pageName:*" + pageName + "*";
-        }
-
+        
         if (!StringUtils.isEmpty(locale)) {
-            dotQuery = dotQuery + " +StaticAdBlock.locale:*" + locale + "*";
+            dotQuery = dotQuery + " +StaticAdBlock.locale:*"
+                    + contentUniqueKey + "*";
         }
-
+        
         dotQuery = dotQuery + " +languageId:1* +deleted:false +working:true";
 
         String dotUrl = contentUrl + dotQuery;

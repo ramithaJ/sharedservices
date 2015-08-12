@@ -41,7 +41,6 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/uimessage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getUiMessageCatalog(
-	        @RequestParam("contentTitle") String contentTitle,
 	        @RequestParam("uniqueKey") String uniqueKey,
 	        @RequestParam("pageName") String pageName,
 			@RequestParam("locale") String locale,
@@ -50,7 +49,7 @@ public class DotCMSStaticContentController {
 		Service service = new Service();
 
 		try {
-			uiMessageContent = staticContentFetchService.getUiMessageContent(contentTitle, uniqueKey, pageName, locale, fetchServerMessages);
+			uiMessageContent = staticContentFetchService.getUiMessageContent(uniqueKey, pageName, locale, fetchServerMessages);
 			if (!StringUtils.isEmpty(uiMessageContent)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(uiMessageContent);
@@ -82,7 +81,6 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/confirmation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getConfirmationCatalog(
-	        @RequestParam("contentTitle") String contentTitle,
 			@RequestParam("moduleName") String moduleName,
 			@RequestParam("locale") String locale) {
 		ConfirmationContent confirmationContent = null;
@@ -90,7 +88,7 @@ public class DotCMSStaticContentController {
 
 		try {
 			confirmationContent = staticContentFetchService
-					.getConfirmationMessageContent(contentTitle, moduleName,
+					.getConfirmationMessageContent(moduleName,
 							locale);
 			if (!StringUtils.isEmpty(confirmationContent)) {
 				service.setStatus("SUCCESS");
@@ -123,7 +121,6 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getStatusContent(
-	        @RequestParam("contentTitle") String contentTitle,
 			@RequestParam("statusMessageType") String statusMessageType,
 			@RequestParam("locale") String locale) {
 		StatusContent statusContent = null;
@@ -131,7 +128,7 @@ public class DotCMSStaticContentController {
 
 		try {
 			statusContent = staticContentFetchService.getStatusContent(
-					contentTitle, statusMessageType, locale);
+					statusMessageType, locale);
 			if (!StringUtils.isEmpty(statusContent)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(statusContent);
@@ -163,9 +160,10 @@ public class DotCMSStaticContentController {
 		Service service = new Service();
 
 		try {
-			emailContent = staticContentFetchService
+		    emailContent = staticContentFetchService
 					.getEmailContent(contentTitle);
-			if (!StringUtils.isEmpty(emailContent)) {
+			
+		    if (!StringUtils.isEmpty(emailContent)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(emailContent);
 			} else {
@@ -195,15 +193,14 @@ public class DotCMSStaticContentController {
 	 */
 	@RequestMapping(value = "/static", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getStaticContent(
+	        @RequestParam("pageName") String pageName,	        
 			@RequestParam("contentUniqueKey") String contentUniqueKey,
-			@RequestParam("pageName") String pageName,
 			@RequestParam("locale") String locale) {
 		StaticContent staticContent = null;
 		Service service = new Service();
 
 		try {
-			staticContent = staticContentFetchService.getStaticContent(
-					contentUniqueKey, pageName, locale);
+			staticContent = staticContentFetchService.getStaticContent(pageName, contentUniqueKey, locale);
 			if (!StringUtils.isEmpty(staticContent)) {
 				service.setStatus("SUCCESS");
 				service.setPayload(staticContent);
