@@ -183,7 +183,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
 
         if (!StringUtils.isEmpty(pageName)) {
             dotQuery = dotQuery + " +StaticAdBlock.pageName:*"
-                    + contentUniqueKey + "*";
+                    + pageName + "*";
         }
 
         if (!StringUtils.isEmpty(contentUniqueKey)) {
@@ -193,7 +193,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
         
         if (!StringUtils.isEmpty(locale)) {
             dotQuery = dotQuery + " +StaticAdBlock.locale:*"
-                    + contentUniqueKey + "*";
+                    + locale + "*";
         }
         
         dotQuery = dotQuery + " +languageId:1* +deleted:false +working:true";
