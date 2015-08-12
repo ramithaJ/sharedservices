@@ -1,20 +1,15 @@
 package com.wiley.gr.ace.discount.services.service;
 
-import java.util.Map;
-
-import com.wiely.gr.ace.discount.service.model.Discount;
-import com.wiely.gr.ace.discount.service.model.InstituteList;
-import com.wiely.gr.ace.discount.service.model.SocietyList;
-import com.wiles.gr.ace.discount.exception.ASException;
+import com.wiely.gr.ace.discount.service.model.GetMaxDiscountRequest;
+import com.wiely.gr.ace.discount.service.model.Service;
+import com.wiles.gr.ace.discount.exception.SharedServiceException;
 
 
 public interface DiscountService {
-	
-	public Discount getHighestDiscount(Map<String, String> requestObject) throws ASException;
-	public SocietyList getDiscSocietiesForJournal(String journalCode)throws ASException;
-	public InstituteList getDiscForInstitutions(String institutionCode)throws ASException;;
-	public InstituteList getInstitutionList()throws ASException;;
-	public void upload()throws ASException;;
-	public void download()throws ASException;
 
+    Service getDiscount(GetMaxDiscountRequest getMaxDiscountRequest) throws SharedServiceException;
+
+    Service getDiscountSocietiesForJournal(String journalAcronym) throws SharedServiceException;
+
+    Service getInstitutionsDiscount(String institution) throws SharedServiceException;
 }

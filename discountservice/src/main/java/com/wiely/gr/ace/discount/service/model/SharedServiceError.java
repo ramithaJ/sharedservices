@@ -17,62 +17,53 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * This is the generic service VO object which is returned by every service.
- * Data from the service is wrapped into this and returned.
+ * This is the generic errorVO returned by the service.
  *
  * @author virtusa
- *	version 1.0
+ *         version 1.0
  */
 @JsonInclude(Include.NON_NULL)
-public class Service {
+public class SharedServiceError {
 
-    private String status = "SUCCESS";
+    private int code;
 
-    private Object payload;
+    private String message;
 
-    private SharedServiceError error;
-
-
-    /**
-     * @return
-     */
-    public String getStatus() {
-        return status;
+    public SharedServiceError(String code, String message) {
+        this.code = Integer.parseInt(code);
+        this.message = message;
     }
 
-    /**
-     * @param status
-     */
-    public void setStatus(String status) {
-        this.status = status;
+    public SharedServiceError() {
+
     }
 
     /**
      * @return
      */
-    public Object getPayload() {
-        return payload;
+    public int getCode() {
+        return code;
     }
 
     /**
-     * @param payload
+     * @param code
      */
-    public void setPayload(Object payload) {
-        this.payload = payload;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     /**
      * @return
      */
-    public SharedServiceError getError() {
-        return error;
+    public String getMessage() {
+        return message;
     }
 
     /**
-     * @param error
+     * @param message
      */
-    public void setError(SharedServiceError error) {
-        this.error = error;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }
