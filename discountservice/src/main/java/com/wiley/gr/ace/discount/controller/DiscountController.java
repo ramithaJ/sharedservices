@@ -14,13 +14,13 @@
 package com.wiley.gr.ace.discount.controller;
 
 
-import com.wiely.gr.ace.discount.common.CommonConstants;
-import com.wiely.gr.ace.discount.common.CommonUtil;
-import com.wiely.gr.ace.discount.common.PropertyUtils;
-import com.wiely.gr.ace.discount.service.model.GetMaxDiscountRequest;
-import com.wiely.gr.ace.discount.service.model.Service;
-import com.wiles.gr.ace.discount.exception.SharedServiceException;
-import com.wiley.gr.ace.discount.services.service.DiscountService;
+import com.wiley.gr.ace.discount.common.CommonConstants;
+import com.wiley.gr.ace.discount.common.CommonUtil;
+import com.wiley.gr.ace.discount.common.PropertyUtils;
+import com.wiley.gr.ace.discount.model.GetMaxDiscountRequest;
+import com.wiley.gr.ace.discount.model.Service;
+import com.wiley.gr.ace.discount.exception.SharedServiceException;
+import com.wiley.gr.ace.discount.service.DiscountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

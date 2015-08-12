@@ -11,7 +11,7 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiely.gr.ace.discount.common;
+package com.wiley.gr.ace.discount.common;
 
 import org.springframework.beans.factory.annotation.Value;
 

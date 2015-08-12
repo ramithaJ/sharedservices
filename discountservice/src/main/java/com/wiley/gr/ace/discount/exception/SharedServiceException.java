@@ -9,7 +9,7 @@
  * is strictly forbidden except by express prior written permission 
  * of John Wiley & Sons.
  *******************************************************************************/
-package com.wiles.gr.ace.discount.exception;
+package com.wiley.gr.ace.discount.exception;
 
 /**
  * @author virtusa

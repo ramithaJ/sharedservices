@@ -11,7 +11,7 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiely.gr.ace.discount.service.model;
+package com.wiley.gr.ace.discount.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

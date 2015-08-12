@@ -11,12 +11,12 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiely.gr.ace.discount.common;
+package com.wiley.gr.ace.discount.common;
 
-import com.wiely.gr.ace.discount.service.model.GetMaxDiscountRequest;
-import com.wiely.gr.ace.discount.service.model.Service;
-import com.wiely.gr.ace.discount.service.model.SharedServiceError;
-import com.wiles.gr.ace.discount.exception.SharedServiceException;
+import com.wiley.gr.ace.discount.model.GetMaxDiscountRequest;
+import com.wiley.gr.ace.discount.model.Service;
+import com.wiley.gr.ace.discount.model.SharedServiceError;
+import com.wiley.gr.ace.discount.exception.SharedServiceException;
 
 public class CommonUtil {
 
