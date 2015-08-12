@@ -17,9 +17,9 @@ package com.wiley.gr.ace.discount.controller;
 import com.wiley.gr.ace.discount.common.CommonConstants;
 import com.wiley.gr.ace.discount.common.CommonUtil;
 import com.wiley.gr.ace.discount.common.PropertyUtils;
+import com.wiley.gr.ace.discount.exception.SharedServiceException;
 import com.wiley.gr.ace.discount.model.GetMaxDiscountRequest;
 import com.wiley.gr.ace.discount.model.Service;
-import com.wiley.gr.ace.discount.exception.SharedServiceException;
 import com.wiley.gr.ace.discount.service.DiscountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +102,24 @@ public class DiscountController extends PropertyUtils {
     public final Service getInstitutionsDiscount(@PathVariable(CommonConstants.INSTITUTION_CD) String institutionCode) {
         try {
             return discountService.getInstitutionsDiscount(institutionCode);
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in getDiscountSocieties", e);
+            return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
+    }
+
+
+    /**
+     * Method to get institution getMaxDiscountRequest of a particular Article based on the GetInstitutionResponse Code.
+     * Or it will return all institutions getMaxDiscountRequest information if GetInstitutionResponse Code is not passed.
+     *
+     * @return {@link Service}
+     */
+    @RequestMapping(value = CommonConstants.GET_INSTITUTIONS_DISCOUNT, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public final Service getInstitutionsDiscount() {
+        try {
+            return discountService.getInstitutionsDiscount(null);
         } catch (SharedServiceException e) {
             LOGGER.error("Error Occurred in getDiscountSocieties", e);
             return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);

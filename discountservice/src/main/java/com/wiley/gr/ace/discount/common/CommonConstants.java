@@ -27,7 +27,10 @@ public class CommonConstants {
 
     public static final String GET_SOCIETY_DISCOUNTS = "/society/{journalAcronym}";
 
-    public static final String GET_INSTITUTIONS_DISCOUNTS = "/institutions/{institutionCode}";
+    public static final String GET_INSTITUTIONS_DISCOUNT = "/institutions/";
+
+    public static final String GET_INSTITUTIONS_DISCOUNTS = GET_INSTITUTIONS_DISCOUNT + "{institutionCode}";
+
 
     public static final String ERROR_NOTE = "Error :";
 

@@ -216,10 +216,15 @@ public class DiscountServiceImpl implements DiscountService {
             //Check whether the procedure returns a value or not
             if (cs != null) {
                 ResultSet cursor = (ResultSet) cs.getObject(1);
+                GetInstitutionsResponse getInstitutionsResponse = new GetInstitutionsResponse();
+                List<GetInstitutionResponse> getInstitutionResponseList = new LinkedList<>();
+                GetInstitutionResponse getInstitutionResponse = null;
+                List<Discount> discountList = null;
+                Discount discount = null;
                 while (cursor.next()) {
-                    GetInstitutionResponse getInstitutionResponse = new GetInstitutionResponse();
-                    List<Discount> discountList = new LinkedList<>();
-                    Discount discount = new Discount();
+                    getInstitutionResponse = new GetInstitutionResponse();
+                    discountList = new LinkedList<>();
+                    discount = new Discount();
                     getInstitutionResponse.setInstituteCode(cursor.getString(1));
                     getInstitutionResponse.setInstituteName(cursor.getString(2));
                     discount.setDiscountCode(cursor.getString(3));
@@ -229,8 +234,10 @@ public class DiscountServiceImpl implements DiscountService {
                     discount.setDiscountValue(cursor.getString(7));
                     discountList.add(discount);
                     getInstitutionResponse.setDiscount(discountList);
-                    service.setPayload(getInstitutionResponse);
+                    getInstitutionResponseList.add(getInstitutionResponse);
+                    getInstitutionsResponse.setInstitutions(getInstitutionResponseList);
                 }
+                service.setPayload(getInstitutionsResponse);
             }
 
         } catch (Exception e) {
