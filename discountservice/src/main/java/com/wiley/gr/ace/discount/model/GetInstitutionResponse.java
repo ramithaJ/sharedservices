@@ -16,10 +16,10 @@ package com.wiley.gr.ace.discount.model;
 import java.util.List;
 
 public class GetInstitutionResponse {
-	
-	private String instituteCode;
-	private String instituteName;
-	private List<Discount> discount;
+
+    private String instituteCode;
+    private String instituteName;
+    private List<Discount> discount;
 
     public String getInstituteCode() {
         return instituteCode;

@@ -13,12 +13,18 @@
  */
 package com.wiley.gr.ace.discount.common;
 
+import com.wiley.gr.ace.discount.exception.SharedServiceException;
+import com.wiley.gr.ace.discount.model.Discount;
 import com.wiley.gr.ace.discount.model.GetMaxDiscountRequest;
 import com.wiley.gr.ace.discount.model.Service;
-import com.wiley.gr.ace.discount.model.SharedServiceError;
-import com.wiley.gr.ace.discount.exception.SharedServiceException;
+import com.wiley.gr.ace.discount.model.ErrorResponse;
 
 public class CommonUtil {
+
+    private CommonUtil(){
+
+    }
+
 
     /**
      * Method to set code, message & status to Service.
@@ -30,7 +36,7 @@ public class CommonUtil {
      */
     public static Service setServiceMessage(String code, String message, String status) {
         Service service = new Service();
-        SharedServiceError error = new SharedServiceError();
+        ErrorResponse error = new ErrorResponse();
         error.setCode(Integer.parseInt(code));
         error.setMessage(message);
         service.setStatus(status);
@@ -64,4 +70,26 @@ public class CommonUtil {
         }
         return false;
     }
+
+    /**
+     * Method to set discount.
+     *
+     * @param discountCode      Discount Code
+     * @param discountTypeName  Discount Type Name
+     * @param promoCode         Promo Code
+     * @param discountValueType Discount Value Type
+     * @param discountValue     Discount Value
+     * @return
+     */
+    public static Discount setDiscount(String discountCode, String discountTypeName, String promoCode, String discountValueType, String discountValue) {
+        Discount discount = new Discount();
+        discount.setDiscountCode(discountCode);
+        discount.setDiscountTypeName(discountTypeName);
+        discount.setPromoCode(promoCode);
+        discount.setDiscountValueType(discountValueType);
+        discount.setDiscountValue(discountValue);
+        return discount;
+    }
+
+
 }

@@ -13,6 +13,7 @@
  */
 package com.wiley.gr.ace.discount.service.impl;
 
+import com.wiley.gr.ace.discount.common.CommonConstants;
 import com.wiley.gr.ace.discount.common.CommonUtil;
 import com.wiley.gr.ace.discount.exception.SharedServiceException;
 import com.wiley.gr.ace.discount.model.*;
@@ -43,6 +44,38 @@ public class DiscountServiceImpl implements DiscountService {
     private JdbcTemplate jdbcTemplate;
 
     /**
+     * Method to get DB Connection.
+     *
+     * @return Database Connection
+     * @throws SQLException
+     */
+    private Connection getConnection() throws SQLException {
+        return jdbcTemplate.getDataSource().getConnection();
+    }
+
+    /**
+     * Method to close connection and callablestatement.
+     *
+     * @param con Connection
+     * @param cs  CallableStatement
+     * @throws SharedServiceException
+     */
+    private void closeConnection(Connection con, CallableStatement cs) throws SharedServiceException {
+        if (null != con) {
+            LOGGER.info(CommonConstants.CLOSE_CONNECTION);
+            //Close the session
+            try {
+                con.close();
+                cs.close();
+            } catch (SQLException sqlError) {
+                LOGGER.error(CommonConstants.ERROR_CLOSE_CONNECTION, sqlError);
+                CommonUtil.throwError(sqlError);
+            }
+        }
+    }
+
+
+    /**
      * This method will call GET_MAX_DISCOUNT stored procedure to get max getMaxDiscountRequest based on the input parameters.
      *
      * @param getMaxDiscountRequest GetMaxDiscountRequest Payload
@@ -59,7 +92,7 @@ public class DiscountServiceImpl implements DiscountService {
             LOGGER.debug("getGetMaxDiscountRequest Request:" + getMaxDiscountRequest.toString());
 
             //Get the Database Connection
-            con = jdbcTemplate.getDataSource().getConnection();
+            con = getConnection();
             //Invoke GET_MAX_DISCOUNT Proc
             cs = con.prepareCall("{call GET_MAX_DISCOUNT(?,?,?,?,?,?,?,?,?,?)}");
             cs.setString(1, getMaxDiscountRequest.getSocietyPromoCode());
@@ -93,7 +126,7 @@ public class DiscountServiceImpl implements DiscountService {
                     service.setPayload(getMaxDiscountResponse);
                 }
                 if (!StringUtils.isEmpty(cs.getString(9)) && !StringUtils.isEmpty(cs.getString(10))) {
-                    service.setError(new SharedServiceError(cs.getString(9), cs.getString(10)));
+                    service.setError(new ErrorResponse(cs.getString(9), cs.getString(10)));
                 }
             }
 
@@ -101,17 +134,7 @@ public class DiscountServiceImpl implements DiscountService {
             LOGGER.error("Exception Occurred during getGetMaxDiscountRequest call...", e);
             CommonUtil.throwError(e);
         } finally {
-            if (null != con) {
-                LOGGER.info("Closing Connection...");
-                //Close the session
-                try {
-                    con.close();
-                    cs.close();
-                } catch (SQLException sqlError) {
-                    LOGGER.error("Exception Occurred during closing connection in getGetMaxDiscountRequest call...", sqlError);
-                    CommonUtil.throwError(sqlError);
-                }
-            }
+            closeConnection(con, cs);
         }
 
         return service;
@@ -135,7 +158,7 @@ public class DiscountServiceImpl implements DiscountService {
             LOGGER.debug("getDiscountSocietiesForJournal Request:" + journalAcronym);
 
             //Get the Database Connection
-            con = jdbcTemplate.getDataSource().getConnection();
+            con = getConnection();
             //Invoke GET_DISCOUNTED_SOCIETIES Proc
             cs = con.prepareCall("{call GET_DISCOUNTED_SOCIETIES(?,?)}");
             cs.setString(2, journalAcronym);
@@ -149,14 +172,13 @@ public class DiscountServiceImpl implements DiscountService {
             //Check whether the procedure returns a value or not
             if (cs != null) {
                 ResultSet cursor = (ResultSet) cs.getObject(1);
+                Discount discount = null;
                 while (cursor.next()) {
                     GetSocietyResponse getSocietyResponse = new GetSocietyResponse();
-                    Discount discount = new Discount();
                     List<Discount> discountList = new LinkedList<>();
                     getSocietyResponse.setSocietyCode(cursor.getString(1));
                     getSocietyResponse.setSocietyName(cursor.getString(2));
-                    discount.setDiscountValueType(cursor.getString(3));
-                    discount.setDiscountValue(cursor.getString(4));
+                    discount = CommonUtil.setDiscount(null, null, null, cursor.getString(3), cursor.getString(4));
                     discountList.add(discount);
                     getSocietyResponse.setDiscount(discountList);
                     service.setPayload(getSocietyResponse);
@@ -168,17 +190,7 @@ public class DiscountServiceImpl implements DiscountService {
             LOGGER.error("Exception Occurred during getDiscountSocietiesForJournal call...", e);
             CommonUtil.throwError(e);
         } finally {
-            if (null != con) {
-                LOGGER.info("Closing Connection...");
-                //Close the session
-                try {
-                    con.close();
-                    cs.close();
-                } catch (SQLException sqlError) {
-                    LOGGER.error("Exception Occurred during closing connection in getDiscountSocietiesForJournal call...", sqlError);
-                    CommonUtil.throwError(sqlError);
-                }
-            }
+            closeConnection(con, cs);
         }
 
         return service;
@@ -202,7 +214,7 @@ public class DiscountServiceImpl implements DiscountService {
             LOGGER.debug("getInstitutionsDiscount Request:" + institutionCode);
 
             //Get the Database Connection
-            con = jdbcTemplate.getDataSource().getConnection();
+            con = getConnection();
             //Invoke GET_INSTITUTION_DISCOUNTS Proc
             cs = con.prepareCall("{call GET_INSTITUTION_DISCOUNTS(?,?)}");
             cs.setString(2, institutionCode);
@@ -224,14 +236,9 @@ public class DiscountServiceImpl implements DiscountService {
                 while (cursor.next()) {
                     getInstitutionResponse = new GetInstitutionResponse();
                     discountList = new LinkedList<>();
-                    discount = new Discount();
                     getInstitutionResponse.setInstituteCode(cursor.getString(1));
                     getInstitutionResponse.setInstituteName(cursor.getString(2));
-                    discount.setDiscountCode(cursor.getString(3));
-                    discount.setDiscountTypeName(cursor.getString(4));
-                    discount.setPromoCode(cursor.getString(5));
-                    discount.setDiscountValueType(cursor.getString(6));
-                    discount.setDiscountValue(cursor.getString(7));
+                    discount = CommonUtil.setDiscount(cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
                     discountList.add(discount);
                     getInstitutionResponse.setDiscount(discountList);
                     getInstitutionResponseList.add(getInstitutionResponse);
@@ -244,17 +251,7 @@ public class DiscountServiceImpl implements DiscountService {
             LOGGER.error("Exception Occurred during getInstitutionsDiscount call...", e);
             CommonUtil.throwError(e);
         } finally {
-            if (null != con) {
-                LOGGER.info("Closing Connection...");
-                //Close the session
-                try {
-                    con.close();
-                    cs.close();
-                } catch (SQLException sqlError) {
-                    LOGGER.error("Exception Occurred during closing connection in getInstitutionsDiscount call...", sqlError);
-                    CommonUtil.throwError(sqlError);
-                }
-            }
+            closeConnection(con, cs);
         }
 
         return service;

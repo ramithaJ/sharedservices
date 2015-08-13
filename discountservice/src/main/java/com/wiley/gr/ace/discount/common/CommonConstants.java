@@ -31,11 +31,19 @@ public class CommonConstants {
 
     public static final String GET_INSTITUTIONS_DISCOUNTS = GET_INSTITUTIONS_DISCOUNT + "{institutionCode}";
 
+    public static final String CLOSE_CONNECTION = "Closing Connection...";
+
+    public static final String ERROR_CLOSE_CONNECTION = "Exception Occurred during closing connection";
 
     public static final String ERROR_NOTE = "Error :";
 
     public static final String ERROR_CODE_100 = "1000";
 
     public static final String ERROR_CODE_101 = "1001";
+
+
+    private CommonConstants() {
+
+    }
 }
 

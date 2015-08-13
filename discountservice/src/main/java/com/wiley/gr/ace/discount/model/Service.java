@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * Data from the service is wrapped into this and returned.
  *
  * @author virtusa
- *	version 1.0
+ *         version 1.0
  */
 @JsonInclude(Include.NON_NULL)
 public class Service {
@@ -30,7 +30,7 @@ public class Service {
 
     private Object payload;
 
-    private SharedServiceError error;
+    private ErrorResponse error;
 
 
     /**
@@ -64,14 +64,14 @@ public class Service {
     /**
      * @return
      */
-    public SharedServiceError getError() {
+    public ErrorResponse getError() {
         return error;
     }
 
     /**
      * @param error
      */
-    public void setError(SharedServiceError error) {
+    public void setError(ErrorResponse error) {
         this.error = error;
     }
 

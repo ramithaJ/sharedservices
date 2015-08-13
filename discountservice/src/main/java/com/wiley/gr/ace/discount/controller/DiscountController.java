@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(CommonConstants.VERSION)
-public class DiscountController extends PropertyUtils {
+public class DiscountController {
 
     /**
      * Logger for UserLoginController class.
@@ -62,7 +62,7 @@ public class DiscountController extends PropertyUtils {
 
             //Validate baseprice from the input. If value is empty (or) null throw error.
             if (CommonUtil.validateBasePrice(getMaxDiscountRequest)) {
-                return CommonUtil.setServiceMessage(CommonConstants.ERROR_CODE_101, PropertyUtils.errorcode101, CommonConstants.ERROR);
+                return CommonUtil.setServiceMessage(CommonConstants.ERROR_CODE_101, PropertyUtils.getErrorCode101(), CommonConstants.ERROR);
             }
             return discountService.getDiscount(getMaxDiscountRequest);
         } catch (SharedServiceException e) {
@@ -73,7 +73,6 @@ public class DiscountController extends PropertyUtils {
 
     /**
      * Method to get society getMaxDiscountRequest of a particular Journal based on the Journal Acronym.
-     * Or it will return all societies getMaxDiscountRequest information if Journal Acronym is not passed.
      *
      * @param journalAcronym Journal Acronym
      * @return {@link Service}
@@ -92,7 +91,6 @@ public class DiscountController extends PropertyUtils {
 
     /**
      * Method to get institution getMaxDiscountRequest of a particular Article based on the GetInstitutionResponse Code.
-     * Or it will return all institutions getMaxDiscountRequest information if GetInstitutionResponse Code is not passed.
      *
      * @param institutionCode GetInstitutionResponse Code
      * @return {@link Service}
@@ -103,15 +101,14 @@ public class DiscountController extends PropertyUtils {
         try {
             return discountService.getInstitutionsDiscount(institutionCode);
         } catch (SharedServiceException e) {
-            LOGGER.error("Error Occurred in getDiscountSocieties", e);
+            LOGGER.error("Error Occurred in getInstitutionsDiscount", e);
             return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
     }
 
 
     /**
-     * Method to get institution getMaxDiscountRequest of a particular Article based on the GetInstitutionResponse Code.
-     * Or it will return all institutions getMaxDiscountRequest information if GetInstitutionResponse Code is not passed.
+     * Method to get all institutions getMaxDiscountRequest information if GetInstitutionResponse Code is not passed.
      *
      * @return {@link Service}
      */
@@ -121,7 +118,7 @@ public class DiscountController extends PropertyUtils {
         try {
             return discountService.getInstitutionsDiscount(null);
         } catch (SharedServiceException e) {
-            LOGGER.error("Error Occurred in getDiscountSocieties", e);
+            LOGGER.error("Error Occurred in getAllInstitutionsDiscount", e);
             return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
     }

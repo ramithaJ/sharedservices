@@ -13,37 +13,27 @@
  */
 package com.wiley.gr.ace.discount.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 /**
  * This is the generic errorVO returned by the service.
  *
  * @author virtusa
  *         version 1.0
  */
-@JsonInclude(Include.NON_NULL)
-public class SharedServiceError {
+public class ErrorResponse {
 
     private int code;
 
     private String message;
 
-    public SharedServiceError(String code, String message) {
+    public ErrorResponse(String code, String message) {
         this.code = Integer.parseInt(code);
         this.message = message;
     }
 
-    public SharedServiceError() {
+    public ErrorResponse() {
 
     }
 
-    /**
-     * @return
-     */
-    public int getCode() {
-        return code;
-    }
 
     /**
      * @param code
@@ -52,12 +42,6 @@ public class SharedServiceError {
         this.code = code;
     }
 
-    /**
-     * @return
-     */
-    public String getMessage() {
-        return message;
-    }
 
     /**
      * @param message

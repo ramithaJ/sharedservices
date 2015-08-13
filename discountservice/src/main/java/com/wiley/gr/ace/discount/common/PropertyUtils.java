@@ -21,6 +21,14 @@ public class PropertyUtils {
      * Error code From Props File.
      */
     @Value("${DISCOUNT_SERVICE_ERROR_101}")
-    public static String errorcode101;
+    private static String ERROR_CODE_101;
 
+
+    private PropertyUtils() {
+
+    }
+
+    public static String getErrorCode101() {
+        return ERROR_CODE_101;
+    }
 }
