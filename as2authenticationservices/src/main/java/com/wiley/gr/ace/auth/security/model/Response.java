@@ -1,7 +1,7 @@
 /**
  * ****************************************************************************
  * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
- * <p/>
+ * <p>
  * All material contained herein is proprietary to John Wiley & Sons
  * and its third party suppliers, if any. The methods, techniques and
  * technical concepts contained herein are considered trade secrets
@@ -21,131 +21,129 @@ import com.wiley.gr.ace.auth.security.constants.CommonConstant;
  */
 public class Response {
 
-	public static enum STATUS {
-		ERROR, SUCCESS, FAILURE, LOCKED;
-	}
+    /**
+     * This field holds the value of code
+     */
+    private String code;
+    /**
+     * This field holds the value of message
+     */
+    private String message;
+    /**
+     * This field holds the value of status
+     */
+    private String status;
 
-	/**
-	 * This field holds the value of code
-	 */
-	private String code;
+    /**
+     * Default constructor
+     */
+    public Response() {
 
-	/**
-	 * This field holds the value of message
-	 */
-	private String message;
+    }
 
-	/**
-	 * This field holds the value of status
-	 */
-	private String status;
+    /**
+     * Constructor
+     *
+     * @param message
+     */
+    public Response(final String message) {
+        this.code = CommonConstant.STATUS_CODE;
+        this.message = message;
+        this.status = CommonConstant.SUCCESS_STATUS;
+    }
 
-	/**
-	 * Default constructor
-	 */
-	public Response() {
+    /**
+     * Constructor
+     *
+     * @param message
+     * @param status
+     */
+    public Response(final String message, final String status) {
+        this.code = CommonConstant.STATUS_CODE;
+        this.message = message;
+        this.status = status;
+    }
 
-	}
+    /**
+     * Constructor
+     *
+     * @param code
+     * @param message
+     * @param status
+     */
+    public Response(final String code, final String message, final String status) {
+        this.code = code;
+        this.message = message;
+        this.status = status;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param message
-	 */
-	public Response(final String message) {
-		this.code = CommonConstant.STATUS_CODE;
-		this.message = message;
-		this.status = CommonConstant.SUCCESS_STATUS;
-	}
+    /**
+     * This method gets Code
+     *
+     * @return String
+     */
+    public String getCode() {
+        return this.code;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param message
-	 * @param status
-	 */
-	public Response(final String message, final String status) {
-		this.code = CommonConstant.STATUS_CODE;
-		this.message = message;
-		this.status = status;
-	}
+    /**
+     * This method sets Code
+     *
+     * @param code
+     */
+    public void setCode(final String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param code
-	 * @param message
-	 * @param status
-	 */
-	public Response(final String code, final String message, final String status) {
-		this.code = code;
-		this.message = message;
-		this.status = status;
-	}
+    /**
+     * This method gets Message
+     *
+     * @return String
+     */
+    public String getMessage() {
+        return this.message;
+    }
 
-	/**
-	 * This method gets Code
-	 *
-	 * @return String
-	 */
-	public String getCode() {
-		return this.code;
-	}
+    /**
+     * This method sets Message
+     *
+     * @param message
+     */
+    public void setMessage(final String message) {
+        this.message = message;
+    }
 
-	/**
-	 * This method gets Message
-	 *
-	 * @return String
-	 */
-	public String getMessage() {
-		return this.message;
-	}
+    /**
+     * This method gets Status
+     *
+     * @return String
+     */
+    public String getStatus() {
+        return this.status;
+    }
 
-	/**
-	 * This method gets Status
-	 *
-	 * @return String
-	 */
-	public String getStatus() {
-		return this.status;
-	}
+    /**
+     * This method sets Status
+     *
+     * @param status
+     */
+    public void setStatus(final String status) {
+        this.status = status;
+    }
 
-	/**
-	 * This method sets Code
-	 *
-	 * @param code
-	 */
-	public void setCode(final String code) {
-		this.code = code;
-	}
+    /**
+     * This method toString
+     *
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "AuthenticateResponse{" + "code='" + this.code + '\''
+                + ", message='" + this.message + '\'' + ", status='"
+                + this.status + '\'' + '}';
+    }
 
-	/**
-	 * This method sets Message
-	 *
-	 * @param message
-	 */
-	public void setMessage(final String message) {
-		this.message = message;
-	}
-
-	/**
-	 * This method sets Status
-	 *
-	 * @param status
-	 */
-	public void setStatus(final String status) {
-		this.status = status;
-	}
-
-	/**
-	 * This method toString
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return "AuthenticateResponse{" + "code='" + this.code + '\''
-				+ ", message='" + this.message + '\'' + ", status='"
-				+ this.status + '\'' + '}';
-	}
+    public static enum STATUS {
+        ERROR, SUCCESS, FAILURE, LOCKED;
+    }
 }
