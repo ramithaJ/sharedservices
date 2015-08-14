@@ -17,7 +17,10 @@ import com.wiley.gr.ace.sharedservices.common.CommonConstants;
 import com.wiley.gr.ace.sharedservices.common.Property;
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
 import com.wiley.gr.ace.sharedservices.helper.UserServiceHelper;
-import com.wiley.gr.ace.sharedservices.payload.*;
+import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
+import com.wiley.gr.ace.sharedservices.payload.Service;
+import com.wiley.gr.ace.sharedservices.payload.UserId;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -152,37 +155,28 @@ public class UserServiceController extends Property {
     @ResponseBody
     public Service searchUserService(@RequestParam(value = CommonConstants.USER_ID, required = false) String userId, @RequestParam(value = "semail", required = false) String semail, @RequestParam(value = "fn", required = false) String fn, @RequestParam(value = "ln", required = false) String ln, @RequestParam(value = "oid", required = false) String oid) {
         Service service = new Service();
-
-
-        if (!StringUtils.isEmpty(userId)) {
-            UserServiceRequest userServiceRequest = null;
-            try {
+        try {
+            if (!StringUtils.isEmpty(userId)) {
+                UserServiceRequest userServiceRequest = null;
                 //Validate user id
                 if (StringUtils.isEmpty(userId)) {
                     return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_101, userServiceError101, CommonConstants.ERROR);
                 }
                 LOGGER.debug("Get User Service:", userId);
                 userServiceRequest = userService.getUserProfileService(userId);
-            } catch (SharedServiceException e) {
-                LOGGER.error("Error Occurred in Get User Service", e);
-                return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+                service.setPayload(userServiceRequest);
+                return service;
             }
-            service.setPayload(userServiceRequest);
-        } else {
-            try {
-
-                //Check whether atleast one input parameter is
-                if (StringUtils.isEmpty(semail) && StringUtils.isEmpty(fn) && StringUtils.isEmpty(ln) && StringUtils.isEmpty(oid)) {
-                    return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_304, userSearchServiceError304, CommonConstants.ERROR);
-                }
-
-                //Search user with the input parameters.
-                service = userService.searchUserService(semail, fn, ln, oid);
-
-            } catch (SharedServiceException e) {
-                LOGGER.error("Error Occurred in Search User Service", e);
-                return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+            //Check whether atleast one input parameter is
+            if (StringUtils.isEmpty(semail) && StringUtils.isEmpty(fn) && StringUtils.isEmpty(ln) && StringUtils.isEmpty(oid)) {
+                return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_304, userSearchServiceError304, CommonConstants.ERROR);
             }
+            //Search user with the input parameters.
+            service = userService.searchUserService(semail, fn, ln, oid);
+
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in Search User Service", e);
+            return UserServiceHelper.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
         }
 
         return service;

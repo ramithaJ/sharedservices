@@ -29,8 +29,8 @@ public class Address implements Serializable {
     private String institutionName;
     private String departmentCd;
     private String departmentName;
-    private String address_01;
-    private String address_02;
+    private String address01;
+    private String address02;
     private String countryCd;
     private String city;
     private String stateCd;
@@ -39,6 +39,14 @@ public class Address implements Serializable {
     private String faxNo;
     private String type;
     private String status;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitleCd() {
         return titleCd;
@@ -80,6 +88,14 @@ public class Address implements Serializable {
         this.institutionCd = institutionCd;
     }
 
+    public String getInstitutionName() {
+        return institutionName;
+    }
+
+    public void setInstitutionName(String institutionName) {
+        this.institutionName = institutionName;
+    }
+
     public String getDepartmentCd() {
         return departmentCd;
     }
@@ -88,20 +104,28 @@ public class Address implements Serializable {
         this.departmentCd = departmentCd;
     }
 
-    public String getAddress_01() {
-        return address_01;
+    public String getDepartmentName() {
+        return departmentName;
     }
 
-    public void setAddress_01(String address_01) {
-        this.address_01 = address_01;
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
-    public String getAddress_02() {
-        return address_02;
+    public String getAddress01() {
+        return address01;
     }
 
-    public void setAddress_02(String address_02) {
-        this.address_02 = address_02;
+    public void setAddress01(String address01) {
+        this.address01 = address01;
+    }
+
+    public String getAddress02() {
+        return address02;
+    }
+
+    public void setAddress02(String address02) {
+        this.address02 = address02;
     }
 
     public String getCountryCd() {
@@ -152,30 +176,6 @@ public class Address implements Serializable {
         this.faxNo = faxNo;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getInstitutionName() {
-        return institutionName;
-    }
-
-    public void setInstitutionName(String institutionName) {
-        this.institutionName = institutionName;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
-
     public String getType() {
         return type;
     }
@@ -190,30 +190,5 @@ public class Address implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "id='" + id + '\'' +
-                ", titleCd='" + titleCd + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", suffixCd='" + suffixCd + '\'' +
-                ", institutionCd='" + institutionCd + '\'' +
-                ", institutionName='" + institutionName + '\'' +
-                ", departmentCd='" + departmentCd + '\'' +
-                ", departmentName='" + departmentName + '\'' +
-                ", address_01='" + address_01 + '\'' +
-                ", address_02='" + address_02 + '\'' +
-                ", countryCd='" + countryCd + '\'' +
-                ", city='" + city + '\'' +
-                ", stateCd='" + stateCd + '\'' +
-                ", postalCd='" + postalCd + '\'' +
-                ", phoneNo='" + phoneNo + '\'' +
-                ", faxNo='" + faxNo + '\'' +
-                ", type='" + type + '\'' +
-                ", status='" + status + '\'' +
-                '}';
     }
 }

@@ -29,6 +29,13 @@ public class CreateUserServiceRequest {
         this.userProfile = userProfile;
     }
 
+    @Override
+    public String toString() {
+        return "CreateUserServiceRequest{" +
+                "userProfile=" + userProfile +
+                '}';
+    }
+
     public class UserProfile {
 
         private String firstName;
@@ -87,12 +94,5 @@ public class CreateUserServiceRequest {
                     ", optInFlag='" + optInFlag + '\'' +
                     '}';
         }
-    }
-
-    @Override
-    public String toString() {
-        return "CreateUserServiceRequest{" +
-                "userProfile=" + userProfile +
-                '}';
     }
 }

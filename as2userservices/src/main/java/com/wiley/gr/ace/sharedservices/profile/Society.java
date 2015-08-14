@@ -29,12 +29,28 @@ public class Society implements Serializable {
     private String toDate;
     private String status;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getSocietyCd() {
         return societyCd;
     }
 
     public void setSocietyCd(String societyCd) {
         this.societyCd = societyCd;
+    }
+
+    public String getSocietyName() {
+        return societyName;
+    }
+
+    public void setSocietyName(String societyName) {
+        this.societyName = societyName;
     }
 
     public String getMembershipNumber() {
@@ -69,41 +85,11 @@ public class Society implements Serializable {
         this.toDate = toDate;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSocietyName() {
-        return societyName;
-    }
-
-    public void setSocietyName(String societyName) {
-        this.societyName = societyName;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Society{" +
-                "id='" + id + '\'' +
-                ", societyCd='" + societyCd + '\'' +
-                ", societyName='" + societyName + '\'' +
-                ", membershipNumber='" + membershipNumber + '\'' +
-                ", promotionCode='" + promotionCode + '\'' +
-                ", fromDate='" + fromDate + '\'' +
-                ", toDate='" + toDate + '\'' +
-                ", status='" + status + '\'' +
-                '}';
     }
 }

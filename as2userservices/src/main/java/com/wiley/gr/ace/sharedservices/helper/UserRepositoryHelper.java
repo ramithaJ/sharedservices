@@ -231,7 +231,7 @@ public class UserRepositoryHelper extends Property {
      * @param affiliationList
      */
     public void setAffiliation(Session session, Users user, UserProfile userProfile, List<Affiliation> affiliationList) {
-        if (null != affiliationList && affiliationList.size() > 0) {
+        if (null != affiliationList && !affiliationList.isEmpty()) {
             LOGGER.debug("Set Affiliation...");
             Set<UserAffiliations> userAffiliationsSet = new HashSet<>();
             for (Affiliation affiliation : affiliationList) {
@@ -414,7 +414,7 @@ public class UserRepositoryHelper extends Property {
                 throw new SharedServiceException(CommonConstants.ERROR_CODE_113, alert.getAlertCd() + "-" + userServiceError113);
             }
 
-            if (null != alertTypeList && alertTypeList.size() > 0) {
+            if (null != alertTypeList && !alertTypeList.isEmpty()) {
                 int alertListSize = alertTypeList.size();
                 for (int j = 0; j < alertListSize; j++) {
                     AlertType alertType = alertTypeList.get(j);

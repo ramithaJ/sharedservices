@@ -14,7 +14,6 @@
 
 package com.wiley.gr.ace.sharedservices.payload;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**

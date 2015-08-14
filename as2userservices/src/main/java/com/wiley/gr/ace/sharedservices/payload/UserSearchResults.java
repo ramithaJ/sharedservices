@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by kkalyan on 7/24/2015.
  */
+
 public class UserSearchResults implements Serializable {
 
     private Integer userId;

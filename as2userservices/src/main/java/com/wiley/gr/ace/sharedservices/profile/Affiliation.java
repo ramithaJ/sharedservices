@@ -32,6 +32,14 @@ public class Affiliation implements Serializable {
     private String toDate;
     private String status;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getInstitutionCd() {
         return institutionCd;
     }
@@ -40,12 +48,28 @@ public class Affiliation implements Serializable {
         this.institutionCd = institutionCd;
     }
 
+    public String getInstitutionName() {
+        return institutionName;
+    }
+
+    public void setInstitutionName(String institutionName) {
+        this.institutionName = institutionName;
+    }
+
     public String getDepartmentCd() {
         return departmentCd;
     }
 
     public void setDepartmentCd(String departmentCd) {
         this.departmentCd = departmentCd;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public String getCity() {
@@ -88,52 +112,11 @@ public class Affiliation implements Serializable {
         this.toDate = toDate;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getInstitutionName() {
-        return institutionName;
-    }
-
-    public void setInstitutionName(String institutionName) {
-        this.institutionName = institutionName;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Affiliation{" +
-                "id='" + id + '\'' +
-                ", institutionCd='" + institutionCd + '\'' +
-                ", institutionName='" + institutionName + '\'' +
-                ", departmentCd='" + departmentCd + '\'' +
-                ", departmentName='" + departmentName + '\'' +
-                ", city='" + city + '\'' +
-                ", stateCd='" + stateCd + '\'' +
-                ", countryCd='" + countryCd + '\'' +
-                ", fromDate='" + fromDate + '\'' +
-                ", toDate='" + toDate + '\'' +
-                ", status='" + status + '\'' +
-                '}';
     }
 }
