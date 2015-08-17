@@ -2,6 +2,8 @@ package com.wiley.gr.ace.staticcontentservices.dotcms.service.impl;
 
 import java.net.URI;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -21,6 +23,9 @@ import com.wiley.gr.ace.staticcontentservices.model.external.EmailCatalogDotcmsR
  * The Class DotCMSDataServiceImpl.
  */
 public class DotCMSDataServiceImpl implements DotCMSDataService {
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(DotCMSDataService.class);
+
 
     /** The content url. */
     @Value("${dotcms-rest.url}")
@@ -36,7 +41,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
     @Override
     public UIMessageCatalogDotcmsResponse getUiMessageCatalog(String uniqueKey, String pageName,
             String locale) throws Exception {
-
+        LOGGER.info("inside getUiMessageCatalog method of DotCMSDataService");
         String dotQuery = "+structureName:UiMessageCatalog +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
         
         if (!StringUtils.isEmpty(uniqueKey)) {
@@ -60,7 +65,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
                 .getForEntity(new URI(dotUrlEncoded), String.class);
         String uiMessageCatalogDotcmsResponseJsonString = responseEntity
                 .getBody();
-
+        LOGGER.info("UI Message Catalog query executed successfully");
         return new ObjectMapper().readValue(
                 uiMessageCatalogDotcmsResponseJsonString,
                 UIMessageCatalogDotcmsResponse.class);
@@ -77,7 +82,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
     public ConfirmationCatalogDotcmsResponse getConfirmationCatalog(
             String moduleName, String locale)
             throws Exception {
-
+        LOGGER.info("inside getConfirmationCatalog method of DotCMSDataService");
         String dotQuery = "+structureName:ConfirmationTexts +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 
        
@@ -99,6 +104,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
         String confirmationCatalogDotcmsResponseJsonString = responseEntity
                 .getBody();
         System.err.println(responseEntity.getBody());
+        LOGGER.info("Confirmation Catalog query executed successfully");
         return new ObjectMapper().readValue(
                 confirmationCatalogDotcmsResponseJsonString,
                 ConfirmationCatalogDotcmsResponse.class);
@@ -113,7 +119,8 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
      */
     @Override
     public StatusCatalogDotcmsResponse getStatusCatalog(String statusMessageType, String locale) throws Exception {
-
+        
+        LOGGER.info("inside getStatusCatalog method of DotCMSDataService");
         String dotQuery = "+structureName:StatusMessages +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 
         if (!StringUtils.isEmpty(statusMessageType)) {
@@ -132,7 +139,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
         ResponseEntity<String> responseEntity = new RestTemplate()
                 .getForEntity(new URI(dotUrlEncoded), String.class);
         String statusCatalogDotcmsResponseJsonString = responseEntity.getBody();
-
+        LOGGER.info("Status Catalog query executed successfully");
         return new ObjectMapper().readValue(
                 statusCatalogDotcmsResponseJsonString,
                 StatusCatalogDotcmsResponse.class);
@@ -148,7 +155,8 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
     @Override
     public EmailCatalogDotcmsResponse getEmailCatalog(String contentTitle)
             throws Exception {
-
+        
+        LOGGER.info("inside getEmailCatalog method of DotCMSDataService");
         String dotQuery = "+structureName:EmailSurveyLink +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
         if (!StringUtils.isEmpty(contentTitle)) {
             dotQuery = dotQuery + " +EmailSurveyLink.contentTitle:*"
@@ -161,7 +169,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
         ResponseEntity<String> responseEntity = new RestTemplate()
                 .getForEntity(new URI(dotUrlEncoded), String.class);
         String emailCatalogDotcmsResponseJsonString = responseEntity.getBody();
-
+        LOGGER.info("Email Catalog query executed successfully");
         return new ObjectMapper().readValue(
                 emailCatalogDotcmsResponseJsonString,
                 EmailCatalogDotcmsResponse.class);
@@ -177,8 +185,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
     @Override
     public StaticCatalogDotcmsResponse getStaticCatalog(String pageName, String contentUniqueKey, String locale) throws Exception {
         
-        
-        System.out.println("You were first here !!!!");
+        LOGGER.info("inside getStaticCatalog method of DotCMSDataService");
         String dotQuery = "+structureName:StaticAdBlock +(conhost:941f9810-7fd0-49b8-83fd-dab4a90e493e conhost:SYSTEM_HOST)";
 
         if (!StringUtils.isEmpty(pageName)) {
@@ -203,7 +210,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
         ResponseEntity<String> responseEntity = new RestTemplate()
                 .getForEntity(new URI(dotUrlEncoded), String.class);
         String staticCatalogDotcmsResponseJsonString = responseEntity.getBody();
-
+        LOGGER.info("Static Catalog query executed successfully");
         return new ObjectMapper().readValue(
                 staticCatalogDotcmsResponseJsonString,
                 StaticCatalogDotcmsResponse.class);
@@ -220,6 +227,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
     public ServerCatalogDotcmsResponse getRelatedServerApplicationMessage(
             String contentIdentifier) throws Exception {
 
+        LOGGER.info("inside getRelatedServerApplicationMessage method of DotCMSDataService");
         String dotQuery = "+structureName:ServerApplicationMessages +Parent_UiMessageCatalog-Child_ServerApplicationMessages:"
                 + contentIdentifier;
 
@@ -228,7 +236,7 @@ public class DotCMSDataServiceImpl implements DotCMSDataService {
         ResponseEntity<String> responseEntity = new RestTemplate()
                 .getForEntity(new URI(dotUrlEncoded), String.class);
         String staticCatalogDotcmsResponseJsonString = responseEntity.getBody();
-
+        LOGGER.info("Server Catalog query executed successfully");
         return new ObjectMapper().readValue(
                 staticCatalogDotcmsResponseJsonString,
                 ServerCatalogDotcmsResponse.class);

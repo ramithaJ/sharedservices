@@ -18,6 +18,8 @@ import com.wiley.gr.ace.staticcontentservices.model.StaticContent;
 import com.wiley.gr.ace.staticcontentservices.model.StatusContent;
 import com.wiley.gr.ace.staticcontentservices.model.UIMessageContent;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class DotCMSStaticContentController.
@@ -25,6 +27,9 @@ import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetc
 @RestController
 @RequestMapping("/staticcontent/get")
 public class DotCMSStaticContentController {
+    
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(DotCMSStaticContentController.class);
 
 	/** The static content fetch service. */
 	@Autowired(required = true)
@@ -45,18 +50,23 @@ public class DotCMSStaticContentController {
 	        @RequestParam("pageName") String pageName,
 			@RequestParam("locale") String locale,
 			@RequestParam("fetchServerMessages") String fetchServerMessages) {
-		UIMessageContent uiMessageContent = null;
+	    LOGGER.info("inside uimessage method of DotCMSStaticContentController");
+	    UIMessageContent uiMessageContent = null;
 		Service service = new Service();
 
 		try {
-			uiMessageContent = staticContentFetchService.getUiMessageContent(uniqueKey, pageName, locale, fetchServerMessages);
+		    
+		    uiMessageContent = staticContentFetchService.getUiMessageContent(uniqueKey, pageName, locale, fetchServerMessages);
 			if (!StringUtils.isEmpty(uiMessageContent)) {
-				service.setStatus("SUCCESS");
+			    LOGGER.info("UI Content Data is Found");
+			    service.setStatus("SUCCESS");
 				service.setPayload(uiMessageContent);
 			} else {
+			    LOGGER.info("UI Content Data is not Found");
 				service.setStatus("FAILURE");
 			}
 		} catch (Exception e) {
+		    LOGGER.error("Print Stack Trace- ", e);
 			e.printStackTrace();
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
@@ -83,7 +93,8 @@ public class DotCMSStaticContentController {
 	public @ResponseBody Service getConfirmationCatalog(
 			@RequestParam("moduleName") String moduleName,
 			@RequestParam("locale") String locale) {
-		ConfirmationContent confirmationContent = null;
+	    LOGGER.info("inside confirmation method of DotCMSStaticContentController");
+	    ConfirmationContent confirmationContent = null;
 		Service service = new Service();
 
 		try {
@@ -91,12 +102,15 @@ public class DotCMSStaticContentController {
 					.getConfirmationMessageContent(moduleName,
 							locale);
 			if (!StringUtils.isEmpty(confirmationContent)) {
+			    LOGGER.info("Confirmation Content Data is Found");
 				service.setStatus("SUCCESS");
 				service.setPayload(confirmationContent);
 			} else {
+			    LOGGER.info("Confirmation Content Data is not Found");
 				service.setStatus("FAILURE");
 			}
 		} catch (Exception e) {
+		    LOGGER.error("Print Stack Trace- ", e);
 		    e.printStackTrace();
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
@@ -123,19 +137,23 @@ public class DotCMSStaticContentController {
 	public @ResponseBody Service getStatusContent(
 			@RequestParam("statusMessageType") String statusMessageType,
 			@RequestParam("locale") String locale) {
-		StatusContent statusContent = null;
+	    LOGGER.info("inside status method of DotCMSStaticContentController");
+	    StatusContent statusContent = null;
 		Service service = new Service();
 
 		try {
 			statusContent = staticContentFetchService.getStatusContent(
 					statusMessageType, locale);
 			if (!StringUtils.isEmpty(statusContent)) {
+			    LOGGER.info("Status Content Data is Found");
 				service.setStatus("SUCCESS");
 				service.setPayload(statusContent);
 			} else {
+			    LOGGER.info("Status Content Data is not Found");
 				service.setStatus("FAILURE");
 			}
 		} catch (Exception e) {
+		    LOGGER.error("Print Stack Trace- ", e);
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
 			err.setCode(209);
@@ -156,7 +174,8 @@ public class DotCMSStaticContentController {
 	@RequestMapping(value = "/email", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Service getEmailContent(
 	        @RequestParam("contentTitle") String contentTitle) {
-		EmailContent emailContent = null;
+	    LOGGER.info("inside email method of DotCMSStaticContentController");
+	    EmailContent emailContent = null;
 		Service service = new Service();
 
 		try {
@@ -164,12 +183,15 @@ public class DotCMSStaticContentController {
 					.getEmailContent(contentTitle);
 			
 		    if (!StringUtils.isEmpty(emailContent)) {
+		        LOGGER.info("Email Content Data is Found");
 				service.setStatus("SUCCESS");
 				service.setPayload(emailContent);
 			} else {
+			    LOGGER.info("Email Content Data is not Found");
 				service.setStatus("FAILURE");
 			}
 		} catch (Exception e) {
+		    LOGGER.error("Print Stack Trace- ", e);
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
 			err.setCode(209);
@@ -196,18 +218,22 @@ public class DotCMSStaticContentController {
 	        @RequestParam("pageName") String pageName,	        
 			@RequestParam("contentUniqueKey") String contentUniqueKey,
 			@RequestParam("locale") String locale) {
-		StaticContent staticContent = null;
+	    LOGGER.info("inside static method of DotCMSStaticContentController");
+	    StaticContent staticContent = null;
 		Service service = new Service();
 
 		try {
 			staticContent = staticContentFetchService.getStaticContent(pageName, contentUniqueKey, locale);
 			if (!StringUtils.isEmpty(staticContent)) {
+			    LOGGER.info("Static Content Data is Found");
 				service.setStatus("SUCCESS");
 				service.setPayload(staticContent);
 			} else {
+			    LOGGER.info("Static Content Data is not Found");
 				service.setStatus("FAILURE");
 			}
 		} catch (Exception e) {
+		    LOGGER.error("Print Stack Trace- ", e);
 			service.setStatus("ERROR");
 			ErrorPOJO err = new ErrorPOJO();
 			err.setCode(209);
