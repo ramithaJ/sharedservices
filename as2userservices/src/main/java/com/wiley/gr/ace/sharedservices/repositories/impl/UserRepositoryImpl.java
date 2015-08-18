@@ -32,7 +32,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -1051,36 +1049,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         Session session = null;
         UserSearchResponse response = new UserSearchResponse();
         List<UserSearchResults> responseResultList = new LinkedList<>();
+        List<UserSearchResults> searchResultsList = new LinkedList<>();
         try {
 
             session = sessionFactory.openSession();
             // Begin the transaction.
             session.beginTransaction();
-            // Check whether primary email exists
 
-            //Below code is for only reference. Need to remove later
-            session.doWork(new Work() {
-                @Override
-                public void execute(Connection con) throws SQLException {
-                    CallableStatement cs = con.prepareCall("{call usersearch(?,?,?,?,?)}");
-                    cs.registerOutParameter(1, OracleTypes.CURSOR);
-                    cs.setString(2, firstName);
-                    cs.setString(3, lastName);
-                    cs.setString(4, orcidId);
-                    cs.setString(5, email);
-
-                    cs.execute();
-                    ResultSet cursor = (ResultSet) cs.getObject(1);
-                    while (cursor.next()) {
-                        LOGGER.info(cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3));
-                    }
-
-                    cursor.close();
-                    cs.close();
-                }
-            });
-
-            //Below code is for only reference. Need to remove later
             Connection con = jdbcTemplate.getDataSource().getConnection();
 
             CallableStatement cs = con.prepareCall("{call usersearch(?,?,?,?,?)}");
@@ -1092,15 +1067,23 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             cs.execute();
             ResultSet cursor = (ResultSet) cs.getObject(1);
+            UserSearchResults userSearchResult = null;
             while (cursor.next()) {
-                LOGGER.info(cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3));
+                userSearchResult = new UserSearchResults();
+                userSearchResult.setUserId(Integer.parseInt(cursor.getString(1)));
+                userSearchResult.setFirstName(cursor.getString(2));
+                userSearchResult.setLastName(cursor.getString(3));
+                userSearchResult.setPrimaryEmailAddr(cursor.getString(4));
+                userSearchResult.setSuffix(cursor.getString(5));
+                userSearchResult.setTitle(cursor.getString(6));
+                userSearchResult.setMiddleName(cursor.getString(7));
+                userSearchResult.setOrcidId(cursor.getString(8));
+                userSearchResult.setInstitution(cursor.getString(9));
+                searchResultsList.add(userSearchResult);
             }
 
             cursor.close();
             cs.close();
-
-
-            List<UserSearchResults> searchResultsList = null;
 
 
             for (UserSearchResults userSearchResults : searchResultsList) {
