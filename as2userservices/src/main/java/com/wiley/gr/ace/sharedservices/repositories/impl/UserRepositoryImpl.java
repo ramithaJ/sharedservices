@@ -55,7 +55,10 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
     //Logger Instance
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryImpl.class);
-    UserRepositoryHelper userRepositoryHelper = new UserRepositoryHelper();
+
+    @Autowired
+    UserRepositoryHelper userRepositoryHelper;
+
     @Autowired
     private SessionFactory sessionFactory;
 
