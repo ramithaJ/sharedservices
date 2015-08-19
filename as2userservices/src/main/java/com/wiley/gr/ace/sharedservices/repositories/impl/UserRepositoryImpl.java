@@ -1106,7 +1106,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                             .add(Projections.property("address.countryCd"), "countryCd")
                             .add(Projections.property("addrType.name"), "type")
                             .add(Projections.property("addrType.addressTypeCd"), "addressTypeCd"));
-                    if (userCriteria.list().isEmpty()) {
+                    if (!userCriteria.list().isEmpty()) {
                         userAddresses = userCriteria.list();
                         for (Object[] userAdd : userAddresses) {
                             com.wiley.gr.ace.sharedservices.payload.Address addrObj = new com.wiley.gr.ace.sharedservices.payload.Address();
