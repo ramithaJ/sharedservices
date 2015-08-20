@@ -106,6 +106,18 @@ public class CommonConstants {
     public static final String ERROR_CODE_201 = "2001";
     public static final String ERROR_CODE_304 = "3004";
 
+    public static final String SEPERATOR = "#################################";
+    public static final String COMMA = ",";
+    public static final String SEMI_COLON = ":";
+    public static final String CREATE_USER_SERVICE = "CREATE_USER_SERVICE";
+    public static final String UPDATE_USER_SERVICE = "UPDATE_USER_SERVICE";
+    public static final String GET_USER_SERVICE = "GET_USER_SERVICE";
+    public static final String SEARCH_USER_SERVICE = "SEARCH_USER_SERVICE";
+    public static final String LOOKUP_USER_SERVICE = "LOOKUP_USER_SERVICE";
+    public static final String DELETE_USER_SERVICE = "DELETE_USER_SERVICE";
+    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy/MM/dd HH:mm:ss";
+
+
     private CommonConstants() {
 
     }

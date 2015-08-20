@@ -29,6 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @author kkalyan
  */
@@ -54,6 +58,7 @@ public class UserServiceController extends Property {
     public Service createUserService(@RequestBody UserServiceRequest userServiceRequest) {
         Service service = new Service();
         try {
+            logInputRequest(userServiceRequest.toString(), CommonConstants.CREATE_USER_SERVICE);
             String authorServicesUniqueIdentifier = userService.createUserService(userServiceRequest);
             service.setPayload(new UserId(authorServicesUniqueIdentifier));
         } catch (SharedServiceException e) {
@@ -74,6 +79,7 @@ public class UserServiceController extends Property {
     public Service deleteUserService(@PathVariable(CommonConstants.USER_ID) String userId) {
         Service service = new Service();
         try {
+            logInputRequest(userId, CommonConstants.DELETE_USER_SERVICE);
             //Validate user id
             if (StringUtils.isEmpty(userId)) {
                 throw new SharedServiceException(CommonConstants.ERROR_CODE_101, userServiceError101);
@@ -99,6 +105,7 @@ public class UserServiceController extends Property {
     public Service updateUserService(@RequestBody UserServiceRequest userServiceRequest, @PathVariable(CommonConstants.USER_ID) String userId) {
         Service service = new Service();
         try {
+            logInputRequest(userServiceRequest.toString(), CommonConstants.UPDATE_USER_SERVICE);
             UserServiceRequest userServiceResponse = null;
             //Validate user id
             if (StringUtils.isEmpty(userId)) {
@@ -127,6 +134,7 @@ public class UserServiceController extends Property {
     public Service lookUpAuthorService(@RequestParam(value = "emailAddress", required = false) String emailAddress, @RequestParam(value = "firstName", required = false) String firstName, @RequestParam(value = "lastName", required = false) String lastName) {
         Service service = new Service();
         try {
+            logInputRequest(emailAddress + CommonConstants.COMMA + firstName + CommonConstants.COMMA + lastName, CommonConstants.LOOKUP_USER_SERVICE);
             //Check whether email address is null or empty. Throw error if it is null (or) emtpy
             if (StringUtils.isEmpty(emailAddress)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_201, userlookUpServiceError201, CommonConstants.ERROR);
@@ -157,6 +165,7 @@ public class UserServiceController extends Property {
         Service service = new Service();
         try {
             if (!StringUtils.isEmpty(userId)) {
+                logInputRequest(userId, CommonConstants.GET_USER_SERVICE);
                 UserServiceRequest userServiceRequest = null;
                 //Validate user id
                 if (StringUtils.isEmpty(userId)) {
@@ -167,6 +176,7 @@ public class UserServiceController extends Property {
                 service.setPayload(userServiceRequest);
                 return service;
             }
+            logInputRequest(semail + CommonConstants.COMMA + fn + CommonConstants.COMMA + ln + CommonConstants.COMMA + oid, CommonConstants.SEARCH_USER_SERVICE);
             //Check whether atleast one input parameter is
             if (StringUtils.isEmpty(semail) && StringUtils.isEmpty(fn) && StringUtils.isEmpty(ln) && StringUtils.isEmpty(oid)) {
                 return UserServiceHelper.setServiceMessage(CommonConstants.ERROR_CODE_304, userSearchServiceError304, CommonConstants.ERROR);
@@ -180,6 +190,29 @@ public class UserServiceController extends Property {
         }
 
         return service;
+    }
+
+    /**
+     * Method to log the input request in the log file.
+     *
+     * @param inputRequest Input Request Obj
+     */
+    private void logInputRequest(String inputRequest, String serviceCall) {
+        LOGGER.info(CommonConstants.SEPERATOR + serviceCall + CommonConstants.SEMI_COLON + getDate() + CommonConstants.SEPERATOR);
+        LOGGER.info(inputRequest);
+        LOGGER.info(CommonConstants.SEPERATOR + serviceCall + CommonConstants.SEMI_COLON + getDate() + CommonConstants.SEPERATOR);
+    }
+
+    /**
+     * Method to get date for logging purpose.
+     *
+     * @return
+     */
+    private String getDate() {
+        DateFormat dateFormat = new SimpleDateFormat(CommonConstants.YYYY_MM_DD_HH_MM_SS);
+        //get current date time with Date()
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
 
