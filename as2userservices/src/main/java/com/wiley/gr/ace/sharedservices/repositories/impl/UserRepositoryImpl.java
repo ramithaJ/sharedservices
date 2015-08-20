@@ -80,6 +80,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         Session session = null;
         Users user = null;
         try {
+
             LOGGER.info("Creating User ...");
 
             //Validate the user request
@@ -251,18 +252,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             //Commit the transaction.
             session.getTransaction().commit();
 
+        } catch (SharedServiceException se) {
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_CREATE_SERVICE, se);
+            throw new SharedServiceException(se.getErrorCode(), CommonConstants.ERROR_NOTE + se.getMessage());
         } catch (Exception e) {
-            //Rollback the session if any exception occurs.
-            if (null != session) {
-                LOGGER.info("Rolling back...");
-                session.getTransaction().rollback();
-            }
-            LOGGER.error("Exception Occurred during user profile creation...", e);
-            if (null != e.getCause()) {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e.getCause().getMessage());
-            } else {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e);
-            }
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_CREATE_SERVICE, e);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             if (null != session) {
                 LOGGER.info("Closing session...");
@@ -346,17 +343,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             userResponse.setUserProfile(userProfile);
 
+        } catch (SharedServiceException se) {
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_GET_SERVICE, se);
+            throw new SharedServiceException(se.getErrorCode(), CommonConstants.ERROR_NOTE + se.getMessage());
         } catch (Exception e) {
-            //Rollback the session if any exception occurs.
-            if (null != session) {
-                session.getTransaction().rollback();
-            }
-            LOGGER.error("Exception Occurred during user profile creation...", e);
-            if (null != e.getCause()) {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e.getCause().getMessage());
-            } else {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e);
-            }
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_GET_SERVICE, e);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             if (null != session) {
                 //Close the session
@@ -487,17 +481,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             LOGGER.info(CommonConstants.COMMIT);
             session.getTransaction().commit();
 
+        } catch (SharedServiceException se) {
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_DELETE_SERVICE, se);
+            throw new SharedServiceException(se.getErrorCode(), CommonConstants.ERROR_NOTE + se.getMessage());
         } catch (Exception e) {
-            //Rollback the session if any exception occurs.
-            if (null != session) {
-                session.getTransaction().rollback();
-            }
-            LOGGER.error("Exception Occurred during user deletion...", e);
-            if (null != e.getCause()) {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e.getCause().getMessage());
-            } else {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e);
-            }
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_DELETE_SERVICE, e);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             if (null != session) {
                 //Close the session
@@ -965,17 +956,14 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             session.clear();
 
 
+        } catch (SharedServiceException se) {
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_UPDATE_SERVICE, se);
+            throw new SharedServiceException(se.getErrorCode(), CommonConstants.ERROR_NOTE + se.getMessage());
         } catch (Exception e) {
-            //Rollback the session if any exception occurs.
-            if (null != session) {
-                session.getTransaction().rollback();
-            }
-            LOGGER.error("Exception Occurred during user profile updating...", e);
-            if (null != e.getCause()) {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e.getCause().getMessage());
-            } else {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e);
-            }
+            rollBackSession(session);
+            LOGGER.error(CommonConstants.ERROR_USER_UPDATE_SERVICE, e);
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             if (null != session) {
                 //Close the session
@@ -1066,11 +1054,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             LOGGER.error("Exception Occurred during Lookup user...", e);
-            if (null != e.getCause()) {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e.getCause().getMessage());
-            } else {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e);
-            }
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             // Close the session
             if (null != session) {
@@ -1098,6 +1082,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         UserSearchResponse response = new UserSearchResponse();
         List<UserSearchResults> responseResultList = new LinkedList<>();
         List<UserSearchResults> searchResultsList = new LinkedList<>();
+        CallableStatement cs = null;
+        ResultSet cursor = null;
         try {
 
             session = sessionFactory.openSession();
@@ -1106,7 +1092,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             Connection con = jdbcTemplate.getDataSource().getConnection();
 
-            CallableStatement cs = con.prepareCall("{call usersearch(?,?,?,?,?)}");
+            cs = con.prepareCall("{call usersearch(?,?,?,?,?)}");
             cs.registerOutParameter(1, OracleTypes.CURSOR);
             cs.setString(2, firstName);
             cs.setString(3, lastName);
@@ -1114,24 +1100,31 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             cs.setString(5, email);
 
             cs.execute();
-            ResultSet cursor = (ResultSet) cs.getObject(1);
+            cursor = (ResultSet) cs.getObject(1);
             UserSearchResults userSearchResult = null;
-            while (cursor.next()) {
-                userSearchResult = new UserSearchResults();
-                userSearchResult.setUserId(Integer.parseInt(cursor.getString(1)));
-                userSearchResult.setFirstName(cursor.getString(2));
-                userSearchResult.setLastName(cursor.getString(3));
-                userSearchResult.setPrimaryEmailAddr(cursor.getString(4));
-                userSearchResult.setSuffix(cursor.getString(5));
-                userSearchResult.setTitle(cursor.getString(6));
-                userSearchResult.setMiddleName(cursor.getString(7));
-                userSearchResult.setOrcidId(cursor.getString(8));
-                userSearchResult.setInstitution(cursor.getString(9));
-                searchResultsList.add(userSearchResult);
+            if (null != cursor) {
+                while (cursor.next()) {
+                    userSearchResult = new UserSearchResults();
+                    userSearchResult.setUserId(Integer.parseInt(cursor.getString(1)));
+                    userSearchResult.setFirstName(cursor.getString(2));
+                    userSearchResult.setLastName(cursor.getString(3));
+                    userSearchResult.setPrimaryEmailAddr(cursor.getString(4));
+                    userSearchResult.setSuffix(cursor.getString(5));
+                    userSearchResult.setTitle(cursor.getString(6));
+                    userSearchResult.setMiddleName(cursor.getString(7));
+                    userSearchResult.setOrcidId(cursor.getString(8));
+                    userSearchResult.setInstitution(cursor.getString(9));
+                    searchResultsList.add(userSearchResult);
+                }
             }
 
-            cursor.close();
-            cs.close();
+            //Close the cursor and statement
+            if (null != cursor) {
+                cursor.close();
+            }
+            if (null != cs) {
+                cs.close();
+            }
 
 
             for (UserSearchResults userSearchResults : searchResultsList) {
@@ -1188,11 +1181,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             LOGGER.error("Exception Occurred during search user...", e);
-            if (null != e.getCause()) {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e.getCause().getMessage());
-            } else {
-                throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + e);
-            }
+            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             // Close the session
             if (null != session) {
@@ -1420,6 +1409,19 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 session.delete(userFunderGrants);
             }
             session.delete(userFunders);
+        }
+    }
+
+    /**
+     * Method to roll back session.
+     *
+     * @param session
+     */
+    private void rollBackSession(Session session) {
+        //Rollback the session if any exception occurs.
+        if (null != session) {
+            LOGGER.info("Rolling back...");
+            session.getTransaction().rollback();
         }
     }
 

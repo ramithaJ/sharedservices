@@ -117,6 +117,12 @@ public class CommonConstants {
     public static final String DELETE_USER_SERVICE = "DELETE_USER_SERVICE";
     public static final String YYYY_MM_DD_HH_MM_SS = "yyyy/MM/dd HH:mm:ss";
 
+    public static final String INTERNAL_SERVER_ERROR = "Internal Server Error - Please check the logs";
+    public static final String ERROR_USER_CREATE_SERVICE = "Exception Occurred during user profile creation...";
+    public static final String ERROR_USER_GET_SERVICE = "Exception Occurred during user get service...";
+    public static final String ERROR_USER_DELETE_SERVICE = "Exception Occurred during user delete service...";
+    public static final String ERROR_USER_UPDATE_SERVICE = "Exception Occurred during user delete service...";
+
 
     private CommonConstants() {
 
