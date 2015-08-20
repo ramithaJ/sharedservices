@@ -1,7 +1,7 @@
 /**
  * ****************************************************************************
  * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
- * <p/>
+ * <p>
  * All material contained herein is proprietary to John Wiley & Sons
  * and its third party suppliers, if any. The methods, techniques and
  * technical concepts contained herein are considered trade secrets

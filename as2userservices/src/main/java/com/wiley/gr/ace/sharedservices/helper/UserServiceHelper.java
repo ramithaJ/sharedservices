@@ -14,15 +14,17 @@
 package com.wiley.gr.ace.sharedservices.helper;
 
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
-import com.wiley.gr.ace.sharedservices.payload.*;
 import com.wiley.gr.ace.sharedservices.payload.Error;
-import com.wiley.gr.ace.sharedservices.persistence.entity.*;
+import com.wiley.gr.ace.sharedservices.payload.Service;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.Address;
+import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
 import com.wiley.gr.ace.sharedservices.profile.*;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,6 +32,14 @@ import java.util.Date;
  * @author kkalyan
  */
 public class UserServiceHelper {
+
+
+    //Logger Instance
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceHelper.class);
+
+    private UserServiceHelper() {
+
+    }
 
     /**
      * Setter method for User Profile Information.
@@ -93,6 +103,29 @@ public class UserServiceHelper {
     }
 
 
+    private static boolean isUserProfileValidate1(UserServiceRequest userServiceRequest) {
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getSuffixCd())) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isUserProfileValidate2(UserServiceRequest userServiceRequest) {
+        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getAlternativeName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getIndustryCd()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getJobCategoryCd())) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isUserProfileValidate3(UserServiceRequest userServiceRequest) {
+        if ((userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') ||
+                !StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
+            return true;
+        }
+        return false;
+    }
+
+
     /**
      * Method to validate the request against user profile.
      *
@@ -101,8 +134,7 @@ public class UserServiceHelper {
      */
     public static boolean isUserProfileDataExists(UserServiceRequest userServiceRequest) {
         boolean isDataExists = false;
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getSuffixCd()) || !StringUtils.isEmpty(userServiceRequest.getUserProfile().getAlternativeName()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getIndustryCd()) || StringUtils.isEmpty(userServiceRequest.getUserProfile().getJobCategoryCd()) || (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') ||
-                !StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
+        if (isUserProfileValidate1(userServiceRequest) || isUserProfileValidate2(userServiceRequest) || isUserProfileValidate3(userServiceRequest)) {
             isDataExists = true;
         }
         return isDataExists;
@@ -195,11 +227,11 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(addressProfile.getDepartmentName())) {
             address.setDepartmentName(addressProfile.getDepartmentName());
         }
-        if (!StringUtils.isEmpty(addressProfile.getAddress_01())) {
-            address.setAddressLine1(addressProfile.getAddress_01());
+        if (!StringUtils.isEmpty(addressProfile.getAddress01())) {
+            address.setAddressLine1(addressProfile.getAddress01());
         }
-        if (!StringUtils.isEmpty(addressProfile.getAddress_02())) {
-            address.setAddressLine2(addressProfile.getAddress_02());
+        if (!StringUtils.isEmpty(addressProfile.getAddress02())) {
+            address.setAddressLine2(addressProfile.getAddress02());
         }
         if (!StringUtils.isEmpty(addressProfile.getCity())) {
             address.setCity(addressProfile.getCity());
@@ -496,7 +528,7 @@ public class UserServiceHelper {
             SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
             convertedDate = sdf.parse(date);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception Occurred during convertStringToDate...", e);
         }
         return convertedDate;
     }
@@ -620,10 +652,10 @@ public class UserServiceHelper {
             address.setDepartmentName(addressEntity.getDepartmentName());
         }
         if (!StringUtils.isEmpty(addressEntity.getAddressLine1())) {
-            address.setAddress_01(addressEntity.getAddressLine1());
+            address.setAddress01(addressEntity.getAddressLine1());
         }
         if (!StringUtils.isEmpty(addressEntity.getAddressLine2())) {
-            address.setAddress_02(addressEntity.getAddressLine2());
+            address.setAddress02(addressEntity.getAddressLine2());
         }
         if (!StringUtils.isEmpty(addressEntity.getCity())) {
             address.setCity(addressEntity.getCity());
@@ -679,7 +711,6 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(userAffiliations.getStateOrProvinceName())) {
             affiliation.setStateCd(userAffiliations.getStateOrProvinceName());
         }
-        //TODO: Country is missing the DB
         if (null != userAffiliations.getStartDt()) {
             affiliation.setFromDate("" + userAffiliations.getStartDt());
         }
@@ -773,7 +804,7 @@ public class UserServiceHelper {
      */
     public static boolean isNumeric(String str) {
         try {
-            double d = Double.parseDouble(str);
+            Double.parseDouble(str);
         } catch (NumberFormatException nfe) {
             return false;
         }

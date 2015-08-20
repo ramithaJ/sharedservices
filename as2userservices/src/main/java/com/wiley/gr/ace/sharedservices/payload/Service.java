@@ -29,7 +29,7 @@ public class Service {
         this.status = status;
     }
 
-    public Service (){
+    public Service() {
 
     }
 

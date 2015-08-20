@@ -23,7 +23,7 @@ public class Error {
 
     private String message;
 
-    public Error(){
+    public Error() {
 
     }
 

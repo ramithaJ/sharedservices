@@ -11,57 +11,57 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UserPreferredJournalsId implements java.io.Serializable {
 
-	private Integer userId;
-	private int journalId;
+    private Integer userId;
+    private int journalId;
 
-	public UserPreferredJournalsId() {
-	}
+    public UserPreferredJournalsId() {
+    }
 
-	public UserPreferredJournalsId(Integer userId, int journalId) {
-		this.userId = userId;
-		this.journalId = journalId;
-	}
+    public UserPreferredJournalsId(Integer userId, int journalId) {
+        this.userId = userId;
+        this.journalId = journalId;
+    }
 
-	@Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
-	public Integer getUserId() {
-		return this.userId;
-	}
+    @Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
+    public Integer getUserId() {
+        return this.userId;
+    }
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-	@Column(name = "JOURNAL_ID", nullable = false, precision = 22, scale = 0)
-	public int getJournalId() {
-		return this.journalId;
-	}
+    @Column(name = "JOURNAL_ID", nullable = false, precision = 22, scale = 0)
+    public int getJournalId() {
+        return this.journalId;
+    }
 
-	public void setJournalId(int journalId) {
-		this.journalId = journalId;
-	}
+    public void setJournalId(int journalId) {
+        this.journalId = journalId;
+    }
 
-	public boolean equals(Object other) {
-		if ((this == other))
-			return true;
-		if ((other == null))
-			return false;
-		if (!(other instanceof UserPreferredJournalsId))
-			return false;
-		UserPreferredJournalsId castOther = (UserPreferredJournalsId) other;
+    public boolean equals(Object other) {
+        if ((this == other))
+            return true;
+        if ((other == null))
+            return false;
+        if (!(other instanceof UserPreferredJournalsId))
+            return false;
+        UserPreferredJournalsId castOther = (UserPreferredJournalsId) other;
 
-		return ((this.getUserId() == castOther.getUserId()) || (this
-				.getUserId() != null && castOther.getUserId() != null && this
-				.getUserId().equals(castOther.getUserId())))
-				&& (this.getJournalId() == castOther.getJournalId());
-	}
+        return ((this.getUserId() == castOther.getUserId()) || (this
+                .getUserId() != null && castOther.getUserId() != null && this
+                .getUserId().equals(castOther.getUserId())))
+                && (this.getJournalId() == castOther.getJournalId());
+    }
 
-	public int hashCode() {
-		int result = 17;
+    public int hashCode() {
+        int result = 17;
 
-		result = 37 * result
-				+ (getUserId() == null ? 0 : this.getUserId().hashCode());
-		result = 37 * result + this.getJournalId();
-		return result;
-	}
+        result = 37 * result
+                + (getUserId() == null ? 0 : this.getUserId().hashCode());
+        result = 37 * result + this.getJournalId();
+        return result;
+    }
 
 }

@@ -23,11 +23,16 @@ import com.wiley.gr.ace.staticcontentservices.model.external.StatusCatalogDotcms
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalog;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class StaticContentFetchServiceImpl.
  */
 public class StaticContentFetchServiceImpl implements StaticContentFetchService {
+
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(StaticContentFetchService.class);
 
 	/** The dot cms data service. */
 	@Autowired(required = true)
@@ -43,7 +48,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	@Override
 	public UIMessageContent getUiMessageContent(String uniqueKey, String pageName, String locale,
 			String fetchServerMessages) throws Exception {
-
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
 		UIMessageCatalogDotcmsResponse uiMessageCatalogDotcmsResponse = dotCMSDataService
 				.getUiMessageCatalog(uniqueKey, pageName, locale);
 		UIMessageContent uiMessageContent = null;
@@ -96,7 +101,8 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	public ConfirmationContent getConfirmationMessageContent(
 			String moduleName, String locale)
 			throws Exception {
-
+	    
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
 		ConfirmationCatalogDotcmsResponse confirmationCatalogDotcmsResponse = dotCMSDataService
 				.getConfirmationCatalog(moduleName, locale);
 		ConfirmationContent confirmationContent = null;
@@ -124,7 +130,8 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 */
 	@Override
 	public StatusContent getStatusContent(String statusMessageType, String locale) throws Exception {
-
+	    
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
 		StatusCatalogDotcmsResponse statusCatalogDotcmsResponse = dotCMSDataService
 				.getStatusCatalog(statusMessageType, locale);
 
@@ -152,7 +159,9 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 */
 	@Override
 	public EmailContent getEmailContent(String contentTitle) throws Exception {
-		EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
+		
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
+	    EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
 				.getEmailCatalog(contentTitle);
 
 		EmailContent emailContent = null;
@@ -179,6 +188,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	@Override
 	public StaticContent getStaticContent(String pageName, String contentUniqueKey, String locale) throws Exception {
 
+	    LOGGER.info("inside getStaticContent method of StaticContentFetchService");
 		StaticCatalogDotcmsResponse staticCatalogDotcmsResponse = dotCMSDataService
 				.getStaticCatalog(pageName,contentUniqueKey,locale);
 		StaticContent staticContent = null;
@@ -192,7 +202,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 			staticContent.setAdBlockBody(staticCatalog.getAdBlockContent());
 
 		}
-
+		
 		return staticContent;
 	}
 }

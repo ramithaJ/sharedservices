@@ -18,7 +18,7 @@ package com.wiley.gr.ace.sharedservices.exceptions;
  */
 public class SharedServiceException extends Exception {
 
-    private String errorCode;
+    private final String errorCode;
 
     public SharedServiceException(String errorCode, String message) {
         super(message);
@@ -30,7 +30,5 @@ public class SharedServiceException extends Exception {
         return errorCode;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
+
 }

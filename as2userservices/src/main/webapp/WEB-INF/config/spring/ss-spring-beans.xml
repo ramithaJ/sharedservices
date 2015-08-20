@@ -15,5 +15,10 @@
 
     <bean id="userService" class="com.wiley.gr.ace.sharedservices.service.impl.UserServiceImpl"/>
     <bean id="userRepository" class="com.wiley.gr.ace.sharedservices.repositories.impl.UserRepositoryImpl"/>
+    <bean id="userRepositoryHelper" class="com.wiley.gr.ace.sharedservices.helper.UserRepositoryHelper"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
 </beans>

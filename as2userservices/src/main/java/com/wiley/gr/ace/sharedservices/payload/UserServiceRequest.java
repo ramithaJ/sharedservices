@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * @author kkalyan
  */
-public class UserServiceRequest implements Serializable{
+public class UserServiceRequest implements Serializable {
 
     private UserProfile userProfile;
 

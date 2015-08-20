@@ -22,19 +22,6 @@ public class DeleteProfileRequest {
 
     private UserProfile userProfile;
 
-    public class UserProfile {
-
-        private String asid;
-
-        public String getAsid() {
-            return asid;
-        }
-
-        public void setAsid(String asid) {
-            this.asid = asid;
-        }
-    }
-
     public UserProfile getUserProfile() {
         return userProfile;
     }
@@ -48,5 +35,18 @@ public class DeleteProfileRequest {
         return "DeleteProfileRequest{" +
                 "userProfile=" + userProfile +
                 '}';
+    }
+
+    public class UserProfile {
+
+        private String asid;
+
+        public String getAsid() {
+            return asid;
+        }
+
+        public void setAsid(String asid) {
+            this.asid = asid;
+        }
     }
 }
