@@ -85,8 +85,6 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             //Validate the user request
             userRepositoryHelper.validateRequest(userServiceRequest);
 
-            //TODO: Log4j Logs
-
             //Create user.
             user = new Users();
             //Open the session.
@@ -584,13 +582,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = addressProfile.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != addressProfile.getId()) {
+                                if (null == addressProfile.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.editAddressProfile(addressProfile, session, userId);
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != addressProfile.getId()) {
+                                if (null == addressProfile.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.deleteAddress(session, addressProfile);
@@ -637,7 +635,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = affiliation.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != affiliation.getId()) {
+                                if (null == affiliation.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userAffiliations = (UserAffiliations) userRepositoryHelper.getEntityById(CommonConstants.AFFILIATION_ID, affiliation.getId(), UserAffiliations.class);
@@ -647,7 +645,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 }
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != affiliation.getId()) {
+                                if (null == affiliation.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.deleteAffiliation(session, affiliation, userId);
@@ -678,7 +676,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = society.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != society.getId()) {
+                                if (null == society.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userSocietyDetails = (UserSocietyDetails) userRepositoryHelper.getEntityById(CommonConstants.USER_SOCIETY_ID, society.getId(), UserSocietyDetails.class);
@@ -688,7 +686,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 }
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != society.getId()) {
+                                if (null == society.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 session.clear();
@@ -725,7 +723,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = coAuthor.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != coAuthor.getId()) {
+                                if (null == coAuthor.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 AuthCoauthDetails authCoauthDetails = (AuthCoauthDetails) userRepositoryHelper.getEntityById(CommonConstants.AUTH_COAUTH_ID, coAuthor.getId(), AuthCoauthDetails.class);
@@ -736,7 +734,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 }
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != coAuthor.getId()) {
+                                if (null == coAuthor.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 session.clear();
@@ -767,13 +765,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = alert.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != alert.getId()) {
+                                if (null == alert.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.updateAlerts(session, alert, alertTypeList, user, userId);
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != alert.getId()) {
+                                if (null == alert.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.deleteAlerts(session, alert, userId);
@@ -808,7 +806,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = preferredJournal.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != preferredJournal.getId()) {
+                                if (null == preferredJournal.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 UserPreferredJournalsId userPreferredJournalsId = new UserPreferredJournalsId();
@@ -820,7 +818,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 }
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != preferredJournal.getId()) {
+                                if (null == preferredJournal.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.deleteJournal(session, preferredJournal, user);
@@ -867,7 +865,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
                                 //Delete MyInterests
-                                if (null != myInterest.getId()) {
+                                if (null == myInterest.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 Set<UserAreaOfInterest> userAreaOfInterestSet = authorProfile.getUserAreaOfInterests();
@@ -886,7 +884,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != myInterest.getId()) {
+                                if (null == myInterest.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 userRepositoryHelper.deleteAreaofInterest(session, myInterest, userId);
@@ -920,7 +918,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                         String status = funder.getStatus();
                         switch (status.toLowerCase()) {
                             case CommonConstants.EDIT:
-                                if (null != funder.getId()) {
+                                if (null == funder.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 //Delete Funders
@@ -930,7 +928,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                                 userRepositoryHelper.addFunder(session, funder, user, authorProfile);
                                 break;
                             case CommonConstants.DELETE:
-                                if (null != funder.getId()) {
+                                if (null == funder.getId()) {
                                     throw new SharedServiceException(CommonConstants.ERROR_CODE_117, userServiceError117);
                                 }
                                 //Delete Funders
