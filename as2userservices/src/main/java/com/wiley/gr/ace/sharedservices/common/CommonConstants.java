@@ -101,6 +101,7 @@ public class CommonConstants {
     public static final String ERROR_CODE_114 = "1014";
     public static final String ERROR_CODE_115 = "1015";
     public static final String ERROR_CODE_116 = "1016";
+    public static final String ERROR_CODE_117 = "1017";
 
     public static final String ERROR_CODE_201 = "2001";
     public static final String ERROR_CODE_304 = "3004";
