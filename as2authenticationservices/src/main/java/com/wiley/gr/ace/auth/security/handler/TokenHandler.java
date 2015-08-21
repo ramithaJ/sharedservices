@@ -1,6 +1,7 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
- *
+ * <p>
  * All material contained herein is proprietary to John Wiley & Sons
  * and its third party suppliers, if any. The methods, techniques and
  * technical concepts contained herein are considered trade secrets
@@ -8,23 +9,21 @@
  * Reproduction or distribution of this material, in whole or in part,
  * is strictly forbidden except by express prior written permission
  * of John Wiley & Sons.
- *******************************************************************************/
+ * *****************************************************************************
+ */
 package com.wiley.gr.ace.auth.security.handler;
 
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.SecureRandom;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import com.wiley.gr.ace.auth.security.constants.CommonConstant;
+import com.wiley.gr.ace.auth.security.model.TokenRequest;
+import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jwk.RsaJwkGenerator;
-import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -34,330 +33,274 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import com.wiley.gr.ace.auth.security.constants.CommonConstant;
-import com.wiley.gr.ace.auth.security.model.TokenRequest;
-import com.wiley.gr.ace.auth.security.service.AuthenticationService;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Virtusa
- *
  */
 public class TokenHandler {
 
-	/**
-	 * This field holds the value of LOGGER
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(TokenHandler.class);
+    /**
+     * This field holds the value of LOGGER
+     */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(TokenHandler.class);
+    /**
+     * This field holds the value of keyMap
+     */
+    private static Map<String, RsaJsonWebKey> keyMap;
+    /**
+     * This field holds the value of applicationProperties
+     */
+    @Autowired
+    @Qualifier(value = "applicationProperties")
+    private Properties applicationProperties;
+    /**
+     * This field holds the value of authenticationService
+     */
+    @Autowired(required = true)
+    private AuthenticationService authenticationService;
 
-	/**
-	 * This field holds the value of applicationProperties
-	 */
-	@Autowired
-	@Qualifier(value = "applicationProperties")
-	private Properties applicationProperties;
+    /**
+     * Method to extract values from the token.
+     *
+     * @param token
+     * @param key
+     * @param jws
+     * @return String
+     * @throws IOException
+     */
+    private String getTokenNodeValue(final String token, final String key,
+                                     final JsonWebSignature jws) throws IOException {
 
-	/**
-	 * This field holds the value of authenticationService
-	 */
-	@Autowired(required = true)
-	private AuthenticationService authenticationService;
+        final ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = null;
+        actualObj = mapper.readTree(jws.getUnverifiedPayload());
+        final JsonNode jsonNode = actualObj.get(key);
 
-	/**
-	 * This field holds the value of keyMap
-	 */
-	private static HashMap<String, RsaJsonWebKey> keyMap;
+        return jsonNode.textValue();
+    }
 
-	/**
-	 * Method to create claims.
-	 *
-	 * @param tokenIssuer
-	 * @param roles
-	 * @param tokenSubject
-	 * @param tokenAudience
-	 * @param tokenExpirationTime
-	 * @param claimKey
-	 * @param userId
-	 * @param minutesBefore
-	 * @return JwtClaims
-	 */
-	private JwtClaims createClaims(final String tokenIssuer,
-			final List<String> roles, final String tokenSubject,
-			final String tokenAudience, final String tokenExpirationTime,
-			final String claimKey, final String userId,
-			final String minutesBefore) {
-		TokenHandler.LOGGER.info("Creating Claims...");
-		final JwtClaims claims = new JwtClaims();
-		claims.setIssuer(tokenIssuer);
-		claims.setAudience(tokenAudience);
-		claims.setExpirationTimeMinutesInTheFuture(new Integer(
-				tokenExpirationTime));
-		claims.setGeneratedJwtId();
-		claims.setIssuedAtToNow();
-		claims.setNotBeforeMinutesInThePast(new Integer(minutesBefore));
-		claims.setSubject(tokenSubject);
-		claims.setClaim(claimKey, userId);
-		claims.setStringListClaim(CommonConstant.ROLES, roles);
-		TokenHandler.LOGGER.debug("Claims..." + claims.toJson());
-		return claims;
-	}
+    /**
+     * Method to create JWS Signature
+     *
+     * @param claims
+     * @param key
+     * @param algorithm
+     * @return String
+     * @throws JoseException
+     */
+    private String jwsSignature(final JwtClaims claims, final PrivateKey key,
+                                final String algorithm) throws JoseException {
+        TokenHandler.LOGGER.info("Creating JWS Signature...");
 
-	/**
-	 * Method to extract values from the token.
-	 *
-	 * @param token
-	 * @param key
-	 * @param jws
-	 * @return String
-	 * @throws IOException
-	 */
-	private String getTokenNodeValue(final String token, final String key,
-			final JsonWebSignature jws) throws IOException {
+        final JsonWebSignature jws = new JsonWebSignature();
+        jws.setPayload(claims.toJson());
+        jws.setKey(key);
 
-		final ObjectMapper mapper = new ObjectMapper();
-		JsonNode actualObj = null;
-		actualObj = mapper.readTree(jws.getUnverifiedPayload());
-		final JsonNode jsonNode = actualObj.get(key);
+        jws.setAlgorithmHeaderValue(algorithm);
 
-		return jsonNode.textValue();
-	}
+        return jws.getCompactSerialization();
+    }
 
-	/**
-	 * Method to create JWS Signature
-	 *
-	 * @param claims
-	 * @param key
-	 * @param algorithm
-	 * @return String
-	 * @throws JoseException
-	 */
-	private String jwsSignature(final JwtClaims claims, final PrivateKey key,
-			final String algorithm) throws JoseException {
-		TokenHandler.LOGGER.info("Creating JWS Signature...");
+    /**
+     * Method to refresh token.
+     *
+     * @param token
+     * @return
+     */
+    public String refreshToken(final String token) throws JoseException,
+            InvalidJwtException, IOException {
+        TokenHandler.LOGGER.info("Refreshing Token...");
+        final JsonWebSignature jws = new JsonWebSignature();
+        jws.setCompactSerialization(token);
+        final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
+                jws);
+        final String userId = this.getTokenNodeValue(token,
+                CommonConstant.USER_ID, jws);
 
-		final JsonWebSignature jws = new JsonWebSignature();
-		jws.setPayload(claims.toJson());
-		jws.setKey(key);
+        final TokenRequest request = new TokenRequest();
+        request.setUserId(userId);
+        request.setAppKey(issuer);
+        request.setRoles(this.authenticationService.getRoles(userId));
+        final String refreshToken = this.hmacTokenGenerator(request);
+        TokenHandler.LOGGER.debug("Refreshed Token..." + refreshToken);
 
-		jws.setAlgorithmHeaderValue(algorithm);
+        return refreshToken;
+    }
 
-		return jws.getCompactSerialization();
-	}
+    /**
+     * Validate the token
+     *
+     * @param token
+     * @return boolean
+     * @throws JoseException
+     */
+    public boolean validateToken(final String token) throws JoseException,
+            InvalidJwtException, IOException {
+        TokenHandler.LOGGER.info("Validating Token...");
+        final JsonWebSignature jws = new JsonWebSignature();
+        jws.setCompactSerialization(token);
+        final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
+                jws);
+        TokenHandler.LOGGER.debug("Validating Token Issuer..." + issuer);
+        if (null == TokenHandler.keyMap) {
+            return false;
+        }
 
-	/**
-	 * Method to refresh token.
-	 *
-	 * @param token
-	 * @return
-	 */
-	public String refreshToken(final String token) throws JoseException,
-			InvalidJwtException, IOException {
-		TokenHandler.LOGGER.info("Refreshing Token...");
-		final JsonWebSignature jws = new JsonWebSignature();
-		jws.setCompactSerialization(token);
-		final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
-				jws);
-		final String userId = this.getTokenNodeValue(token,
-				CommonConstant.USER_ID, jws);
+        if (!TokenHandler.keyMap.containsKey(issuer)) {
+            return false;
+        }
 
-		final TokenRequest request = new TokenRequest();
-		request.setUserId(userId);
-		request.setAppKey(issuer);
-		request.setRoles(this.authenticationService.getRoles(userId));
-		final String refreshToken = this.hmacTokenGenerator(request);
-		TokenHandler.LOGGER.debug("Refreshed Token..." + refreshToken);
+        if (null != issuer) {
+            jws.setKey(TokenHandler.keyMap.get(issuer).getPublicKey());
+        }
 
-		return refreshToken;
-	}
+        return jws.verifySignature();
+    }
 
-	/**
-	 * Validate the token
-	 *
-	 * @param token
-	 * @return boolean
-	 * @throws JoseException
-	 */
-	public boolean validateToken(final String token) throws JoseException,
-			InvalidJwtException, IOException {
-		TokenHandler.LOGGER.info("Validating Token...");
-		final JsonWebSignature jws = new JsonWebSignature();
-		jws.setCompactSerialization(token);
-		final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
-				jws);
-		TokenHandler.LOGGER.debug("Validating Token Issuer..." + issuer);
-		if (null == TokenHandler.keyMap) {
-			return false;
-		}
+    /**
+     * Method to create hmac token.
+     *
+     * @param tokenRequest
+     * @return
+     */
+    public String hmacTokenGenerator(final TokenRequest tokenRequest) {
 
-		if (!TokenHandler.keyMap.containsKey(issuer)) {
-			return false;
-		}
+        final String tokenKey = tokenRequest.getAppKey().toLowerCase()
+                + CommonConstant.DOT;
+        final String tokenSubject = this.applicationProperties
+                .getProperty(tokenKey + CommonConstant.SUBJECT);
+        final String claimKey = this.applicationProperties.getProperty(tokenKey
+                + CommonConstant.CLAIM_KEY);
+        String sharedSecretKey = this.sharedSecretKey(tokenRequest.getUserId());
+        LOGGER.debug(sharedSecretKey);
+        JWSSigner signer = new MACSigner(sharedSecretKey);
 
-		if (null != issuer) {
-			jws.setKey(TokenHandler.keyMap.get(issuer).getPublicKey());
-		}
+        JWTClaimsSet claimsSet = this.hmacClaimsSet(tokenRequest.getAppKey(),
+                tokenRequest.getRoles(), tokenSubject, claimKey, tokenRequest.getUserId());
 
-		return jws.verifySignature();
-	}
+        SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256),
+                claimsSet);
+        try {
+            signedJWT.sign(signer);
+        } catch (JOSEException e) {
+            LOGGER.error("Exception hmacTokenGenerator", e);
+        }
 
-	public String hmacTokenGenerator(final TokenRequest tokenRequest) {
+        LOGGER.debug("HMAC Token     " + signedJWT.serialize());
+        return signedJWT.serialize();
+    }
 
-		final String tokenKey = tokenRequest.getAppKey().toLowerCase()
-				+ CommonConstant.DOT;
-		final String tokenSubject = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.SUBJECT);
-		final String tokenAudience = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.AUDIENCE);
-		final String tokenExpirationTime = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.EXPIRATION_TIME);
-		final String claimKey = this.applicationProperties.getProperty(tokenKey
-				+ CommonConstant.CLAIM_KEY);
-		final String minutesBefore = this.applicationProperties
-				.getProperty(tokenKey + CommonConstant.TIME_BEFORE);
+    /**
+     * @param appKey
+     * @param roles
+     * @param tokenSubject
+     * @param claimKey
+     * @param userId
+     * @return
+     */
+    public JWTClaimsSet hmacClaimsSet(String appKey, List<String> roles,
+                                      String tokenSubject, String claimKey, String userId) {
 
-		String sharedSecretKey = this.sharedSecretKey(tokenRequest.getUserId());
-		System.err.println(sharedSecretKey);
-		JWSSigner signer = new MACSigner(sharedSecretKey);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
+        // "AS Token"
+        jwtClaimsSet.setSubject(tokenSubject);
+        jwtClaimsSet.setAudience(roles);
+        // "AS"
+        jwtClaimsSet.setIssuer(appKey);
+        jwtClaimsSet.setExpirationTime(new Date(
+                new Date().getTime() + 60 * 1000));
+        jwtClaimsSet
+                .setNotBeforeTime(new Date(new Date().getTime() + 60 * 1000));
+        // "userId", "8011047"
+        jwtClaimsSet.setClaim(claimKey, userId);
 
-		JWTClaimsSet claimsSet = this.hmacClaimsSet(tokenRequest.getAppKey(),
-				tokenRequest.getRoles(), tokenSubject, tokenAudience,
-				tokenExpirationTime, claimKey, tokenRequest.getUserId(),
-				minutesBefore);
+        return jwtClaimsSet;
+    }
 
-		SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256),
-				claimsSet);
-		try {
-			signedJWT.sign(signer);
-		} catch (JOSEException e) {
-			e.printStackTrace();
-		}
+    /**
+     * @param hmacToken
+     * @return
+     * @throws ParseException
+     * @throws JOSEException
+     * @throws JoseException
+     * @throws IOException
+     */
+    public boolean hmacTokenVerifies(String hmacToken) throws ParseException,
+            JOSEException, JoseException, IOException {
 
-		System.err.println("HMAC Token     " + signedJWT.serialize());
-		return signedJWT.serialize();
-	}
+        JsonWebSignature jws = new JsonWebSignature();
+        jws.setCompactSerialization(hmacToken);
+        final String userId = this.getTokenNodeValue(hmacToken,
+                CommonConstant.USER_ID, jws);
+        String sharedSecretKey = this.sharedSecretKey(userId);
+        SignedJWT signedJWT = SignedJWT.parse(hmacToken);
+        JWSVerifier verifier = new MACVerifier(sharedSecretKey);
+        LOGGER.debug("verifier-------" + signedJWT.verify(verifier));
+        if (signedJWT.verify(verifier)) {
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * @param appKey
-	 * @param roles
-	 * @param tokenSubject
-	 * @param tokenAudience
-	 * @param tokenExpirationTime
-	 * @param claimKey
-	 * @param userId
-	 * @param minutesBefore
-	 * @return
-	 */
-	public JWTClaimsSet hmacClaimsSet(String appKey, List<String> roles,
-			String tokenSubject, String tokenAudience,
-			String tokenExpirationTime, String claimKey, String userId,
-			String minutesBefore) {
+    /**
+     * @param userId
+     * @return
+     */
+    private String sharedSecretKey(final String userId) {
+        String salt = "[B@5c5f0b5f";
+        String sharedSecretKey = null;
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(salt.getBytes());
+            byte[] bytes = messageDigest.digest(userId.getBytes());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < bytes.length; i++) {
+                stringBuilder.append(Integer.toString(
+                        (bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            sharedSecretKey = stringBuilder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("Exception sharedSecretKey", e);
+        }
+        return sharedSecretKey;
+    }
 
-		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
-		jwtClaimsSet.setSubject(tokenSubject);// "AS Token"
-		jwtClaimsSet.setAudience(roles);
-		jwtClaimsSet.setIssuer(appKey);// "AS"
-		jwtClaimsSet.setExpirationTime(new Date(
-				new Date().getTime() + 60 * 1000));
-		jwtClaimsSet
-				.setNotBeforeTime(new Date(new Date().getTime() + 60 * 1000));
-		jwtClaimsSet.setClaim(claimKey, userId);// "userId", "8011047"
-		
-		return jwtClaimsSet;
-	}
+    /**
+     * @param token
+     * @return
+     * @throws JoseException
+     * @throws InvalidJwtException
+     * @throws IOException
+     */
+    public String hmacRefreshToken(final String token) throws JoseException,
+            InvalidJwtException, IOException {
 
-	/**
-	 * @param hmacToken
-	 * @return
-	 * @throws ParseException
-	 * @throws JOSEException
-	 * @throws JoseException
-	 * @throws IOException
-	 */
-	public boolean hmacTokenVerifies(String hmacToken) throws ParseException,
-			JOSEException, JoseException, IOException {
+        TokenHandler.LOGGER.info("Refreshing Token...");
+        JsonWebSignature jws = new JsonWebSignature();
+        jws.setCompactSerialization(token);
+        final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
+                jws);
+        LOGGER.debug("issuer----------- " + issuer);
+        final String userId = this.getTokenNodeValue(token,
+                CommonConstant.USER_ID, jws);
+        LOGGER.debug("userId----------- " + userId);
+        final TokenRequest request = new TokenRequest();
+        request.setUserId(userId);
+        request.setAppKey(issuer);
+        request.setRoles(this.authenticationService.getRoles(userId));
+        final String refreshToken = this.hmacTokenGenerator(request);
+        TokenHandler.LOGGER.debug("Refreshed Token..." + refreshToken);
 
-		JsonWebSignature jws = new JsonWebSignature();
-		jws.setCompactSerialization(hmacToken);
-		final String userId = this.getTokenNodeValue(hmacToken,
-				CommonConstant.USER_ID, jws);
-		System.err.println("userId------ " + userId);
-		String sharedSecretKey = this.sharedSecretKey(userId);
-		SignedJWT signedJWT = SignedJWT.parse(hmacToken);
-		JWSVerifier verifier = new MACVerifier(sharedSecretKey);
-		System.err.println("verifier-------"+ signedJWT.verify(verifier));
-		if(signedJWT.verify(verifier)) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @param userId
-	 * @return
-	 */
-	private String sharedSecretKey(final String userId) {
-		
-		 /*SecureRandom random = new SecureRandom(); 
-		 byte[] sharedSecret = new byte[32]; 
-		 random.nextBytes(sharedSecret); 
-		 String salt = sharedSecret.toString();
-		 System.err.println(salt);*/
-		String salt = "[B@5c5f0b5f";
-		String sharedSecretKey = null;
-		try {
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-			messageDigest.update(salt.getBytes());
-			byte[] bytes = messageDigest.digest(userId.getBytes());
-			StringBuilder stringBuilder = new StringBuilder();
-			for (int i = 0; i < bytes.length; i++) {
-				stringBuilder.append(Integer.toString(
-						(bytes[i] & 0xff) + 0x100, 16).substring(1));
-			}
-			sharedSecretKey = stringBuilder.toString();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		System.err.println(sharedSecretKey);
-		return sharedSecretKey;
-	}
-
-	/**
-	 * @param token
-	 * @return
-	 * @throws JoseException
-	 * @throws InvalidJwtException
-	 * @throws IOException
-	 */
-	public String hmacRefreshToken(final String token) throws JoseException,
-			InvalidJwtException, IOException {
-
-		TokenHandler.LOGGER.info("Refreshing Token...");
-		JsonWebSignature jws = new JsonWebSignature();
-		jws.setCompactSerialization(token);
-		final String issuer = this.getTokenNodeValue(token, CommonConstant.ISS,
-				jws);
-		System.err.println("issuer----------- " + issuer);
-		final String userId = this.getTokenNodeValue(token,
-				CommonConstant.USER_ID, jws);
-		System.err.println("userId----------- " + userId);
-		final TokenRequest request = new TokenRequest();
-		request.setUserId(userId);
-		request.setAppKey(issuer);
-		request.setRoles(this.authenticationService.getRoles(userId));
-		final String refreshToken = this.hmacTokenGenerator(request);
-		TokenHandler.LOGGER.debug("Refreshed Token..." + refreshToken);
-
-		return refreshToken;
-	}
+        return refreshToken;
+    }
 }

@@ -23,7 +23,7 @@ public interface DotCMSDataService {
      * @throws Exception
      *             the exception
      */
-    UIMessageCatalogDotcmsResponse getUiMessageCatalog(String pageName,
+    UIMessageCatalogDotcmsResponse getUiMessageCatalog(String uniqueKey, String pageName,
             String locale) throws Exception;
 
     /**
@@ -36,7 +36,7 @@ public interface DotCMSDataService {
      * @throws Exception             the exception
      */
     ConfirmationCatalogDotcmsResponse getConfirmationCatalog(
-            String contentTitle, String moduleName, String locale)
+            String moduleName, String locale)
             throws Exception;
 
     /**
@@ -52,8 +52,7 @@ public interface DotCMSDataService {
      * @throws Exception
      *             the exception
      */
-    StatusCatalogDotcmsResponse getStatusCatalog(String contentTitle,
-            String statusMessageType, String locale) throws Exception;
+    StatusCatalogDotcmsResponse getStatusCatalog(String statusMessageType, String locale) throws Exception;
 
     /**
      * Gets the email catalog.
@@ -76,8 +75,7 @@ public interface DotCMSDataService {
      * @return the static catalog
      * @throws Exception             the exception
      */
-    StaticCatalogDotcmsResponse getStaticCatalog(String contentUniqueKey,
-            String pageName, String locale) throws Exception;
+    StaticCatalogDotcmsResponse getStaticCatalog(String pageName, String contentUniqueKey, String locale) throws Exception;
 
     /**
      * Gets the related server application message.

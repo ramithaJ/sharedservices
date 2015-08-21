@@ -23,11 +23,16 @@ import com.wiley.gr.ace.staticcontentservices.model.external.StatusCatalogDotcms
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalog;
 import com.wiley.gr.ace.staticcontentservices.model.external.UIMessageCatalogDotcmsResponse;
 import com.wiley.gr.ace.staticcontentservices.services.service.StaticContentFetchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class StaticContentFetchServiceImpl.
  */
 public class StaticContentFetchServiceImpl implements StaticContentFetchService {
+
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(StaticContentFetchService.class);
 
 	/** The dot cms data service. */
 	@Autowired(required = true)
@@ -41,11 +46,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 * java.lang.String)
 	 */
 	@Override
-	public UIMessageContent getUiMessageContent(String pageName, String locale,
+	public UIMessageContent getUiMessageContent(String uniqueKey, String pageName, String locale,
 			String fetchServerMessages) throws Exception {
-
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
 		UIMessageCatalogDotcmsResponse uiMessageCatalogDotcmsResponse = dotCMSDataService
-				.getUiMessageCatalog(pageName, locale);
+				.getUiMessageCatalog(uniqueKey, pageName, locale);
 		UIMessageContent uiMessageContent = null;
 		if (!StringUtils.isEmpty(uiMessageCatalogDotcmsResponse)) {
 			uiMessageContent = new UIMessageContent();
@@ -57,6 +62,7 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 					.getInlineHelpOption2());
 			uiMessageContent.setLocale(locale);
 			uiMessageContent.setPageName(pageName);
+			uiMessageCatalog.setUniqueKey(uniqueKey);
 			uiMessageContent.setUiLabelMessages(uiMessageCatalog
 					.getUiLabelMessages());
 
@@ -93,11 +99,12 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 */
 	@Override
 	public ConfirmationContent getConfirmationMessageContent(
-			String contentTitle, String moduleName, String locale)
+			String moduleName, String locale)
 			throws Exception {
-
+	    
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
 		ConfirmationCatalogDotcmsResponse confirmationCatalogDotcmsResponse = dotCMSDataService
-				.getConfirmationCatalog(contentTitle, moduleName, locale);
+				.getConfirmationCatalog(moduleName, locale);
 		ConfirmationContent confirmationContent = null;
 		if (!StringUtils.isEmpty(confirmationCatalogDotcmsResponse)) {
 			confirmationContent = new ConfirmationContent();
@@ -106,7 +113,6 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 					.getContentlets().get(0);
 			confirmationContent.setConfirmationMessages(confirmationCatalog
 					.getConfirmationMessages());
-			confirmationContent.setContentTiltle(contentTitle);
 			confirmationContent.setLocale(locale);
 			confirmationContent.setModuleName(moduleName);
 
@@ -123,11 +129,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 * java.lang.String)
 	 */
 	@Override
-	public StatusContent getStatusContent(String contentTitle,
-			String statusMessageType, String locale) throws Exception {
-
+	public StatusContent getStatusContent(String statusMessageType, String locale) throws Exception {
+	    
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
 		StatusCatalogDotcmsResponse statusCatalogDotcmsResponse = dotCMSDataService
-				.getStatusCatalog(contentTitle, statusMessageType, locale);
+				.getStatusCatalog(statusMessageType, locale);
 
 		StatusContent statusContent = null;
 		if (!StringUtils.isEmpty(statusCatalogDotcmsResponse)) {
@@ -135,9 +141,8 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 
 			StatusCatalog statusCatalog = statusCatalogDotcmsResponse
 					.getContentlets().get(0);
-
+			statusContent.setActionLables(statusCatalog.getActionLables());
 			statusContent.setStatusMessages(statusCatalog.getStatusMessages());
-			statusContent.setContentTitle(contentTitle);
 			statusContent.setLocale(locale);
 			statusContent.setStatusMessageType(statusMessageType);
 
@@ -154,15 +159,19 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 */
 	@Override
 	public EmailContent getEmailContent(String contentTitle) throws Exception {
-		EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
+		
+	    LOGGER.info("inside getUiMessageContent method of StaticContentFetchService");
+	    EmailCatalogDotcmsResponse emailCatalogDotcmsResponse = dotCMSDataService
 				.getEmailCatalog(contentTitle);
 
 		EmailContent emailContent = null;
 		if (!StringUtils.isEmpty(emailCatalogDotcmsResponse)) {
 			emailContent = new EmailContent();
+			System.out.println("You were also here");
 			EmailCatalog emailCatalog = emailCatalogDotcmsResponse
 					.getContentlets().get(0);
-			emailContent.setContentTitle(emailCatalog.getContentTitle());
+			
+			emailContent.setContentTitle(contentTitle);
 			emailContent.setSurveyLink(emailCatalog.getSurveyLink());
 		}
 
@@ -177,25 +186,23 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public StaticContent getStaticContent(String contentUniqueKey,
-			String pageName, String locale) throws Exception {
+	public StaticContent getStaticContent(String pageName, String contentUniqueKey, String locale) throws Exception {
 
+	    LOGGER.info("inside getStaticContent method of StaticContentFetchService");
 		StaticCatalogDotcmsResponse staticCatalogDotcmsResponse = dotCMSDataService
-				.getStaticCatalog(contentUniqueKey, pageName, locale);
+				.getStaticCatalog(pageName,contentUniqueKey,locale);
 		StaticContent staticContent = null;
 		if (!StringUtils.isEmpty(staticCatalogDotcmsResponse)) {
 			staticContent = new StaticContent();
 			StaticCatalog staticCatalog = staticCatalogDotcmsResponse
 					.getContentlets().get(0);
-			staticContent.setContentTitle(staticCatalog.getContentTitle());
-
-			staticContent.setContentTitle(contentUniqueKey);
 			staticContent.setPageName(pageName);
+			staticContent.setContentTitle(contentUniqueKey);
 			staticContent.setLocale(locale);
 			staticContent.setAdBlockBody(staticCatalog.getAdBlockContent());
 
 		}
-
+		
 		return staticContent;
 	}
 }

@@ -11,8 +11,11 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.email.service;
 
+import java.util.ArrayList;
+
 import javax.mail.MessagingException;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface MailSenderService.
  * 
@@ -20,20 +23,25 @@ import javax.mail.MessagingException;
  */
 public interface MailSenderService {
 
-    /**
-     * Send email.
-     *
-     * @param from
-     *            the from
-     * @param to
-     *            the to
-     * @param subject
-     *            the subject
-     * @param body
-     *            the body
-     * @throws MessagingException
-     *             the messaging exception
-     */
-    void sendEmail(String from, String to, String subject, String body)
-            throws MessagingException;
+	/**
+	 * Send email.
+	 *
+	 * @param from
+	 *            the from
+	 * @param to
+	 *            the to
+	 * @param cc
+	 *            the cc
+	 * @param bcc
+	 *            the bcc
+	 * @param subject
+	 *            the subject
+	 * @param body
+	 *            the body
+	 * @throws MessagingException
+	 *             the messaging exception
+	 */
+	void sendEmail(final String from, final ArrayList<String> to,
+			ArrayList<String> cc, ArrayList<String> bcc, final String subject,
+			final String body) throws MessagingException;
 }

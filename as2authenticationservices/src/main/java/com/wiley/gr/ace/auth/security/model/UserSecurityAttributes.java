@@ -1,7 +1,7 @@
 /**
  * ****************************************************************************
  * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
- * <p/>
+ * <p>
  * All material contained herein is proprietary to John Wiley & Sons
  * and its third party suppliers, if any. The methods, techniques and
  * technical concepts contained herein are considered trade secrets
@@ -33,34 +33,33 @@ public class UserSecurityAttributes {
     @JsonProperty("SourceSystem")
     private String sourceSystem;
 
-	/**
-	 * @return the existingEmail
-	 */
-	public final String getExistingEmail() {
-		return existingEmail;
-	}
+    /**
+     * @return the existingEmail
+     */
+    public final String getExistingEmail() {
+        return existingEmail;
+    }
 
-	/**
-	 * @param existingEmail the existingEmail to set
-	 */
-	public final void setExistingEmail(String existingEmail) {
-		this.existingEmail = existingEmail;
-	}
+    /**
+     * @param existingEmail the existingEmail to set
+     */
+    public final void setExistingEmail(String existingEmail) {
+        this.existingEmail = existingEmail;
+    }
 
-	/**
-	 * @return the sourceSystem
-	 */
-	public final String getSourceSystem() {
-		return sourceSystem;
-	}
+    /**
+     * @return the sourceSystem
+     */
+    public final String getSourceSystem() {
+        return sourceSystem;
+    }
 
-	/**
-	 * @param sourceSystem the sourceSystem to set
-	 */
-	public final void setSourceSystem(String sourceSystem) {
-		this.sourceSystem = sourceSystem;
-	}
+    /**
+     * @param sourceSystem the sourceSystem to set
+     */
+    public final void setSourceSystem(String sourceSystem) {
+        this.sourceSystem = sourceSystem;
+    }
 
-    
-    
+
 }

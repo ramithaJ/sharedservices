@@ -11,60 +11,60 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UserAlertsId implements java.io.Serializable {
 
-	private Integer userId;
-	private String alertCd;
+    private Integer userId;
+    private String alertCd;
 
-	public UserAlertsId() {
-	}
+    public UserAlertsId() {
+    }
 
-	public UserAlertsId(Integer userId, String alertCd) {
-		this.userId = userId;
-		this.alertCd = alertCd;
-	}
+    public UserAlertsId(Integer userId, String alertCd) {
+        this.userId = userId;
+        this.alertCd = alertCd;
+    }
 
-	@Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
-	public Integer getUserId() {
-		return this.userId;
-	}
+    @Column(name = "USER_ID", nullable = false, precision = 22, scale = 0)
+    public Integer getUserId() {
+        return this.userId;
+    }
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-	@Column(name = "ALERT_CD", nullable = false, length = 15)
-	public String getAlertCd() {
-		return this.alertCd;
-	}
+    @Column(name = "ALERT_CD", nullable = false, length = 15)
+    public String getAlertCd() {
+        return this.alertCd;
+    }
 
-	public void setAlertCd(String alertCd) {
-		this.alertCd = alertCd;
-	}
+    public void setAlertCd(String alertCd) {
+        this.alertCd = alertCd;
+    }
 
-	public boolean equals(Object other) {
-		if ((this == other))
-			return true;
-		if ((other == null))
-			return false;
-		if (!(other instanceof UserAlertsId))
-			return false;
-		UserAlertsId castOther = (UserAlertsId) other;
+    public boolean equals(Object other) {
+        if ((this == other))
+            return true;
+        if ((other == null))
+            return false;
+        if (!(other instanceof UserAlertsId))
+            return false;
+        UserAlertsId castOther = (UserAlertsId) other;
 
-		return ((this.getUserId() == castOther.getUserId()) || (this
-				.getUserId() != null && castOther.getUserId() != null && this
-				.getUserId().equals(castOther.getUserId())))
-				&& ((this.getAlertCd() == castOther.getAlertCd()) || (this
-						.getAlertCd() != null && castOther.getAlertCd() != null && this
-						.getAlertCd().equals(castOther.getAlertCd())));
-	}
+        return ((this.getUserId() == castOther.getUserId()) || (this
+                .getUserId() != null && castOther.getUserId() != null && this
+                .getUserId().equals(castOther.getUserId())))
+                && ((this.getAlertCd() == castOther.getAlertCd()) || (this
+                .getAlertCd() != null && castOther.getAlertCd() != null && this
+                .getAlertCd().equals(castOther.getAlertCd())));
+    }
 
-	public int hashCode() {
-		int result = 17;
+    public int hashCode() {
+        int result = 17;
 
-		result = 37 * result
-				+ (getUserId() == null ? 0 : this.getUserId().hashCode());
-		result = 37 * result
-				+ (getAlertCd() == null ? 0 : this.getAlertCd().hashCode());
-		return result;
-	}
+        result = 37 * result
+                + (getUserId() == null ? 0 : this.getUserId().hashCode());
+        result = 37 * result
+                + (getAlertCd() == null ? 0 : this.getAlertCd().hashCode());
+        return result;
+    }
 
 }

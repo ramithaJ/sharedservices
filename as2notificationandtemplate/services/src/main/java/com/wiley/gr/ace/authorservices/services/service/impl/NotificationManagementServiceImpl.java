@@ -11,11 +11,14 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.services.service.impl;
 
+import java.io.BufferedReader;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.sql.rowset.serial.SerialClob;
@@ -309,15 +312,19 @@ public class NotificationManagementServiceImpl implements
 		if (!StringUtils.isEmpty(notificationEntity.getAppId()))
 			notification.setAppId(notificationEntity.getAppId());
 		if (!StringUtils.isEmpty(notificationEntity.getContent()))
-			notification.setContent(clobStringConversion(notificationEntity
-					.getContent()));
+			notification.setContent(notificationEntity.getContent().toString());
 		if (!StringUtils.isEmpty(notificationEntity.getId()))
 			notification.setId(notificationEntity.getId());
-		if (!StringUtils
-				.isEmpty(notificationEntity.getNotificationRecipients())) {
-			NotificationRecipientsObj tempNotificationRecipient = getNotificationRecipientsVO(notificationEntity
-					.getNotificationRecipients());
-			notification.setNotificationRecipients(tempNotificationRecipient);
+		if (!StringUtils.isEmpty(notificationEntity
+				.getNotificationRecipientses())) {
+			ArrayList<NotificationRecipientsObj> notificationRecipientsObjs = new ArrayList<NotificationRecipientsObj>();
+			for (NotificationRecipients notificationRecipients : notificationEntity
+					.getNotificationRecipientses()) {
+				NotificationRecipientsObj tempNotificationRecipient = getNotificationRecipientsVO(notificationRecipients);
+				notificationRecipientsObjs.add(tempNotificationRecipient);
+			}
+			notification
+					.setNotificationRecipientsObjs(notificationRecipientsObjs);
 		}
 		if (!StringUtils.isEmpty(notificationEntity.getSenderEmail()))
 			notification.setSenderEmail(notificationEntity.getSenderEmail());
@@ -352,7 +359,7 @@ public class NotificationManagementServiceImpl implements
 		LOGGER.info("inside getNotificationRecipientsVO Method of NotificationManagementServiceImpl");
 		NotificationRecipientsObj notificationRecipients = new NotificationRecipientsObj();
 		notificationRecipients.setNotificationId(notoficationRecipients
-				.getNotificationId());
+				.getNotification().getId());
 		notificationRecipients.setUserId(notoficationRecipients.getUserId());
 		notificationRecipients.setEmail(notoficationRecipients.getEmail());
 		return notificationRecipients;
@@ -399,7 +406,18 @@ public class NotificationManagementServiceImpl implements
 		LOGGER.info("inside clobStringConversion Method of NotificationManagementServiceImpl");
 		if (clb == null)
 			return "";
-		return clb.getSubString(1, (int) clb.length());
+
+		StringBuilder str = new StringBuilder();
+		String strng;
+
+		BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
+
+		while ((strng = bufferRead.readLine()) != null) {
+			str.append(strng);
+			bufferRead.close();
+		}
+		return str.toString();
+
 	}
 
 	/**
@@ -517,17 +535,22 @@ public class NotificationManagementServiceImpl implements
 			}
 			if (!StringUtils.isEmpty(from)) {
 				for (NotificationObj n : notificationList) {
-					if (!from.equalsIgnoreCase(n.getSenderEmail()))
+					if (!from.equalsIgnoreCase(n.getSenderId()))
 						notificationList.remove(n);
 				}
 
 			}
 			if (!StringUtils.isEmpty(to)) {
 				for (NotificationObj n : notificationList) {
-					notificationRecipients = getNotificationRecipientsVO(notificationManagementDAO
-							.getNotificationRecipients(n.getId()));
-					if (!to.equalsIgnoreCase(notificationRecipients.getEmail()))
-						notificationList.remove(n);
+					for (NotificationRecipients recipients : notificationManagementDAO
+							.getNotificationRecipients(n.getId())) {
+						if ("TO".equalsIgnoreCase(recipients.getType())) {
+							notificationRecipients = getNotificationRecipientsVO(recipients);
+							if (!to.equalsIgnoreCase(notificationRecipients
+									.getUserId()))
+								notificationList.remove(n);
+						}
+					}
 				}
 			}
 			if (!StringUtils.isEmpty(type)) {
@@ -552,6 +575,7 @@ public class NotificationManagementServiceImpl implements
 				notificationList.retainAll(tempList);
 
 			}
+
 		}
 		return notificationList;
 	}
@@ -579,10 +603,10 @@ public class NotificationManagementServiceImpl implements
 		LOGGER.info("inside sendEmailNotification Method of NotificationManagementServiceImpl");
 		NotificationResponse notificationResponse = new NotificationResponse();
 		mailSenderService.sendEmail(notificationDetails.getFrom(),
-				notificationDetails.getTo(), templateObj.getDescription(),
+				notificationDetails.getTo(), notificationDetails.getCcList(),
+				notificationDetails.getBccList(), templateObj.getDescription(),
 				templateObj.getBody());
 		NotificationObj notificationObj = new NotificationObj();
-		NotificationRecipientsObj notificationRecipientsObj = new NotificationRecipientsObj();
 
 		notificationObj.setAppId(applicationId);
 		notificationObj.setContent(templateObj.getBody());
@@ -591,15 +615,43 @@ public class NotificationManagementServiceImpl implements
 		notificationObj.setType("email");
 		notificationObj.setUnread('n');
 
-		notificationRecipientsObj.setEmail(notificationDetails.getTo());
+		ArrayList<NotificationRecipientsObj> recipientList = new ArrayList<NotificationRecipientsObj>();
+		if (!StringUtils.isEmpty(notificationDetails.getTo())) {
+			for (String toEmail : notificationDetails.getTo()) {
+				NotificationRecipientsObj tempNotificationRecipientsObj = new NotificationRecipientsObj();
+				tempNotificationRecipientsObj.setEmail(toEmail);
+				tempNotificationRecipientsObj.setRecipientType("TO");
+				recipientList.add(tempNotificationRecipientsObj);
+			}
+		}
+
+		if (!StringUtils.isEmpty(notificationDetails.getCcList())) {
+			for (String ccEmail : notificationDetails.getCcList()) {
+				NotificationRecipientsObj tempNotificationRecipientsObj = new NotificationRecipientsObj();
+				tempNotificationRecipientsObj.setEmail(ccEmail);
+				tempNotificationRecipientsObj.setRecipientType("CC");
+				recipientList.add(tempNotificationRecipientsObj);
+			}
+		}
+
+		if (!StringUtils.isEmpty(notificationDetails.getBccList())) {
+			for (String bccEmail : notificationDetails.getBccList()) {
+				NotificationRecipientsObj tempNotificationRecipientsObj = new NotificationRecipientsObj();
+				tempNotificationRecipientsObj.setEmail(bccEmail);
+				tempNotificationRecipientsObj.setRecipientType("BCC");
+				recipientList.add(tempNotificationRecipientsObj);
+			}
+		}
 
 		Integer notificationId = createNotificationHistory(notificationObj,
-				notificationRecipientsObj);
+				recipientList);
 		if (!StringUtils.isEmpty(notificationId)) {
 			notificationResponse.setNotificationId(notificationId.toString());
-			notificationResponse
-					.setSentTo(notificationRecipientsObj.getEmail());
-			notificationResponse.setTemplateID(templateId);
+			notificationResponse.setSentToList(notificationDetails.getTo());
+			notificationResponse.setSentCCList(notificationDetails.getCcList());
+			notificationResponse.setSentBCCList(notificationDetails
+					.getBccList());
+			notificationResponse.setTemplateId(templateId);
 		}
 
 		return notificationResponse;
@@ -622,18 +674,33 @@ public class NotificationManagementServiceImpl implements
 			throws Exception {
 		LOGGER.info("inside resendEmailNotification Method of NotificationManagementServiceImpl");
 		NotificationResponse notificationResponse = new NotificationResponse();
-		NotificationRecipients notificationRecipients = notificationManagementDAO
+		ArrayList<NotificationRecipients> notificationRecipientsList = notificationManagementDAO
 				.getNotificationRecipients(notificationId);
 		Notification notification = notificationManagementDAO.getNotification(
 				applicationId, notificationId);
 		Template template = notification.getTemplate();
 		TemplateObj templateObj = getTemplateVO(template);
+		ArrayList<String> toRecipients = new ArrayList<String>();
+		ArrayList<String> ccRecipients = new ArrayList<String>();
+		ArrayList<String> bccRecipients = new ArrayList<String>();
+
+		for (NotificationRecipients notificationRecipients : notificationRecipientsList) {
+			if ("TO".equalsIgnoreCase(notificationRecipients.getType())) {
+				toRecipients.add(notificationRecipients.getEmail());
+			} else if ("CC".equalsIgnoreCase(notificationRecipients.getType())) {
+				ccRecipients.add(notificationRecipients.getEmail());
+			} else {
+				bccRecipients.add(notificationRecipients.getEmail());
+			}
+		}
 		mailSenderService.sendEmail(notification.getSenderEmail(),
-				notificationRecipients.getEmail(),
+				toRecipients, ccRecipients, bccRecipients,
 				templateObj.getDescription(), templateObj.getBody());
 		notificationResponse.setNotificationId(notificationId.toString());
-		notificationResponse.setSentTo(notificationRecipients.getEmail());
-		notificationResponse.setTemplateID(template.getId());
+		notificationResponse.setSentToList(toRecipients);
+		notificationResponse.setSentCCList(ccRecipients);
+		notificationResponse.setSentBCCList(bccRecipients);
+		notificationResponse.setTemplateId(template.getId());
 		return notificationResponse;
 	}
 
@@ -685,15 +752,13 @@ public class NotificationManagementServiceImpl implements
 	 */
 	private Integer createNotificationHistory(
 			final NotificationObj notificationObj,
-			final NotificationRecipientsObj notificationRecipientsObj)
+			final ArrayList<NotificationRecipientsObj> notificationRecipientsObjList)
 			throws Exception {
 		LOGGER.info("inside createNotificationHistory Method of NotificationManagementServiceImpl");
 		Notification notification = new Notification();
-		NotificationRecipients notificationRecipients = new NotificationRecipients();
 
 		notification.setAppId(notificationObj.getAppId());
-		notification.setContent(new SerialClob(notificationObj.getContent()
-				.toCharArray()));
+		notification.setContent(new SerialClob(notificationObj.getContent().toCharArray()));
 		notification.setSenderEmail(notificationObj.getSenderEmail());
 
 		Template template = new Template();
@@ -707,10 +772,19 @@ public class NotificationManagementServiceImpl implements
 		notification.setType(notificationObj.getType());
 		notification.setUnread(notificationObj.getUnread());
 
-		notificationRecipients.setEmail(notificationRecipientsObj.getEmail());
-		// notificationRecipients.setNotificationId(notificationObj.getId());
-		notificationRecipients.setNotification(notification);
-		notification.setNotificationRecipients(notificationRecipients);
+		Set<NotificationRecipients> notificationRecipientsSet = new HashSet<NotificationRecipients>();
+
+		for (NotificationRecipientsObj notificationRecipientsObj : notificationRecipientsObjList) {
+			NotificationRecipients notificationRecipients = new NotificationRecipients();
+			notificationRecipients.setEmail(notificationRecipientsObj
+					.getEmail());
+			notificationRecipients.setType(notificationRecipientsObj
+					.getRecipientType());
+			notificationRecipients.setNotification(notification);
+			notificationRecipientsSet.add(notificationRecipients);
+		}
+
+		notification.setNotificationRecipientses(notificationRecipientsSet);
 		return notificationManagementDAO
 				.createNotificationHistory(notification);
 	}

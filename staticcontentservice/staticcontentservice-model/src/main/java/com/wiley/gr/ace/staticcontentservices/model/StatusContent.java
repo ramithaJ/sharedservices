@@ -18,6 +18,10 @@ public class StatusContent {
     /** The locale. */
     private String locale;
     
+    private HashMap<String, String> actionLables;
+    
+    
+
     /** The confirmation messages. */
     private HashMap<String, String> statusMessages;
     
@@ -77,6 +81,14 @@ public class StatusContent {
         this.locale = locale;
     }
 
+    
+    public final HashMap<String, String> getActionLables() {
+        return actionLables;
+    }
+
+    public final void setActionLables(HashMap<String, String> actionLables) {
+        this.actionLables = actionLables;
+    }
     /**
      * Gets the confirmation messages.
      *

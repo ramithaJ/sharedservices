@@ -11,60 +11,60 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class RolePermissionsId implements java.io.Serializable {
 
-	private int roleId;
-	private String permissionCd;
+    private int roleId;
+    private String permissionCd;
 
-	public RolePermissionsId() {
-	}
+    public RolePermissionsId() {
+    }
 
-	public RolePermissionsId(int roleId, String permissionCd) {
-		this.roleId = roleId;
-		this.permissionCd = permissionCd;
-	}
+    public RolePermissionsId(int roleId, String permissionCd) {
+        this.roleId = roleId;
+        this.permissionCd = permissionCd;
+    }
 
-	@Column(name = "ROLE_ID", nullable = false, precision = 22, scale = 0)
-	public int getRoleId() {
-		return this.roleId;
-	}
+    @Column(name = "ROLE_ID", nullable = false, precision = 22, scale = 0)
+    public int getRoleId() {
+        return this.roleId;
+    }
 
-	public void setRoleId(int roleId) {
-		this.roleId = roleId;
-	}
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
 
-	@Column(name = "PERMISSION_CD", nullable = false, length = 25)
-	public String getPermissionCd() {
-		return this.permissionCd;
-	}
+    @Column(name = "PERMISSION_CD", nullable = false, length = 25)
+    public String getPermissionCd() {
+        return this.permissionCd;
+    }
 
-	public void setPermissionCd(String permissionCd) {
-		this.permissionCd = permissionCd;
-	}
+    public void setPermissionCd(String permissionCd) {
+        this.permissionCd = permissionCd;
+    }
 
-	public boolean equals(Object other) {
-		if ((this == other))
-			return true;
-		if ((other == null))
-			return false;
-		if (!(other instanceof RolePermissionsId))
-			return false;
-		RolePermissionsId castOther = (RolePermissionsId) other;
+    public boolean equals(Object other) {
+        if ((this == other))
+            return true;
+        if ((other == null))
+            return false;
+        if (!(other instanceof RolePermissionsId))
+            return false;
+        RolePermissionsId castOther = (RolePermissionsId) other;
 
-		return (this.getRoleId() == castOther.getRoleId())
-				&& ((this.getPermissionCd() == castOther.getPermissionCd()) || (this
-						.getPermissionCd() != null
-						&& castOther.getPermissionCd() != null && this
-						.getPermissionCd().equals(castOther.getPermissionCd())));
-	}
+        return (this.getRoleId() == castOther.getRoleId())
+                && ((this.getPermissionCd() == castOther.getPermissionCd()) || (this
+                .getPermissionCd() != null
+                && castOther.getPermissionCd() != null && this
+                .getPermissionCd().equals(castOther.getPermissionCd())));
+    }
 
-	public int hashCode() {
-		int result = 17;
+    public int hashCode() {
+        int result = 17;
 
-		result = 37 * result + this.getRoleId();
-		result = 37
-				* result
-				+ (getPermissionCd() == null ? 0 : this.getPermissionCd()
-						.hashCode());
-		return result;
-	}
+        result = 37 * result + this.getRoleId();
+        result = 37
+                * result
+                + (getPermissionCd() == null ? 0 : this.getPermissionCd()
+                .hashCode());
+        return result;
+    }
 
 }

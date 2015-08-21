@@ -11,9 +11,12 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.model;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class NotificationDetails.
  * 
@@ -26,7 +29,13 @@ public class NotificationDetails {
     private String from;
 
     /** The to. */
-    private String to;
+    private ArrayList<String> to;
+    
+    /** The cc list. */
+    private ArrayList<String> ccList;
+    
+    /** The bcc list. */
+    private ArrayList<String> bccList;
 
     /** The template details. */
     private TemplateDetails templateDetails;
@@ -50,24 +59,54 @@ public class NotificationDetails {
         this.from = from;
     }
 
-    /**
-     * Gets the to.
-     *
-     * @return the to
-     */
-    public final String getTo() {
-        return to;
-    }
+    public final ArrayList<String> getTo() {
+		return to;
+	}
 
-    /**
-     * Sets the to.
+	/**
+     * Gets the cc list.
      *
-     * @param to
-     *            the new to
+     * @return the cc list
      */
-    public final void setTo(final String to) {
-        this.to = to;
-    }
+    public final ArrayList<String> getCcList() {
+		return ccList;
+	}
+
+	/**
+	 * Sets the cc list.
+	 *
+	 * @param ccList the new cc list
+	 */
+	public final void setCcList(final ArrayList<String> ccList) {
+		this.ccList = ccList;
+	}
+
+	/**
+	 * Gets the bcc list.
+	 *
+	 * @return the bcc list
+	 */
+	public final ArrayList<String> getBccList() {
+		return bccList;
+	}
+
+	/**
+	 * Sets the bcc list.
+	 *
+	 * @param bccList the new bcc list
+	 */
+	public final void setBccList(final ArrayList<String> bccList) {
+		this.bccList = bccList;
+	}
+
+	/**
+	 * Sets the to.
+	 *
+	 * @param to the new to
+	 */
+	public final void setTo(final ArrayList<String> to) {
+		this.to = to;
+	}
 
     /**
      * Gets the template details.

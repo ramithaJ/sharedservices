@@ -11,6 +11,8 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.services.service;
 
+import java.util.ArrayList;
+
 import com.wiley.gr.ace.authorservices.model.Tags;
 import com.wiley.gr.ace.authorservices.model.TemplateDetails;
 import com.wiley.gr.ace.authorservices.model.TemplateObj;
@@ -119,4 +121,6 @@ public interface TemplateManagementService {
      */
     TemplateObj renderTemplate(String applicationId, String templateId,
             TemplateDetails templateDetails) throws Exception;
+    
+    ArrayList<String> getVelocityVars(String applicationId, String templateId) throws Exception;
 }

@@ -14,7 +14,9 @@
 package com.wiley.gr.ace.sharedservices.repositories;
 
 import com.wiley.gr.ace.sharedservices.exceptions.SharedServiceException;
-import com.wiley.gr.ace.sharedservices.payload.*;
+import com.wiley.gr.ace.sharedservices.payload.LookupResponse;
+import com.wiley.gr.ace.sharedservices.payload.Service;
+import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 
 /**
  * @author kkalyan

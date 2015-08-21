@@ -1,201 +1,127 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
- *
- * All material contained herein is proprietary to John Wiley & Sons 
- * and its third party suppliers, if any. The methods, techniques and 
- * technical concepts contained herein are considered trade secrets 
- * and confidential and may be protected by intellectual property laws.  
- * Reproduction or distribution of this material, in whole or in part, 
- * is strictly forbidden except by express prior written permission 
+ * <p>
+ * All material contained herein is proprietary to John Wiley & Sons
+ * and its third party suppliers, if any. The methods, techniques and
+ * technical concepts contained herein are considered trade secrets
+ * and confidential and may be protected by intellectual property laws.
+ * Reproduction or distribution of this material, in whole or in part,
+ * is strictly forbidden except by express prior written permission
  * of John Wiley & Sons.
- *******************************************************************************/
+ * *****************************************************************************
+ */
 package com.wiley.gr.ace.discount.controller;
 
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.wiley.gr.ace.discount.common.CommonConstants;
+import com.wiley.gr.ace.discount.common.CommonUtil;
+import com.wiley.gr.ace.discount.common.PropertyUtils;
+import com.wiley.gr.ace.discount.exception.SharedServiceException;
+import com.wiley.gr.ace.discount.model.GetMaxDiscountRequest;
+import com.wiley.gr.ace.discount.model.Service;
+import com.wiley.gr.ace.discount.service.DiscountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-import com.wiles.gr.ace.discount.exception.ASExceptionController;
-import com.wiley.gr.ace.discount.services.service.DiscountService;
-import com.wiley.gr.ace.authorservices.model.Service;
 
 /**
- * Discount controller holds methods for discount API
+ * GetMaxDiscountRequest controller holds methods for getMaxDiscountRequest API
+ *
  * @author virtusa version 1.0
  */
 @RestController
-@RequestMapping("/v1/")
-public class DiscountController extends ASExceptionController {
-    
+@RequestMapping(CommonConstants.VERSION)
+public class DiscountController {
+
     /**
      * Logger for UserLoginController class.
      */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(DiscountController.class);
-    
-    /**
-     * injecting UserLoginService bean.
-     */
-    @Autowired(required = true)
+
+    // GetMaxDiscountRequest Impl Service.
+    @Autowired
     private DiscountService discountService;
-   
-    
-    
-    /** Error code From Props File. */
-    @Value("${journalCode.required}")
-    private String errorcode;
-    /** Error message From Props File. */
-    @Value("${adminnotexist.message}")
-    private String errormessage;
-  
-    
-    
- /**
-  * Method returns the available highest discount value for given parameters. 
-  * service accept any number of parameters as key value pair. 
-  * @param requestObject to be set.
-  * @return {@link Service}
-  */
-    @RequestMapping(value = "/discounts/", method = RequestMethod.POST)
-    public final Service getHighestDiscount(@Valid @RequestBody final Map<String,String> requestObject) {
-    	  
-        
-        Service service = new Service();
-        service.setPayload(discountService.getHighestDiscount(requestObject));
-        
-        LOGGER.info("Return highest discount sucessfully");
-		return service;
+
+    /**
+     * Method calculates discounts based on the different category providers like GetSocietyResponse, Journal, GetInstitutionResponse
+     * and will return the getMaxDiscountRequest which is maximum applicable for the user.
+     *
+     * @param getMaxDiscountRequest GetMaxDiscountRequest Request JSON Object
+     * @return {@link Service}
+     */
+
+    @RequestMapping(value = CommonConstants.GET_DISCOUNT, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public final Service getDiscount(@RequestBody GetMaxDiscountRequest getMaxDiscountRequest) {
+        try {
+
+            //Validate baseprice from the input. If value is empty (or) null throw error.
+            if (CommonUtil.validateBasePrice(getMaxDiscountRequest)) {
+                return CommonUtil.setServiceMessage(CommonConstants.ERROR_CODE_101, PropertyUtils.getErrorCode101(), CommonConstants.ERROR);
+            }
+            return discountService.getDiscount(getMaxDiscountRequest);
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in getGetMaxDiscountRequest", e);
+            return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
     }
 
     /**
-     * Method returns discounted societies for given journal code. 
-     * @param journalCode to be set
+     * Method to get society getMaxDiscountRequest of a particular Journal based on the Journal Acronym.
+     *
+     * @param journalAcronym Journal Acronym
      * @return {@link Service}
      */
-    
-	@RequestMapping(value = "/discounts/society/{journalCode}", method = RequestMethod.GET)
-	public final Service getDiscSocietiesForJournal(
-			@Valid @PathVariable("journalCode") String journalCode) {
-
-		Service service = new Service();
-
-		if (!journalCode.isEmpty() && journalCode != null){
-
-			discountService.getDiscSocietiesForJournal(journalCode);
-
-			service.setPayload(discountService
-					.getDiscSocietiesForJournal(journalCode));
-			
-		}
-		LOGGER.info("Return discounted societies for jurnal" + journalCode
-				+ " sucessfully");
-		return service;
-	}
-
-    /**
-     * Method returns available discounts for given institution code.   
-     * @param institutionCode to be set
-     * @return {@link Service}
-     */
-    @RequestMapping(value = "/discounts/institutions/{institutionCode}", method = RequestMethod.GET)
-    public final Service getDiscForInstitutions(@PathVariable("institutionCode") String institutionCode) {
-        
-        Service service = new Service();
-        
-    	if (!institutionCode.isEmpty() && institutionCode != null){
-    	
-        service.setPayload(discountService.getDiscForInstitutions(institutionCode));
-        
-        LOGGER.info("Return discounts for institute code"+ institutionCode +" sucessfully");
-    	}
-		return service;
+    @RequestMapping(value = CommonConstants.GET_SOCIETY_DISCOUNTS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public final Service getDiscountSocieties(@PathVariable(CommonConstants.JOURNAL_ACRONYM) String journalAcronym) {
+        try {
+            return discountService.getDiscountSocietiesForJournal(journalAcronym);
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in getDiscountSocieties", e);
+            return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
     }
-    
+
+
     /**
-     * Method returns discounted institution list.
+     * Method to get institution getMaxDiscountRequest of a particular Article based on the GetInstitutionResponse Code.
+     *
+     * @param institutionCode GetInstitutionResponse Code
      * @return {@link Service}
      */
-    @RequestMapping(value = "/discounts/institutions/", method = RequestMethod.GET)
-    public final Service getInstitutions() {
-        
-        Service service = new Service();
-        service.setPayload(discountService.getInstitutionList());
-        
-        LOGGER.info("Return institution list sucessfully");
-    	
-		return service;
+    @RequestMapping(value = CommonConstants.GET_INSTITUTIONS_DISCOUNTS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public final Service getInstitutionsDiscount(@PathVariable(CommonConstants.INSTITUTION_CD) String institutionCode) {
+        try {
+            return discountService.getInstitutionsDiscount(institutionCode);
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in getInstitutionsDiscount", e);
+            return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
     }
-    
- 
+
+
     /**
-     * Service to upload the discount data  csv file.
+     * Method to get all institutions getMaxDiscountRequest information if GetInstitutionResponse Code is not passed.
+     *
      * @return {@link Service}
      */
-	@RequestMapping(value = "/discounts/upload", method = RequestMethod.POST)
-	public @ResponseBody String handleFileUpload(@RequestParam("file") MultipartFile file) {
-		String name = "test11";
-		if (!file.isEmpty()) {
-			try {
-				
-				String  obj = new String();
-				byte[] bytes = file.getBytes();
-				
-				ByteArrayInputStream bis = new ByteArrayInputStream(file.getBytes());
-				
-				ObjectInput in = null;
-				try {
-				  in = new ObjectInputStream(bis);
-				  Object o = in.readObject();
-				
-				}catch(Exception e){}
-				
-				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(name + "-uploaded.txt")));
-				stream.write(bytes);
-				
-					  
-				stream.close();
-				System.out.println(obj);
-				return "You successfully uploaded " + name + " into " + name
-						+ "-uploaded !";
-			} catch (Exception e) {
-				return "You failed to upload " + name + " => " + e.getMessage();
-			}
-		} else {
-			return "You failed to upload " + name
-					+ " because the file was empty.";
-		}
-	}
-  
-    /**
-     * Service to downlaod the discount data csv file
-     * @return 
-     */
-    @RequestMapping(value = "/discounts/file", method = RequestMethod.GET)
-    public final Service downlaod() {
-        
-        Service service = new Service();
-		return service;
+    @RequestMapping(value = CommonConstants.GET_INSTITUTIONS_DISCOUNT, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public final Service getInstitutionsDiscount() {
+        try {
+            return discountService.getInstitutionsDiscount(null);
+        } catch (SharedServiceException e) {
+            LOGGER.error("Error Occurred in getAllInstitutionsDiscount", e);
+            return CommonUtil.setServiceMessage(e.getErrorCode(), e.getMessage(), CommonConstants.ERROR);
+        }
     }
-    
-    
+
+
 }

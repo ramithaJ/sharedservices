@@ -20,7 +20,7 @@ public interface StaticContentFetchService {
 	 * @return the ui message content
 	 * @throws Exception the exception
 	 */
-	UIMessageContent getUiMessageContent(String pageName, String locale, String fetchServerMessages)
+	UIMessageContent getUiMessageContent(String uniqueKey, String pageName, String locale, String fetchServerMessages)
 			throws Exception;
     
     /**
@@ -32,7 +32,7 @@ public interface StaticContentFetchService {
      * @return the confirmation message content
      * @throws Exception the exception
      */
-    ConfirmationContent getConfirmationMessageContent(String contentTitle, String moduleName, String locale)
+    ConfirmationContent getConfirmationMessageContent(String moduleName, String locale)
             throws Exception;
 	
 	/**
@@ -44,7 +44,7 @@ public interface StaticContentFetchService {
 	 * @return the status content
 	 * @throws Exception the exception
 	 */
-	StatusContent getStatusContent(String contentTitle, String statusMessageType, String locale)
+	StatusContent getStatusContent(String statusMessageType, String locale)
             throws Exception;
 	
 	/**
@@ -67,5 +67,5 @@ public interface StaticContentFetchService {
 	 * @return the static content
 	 * @throws Exception the exception
 	 */
-	StaticContent getStaticContent (String contentUniqueKey, String pageName,  String locale) throws Exception;
+	StaticContent getStaticContent (String pageName, String contentUniqueKey, String locale) throws Exception;
 }

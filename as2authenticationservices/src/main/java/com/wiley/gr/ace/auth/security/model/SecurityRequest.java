@@ -1,7 +1,7 @@
 /**
  * ****************************************************************************
  * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
- * <p/>
+ * <p>
  * All material contained herein is proprietary to John Wiley & Sons
  * and its third party suppliers, if any. The methods, techniques and
  * technical concepts contained herein are considered trade secrets
@@ -19,26 +19,26 @@ package com.wiley.gr.ace.auth.security.model;
  */
 public class SecurityRequest {
 
-	/**
-	 * This field holds the value of userId
-	 */
-	private String userId;
+    /**
+     * This field holds the value of userId
+     */
+    private String userId;
 
-	/**
-	 * This method gets UserId
-	 *
-	 * @return String
-	 */
-	public String getUserId() {
-		return this.userId;
-	}
+    /**
+     * This method gets UserId
+     *
+     * @return String
+     */
+    public String getUserId() {
+        return this.userId;
+    }
 
-	/**
-	 * This method sets UserId
-	 *
-	 * @param userId
-	 */
-	public void setUserId(final String userId) {
-		this.userId = userId;
-	}
+    /**
+     * This method sets UserId
+     *
+     * @param userId
+     */
+    public void setUserId(final String userId) {
+        this.userId = userId;
+    }
 }
