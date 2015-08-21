@@ -1,8 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved. --><!-- All material contained herein is proprietary to John Wiley & Sons --><!-- and its third party suppliers, if any. The methods, techniques and --><!-- technical concepts contained herein are considered trade secrets --><!-- and confidential and may be protected by intellectual property laws. --><!-- Reproduction or distribution of this material, in whole or in part, --><!-- is strictly forbidden except by express prior written permission --><!-- of John Wiley & Sons. --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!-- Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved. -->
+
+<!-- All material contained herein is proprietary to John Wiley & Sons -->
+<!-- and its third party suppliers, if any. The methods, techniques and -->
+<!-- technical concepts contained herein are considered trade secrets -->
+<!-- and confidential and may be protected by intellectual property laws. -->
+<!-- Reproduction or distribution of this material, in whole or in part, -->
+<!-- is strictly forbidden except by express prior written permission -->
+<!-- of John Wiley & Sons. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wiley.gr.ace</groupId>
-	<artifactId>crossrefservices</artifactId>
+	<artifactId>as2-crossrefservices</artifactId>
 	<packaging>pom</packaging>
 	<version>2.0.0-SNAPSHOT</version>
 	<name>AuthorServices</name>
@@ -19,7 +29,7 @@
 		<module>as2crossrefservices-persistence</module>
     <module>as2crossrefservices-service</module>
     <module>as2crossrefservices-web</module>
-    <module>as2entities</module>
+    <module>as2crossrefservices-entities</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -153,7 +163,7 @@
 		</repository>
 	</repositories>
 	<build>
-		<finalName>as2crossrefservices</finalName>
+		<finalName>crossrefservices</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

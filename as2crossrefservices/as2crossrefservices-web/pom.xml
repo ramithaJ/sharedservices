@@ -1,16 +1,25 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
+<!-- Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved. -->
+
+<!-- All material contained herein is proprietary to John Wiley & Sons  -->
+<!-- and its third party suppliers, if any. The methods, techniques and  -->
+<!-- technical concepts contained herein are considered trade secrets  -->
+<!-- and confidential and may be protected by intellectual property laws.   -->
+<!-- Reproduction or distribution of this material, in whole or in part,  -->
+<!-- is strictly forbidden except by express prior written permission  -->
+<!-- of John Wiley & Sons. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>com.wiley.gr.ace</groupId>
     <artifactId>crossrefservices</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>as2crossrefservices</artifactId>
+  <artifactId>as2crossrefservices-web</artifactId>
   <packaging>war</packaging>
-  <name>as2crossrefservices-web Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+  <version>1.0.0-SNAPSHOT</version>
   <dependencies>
     <dependency>
      <groupId>com.wiley.gr.ace</groupId>
@@ -23,7 +32,4 @@
 	<version>2.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
-  <build>
-    <finalName>as2crossrefservices-web</finalName>
-  </build>
 </project>
