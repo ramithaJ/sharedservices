@@ -559,6 +559,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
                     userReferenceData.setUsersByUserId(user);
                     session.update(userReferenceData);
+                } else {
+                	UserReferenceData userReferenceData2 = new UserReferenceData();
+                    Users users = new Users();
+                    users.setUserId(Integer.valueOf(userId));
+                    userReferenceData = UserServiceHelper.setUserReference(userReferenceData2, userServiceRequest);
+                    userReferenceData.setUsersByUserId(users);
+                    session.save(userReferenceData);
                 }
             }
 
