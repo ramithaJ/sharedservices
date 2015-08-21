@@ -29,7 +29,6 @@
 		<module>as2crossrefservices-persistence</module>
     <module>as2crossrefservices-service</module>
     <module>as2crossrefservices-web</module>
-    <module>as2crossrefservices-entities</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
