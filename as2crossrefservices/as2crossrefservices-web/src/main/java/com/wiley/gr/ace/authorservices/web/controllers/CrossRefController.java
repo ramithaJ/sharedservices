@@ -45,7 +45,7 @@ public class CrossRefController {
 
 	/** The get dh id code. */
 	@Value("${CrossRefController.getNoDhId.code}")
-	private int getNoDhIdErrorCode;
+	private String getNoDhIdErrorCode;
 
 	/** The get dh id message. */
 	@Value("${CrossRefController.getNoDhId.message}")
@@ -53,7 +53,7 @@ public class CrossRefController {
 
 	/** The get dh id error code. */
 	@Value("${CrossRefController.getDhIdError.code}")
-	private int getDhIdErrorCode;
+	private String getDhIdErrorCode;
 
 	/** The get dh id error message. */
 	@Value("${CrossRefController.getDhIdError.message}")
@@ -61,7 +61,7 @@ public class CrossRefController {
 
 	/** The get no value error code. */
 	@Value("${CrossRefController.getNoValue.code}")
-	private int getNoValueErrorCode;
+	private String getNoValueErrorCode;
 
 	/** The get no value error message. */
 	@Value("${CrossRefController.getNoValue.message}")
@@ -69,7 +69,7 @@ public class CrossRefController {
 
 	/** The get value error code. */
 	@Value("${CrossRefController.getValue.code}")
-	private int getValueErrorCode;
+	private String getValueErrorCode;
 
 	/** The get value error message. */
 	@Value("${CrossRefController.getValue.message}")
@@ -77,7 +77,7 @@ public class CrossRefController {
 
 	/** The create no value error code. */
 	@Value("${CrossRefController.createNoValue.code}")
-	private int createNoValueErrorCode;
+	private String createNoValueErrorCode;
 
 	/** The create no value error message. */
 	@Value("${CrossRefController.createNoValue.message}")
@@ -85,7 +85,7 @@ public class CrossRefController {
 
 	/** The create value error code. */
 	@Value("${CrossRefController.createValue.code}")
-	private int createValueErrorCode;
+	private String createValueErrorCode;
 
 	/** The create value error message. */
 	@Value("${CrossRefController.createValue.message}")
@@ -93,7 +93,7 @@ public class CrossRefController {
 
 	/** The update no value error code. */
 	@Value("${CrossRefController.updateNoValue.code}")
-	private int updateNoValueErrorCode;
+	private String updateNoValueErrorCode;
 
 	/** The update no value error message. */
 	@Value("${CrossRefController.updateNoValue.message}")
@@ -101,7 +101,7 @@ public class CrossRefController {
 
 	/** The update value error code. */
 	@Value("${CrossRefController.updateValue.code}")
-	private int updateValueErrorCode;
+	private String updateValueErrorCode;
 
 	/** The update value error message. */
 	@Value("${CrossRefController.updateValue.message}")
@@ -109,7 +109,7 @@ public class CrossRefController {
 
 	/** The delete no value error code. */
 	@Value("${CrossRefController.deleteNoValue.code}")
-	private int deleteNoValueErrorCode;
+	private String deleteNoValueErrorCode;
 
 	/** The delete no value error message. */
 	@Value("${CrossRefController.deleteNoValue.message}")
@@ -117,7 +117,7 @@ public class CrossRefController {
 
 	/** The delete value error code. */
 	@Value("${CrossRefController.deleteValue.code}")
-	private int deleteValueErrorCode;
+	private String deleteValueErrorCode;
 
 	/** The delete value error message. */
 	@Value("${CrossRefController.deleteValue.message}")
@@ -148,7 +148,7 @@ public class CrossRefController {
 				service.setPayload(productPersonRelationObj);
 			} else {
 				final ErrorPOJO error = new ErrorPOJO();
-				error.setCode(getNoDhIdErrorCode);
+				error.setCode(Integer.parseInt(getNoDhIdErrorCode));
 				error.setMessage(getNoDhIdErrorMessage);
 				service.setStatus("FAILURE");
 				service.setError(error);
@@ -157,7 +157,7 @@ public class CrossRefController {
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
 			final ErrorPOJO error = new ErrorPOJO();
-			error.setCode(getDhIdErrorCode);
+			error.setCode(Integer.parseInt(getDhIdErrorCode));
 			error.setMessage(getDhIdErrorMessage);
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -194,7 +194,7 @@ public class CrossRefController {
 				service.setPayload(authorDetails);
 			} else {
 				final ErrorPOJO error = new ErrorPOJO();
-				error.setCode(getNoValueErrorCode);
+				error.setCode(Integer.parseInt(getNoValueErrorCode));
 				error.setMessage(getNoValueErrorMessage);
 				service.setStatus("ERROR");
 				service.setError(error);
@@ -202,7 +202,7 @@ public class CrossRefController {
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
 			final ErrorPOJO error = new ErrorPOJO();
-			error.setCode(getValueErrorCode);
+			error.setCode(Integer.parseInt(getValueErrorCode));
 			error.setMessage(getValueErrorMessage);
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -228,7 +228,7 @@ public class CrossRefController {
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(createNoValueErrorCode);
+			error.setCode(Integer.parseInt(createNoValueErrorCode));
 			error.setMessage(createNoValueErrorMessage);
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -237,7 +237,7 @@ public class CrossRefController {
 			service.setStatus("SUCCESS");
 		} else {
 			final ErrorPOJO error = new ErrorPOJO();
-			error.setCode(createValueErrorCode);
+			error.setCode(Integer.parseInt(createValueErrorCode));
 			error.setMessage(createValueErrorMessage);
 			service.setStatus("FAILURE");
 			service.setError(error);
@@ -263,7 +263,7 @@ public class CrossRefController {
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(updateNoValueErrorCode);
+			error.setCode(Integer.parseInt(updateNoValueErrorCode));
 			error.setMessage(updateNoValueErrorMessage);
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -272,7 +272,7 @@ public class CrossRefController {
 			service.setStatus("SUCCESS");
 		} else {
 			final ErrorPOJO error = new ErrorPOJO();
-			error.setCode(updateValueErrorCode);
+			error.setCode(Integer.parseInt(updateValueErrorCode));
 			error.setMessage(updateValueErrorMessage);
 			service.setStatus("FAILURE");
 			service.setError(error);
@@ -299,7 +299,7 @@ public class CrossRefController {
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
 			ErrorPOJO error = new ErrorPOJO();
-			error.setCode(deleteNoValueErrorCode);
+			error.setCode(Integer.parseInt(deleteNoValueErrorCode));
 			error.setMessage(deleteNoValueErrorMessage);
 			service.setStatus("ERROR");
 			service.setError(error);
@@ -308,7 +308,7 @@ public class CrossRefController {
 			service.setStatus("SUCCESS");
 		} else {
 			final ErrorPOJO error = new ErrorPOJO();
-			error.setCode(deleteValueErrorCode);
+			error.setCode(Integer.parseInt(deleteValueErrorCode));
 			error.setMessage(deleteValueErrorMessage);
 			service.setStatus("FAILURE");
 			service.setError(error);
