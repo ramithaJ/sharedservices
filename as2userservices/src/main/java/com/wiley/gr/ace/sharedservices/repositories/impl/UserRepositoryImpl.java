@@ -131,20 +131,25 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             }
 
             //Create User Secondary Email Address
-            Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = new HashSet<>();
-            UserSecondaryEmailAddr secondaryEmailAddr = new UserSecondaryEmailAddr();
-            secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
-            if (null != secondaryEmailAddr) {
-                LOGGER.debug("Set Secondary Email Addr...");
-                secondaryEmailAddr.setCreatedDate(UserServiceHelper.getDate());
-                secondaryEmailAddr.setUpdatedDate(UserServiceHelper.getDate());
-                secondaryEmailAddr.setUsersByCreatedBy(user);
-                secondaryEmailAddr.setUsersByUpdatedBy(user);
-                userSecondaryEmailAddrSet.add(secondaryEmailAddr);
-                //Set the secondary email address to the user object
-                secondaryEmailAddr.setUsersByUserId(user);
-                session.save(secondaryEmailAddr);
-                userProfile.setUserSecondaryEmailAddr(secondaryEmailAddr);
+            String secondaryEmailCommaSeperatedList = userServiceRequest.getUserProfile().getRecoveryEmailAddress();
+            if (!StringUtils.isEmpty(secondaryEmailCommaSeperatedList)) {
+                Set<UserSecondaryEmailAddr> userSecondaryEmailAddrSet = new HashSet<>();
+                //Recreate with new one.
+                String[] secondaryEmailIds = secondaryEmailCommaSeperatedList.split(CommonConstants.COMMA);
+                for (String secondaryEmailId : secondaryEmailIds) {
+                    UserSecondaryEmailAddr secondaryEmailAddr = new UserSecondaryEmailAddr();
+                    secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(secondaryEmailId, secondaryEmailAddr, user);
+                    secondaryEmailAddr.setCreatedDate(UserServiceHelper.getDate());
+                    secondaryEmailAddr.setUpdatedDate(UserServiceHelper.getDate());
+                    secondaryEmailAddr.setUsersByCreatedBy(user);
+                    secondaryEmailAddr.setUsersByUpdatedBy(user);
+                    userSecondaryEmailAddrSet.add(secondaryEmailAddr);
+                    //Set the secondary email address to the user object
+                    secondaryEmailAddr.setUsersByUserId(user);
+                    session.save(secondaryEmailAddr);
+                    userProfile.setUserSecondaryEmailAddr(secondaryEmailAddr);
+                }
+
             }
 
 
@@ -534,39 +539,39 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             UserProfile authorProfile = user.getUserProfileByUserId();
 
 
-            //Update User Secondary Email Address
+            //Create (or) Update User Secondary Email Address
             if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecoveryEmailAddress())) {
+                String secondaryEmailCommaSeperatedList = userServiceRequest.getUserProfile().getRecoveryEmailAddress();
                 Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
+                //Delete All existing ids.
                 if (!CollectionUtils.isEmpty(secondaryEmailAddrs)) {
                     for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrs) {
-                        secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(userServiceRequest, secondaryEmailAddr, user);
-                        if (null != secondaryEmailAddr) {
-                            LOGGER.info("Set Secondary Email Addr...");
-                            //Set the secondary email address to the user object
-                            secondaryEmailAddr.setUsersByUserId(user);
-                            session.update(secondaryEmailAddr);
-                        }
-
+                        session.delete(secondaryEmailAddr);
                     }
                 }
+
+                //Recreate with new one.
+                String[] secondaryEmailIds = secondaryEmailCommaSeperatedList.split(CommonConstants.COMMA);
+                for (String secondaryEmailId : secondaryEmailIds) {
+                    UserSecondaryEmailAddr secondaryEmailAddr = new UserSecondaryEmailAddr();
+                    secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(secondaryEmailId, secondaryEmailAddr, user);
+                    //Set the secondary email address to the user object
+                    secondaryEmailAddr.setUsersByUserId(user);
+                    session.save(secondaryEmailAddr);
+                }
+
             }
 
-            //Update Orcid id & Ecid information
+            //Create (or) Update Orcid id & Ecid information
             if ((!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) || (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid()))) {
                 UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
-                if (null != userReferenceData) {
-                    LOGGER.debug("Update UserReferenceData...");
-                    userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
-                    userReferenceData.setUsersByUserId(user);
-                    session.update(userReferenceData);
-                } else {
-                	UserReferenceData userReferenceData2 = new UserReferenceData();
-                    Users users = new Users();
-                    users.setUserId(Integer.valueOf(userId));
-                    userReferenceData = UserServiceHelper.setUserReference(userReferenceData2, userServiceRequest);
-                    userReferenceData.setUsersByUserId(users);
-                    session.save(userReferenceData);
+                if (null == userReferenceData) {
+                    userReferenceData = new UserReferenceData();
                 }
+                LOGGER.debug("Update UserReferenceData...");
+                userReferenceData = UserServiceHelper.setUserReference(userReferenceData, userServiceRequest);
+                userReferenceData.setUsersByUserId(user);
+                session.saveOrUpdate(userReferenceData);
             }
 
             //Update user Address Object
