@@ -176,8 +176,8 @@ public class CrossRefController {
 	 */
 	@RequestMapping(value = "/articles", method = RequestMethod.GET)
 	public final Service getCrossRefUserId(
-			@RequestParam(value = "userId") final String userId,
-			@RequestParam(value = "emailAddr") final String emailAddr) {
+			@RequestParam(value = "userId", required = false) final String userId,
+			@RequestParam(value = "emailAddr", required = false) final String emailAddr) {
 		LOGGER.info("inside getCrossRefUserId method of CrossRefController");
 		Service service = new Service();
 		AuthorDetails authorDetails = null;
