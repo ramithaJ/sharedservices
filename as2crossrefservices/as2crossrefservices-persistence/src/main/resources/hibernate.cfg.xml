@@ -97,10 +97,14 @@
 		<mapping
 			class="com.wiley.gr.ace.authorservices.persistence.entity.ObjectTypes" />
 		<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.Orders" />
-				<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.OrderAuthorsQuery" />
-				<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.OrderArticleQuery" />
-				<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.OrderReference" />
-				<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.OrderTypes" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.OrderAuthorsQuery" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.OrderArticleQuery" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.OrderReference" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.OrderTypes" />
 		<mapping
 			class="com.wiley.gr.ace.authorservices.persistence.entity.PermissionGroups" />
 		<mapping
@@ -162,9 +166,11 @@
 
 		<mapping
 			class="com.wiley.gr.ace.authorservices.persistence.entity.ArticleConfiguration" />
-			<mapping
+		<mapping
 			class="com.wiley.gr.ace.authorservices.persistence.entity.WpgResponseDetails" />
-			<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.WpgResponseDetailsId" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.DiscountDetails" />
+		<mapping
+			class="com.wiley.gr.ace.authorservices.persistence.entity.SocietyJournals" />
 	</session-factory>
 </hibernate-configuration>
