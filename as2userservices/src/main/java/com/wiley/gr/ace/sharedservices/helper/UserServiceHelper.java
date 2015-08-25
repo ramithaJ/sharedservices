@@ -27,6 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author kkalyan
@@ -143,14 +146,14 @@ public class UserServiceHelper {
     /**
      * Setter method for UserSecondaryEmailAddr data.
      *
-     * @param userServiceRequest Request JSON Information
+     * @param emailId            emailId
      * @param secondaryEmailAddr Entity Object
      * @param user               Entity Object
      * @return secondaryEmailAddr entity object
      */
-    public static UserSecondaryEmailAddr setUserSecondaryEmailAddr(UserServiceRequest userServiceRequest, UserSecondaryEmailAddr secondaryEmailAddr, Users user) {
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecoveryEmailAddress())) {
-            secondaryEmailAddr.setSecondaryEmailAddr(userServiceRequest.getUserProfile().getRecoveryEmailAddress());
+    public static UserSecondaryEmailAddr setUserSecondaryEmailAddr(String emailId, UserSecondaryEmailAddr secondaryEmailAddr, Users user) {
+        if (!StringUtils.isEmpty(emailId)) {
+            secondaryEmailAddr.setSecondaryEmailAddr(emailId);
             secondaryEmailAddr.setUpdatedDate(getDate());
             secondaryEmailAddr.setUsersByUserId(user);
             return secondaryEmailAddr;
@@ -599,8 +602,13 @@ public class UserServiceHelper {
                 userProfile.setProfileVisibleFlag(user.getUserProfileByUserId().getProfileVisibleFlg());
             }
 
-            if (null != user.getUserProfileByUserId().getUserSecondaryEmailAddr() && !StringUtils.isEmpty(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr())) {
-                userProfile.setRecoveryEmailAddress(user.getUserProfileByUserId().getUserSecondaryEmailAddr().getSecondaryEmailAddr());
+            if (null != user.getUserProfileByUserId()) {
+                Set<UserSecondaryEmailAddr> userSecondaryEmailAddrsForUserId = user.getUserSecondaryEmailAddrsForUserId();
+                List<String> secondaryEmail = new LinkedList();
+                for (UserSecondaryEmailAddr userSecondaryEmailAddr : userSecondaryEmailAddrsForUserId) {
+                    secondaryEmail.add(userSecondaryEmailAddr.getSecondaryEmailAddr());
+                }
+                userProfile.setRecoveryEmailAddress(StringUtils.join(secondaryEmail, CommonConstants.COMMA));
             }
         }
 
