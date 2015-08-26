@@ -200,6 +200,7 @@ public class CrossRefController {
 				service.setError(error);
 			}
 		} catch (final Exception e) {
+	
 			LOGGER.error("Print Stack Trace- ", e);
 			final ErrorPOJO error = new ErrorPOJO();
 			error.setCode(Integer.parseInt(getValueErrorCode));
@@ -224,6 +225,7 @@ public class CrossRefController {
 		Service service = new Service();
 		boolean isCreated = false;
 		try {
+			System.err.println("-----------------------------");
 			isCreated = crossRefService.createCrossRef(productPersonRelation);
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
