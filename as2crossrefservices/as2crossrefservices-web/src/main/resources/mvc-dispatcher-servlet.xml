@@ -21,8 +21,8 @@
 	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<context:component-scan base-package="com.wiley.gr.ace.authorservices.*" />
+	<context:property-placeholder location="classpath:exception.properties" ignore-unresolvable="true" />
 
-	
 	<mvc:annotation-driven />
 
 </beans>
