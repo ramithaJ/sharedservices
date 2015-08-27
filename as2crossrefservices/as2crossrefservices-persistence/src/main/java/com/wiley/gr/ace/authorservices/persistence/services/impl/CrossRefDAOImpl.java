@@ -223,36 +223,29 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		boolean isCreated = false;
 		Session session = null;
 		if (!StringUtils.isEmpty(productPersonRelations)) {
-			System.err.println("----------------------------");
 			try {
-				System.err.println("----------------------------");
+				ProductPersonRelations prrelations = null;
 				if (!StringUtils.isEmpty(productPersonRelations
 						.getUserProfile())) {
 					int userId = productPersonRelations.getUserProfile()
 							.getUserId();
 					int dhId = productPersonRelations.getProducts().getDhId();
-					ProductPersonRelations prrelations = getCrossRefByUser(
-							userId, dhId);
-					if (StringUtils.isEmpty(prrelations)) {
-						throw new Exception();
-					}
+					prrelations = getCrossRefByUser(userId, dhId);
 				} else {
-					System.err.println("----------------------------");
 					String email = productPersonRelations.getEmailAddr();
 					int dhId = productPersonRelations.getProducts().getDhId();
-					System.err.println(email);
-					System.err.println(dhId);
-					ProductPersonRelations pprrelations = getCrossRefByEmail(
-							email, dhId);
-					if (StringUtils.isEmpty(pprrelations)) {
-						throw new Exception();
-					}
+					prrelations = getCrossRefByEmail(email, dhId);
 				}
-				session = getSessionFactory().openSession();
-				session.beginTransaction();
-				session.saveOrUpdate(productPersonRelations);
-				session.getTransaction().commit();
-				isCreated = true;
+				
+				if (StringUtils.isEmpty(prrelations)) {
+					session = getSessionFactory().openSession();
+					session.beginTransaction();
+					session.saveOrUpdate(productPersonRelations);
+					session.getTransaction().commit();
+					isCreated = true;
+				} else {
+					isCreated = false;
+				}
 			} catch (Exception e) {
 				isCreated = false;
 			} finally {
@@ -279,7 +272,7 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 	 *             the exception
 	 */
 	@Override
-	public final boolean deleteProductPersonRelation(final int userId,
+	public final boolean deleteProductPersonRelation(final Integer userId,
 			final String email, final int dhId) throws Exception {
 		boolean isDeleted = false;
 		Session session = null;
@@ -357,6 +350,13 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return isUpdated;
 	}
 
+	/**
+	 * Gets the cross ref by user.
+	 *
+	 * @param userId the user id
+	 * @param dhId the dh id
+	 * @return the cross ref by user
+	 */
 	private ProductPersonRelations getCrossRefByUser(Integer userId,
 			Integer dhId) {
 		ProductPersonRelations productPersonRelations = null;
@@ -376,6 +376,13 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 		return productPersonRelations;
 	}
 
+	/**
+	 * Gets the cross ref by email.
+	 *
+	 * @param email the email
+	 * @param dhId the dh id
+	 * @return the cross ref by email
+	 */
 	private ProductPersonRelations getCrossRefByEmail(String email, Integer dhId) {
 		ProductPersonRelations productPersonRelations = null;
 		Session session = null;

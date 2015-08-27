@@ -119,7 +119,7 @@ public interface CrossRefDAO {
      * @throws Exception
      *             the exception
      */
-    boolean deleteProductPersonRelation(int userId, String email, int dhId)
+    boolean deleteProductPersonRelation(Integer userId, String email, int dhId)
             throws Exception;
 
     /**
