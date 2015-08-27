@@ -13,23 +13,43 @@
  */
 package com.wiley.gr.ace.sharedservices.helper;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
 import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.payload.Service;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.Address;
-import com.wiley.gr.ace.sharedservices.persistence.entity.*;
+import com.wiley.gr.ace.sharedservices.persistence.entity.Alerts;
+import com.wiley.gr.ace.sharedservices.persistence.entity.AreaOfInterest;
+import com.wiley.gr.ace.sharedservices.persistence.entity.AuthCoauthDetails;
+import com.wiley.gr.ace.sharedservices.persistence.entity.Journals;
+import com.wiley.gr.ace.sharedservices.persistence.entity.ProfileAttributeList;
+import com.wiley.gr.ace.sharedservices.persistence.entity.ResearchFunders;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserAffiliations;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserAlerts;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserAreaOfInterest;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserFunderGrants;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserPreferredJournals;
 import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
-import com.wiley.gr.ace.sharedservices.profile.*;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfileAttribVisible;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserReferenceData;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserSecondaryEmailAddr;
+import com.wiley.gr.ace.sharedservices.persistence.entity.UserSocietyDetails;
+import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
+import com.wiley.gr.ace.sharedservices.profile.Affiliation;
+import com.wiley.gr.ace.sharedservices.profile.Alert;
+import com.wiley.gr.ace.sharedservices.profile.AlertType;
+import com.wiley.gr.ace.sharedservices.profile.CoAuthor;
+import com.wiley.gr.ace.sharedservices.profile.Funder;
+import com.wiley.gr.ace.sharedservices.profile.MyInterest;
+import com.wiley.gr.ace.sharedservices.profile.PreferredJournal;
+import com.wiley.gr.ace.sharedservices.profile.Society;
 
 /**
  * @author kkalyan
@@ -536,6 +556,17 @@ public class UserServiceHelper {
         return convertedDate;
     }
 
+    public static String convertDateToString(Date date){
+        String convertedDate = null;
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
+            convertedDate = sdf.format(date);
+        } catch (Exception e){
+            LOGGER.error("Exception Occurred during convertStringToDate...", e);
+        }
+        return convertedDate;
+    }
+
     /**
      * Method to set code, message & status to Service.
      *
@@ -720,10 +751,10 @@ public class UserServiceHelper {
             affiliation.setStateCd(userAffiliations.getStateOrProvinceName());
         }
         if (null != userAffiliations.getStartDt()) {
-            affiliation.setFromDate("" + userAffiliations.getStartDt());
+            affiliation.setFromDate(convertDateToString(userAffiliations.getStartDt()));
         }
         if (null != userAffiliations.getEndDt()) {
-            affiliation.setToDate("" + userAffiliations.getEndDt());
+            affiliation.setToDate(convertDateToString(userAffiliations.getEndDt()));
         }
         return affiliation;
     }
@@ -752,10 +783,10 @@ public class UserServiceHelper {
             society.setSocietyCd(userSocietyDetails.getSocieties().getSocietyCd());
         }
         if (null != userSocietyDetails.getStartDt()) {
-            society.setFromDate("" + userSocietyDetails.getStartDt());
+            society.setFromDate(convertDateToString(userSocietyDetails.getStartDt()));
         }
         if (null != userSocietyDetails.getEndDt()) {
-            society.setToDate("" + userSocietyDetails.getEndDt());
+            society.setToDate(convertDateToString(userSocietyDetails.getEndDt()));
         }
         return society;
     }

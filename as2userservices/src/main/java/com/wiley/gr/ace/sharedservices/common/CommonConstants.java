@@ -30,7 +30,7 @@ public class CommonConstants {
     public static final String ERROR = "ERROR";
     public static final String REQUEST_PATH = "/profile/{userId}";
     public static final String USER_SERVICE_REQUEST_PATH = "/profile";
-    public static final String DATE_FORMAT = "MM-dd-yyyy";
+    public static final String DATE_FORMAT = "MM-dd-yyyy'T'HH:mm:ss";
     public static final String ADDRESS_ID = "addressId";
     public static final String PROFILE_ATTR_CD = "profileAttribCd";
     public static final String ADDRESS_TYPE_CD = "addressTypeCd";
