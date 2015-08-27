@@ -225,7 +225,6 @@ public class CrossRefController {
 		Service service = new Service();
 		boolean isCreated = false;
 		try {
-			System.err.println("-----------------------------");
 			isCreated = crossRefService.createCrossRef(productPersonRelation);
 		} catch (final Exception e) {
 			LOGGER.error("Print Stack Trace- ", e);
