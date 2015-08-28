@@ -230,7 +230,7 @@ public class CrossRefController {
 			LOGGER.error("Print Stack Trace- ", e);
 			ErrorPOJO error = new ErrorPOJO();
 			error.setCode(Integer.parseInt(createNoValueErrorCode));
-			error.setMessage(createNoValueErrorMessage);
+			error.setMessage(e.getMessage());
 			service.setStatus("ERROR");
 			service.setError(error);
 		}

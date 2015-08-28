@@ -252,9 +252,6 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 				} else {
 					isCreated = false;
 				}
-			} catch (Exception e) {
-				LOGGER.error(e.getLocalizedMessage());
-				isCreated = false;
 			} finally {
 				if (!StringUtils.isEmpty(session)) {
 					session.flush();
