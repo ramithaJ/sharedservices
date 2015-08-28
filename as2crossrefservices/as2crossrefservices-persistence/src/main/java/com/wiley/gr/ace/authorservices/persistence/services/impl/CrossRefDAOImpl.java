@@ -16,6 +16,8 @@ import static com.wiley.gr.ace.authorservices.persistence.connection.CrossRefHib
 import java.util.List;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.persistence.entity.ProductPersonRelations;
@@ -30,6 +32,10 @@ import com.wiley.gr.ace.authorservices.persistence.services.CrossRefDAO;
  * @author virtusa version 1.0
  */
 public class CrossRefDAOImpl implements CrossRefDAO {
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(CrossRefDAOImpl.class);
 
 	/**
 	 * Gets the product person relations.
@@ -236,7 +242,7 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 					int dhId = productPersonRelations.getProducts().getDhId();
 					prrelations = getCrossRefByEmail(email, dhId);
 				}
-				
+
 				if (StringUtils.isEmpty(prrelations)) {
 					session = getSessionFactory().openSession();
 					session.beginTransaction();
@@ -247,6 +253,7 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 					isCreated = false;
 				}
 			} catch (Exception e) {
+				LOGGER.error(e.getLocalizedMessage());
 				isCreated = false;
 			} finally {
 				if (!StringUtils.isEmpty(session)) {
@@ -353,8 +360,10 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 	/**
 	 * Gets the cross ref by user.
 	 *
-	 * @param userId the user id
-	 * @param dhId the dh id
+	 * @param userId
+	 *            the user id
+	 * @param dhId
+	 *            the dh id
 	 * @return the cross ref by user
 	 */
 	private ProductPersonRelations getCrossRefByUser(Integer userId,
@@ -379,8 +388,10 @@ public class CrossRefDAOImpl implements CrossRefDAO {
 	/**
 	 * Gets the cross ref by email.
 	 *
-	 * @param email the email
-	 * @param dhId the dh id
+	 * @param email
+	 *            the email
+	 * @param dhId
+	 *            the dh id
 	 * @return the cross ref by email
 	 */
 	private ProductPersonRelations getCrossRefByEmail(String email, Integer dhId) {
