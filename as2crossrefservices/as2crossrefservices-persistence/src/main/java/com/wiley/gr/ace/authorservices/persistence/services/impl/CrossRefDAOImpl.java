@@ -33,9 +33,6 @@ import com.wiley.gr.ace.authorservices.persistence.services.CrossRefDAO;
  */
 public class CrossRefDAOImpl implements CrossRefDAO {
 
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(CrossRefDAOImpl.class);
 
 	/**
 	 * Gets the product person relations.
