@@ -16,8 +16,6 @@ import static com.wiley.gr.ace.authorservices.persistence.connection.CrossRefHib
 import java.util.List;
 
 import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.wiley.gr.ace.authorservices.persistence.entity.ProductPersonRelations;

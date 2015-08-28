@@ -79,9 +79,9 @@ public class CrossRefController {
 	@Value("${CrossRefController.createNoValue.code}")
 	private String createNoValueErrorCode;
 
-	/** The create no value error message. */
+	/** The create no value error message. *//*
 	@Value("${CrossRefController.createNoValue.message}")
-	private String createNoValueErrorMessage;
+	private String createNoValueErrorMessage;*/
 
 	/** The create value error code. */
 	@Value("${CrossRefController.createValue.code}")
