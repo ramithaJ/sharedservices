@@ -12,6 +12,7 @@
 package com.wiley.gr.ace.authorservices.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -46,7 +47,7 @@ public class NotificationObj {
 	private String type;
 
 	/** The sent on. */
-	private String sentOn;
+	private Date sentOn;
 
 	/** The unread. */
 	private Character unread;
@@ -192,7 +193,7 @@ public class NotificationObj {
 	 *
 	 * @return the sent on
 	 */
-	public final String getSentOn() {
+	public final Date getSentOn() {
 		return sentOn;
 	}
 
@@ -202,7 +203,7 @@ public class NotificationObj {
 	 * @param sentOn
 	 *            the new sent on
 	 */
-	public final void setSentOn(final String sentOn) {
+	public final void setSentOn(final Date sentOn) {
 		this.sentOn = sentOn;
 	}
 

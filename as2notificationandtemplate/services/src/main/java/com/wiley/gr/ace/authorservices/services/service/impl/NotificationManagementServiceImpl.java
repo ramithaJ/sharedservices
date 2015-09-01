@@ -333,7 +333,7 @@ public class NotificationManagementServiceImpl implements
 		if (!StringUtils.isEmpty(notificationEntity.getType()))
 			notification.setType(notificationEntity.getType());
 		if (!StringUtils.isEmpty(notificationEntity.getSentOn()))
-			notification.setSentOn(notificationEntity.getSentOn().toString());
+			notification.setSentOn(notificationEntity.getSentOn());
 		if (!StringUtils.isEmpty(notificationEntity.getUnread()))
 			notification.setUnread(notificationEntity.getUnread());
 		TemplateObj tempTemplate = getTemplateVO(notificationEntity
@@ -614,6 +614,7 @@ public class NotificationManagementServiceImpl implements
 		notificationObj.setTemplate(templateObj);
 		notificationObj.setType("email");
 		notificationObj.setUnread('n');
+		notificationObj.setSentOn(new Date());
 
 		ArrayList<NotificationRecipientsObj> recipientList = new ArrayList<NotificationRecipientsObj>();
 		if (!StringUtils.isEmpty(notificationDetails.getTo())) {
@@ -760,6 +761,7 @@ public class NotificationManagementServiceImpl implements
 		notification.setAppId(notificationObj.getAppId());
 		notification.setContent(new SerialClob(notificationObj.getContent().toCharArray()));
 		notification.setSenderEmail(notificationObj.getSenderEmail());
+		notification.setSentOn(notificationObj.getSentOn());
 
 		Template template = new Template();
 		template.setAppId(notificationObj.getTemplate().getAppId());
