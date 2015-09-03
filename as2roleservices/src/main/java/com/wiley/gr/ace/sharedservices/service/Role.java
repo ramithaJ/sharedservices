@@ -57,10 +57,11 @@ public class Role {
      * @param permissions
      *            the permissions
      */
-    public Role(int roleId, String roleName, List<Permission> permissions,
-            List<UserRole> usersList, String roleType) {
+    public Role(final int roleId, final String roleName, final String roleDescription, final List<Permission> permissions,
+            final List<UserRole> usersList, final String roleType) {
         this.roleId = roleId;
         this.roleName = roleName;
+        this.roleDescription = roleDescription;
         this.permissions = permissions;
         users = usersList;
         this.roleType = roleType;
@@ -76,8 +77,8 @@ public class Role {
      * @param permissions
      *            the permissions
      */
-    public Role(int roleId, String roleName, List<Permission> permissions,
-            String roleType) {
+    public Role(final int roleId, final String roleName, final List<Permission> permissions,
+            final String roleType) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.permissions = permissions;
@@ -117,7 +118,7 @@ public class Role {
      * @param roleId
      *            the roleId to set
      */
-    public void setRoleId(int roleId) {
+    public void setRoleId(final int roleId) {
         this.roleId = roleId;
     }
 
@@ -127,7 +128,7 @@ public class Role {
      * @param roleName
      *            the new role name
      */
-    public void setRoleName(String roleName) {
+    public void setRoleName(final String roleName) {
         this.roleName = roleName;
     }
 
@@ -146,7 +147,7 @@ public class Role {
      * @param roleDescription
      *            the roleDescription to set
      */
-    public final void setRoleDescription(String roleDescription) {
+    public final void setRoleDescription(final String roleDescription) {
         this.roleDescription = roleDescription;
     }
 
@@ -156,7 +157,7 @@ public class Role {
      * @param permissions
      *            the permissions to set
      */
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(final List<Permission> permissions) {
         this.permissions = permissions;
     }
 
@@ -211,7 +212,7 @@ public class Role {
      * @param roleType
      *            the roleType to set
      */
-    public final void setRoleType(String roleType) {
+    public final void setRoleType(final String roleType) {
         this.roleType = roleType;
     }
 
@@ -221,7 +222,7 @@ public class Role {
      * @param createdDate
      *            the createdDate to set
      */
-    public final void setCreatedDate(Date createdDate) {
+    public final void setCreatedDate(final Date createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -231,7 +232,7 @@ public class Role {
      * @param updatedDate
      *            the updatedDate to set
      */
-    public final void setUpdatedDate(Date updatedDate) {
+    public final void setUpdatedDate(final Date updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -241,7 +242,7 @@ public class Role {
      * @param createdBy
      *            the createdBy to set
      */
-    public final void setCreatedBy(int createdBy) {
+    public final void setCreatedBy(final int createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -251,7 +252,7 @@ public class Role {
      * @param updatedBy
      *            the updatedBy to set
      */
-    public final void setUpdatedBy(int updatedBy) {
+    public final void setUpdatedBy(final int updatedBy) {
         this.updatedBy = updatedBy;
     }
 
@@ -266,7 +267,7 @@ public class Role {
      * @param usersList
      *            the usersList to set
      */
-    public void setUsers(List<UserRole> usersList) {
+    public void setUsers(final List<UserRole> usersList) {
         users = usersList;
     }
 
