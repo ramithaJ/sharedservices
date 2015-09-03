@@ -88,7 +88,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                     userRole = new UserRole(userRoles.getId().getUserId());
                     usersList.add(userRole);
                 }
-                roleList.add(new Role(role.getRoleId(), role.getRoleName(),
+                roleList.add(new Role(role.getRoleId(), role.getRoleName(), role.getDescription(), 
                         permissionList, usersList, role.getRoleType()));
             }
 
@@ -187,7 +187,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (int)
      */
     @Override
-    public Role findRole(int roleId) throws SharedServiceException {
+    public Role findRole(final int roleId) throws SharedServiceException {
         Session session = null;
         Role role = null;
         List<String> groups;
@@ -229,7 +229,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 usersList.add(userRole);
             }
 
-            role = new Role(roles.getRoleId(), roles.getRoleName(), permission,
+            role = new Role(roles.getRoleId(), roles.getRoleName(), roles.getDescription(), permission,
                     usersList, roles.getRoleType());
 
             // Flush the session.
@@ -262,7 +262,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (int)
      */
     @Override
-    public Role findRoleByUser(int userId) throws SharedServiceException {
+    public Role findRoleByUser(final int userId) throws SharedServiceException {
         Session session = null;
         Role role = null;
         List<String> groups;
@@ -330,7 +330,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Permission> findPermissions(String permissionGroupCd)
+    public List<Permission> findPermissions(final String permissionGroupCd)
             throws SharedServiceException {
         Session session = null;
         final List<Permission> list = new ArrayList<>();
@@ -393,7 +393,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (int)
      */
     @Override
-    public Permission findPermission(String permissionId)
+    public Permission findPermission(final String permissionId)
             throws SharedServiceException {
         Permission permission = new Permission();
         Session session = null;
@@ -449,7 +449,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Permission> findAdditionalPermissions(int userId, int objectId)
+    public List<Permission> findAdditionalPermissions(final int userId, final int objectId)
             throws SharedServiceException {
         Session session = null;
         List<String> groups = null;
@@ -511,7 +511,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (int)
      */
     @Override
-    public void deleteRole(int roleId) throws SharedServiceException {
+    public void deleteRole(final int roleId) throws SharedServiceException {
         Session session = null;
         new ArrayList<>();
         try {
@@ -552,7 +552,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void deletePermission(int roleId) throws SharedServiceException {
+    public void deletePermission(final int roleId) throws SharedServiceException {
         Session session = null;
         try {
             session = sessionFactory.openSession();
@@ -595,7 +595,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * deletePermissionOfUser(int, int)
      */
     @Override
-    public void deletePermissionOfUser(int userId, int articleId)
+    public void deletePermissionOfUser(final int userId, final int articleId)
             throws SharedServiceException {
         Session session = null;
         try {
@@ -639,7 +639,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (java.lang.String)
      */
     @Override
-    public void createNewRole(Role role) throws SharedServiceException {
+    public void createNewRole(final Role role) throws SharedServiceException {
         Session session = null;
         try {
             session = sessionFactory.openSession();
@@ -687,7 +687,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * createNewPermission (java.lang.String)
      */
     @Override
-    public void createNewPermission(Permission permission)
+    public void createNewPermission(final Permission permission)
             throws SharedServiceException {
         Session session = null;
         try {
@@ -736,7 +736,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * (int, com.wiley.gr.ace.sharedservices.service.Role)
      */
     @Override
-    public void updateRole(int roleId, Role role) throws SharedServiceException {
+    public void updateRole(final int roleId, final Role role) throws SharedServiceException {
         Session session = null;
         try {
             session = sessionFactory.openSession();
@@ -783,7 +783,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void updatePermission(List<Permission> permissionList, int roleId)
+    public void updatePermission(final List<Permission> permissionList, final int roleId)
             throws SharedServiceException {
 
         // Get the session from sessionFactory pool.
@@ -843,8 +843,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * com.wiley.gr.ace.sharedservices.service.AdditionalPermission)
      */
     @Override
-    public void updateAdditionalPermissions(int userId, int objectId,
-            AdditionalPermission permission) throws SharedServiceException {
+    public void updateAdditionalPermissions(final int userId, final int objectId,
+            final AdditionalPermission permission) throws SharedServiceException {
 
         Session session = null;
         try {
@@ -902,7 +902,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void deletePermissionOfRole(int roleId, String permissionCd)
+    public void deletePermissionOfRole(final int roleId, final String permissionCd)
             throws SharedServiceException {
 
         Session session = null;
