@@ -117,15 +117,18 @@ public class DiscountServiceImpl implements DiscountService {
             //Check whether the procedure returns a value or not
             if (cs != null) {
                 ResultSet cursor = (ResultSet) cs.getObject(8);
-                while (cursor.next()) {
-                    GetMaxDiscountResponse getMaxDiscountResponse = new GetMaxDiscountResponse();
-                    getMaxDiscountResponse.setDiscountTypeName(cursor.getString(1));
-                    getMaxDiscountResponse.setDiscountTypeCode(cursor.getString(2));
-                    getMaxDiscountResponse.setDiscountPercentage(cursor.getString(3));
-                    getMaxDiscountResponse.setDiscountValue(cursor.getString(4));
-                    service.setPayload(getMaxDiscountResponse);
+                if (null != cursor) {
+                    while (cursor.next()) {
+                        GetMaxDiscountResponse getMaxDiscountResponse = new GetMaxDiscountResponse();
+                        getMaxDiscountResponse.setDiscountTypeName(cursor.getString(1));
+                        getMaxDiscountResponse.setDiscountTypeCode(cursor.getString(2));
+                        getMaxDiscountResponse.setDiscountPercentage(cursor.getString(3));
+                        getMaxDiscountResponse.setDiscountValue(cursor.getString(4));
+                        service.setPayload(getMaxDiscountResponse);
+                    }
                 }
                 if (!StringUtils.isEmpty(cs.getString(9)) && !StringUtils.isEmpty(cs.getString(10))) {
+                    service.setStatus(CommonConstants.ERROR);
                     service.setError(new ErrorResponse(cs.getString(9), cs.getString(10)));
                 }
             }

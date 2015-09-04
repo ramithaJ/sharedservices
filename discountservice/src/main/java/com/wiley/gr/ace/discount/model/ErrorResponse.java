@@ -13,17 +13,19 @@
  */
 package com.wiley.gr.ace.discount.model;
 
+import java.io.Serializable;
+
 /**
  * This is the generic errorVO returned by the service.
  *
  * @author virtusa
  *         version 1.0
  */
-public class ErrorResponse {
+public class ErrorResponse implements Serializable {
 
-    private int code;
+    public int code;
 
-    private String message;
+    public String message;
 
     public ErrorResponse(String code, String message) {
         this.code = Integer.parseInt(code);
