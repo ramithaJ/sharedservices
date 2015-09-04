@@ -13,46 +13,23 @@
  */
 package com.wiley.gr.ace.sharedservices.helper;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.wiley.gr.ace.sharedservices.common.CommonConstants;
 import com.wiley.gr.ace.sharedservices.payload.Error;
 import com.wiley.gr.ace.sharedservices.payload.Service;
 import com.wiley.gr.ace.sharedservices.payload.UserServiceRequest;
 import com.wiley.gr.ace.sharedservices.persistence.entity.Address;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Alerts;
-import com.wiley.gr.ace.sharedservices.persistence.entity.AreaOfInterest;
-import com.wiley.gr.ace.sharedservices.persistence.entity.AuthCoauthDetails;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Journals;
-import com.wiley.gr.ace.sharedservices.persistence.entity.ProfileAttributeList;
-import com.wiley.gr.ace.sharedservices.persistence.entity.ResearchFunders;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserAffiliations;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserAlerts;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserAreaOfInterest;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserFunderGrants;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserPreferredJournals;
+import com.wiley.gr.ace.sharedservices.persistence.entity.*;
 import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfile;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserProfileAttribVisible;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserReferenceData;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserSecondaryEmailAddr;
-import com.wiley.gr.ace.sharedservices.persistence.entity.UserSocietyDetails;
-import com.wiley.gr.ace.sharedservices.persistence.entity.Users;
-import com.wiley.gr.ace.sharedservices.profile.Affiliation;
-import com.wiley.gr.ace.sharedservices.profile.Alert;
-import com.wiley.gr.ace.sharedservices.profile.AlertType;
-import com.wiley.gr.ace.sharedservices.profile.CoAuthor;
-import com.wiley.gr.ace.sharedservices.profile.Funder;
-import com.wiley.gr.ace.sharedservices.profile.MyInterest;
-import com.wiley.gr.ace.sharedservices.profile.PreferredJournal;
-import com.wiley.gr.ace.sharedservices.profile.Society;
+import com.wiley.gr.ace.sharedservices.profile.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author kkalyan
@@ -247,12 +224,9 @@ public class UserServiceHelper {
         if (!StringUtils.isEmpty(addressProfile.getInstitutionName())) {
             address.setInstitutionName(addressProfile.getInstitutionName());
         }
-        if (!StringUtils.isEmpty(addressProfile.getDepartmentCd())) {
-            address.setDepartmentCd(addressProfile.getDepartmentCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getDepartmentName())) {
-            address.setDepartmentName(addressProfile.getDepartmentName());
-        }
+        address.setDepartmentCd(addressProfile.getDepartmentCd());
+        address.setDepartmentName(addressProfile.getDepartmentName());
+
         if (!StringUtils.isEmpty(addressProfile.getAddress01())) {
             address.setAddressLine1(addressProfile.getAddress01());
         }
@@ -559,12 +533,12 @@ public class UserServiceHelper {
         return convertedDate;
     }
 
-    public static String convertDateToString(Date date){
+    public static String convertDateToString(Date date) {
         String convertedDate = null;
-        try{
+        try {
             SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
             convertedDate = sdf.format(date);
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("Exception Occurred during convertStringToDate...", e);
         }
         return convertedDate;
