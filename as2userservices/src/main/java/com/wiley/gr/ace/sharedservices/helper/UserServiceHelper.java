@@ -52,16 +52,9 @@ public class UserServiceHelper {
      * @return user entity object
      */
     public static Users setUserInformation(UserServiceRequest userServiceRequest, Users user) {
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) {
-            user.setFirstName(userServiceRequest.getUserProfile().getFirstName());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getLastName())) {
-            user.setLastName(userServiceRequest.getUserProfile().getLastName());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
-            user.setPrimaryEmailAddr(userServiceRequest.getUserProfile().getPrimaryEmailAddress());
-        }
-
+        user.setFirstName(userServiceRequest.getUserProfile().getFirstName());
+        user.setLastName(userServiceRequest.getUserProfile().getLastName());
+        user.setPrimaryEmailAddr(userServiceRequest.getUserProfile().getPrimaryEmailAddress());
         user.setUpdatedDate(getDate());
         return user;
     }
@@ -75,31 +68,18 @@ public class UserServiceHelper {
      */
     public static UserProfile setUserProfileInformation(UserServiceRequest userServiceRequest, UserProfile userProfile) {
 
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getTitleCd())) {
-            userProfile.setTitleCd(userServiceRequest.getUserProfile().getTitleCd());
-        }
+        userProfile.setTitleCd(userServiceRequest.getUserProfile().getTitleCd());
+
         //TODO: Profile Pic
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getMiddleName())) {
-            userProfile.setMiddleName(userServiceRequest.getUserProfile().getMiddleName());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getSuffixCd())) {
-            userProfile.setSuffixCd(userServiceRequest.getUserProfile().getSuffixCd());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getAlternativeName())) {
-            userProfile.setAlternativeName(userServiceRequest.getUserProfile().getAlternativeName());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getIndustryCd())) {
-            userProfile.setIndustryCd(userServiceRequest.getUserProfile().getIndustryCd());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getJobCategoryCd())) {
-            userProfile.setJobCategoryCd(userServiceRequest.getUserProfile().getJobCategoryCd());
-        }
-        if (userServiceRequest.getUserProfile().getProfileVisibleFlag() != ' ') {
-            userProfile.setProfileVisibleFlg(userServiceRequest.getUserProfile().getProfileVisibleFlag());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecieveEmailsFlag())) {
-            userProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
-        }
+
+        userProfile.setMiddleName(userServiceRequest.getUserProfile().getMiddleName());
+        userProfile.setSuffixCd(userServiceRequest.getUserProfile().getSuffixCd());
+        userProfile.setAlternativeName(userServiceRequest.getUserProfile().getAlternativeName());
+        userProfile.setIndustryCd(userServiceRequest.getUserProfile().getIndustryCd());
+        userProfile.setJobCategoryCd(userServiceRequest.getUserProfile().getJobCategoryCd());
+        userProfile.setProfileVisibleFlg(userServiceRequest.getUserProfile().getProfileVisibleFlag());
+        userProfile.setOptInPromoteFlg(userServiceRequest.getUserProfile().getRecieveEmailsFlag());
+
 
         userProfile.setUpdatedDate(getDate());
         return userProfile;
@@ -152,7 +132,7 @@ public class UserServiceHelper {
      * @return secondaryEmailAddr entity object
      */
     public static UserSecondaryEmailAddr setUserSecondaryEmailAddr(String emailId, UserSecondaryEmailAddr secondaryEmailAddr, Users user) {
-        if (!StringUtils.isEmpty(emailId)) {
+        if (null != emailId) {
             secondaryEmailAddr.setSecondaryEmailAddr(emailId);
             secondaryEmailAddr.setUpdatedDate(getDate());
             secondaryEmailAddr.setUsersByUserId(user);
@@ -206,51 +186,21 @@ public class UserServiceHelper {
      * @return address entity object
      */
     public static Address setAddress(Address address, com.wiley.gr.ace.sharedservices.profile.Address addressProfile) {
-        if (!StringUtils.isEmpty(addressProfile.getTitleCd())) {
-            address.setTitleCd(addressProfile.getTitleCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getFirstName())) {
-            address.setFirstName(addressProfile.getFirstName());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getLastName())) {
-            address.setLastName(addressProfile.getLastName());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getSuffixCd())) {
-            address.setSuffixCd(addressProfile.getSuffixCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getInstitutionCd())) {
-            address.setInstitutionCd(addressProfile.getInstitutionCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getInstitutionName())) {
-            address.setInstitutionName(addressProfile.getInstitutionName());
-        }
+        address.setTitleCd(addressProfile.getTitleCd());
+        address.setFirstName(addressProfile.getFirstName());
+        address.setLastName(addressProfile.getLastName());
+        address.setSuffixCd(addressProfile.getSuffixCd());
+        address.setInstitutionCd(addressProfile.getInstitutionCd());
+        address.setInstitutionName(addressProfile.getInstitutionName());
         address.setDepartmentCd(addressProfile.getDepartmentCd());
         address.setDepartmentName(addressProfile.getDepartmentName());
-
-        if (!StringUtils.isEmpty(addressProfile.getAddress01())) {
-            address.setAddressLine1(addressProfile.getAddress01());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getAddress02())) {
-            address.setAddressLine2(addressProfile.getAddress02());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getCity())) {
-            address.setCity(addressProfile.getCity());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getStateCd())) {
-            address.setState(addressProfile.getStateCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getPostalCd())) {
-            address.setPostalcode(addressProfile.getPostalCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getCountryCd())) {
-            address.setCountryCd(addressProfile.getCountryCd());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getPhoneNo())) {
-            address.setPhone(addressProfile.getPhoneNo());
-        }
-        if (!StringUtils.isEmpty(addressProfile.getFaxNo())) {
-            address.setFax(addressProfile.getFaxNo());
-        }
+        address.setAddressLine1(addressProfile.getAddress01());
+        address.setAddressLine2(addressProfile.getAddress02());
+        address.setCity(addressProfile.getCity());
+        address.setState(addressProfile.getStateCd());
+        address.setPostalcode(addressProfile.getPostalCd());
+        address.setCountryCd(addressProfile.getCountryCd());
+        address.setFax(addressProfile.getFaxNo());
         address.setUpdatedDate(getDate());
         return address;
     }
@@ -400,12 +350,8 @@ public class UserServiceHelper {
      * @return
      */
     public static UserReferenceData setUserReference(UserReferenceData userReferenceData, UserServiceRequest userServiceRequest) {
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) {
-            userReferenceData.setOrcidId(userServiceRequest.getUserProfile().getOrcidId());
-        }
-        if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid())) {
-            userReferenceData.setEcid(userServiceRequest.getUserProfile().getEcid());
-        }
+        userReferenceData.setOrcidId(userServiceRequest.getUserProfile().getOrcidId());
+        userReferenceData.setEcid(userServiceRequest.getUserProfile().getEcid());
         userReferenceData.setUpdatedDate(getDate());
         return userReferenceData;
     }

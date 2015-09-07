@@ -532,7 +532,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             //Begin the transaction.
             session.beginTransaction();
 
-            if ((!StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) || (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getLastName())) || (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getPrimaryEmailAddress()))) {
+            if ((!StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) || (null != userServiceRequest.getUserProfile().getLastName()) ||
+                    (null != userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
                 user = UserServiceHelper.setUserInformation(userServiceRequest, user);
             }
             //Get AuthorProfile Object
@@ -540,7 +541,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
 
             //Create (or) Update User Secondary Email Address
-            if (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getRecoveryEmailAddress())) {
+            if (null != userServiceRequest.getUserProfile().getRecoveryEmailAddress()) {
                 String secondaryEmailCommaSeperatedList = userServiceRequest.getUserProfile().getRecoveryEmailAddress();
                 Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
                 //Delete All existing ids.
@@ -563,7 +564,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             }
 
             //Create (or) Update Orcid id & Ecid information
-            if ((!StringUtils.isEmpty(userServiceRequest.getUserProfile().getOrcidId())) || (!StringUtils.isEmpty(userServiceRequest.getUserProfile().getEcid()))) {
+            if ((null != userServiceRequest.getUserProfile().getOrcidId()) ||
+                    (null != userServiceRequest.getUserProfile().getEcid())) {
                 UserReferenceData userReferenceData = user.getUserReferenceDataByUserId();
                 if (null == userReferenceData) {
                     userReferenceData = new UserReferenceData();
