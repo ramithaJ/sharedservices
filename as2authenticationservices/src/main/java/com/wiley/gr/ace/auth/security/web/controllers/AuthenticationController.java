@@ -19,6 +19,7 @@ import com.wiley.gr.ace.auth.security.model.Response;
 import com.wiley.gr.ace.auth.security.model.TokenRequest;
 import com.wiley.gr.ace.auth.security.model.User;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -180,6 +182,10 @@ public class AuthenticationController {
             return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
                     this.authMessage008, CommonConstant.FAILURE_STATUS), null,
                     HttpStatus.UNAUTHORIZED);
+        } catch (AuthenticationException authenticationException) {
+        	return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
+        			CommonConstant.EXCEPTION, CommonConstant.FAILURE_STATUS), null,
+                    HttpStatus.OK);
         }
     }
 }
