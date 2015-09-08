@@ -298,7 +298,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public <T> User searchUser(final String userId)
-            throws NameNotFoundException {
+            throws NameNotFoundException, IndexOutOfBoundsException {
 
         LOGGER.info("Inside searchUser method");
         this.setContext(this.directoyServiceUrl, null, null);

@@ -175,7 +175,7 @@ public class AuthenticationController {
         try {
             User user = authenticationService.searchUser(request.getUserId());
             return new ResponseEntity<>(user, null, HttpStatus.OK);
-        } catch (NameNotFoundException nameNotFoundException) {
+        } catch (NameNotFoundException | IndexOutOfBoundsException nameNotFoundException) {
             LOGGER.error("NameNotFoundException in Search User", nameNotFoundException);
             return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
                     this.authMessage008, CommonConstant.FAILURE_STATUS), null,
