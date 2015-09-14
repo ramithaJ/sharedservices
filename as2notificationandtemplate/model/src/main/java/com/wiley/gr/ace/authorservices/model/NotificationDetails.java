@@ -11,12 +11,12 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.model;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NotificationDetails.
  * 
@@ -30,15 +30,59 @@ public class NotificationDetails {
 
     /** The to. */
     private ArrayList<String> to;
-    
+
     /** The cc list. */
     private ArrayList<String> ccList;
-    
+
     /** The bcc list. */
     private ArrayList<String> bccList;
 
     /** The template details. */
     private TemplateDetails templateDetails;
+
+    /** The attachments. */
+    private File[] attachments;
+
+    /**
+     * Gets the attachments.
+     *
+     * @return the attachments
+     */
+    public final File[] getAttachments() {
+        return attachments;
+    }
+
+    /**
+     * Sets the attachments.
+     *
+     * @param attachments
+     *            the new attachments
+     */
+    public final void setAttachments(final File[] attachments) {
+        this.attachments = attachments;
+    }
+
+    /** The notification data. */
+    private NotificationDataObj notificationData;
+
+    /**
+     * Gets the notification data.
+     *
+     * @return the notification data
+     */
+    public final NotificationDataObj getNotificationData() {
+        return notificationData;
+    }
+
+    /**
+     * Sets the notification data.
+     *
+     * @param notificationData
+     *            the new notification data
+     */
+    public final void setNotificationData(final NotificationDataObj notificationData) {
+        this.notificationData = notificationData;
+    }
 
     /**
      * Gets the from.
@@ -59,54 +103,62 @@ public class NotificationDetails {
         this.from = from;
     }
 
+    /**
+     * Gets the to.
+     *
+     * @return the to
+     */
     public final ArrayList<String> getTo() {
-		return to;
-	}
+        return to;
+    }
 
-	/**
+    /**
      * Gets the cc list.
      *
      * @return the cc list
      */
     public final ArrayList<String> getCcList() {
-		return ccList;
-	}
+        return ccList;
+    }
 
-	/**
-	 * Sets the cc list.
-	 *
-	 * @param ccList the new cc list
-	 */
-	public final void setCcList(final ArrayList<String> ccList) {
-		this.ccList = ccList;
-	}
+    /**
+     * Sets the cc list.
+     *
+     * @param ccList
+     *            the new cc list
+     */
+    public final void setCcList(final ArrayList<String> ccList) {
+        this.ccList = ccList;
+    }
 
-	/**
-	 * Gets the bcc list.
-	 *
-	 * @return the bcc list
-	 */
-	public final ArrayList<String> getBccList() {
-		return bccList;
-	}
+    /**
+     * Gets the bcc list.
+     *
+     * @return the bcc list
+     */
+    public final ArrayList<String> getBccList() {
+        return bccList;
+    }
 
-	/**
-	 * Sets the bcc list.
-	 *
-	 * @param bccList the new bcc list
-	 */
-	public final void setBccList(final ArrayList<String> bccList) {
-		this.bccList = bccList;
-	}
+    /**
+     * Sets the bcc list.
+     *
+     * @param bccList
+     *            the new bcc list
+     */
+    public final void setBccList(final ArrayList<String> bccList) {
+        this.bccList = bccList;
+    }
 
-	/**
-	 * Sets the to.
-	 *
-	 * @param to the new to
-	 */
-	public final void setTo(final ArrayList<String> to) {
-		this.to = to;
-	}
+    /**
+     * Sets the to.
+     *
+     * @param to
+     *            the new to
+     */
+    public final void setTo(final ArrayList<String> to) {
+        this.to = to;
+    }
 
     /**
      * Gets the template details.

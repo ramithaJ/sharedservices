@@ -194,7 +194,8 @@ public class ScheduleObj {
      * @param scheduleTemplate
      *            the new schedule template
      */
-    public final void setScheduleTemplate(final ScheduleTemplateObj scheduleTemplate) {
+    public final void setScheduleTemplate(
+            final ScheduleTemplateObj scheduleTemplate) {
         this.scheduleTemplate = scheduleTemplate;
     }
 

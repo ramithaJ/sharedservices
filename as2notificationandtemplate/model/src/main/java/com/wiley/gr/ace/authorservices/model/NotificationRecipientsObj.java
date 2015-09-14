@@ -33,7 +33,7 @@ public class NotificationRecipientsObj {
 
     /** The email. */
     private String email;
-    
+
     /** The recipient type. */
     private String recipientType;
 
@@ -113,22 +113,23 @@ public class NotificationRecipientsObj {
         this.email = email;
     }
 
-	/**
-	 * Gets the recipient type.
-	 *
-	 * @return the recipient type
-	 */
-	public final String getRecipientType() {
-		return recipientType;
-	}
+    /**
+     * Gets the recipient type.
+     *
+     * @return the recipient type
+     */
+    public final String getRecipientType() {
+        return recipientType;
+    }
 
-	/**
-	 * Sets the recipient type.
-	 *
-	 * @param recipientType the new recipient type
-	 */
-	public final void setRecipientType(final String recipientType) {
-		this.recipientType = recipientType;
-	}
+    /**
+     * Sets the recipient type.
+     *
+     * @param recipientType
+     *            the new recipient type
+     */
+    public final void setRecipientType(final String recipientType) {
+        this.recipientType = recipientType;
+    }
 
 }

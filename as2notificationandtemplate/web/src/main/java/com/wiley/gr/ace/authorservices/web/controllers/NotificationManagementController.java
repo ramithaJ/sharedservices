@@ -55,7 +55,7 @@ public class NotificationManagementController {
     /** The template management service. */
     @Autowired(required = true)
     private TemplateManagementService templateManagementService;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noSchedule.code}")
     private int noScheduleErrorCode;
@@ -63,7 +63,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noSchedule.message}")
     private String noScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.getSchedule.code}")
     private int getScheduleErrorCode;
@@ -79,7 +79,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noDeleteSchedule.message}")
     private String noDeleteScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.deleteSchedule.code}")
     private int deleteScheduleErrorCode;
@@ -87,7 +87,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.deleteSchedule.message}")
     private String deleteScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noUpdateSchedule.code}")
     private int noUpdateScheduleErrorCode;
@@ -95,7 +95,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noUpdateSchedule.message}")
     private String noUpdateScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.updateSchedule.code}")
     private int updateScheduleErrorCode;
@@ -103,7 +103,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.updateSchedule.message}")
     private String updateScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noCreateSchedule.code}")
     private int noCreateScheduleErrorCode;
@@ -111,7 +111,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noCreateSchedule.message}")
     private String noCreateScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.createSchedule.code}")
     private int createScheduleErrorCode;
@@ -119,7 +119,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.createSchedule.message}")
     private String createScheduleErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noTemplateLookup.code}")
     private int noTemplateLookupErrorCode;
@@ -127,7 +127,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noTemplateLookup.message}")
     private String noTemplateLookupErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.templateLookup.code}")
     private int templateLookupErrorCode;
@@ -135,7 +135,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.templateLookup.message}")
     private String templateLookupErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noNotification.code}")
     private int noNotificationErrorCode;
@@ -143,7 +143,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noNotification.message}")
     private String noNotificationErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.getNotification.code}")
     private int getNotificationErrorCode;
@@ -151,7 +151,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.getNotification.message}")
     private String getNotificationErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noSetNotificationFlag.code}")
     private int noSetNotificationFlagErrorCode;
@@ -159,7 +159,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noSetNotificationFlag.message}")
     private String noSetNotificationFlagErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.setNotificationFlag.code}")
     private int setNotificationFlagErrorCode;
@@ -167,7 +167,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.setNotificationFlag.message}")
     private String setNotificationFlagErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.noNotificationHistory.code}")
     private int noNotificationHistoryErrorCode;
@@ -175,7 +175,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.noNotificationHistory.message}")
     private String noNotificationHistoryErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.getNotificationHistory.code}")
     private int getNotificationHistoryErrorCode;
@@ -183,7 +183,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.getNotificationHistory.message}")
     private String getNotificationHistoryErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.sendNotification.code}")
     private int sendNotificationErrorCode;
@@ -191,7 +191,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.sendNotification.message}")
     private String sendNotificationErrorMessage;
-    
+
     /** value from props file configured. */
     @Value("${NotificationManagementController.resendNotification.code}")
     private int resendNotificationErrorCode;
@@ -199,7 +199,7 @@ public class NotificationManagementController {
     /** value from props file configured. */
     @Value("${NotificationManagementController.resendNotification.message}")
     private String resendNotificationErrorMessage;
-    
+
     /**
      * Gets the schedule.
      *
@@ -497,24 +497,37 @@ public class NotificationManagementController {
      *            the limit
      * @param unreadFlag
      *            the unread flag
+     * @param tagL1
+     *            the tag l1
+     * @param tagL2
+     *            the tag l2
+     * @param itemKey
+     *            the item key
+     * @param itemValue
+     *            the item value
      * @return the notification history
      */
     @RequestMapping(value = "/{applicationId}", method = RequestMethod.GET)
     public final Service getNotificationHistory(
-            @PathVariable("applicationId") final String applicationId,
-            @RequestParam(value = "from") final String from,
-            @RequestParam(value = "to") final String to,
-            @RequestParam(value = "type") final String type,
-            @RequestParam(value = "offset") final String offset,
-            @RequestParam(value = "limit") final String limit,
-            @RequestParam(value = "unreadFlag") final String unreadFlag) {
+            @PathVariable(value = "applicationId") final String applicationId,
+            @RequestParam(required = false, value = "from") final String from,
+            @RequestParam(required = false, value = "to") final String to,
+            @RequestParam(required = false, value = "type") final String type,
+            @RequestParam(required = false, value = "offset") final String offset,
+            @RequestParam(required = false, value = "limit") final String limit,
+            @RequestParam(required = false, value = "unreadFlag") final String unreadFlag,
+            @RequestParam(required = false, value = "tagL1") final String tagL1,
+            @RequestParam(required = false, value = "tagL2") final String tagL2,
+            @RequestParam(required = false, value = "itemValue") final String itemKey,
+            @RequestParam(required = false, value = "itemKey") final String itemValue) {
         LOGGER.info("inside getNotificationHistory method of NotificationManagementController");
         Service service = new Service();
         List<NotificationObj> notificationHistory = null;
         try {
             notificationHistory = notificationManagementService
                     .getNotificationHistory(applicationId, from, to, type,
-                            offset, limit, unreadFlag);
+                            offset, limit, unreadFlag, tagL1, tagL2, itemKey,
+                            itemValue);
             if (!StringUtils.isEmpty(notificationHistory)) {
                 service.setStatus("SUCCESS");
                 System.err.println(notificationHistory);

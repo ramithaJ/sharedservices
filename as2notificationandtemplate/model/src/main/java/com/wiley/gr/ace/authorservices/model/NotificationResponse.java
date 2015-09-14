@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NotificationResponse.
  * 
@@ -25,59 +24,114 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class NotificationResponse {
 
-	/** The notification id. */
-	private String notificationId;
 
-	/** The template id. */
-	private String templateId;
+    /** The notification id. */
+    private String notificationId;
 
-	/** The sent to. */
-	private ArrayList<String> sentToList;
 
-	/** The sent cc list. */
-	private ArrayList<String> sentCCList;
+    /** The template id. */
+    private String templateId;
 
-	/** The sent bcc list. */
-	private ArrayList<String> sentBCCList;
 
-	public final String getNotificationId() {
-		return notificationId;
-	}
+    /** The sent to list. */
+    private ArrayList<String> sentToList;
 
-	public final void setNotificationId(final String notificationId) {
-		this.notificationId = notificationId;
-	}
 
-	public final String getTemplateId() {
-		return templateId;
-	}
+    /** The sent cc list. */
+    private ArrayList<String> sentCCList;
 
-	public final void setTemplateId(final String templateId) {
-		this.templateId = templateId;
-	}
 
-	public final ArrayList<String> getSentToList() {
-		return sentToList;
-	}
+    /** The sent bcc list. */
+    private ArrayList<String> sentBCCList;
 
-	public final void setSentToList(final ArrayList<String> sentToList) {
-		this.sentToList = sentToList;
-	}
+    /**
+     * Gets the notification id.
+     *
+     * @return the notification id
+     */
+    public final String getNotificationId() {
+        return notificationId;
+    }
 
-	public final ArrayList<String> getSentCCList() {
-		return sentCCList;
-	}
+    /**
+     * Sets the notification id.
+     *
+     * @param notificationId the new notification id
+     */
+    public final void setNotificationId(final String notificationId) {
+        this.notificationId = notificationId;
+    }
 
-	public final void setSentCCList(final ArrayList<String> sentCCList) {
-		this.sentCCList = sentCCList;
-	}
+    /**
+     * Gets the template id.
+     *
+     * @return the template id
+     */
+    public final String getTemplateId() {
+        return templateId;
+    }
 
-	public final ArrayList<String> getSentBCCList() {
-		return sentBCCList;
-	}
+    /**
+     * Sets the template id.
+     *
+     * @param templateId the new template id
+     */
+    public final void setTemplateId(final String templateId) {
+        this.templateId = templateId;
+    }
 
-	public final void setSentBCCList(final ArrayList<String> sentBCCList) {
-		this.sentBCCList = sentBCCList;
-	}
+    /**
+     * Gets the sent to list.
+     *
+     * @return the sent to list
+     */
+    public final ArrayList<String> getSentToList() {
+        return sentToList;
+    }
+
+    /**
+     * Sets the sent to list.
+     *
+     * @param sentToList the new sent to list
+     */
+    public final void setSentToList(final ArrayList<String> sentToList) {
+        this.sentToList = sentToList;
+    }
+
+    /**
+     * Gets the sent cc list.
+     *
+     * @return the sent cc list
+     */
+    public final ArrayList<String> getSentCCList() {
+        return sentCCList;
+    }
+
+    /**
+     * Sets the sent cc list.
+     *
+     * @param sentCCList the new sent cc list
+     */
+    public final void setSentCCList(final ArrayList<String> sentCCList) {
+        this.sentCCList = sentCCList;
+    }
+
+    /**
+     * Gets the sent bcc list.
+     *
+     * @return the sent bcc list
+     */
+    public final ArrayList<String> getSentBCCList() {
+        return sentBCCList;
+    }
+
+    /**
+     * Sets the sent bcc list.
+     *
+     * @param sentBCCList the new sent bcc list
+     */
+    public final void setSentBCCList(final ArrayList<String> sentBCCList) {
+        this.sentBCCList = sentBCCList;
+    }
 
 }

@@ -33,40 +33,28 @@
 		<mapping
 			class="com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients" />
 		<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.Schedule" />
-		<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate" />
+			class="com.wiley.gr.ace.authorservices.persistence.entity.NotificationData" />
+		<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.Schedule" />
 		<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.Template" />
+			class="com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate" />
+		<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.Template" />
 
 	</session-factory>
 </hibernate-configuration>
 
-<!-- <hibernate-configuration>
-	<session-factory name="asdb">
-		<property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-		<property name="connection.url">jdbc:oracle:thin:@10.6.4.146:1521/pdasstg</property>
-		<property name="connection.username">pdbadmin</property>
-		<property name="connection.password">board</property>
-		<property name="dialect">org.hibernate.dialect.OracleDialect</property>
-		<property name="show_sql">true</property>
-		<property name="validationQuery">select 1 from dual</property>
-		<property name="format_sql">true</property>
-		<property name="use_sql_comments">true</property>
-		<property name="hibernate.c3p0.min_size">10</property>
-		<property name="hibernate.c3p0.max_size">20</property>
-		<property name="hibernate.c3p0.acquire_increment">1</property>
-		<property name="hibernate.c3p0.idle_test_period">3000</property>
-		<property name="hibernate.c3p0.max_statements">50</property>
-		<property name="hibernate.c3p0.timeout">1800</property>
-		<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.Notification" />
-		<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients" />
-		<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.Schedule" />
-		<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate" />
-		<mapping
-			class="com.wiley.gr.ace.authorservices.persistence.entity.Template" />
-
-	</session-factory>
-</hibernate-configuration> -->
+<!-- <hibernate-configuration> <session-factory name="asdb"> <property name="connection.driver_class">oracle.jdbc.OracleDriver</property> 
+	<property name="connection.url">jdbc:oracle:thin:@10.6.4.146:1521/pdasstg</property> 
+	<property name="connection.username">pdbadmin</property> <property name="connection.password">board</property> 
+	<property name="dialect">org.hibernate.dialect.OracleDialect</property> <property 
+	name="show_sql">true</property> <property name="validationQuery">select 1 
+	from dual</property> <property name="format_sql">true</property> <property 
+	name="use_sql_comments">true</property> <property name="hibernate.c3p0.min_size">10</property> 
+	<property name="hibernate.c3p0.max_size">20</property> <property name="hibernate.c3p0.acquire_increment">1</property> 
+	<property name="hibernate.c3p0.idle_test_period">3000</property> <property 
+	name="hibernate.c3p0.max_statements">50</property> <property name="hibernate.c3p0.timeout">1800</property> 
+	<mapping class="com.wiley.gr.ace.authorservices.persistence.entity.Notification" 
+	/> <mapping class="com.wiley.gr.ace.authorservices.persistence.entity.NotificationRecipients" 
+	/> <mapping class="com.wiley.gr.ace.authorservices.persistence.entity.Schedule" 
+	/> <mapping class="com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate" 
+	/> <mapping class="com.wiley.gr.ace.authorservices.persistence.entity.Template" 
+	/> </session-factory> </hibernate-configuration> -->
