@@ -146,7 +146,6 @@ public class NotificationManagementServiceImpl implements
                 ScheduleTemplate scheduleTemplate = getScheduleTemplateEntity(
                         scheduleTemplateObj, schedule.getId(),
                         schedule.getAppId());
-                scheduleTemplate.setSchedule(scheduleEntity);
                 scheduleEntity.setScheduleTemplate(scheduleTemplate);
             }
             return notificationManagementDAO
