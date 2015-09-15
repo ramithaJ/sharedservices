@@ -110,7 +110,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             userProfile.setUsersByUpdatedBy(user);
             userProfile.setUsersByUserId(user);
             //Make account Active.
-            userProfile.setIsAccountActive('1');
+            userProfile.setIsAccountActive('0');
             session.save(userProfile);
 
             //Set Orcid id information
@@ -534,6 +534,22 @@ public class UserRepositoryImpl extends Property implements UserRepository {
 
             if ((!StringUtils.isEmpty(userServiceRequest.getUserProfile().getFirstName())) || (null != userServiceRequest.getUserProfile().getLastName()) ||
                     (null != userServiceRequest.getUserProfile().getPrimaryEmailAddress())) {
+
+                //Primary email address validation
+                if (null != userServiceRequest.getUserProfile().getPrimaryEmailAddress()) {
+                    Users userPrimaryCheck = (Users) userRepositoryHelper.getEntity(CommonConstants.PRIMARY_EMAIL_ID, userServiceRequest.getUserProfile().getPrimaryEmailAddress(), Users.class, false);
+                    if (null != userPrimaryCheck && userPrimaryCheck.getUserId() != Integer.parseInt(userId)) {
+                        throw new SharedServiceException(CommonConstants.ERROR_CODE_118, userServiceError118);
+                    }
+                    UserSecondaryEmailAddr userSecondaryCheck = (UserSecondaryEmailAddr) userRepositoryHelper.getEntity(CommonConstants.SECONDARY_EMAIL_ID, userServiceRequest.getUserProfile().getPrimaryEmailAddress(), UserSecondaryEmailAddr.class, false);
+                    if (null != userSecondaryCheck) {
+                        Users usersPrimaryChecks = userSecondaryCheck.getUsersByUserId();
+                        if (null != usersPrimaryChecks && usersPrimaryChecks.getUserId() != Integer.parseInt(userId)) {
+                            throw new SharedServiceException(CommonConstants.ERROR_CODE_118, userServiceError118);
+                        }
+                    }
+                }
+
                 user = UserServiceHelper.setUserInformation(userServiceRequest, user);
             }
             //Get AuthorProfile Object
