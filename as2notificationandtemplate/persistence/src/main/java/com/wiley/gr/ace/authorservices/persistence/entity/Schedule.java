@@ -3,6 +3,8 @@ package com.wiley.gr.ace.authorservices.persistence.entity;
 // Generated Aug 11, 2015 2:21:56 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -114,7 +116,7 @@ public class Schedule implements java.io.Serializable {
 		this.lastModifiedOn = lastModifiedOn;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "schedule")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "schedule", cascade = CascadeType.ALL)
 	public ScheduleTemplate getScheduleTemplate() {
 		return this.scheduleTemplate;
 	}
