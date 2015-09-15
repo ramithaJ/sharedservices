@@ -11,6 +11,7 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.email.service;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.mail.MessagingException;
@@ -43,5 +44,5 @@ public interface MailSenderService {
 	 */
 	void sendEmail(final String from, final ArrayList<String> to,
 			ArrayList<String> cc, ArrayList<String> bcc, final String subject,
-			final String body) throws MessagingException;
+			final String body, File[] attachments) throws MessagingException;
 }

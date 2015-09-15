@@ -11,6 +11,7 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.email.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.mail.MessagingException;
@@ -30,43 +31,49 @@ import com.wiley.gr.ace.authorservices.email.service.MailSenderService;
  */
 public class MailSenderServiceImpl implements MailSenderService {
 
-	/** The mail sender. */
-	@Autowired
-	private JavaMailSenderImpl mailSender;
+    /** The mail sender. */
+    @Autowired
+    private JavaMailSenderImpl mailSender;
 
-	/**
-	 * Send email.
-	 *
-	 * @param from
-	 *            the from
-	 * @param to
-	 *            the to
-	 * @param subject
-	 *            the subject
-	 * @param body
-	 *            the body
-	 * @throws MessagingException
-	 *             the messaging exception
-	 */
-	@Override
-	public final void sendEmail(final String from, final ArrayList<String> to,
-			final ArrayList<String> cc, final ArrayList<String> bcc,
-			final String subject, final String body) throws MessagingException {
+    /**
+     * Send email.
+     *
+     * @param from
+     *            the from
+     * @param to
+     *            the to
+     * @param subject
+     *            the subject
+     * @param body
+     *            the body
+     * @throws MessagingException
+     *             the messaging exception
+     */
+    @Override
+    public final void sendEmail(final String from, final ArrayList<String> to,
+            final ArrayList<String> cc, final ArrayList<String> bcc,
+            final String subject, final String body, File[] attachments)
+            throws MessagingException {
 
-		MimeMessage message = mailSender.createMimeMessage();
+        MimeMessage message = mailSender.createMimeMessage();
 
-		MimeMessageHelper mailMsg = new MimeMessageHelper(message);
-		mailMsg.setFrom(from);
-		mailMsg.setTo(to.toArray(new String[to.size()]));
-		if (!StringUtils.isEmpty(cc)) {
-			mailMsg.setCc(cc.toArray(new String[to.size()]));
-		}
-		if (!StringUtils.isEmpty(bcc)) {
-			mailMsg.setBcc(bcc.toArray(new String[to.size()]));
-		}
-		mailMsg.setSubject(subject);
-		mailMsg.setText(body, true);
-		mailSender.send(message);
-	}
+        MimeMessageHelper mailMsg = new MimeMessageHelper(message);
+        mailMsg.setFrom(from);
+        mailMsg.setTo(to.toArray(new String[to.size()]));
+        if (!StringUtils.isEmpty(cc)) {
+            mailMsg.setCc(cc.toArray(new String[to.size()]));
+        }
+        if (!StringUtils.isEmpty(bcc)) {
+            mailMsg.setBcc(bcc.toArray(new String[to.size()]));
+        }
+        if (!StringUtils.isEmpty(attachments)) {
+            for (File file : attachments) {
+                mailMsg.addAttachment(file.getName(),file);
+            }
+        }
+        mailMsg.setSubject(subject);
+        mailMsg.setText(body, true);
+        mailSender.send(message);
+    }
 
 }

@@ -375,11 +375,9 @@ public class NotificationManagementServiceImpl implements
         Set<NotificationRecipients> notificationRecepients = notificationEntity
                 .getNotificationRecipientses();
         if (!StringUtils.isEmpty(notificationRecepients)) {
-            ArrayList<NotificationRecipientsObj> notificationRecipientsObjs = 
-                    new ArrayList<NotificationRecipientsObj>();
+            ArrayList<NotificationRecipientsObj> notificationRecipientsObjs = new ArrayList<NotificationRecipientsObj>();
             for (NotificationRecipients notificationRecipients : notificationRecepients) {
-                NotificationRecipientsObj tempNotificationRecipient = 
-                        getNotificationRecipientsVO(notificationRecipients);
+                NotificationRecipientsObj tempNotificationRecipient = getNotificationRecipientsVO(notificationRecipients);
                 notificationRecipientsObjs.add(tempNotificationRecipient);
             }
             notification
@@ -718,7 +716,7 @@ public class NotificationManagementServiceImpl implements
         mailSenderService.sendEmail(notificationDetails.getFrom(),
                 notificationDetails.getTo(), notificationDetails.getCcList(),
                 notificationDetails.getBccList(), templateObj.getDescription(),
-                templateObj.getBody());
+                templateObj.getBody(), files);
         NotificationObj notificationObj = new NotificationObj();
 
         notificationObj.setAppId(applicationId);
@@ -811,9 +809,28 @@ public class NotificationManagementServiceImpl implements
                 bccRecipients.add(notificationRecipients.getEmail());
             }
         }
+        String path = notification.getAttachmentPath();
+        File[] attachments = null;
+        if (!StringUtils.isEmpty(path)) {
+            attachments = new File(path).listFiles();
+        }
+        if (!StringUtils.isEmpty(attachments)) {
+            Date dateForFolder = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String folderName = sdf.format(dateForFolder);
+            path = homePath + folderName + "/";
+            File uploadDirectory = new File(path);
+            boolean isCreated = uploadDirectory.mkdirs();
+            if (isCreated) {
+                for (File attachment : attachments) {
+                    FileUtils.copyFileToDirectory(attachment, uploadDirectory);
+                }
+            }
+        }
         mailSenderService.sendEmail(notification.getSenderEmail(),
                 toRecipients, ccRecipients, bccRecipients,
-                templateObj.getDescription(), templateObj.getBody());
+                templateObj.getDescription(), templateObj.getBody(),
+                attachments);
         notificationResponse.setNotificationId(notificationId.toString());
         notificationResponse.setSentToList(toRecipients);
         notificationResponse.setSentCCList(ccRecipients);
@@ -938,8 +955,8 @@ public class NotificationManagementServiceImpl implements
                 sb.append(line);
             }
         } finally {
-            br.close();
             reader.close();
+            br.close();
         }
         return sb.toString();
     }
