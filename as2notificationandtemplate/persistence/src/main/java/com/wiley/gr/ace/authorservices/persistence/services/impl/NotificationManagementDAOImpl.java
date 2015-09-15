@@ -459,7 +459,9 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                 session = getSessionFactory().openSession();
                 String hql = "from ScheduleTemplate st where st.scheduleId = :scheduleId";
                 scheduleTemplate = (ScheduleTemplate) session.createQuery(hql)
-                        .setString("scheduleId", scheduleId).list().get(0);
+                        .setString("scheduleId", scheduleId).uniqueResult();
+            } catch (final Exception e) {
+                LOGGER.error("Print Stack Trace- ", e);
             } finally {
                 if (!StringUtils.isEmpty(session)) {
                     session.flush();
