@@ -420,11 +420,6 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
         try {
             session = getSessionFactory().openSession();
             session.beginTransaction();
-            System.err.println(notification.getAppId());
-            System.err.println(notification.getAttachmentPath());
-            System.err.println(notification.getSenderEmail());
-            System.err.println(notification.getType());
-            System.err.println(notification.getNotificationData());
             session.save(notification);
             session.getTransaction().commit();
             notificationId = notification.getId();

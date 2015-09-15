@@ -40,7 +40,7 @@ public class EmailConfig {
     @Bean
     public JavaMailSenderImpl javaMailSenderImpl() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtpgate.wiley.com");
+        mailSender.setHost(ipAddr);
         mailSender.setPort(25);
         Properties prop = mailSender.getJavaMailProperties();
         prop.put("mail.transport.protocol", "smtp");
