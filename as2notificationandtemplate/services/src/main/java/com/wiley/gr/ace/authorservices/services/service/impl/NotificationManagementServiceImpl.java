@@ -745,6 +745,7 @@ public class NotificationManagementServiceImpl implements
                 for (File file : files) {
                     FileUtils.copyFileToDirectory(file, directory);
                 }
+                files=directory.listFiles();
             }
         }
         mailSenderService.sendEmail(notificationDetails.getFrom(),
