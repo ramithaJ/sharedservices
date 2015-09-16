@@ -455,18 +455,45 @@ public class NotificationManagementServiceImpl implements
             throws Exception {
         LOGGER.info("inside getTemplateVO Method of NotificationManagementServiceImpl");
         TemplateObj template = new TemplateObj();
-        template.setCreatedBy(templateEntity.getCreatedBy());
-        template.setAppId(templateEntity.getAppId());
-        template.setBody(clobToString(templateEntity.getBody()));
-        template.setDescription(templateEntity.getDescription());
-        template.setModifiedBy(templateEntity.getModifiedBy());
-        template.setTagl1(templateEntity.getTagl1());
-        template.setTagl2(templateEntity.getTagl2());
-        template.setId(templateEntity.getId());
-        /*
-         * template.setLastModifiedOn(templateEntity.getLastModifiedOn());
-         * template.setCreatedOn(templateEntity.getCreatedOn());
-         */
+        System.err.println(templateEntity);
+        if (!StringUtils.isEmpty(templateEntity)) {
+            String createdBy = templateEntity.getCreatedBy();
+            if (!StringUtils.isEmpty(createdBy)) {
+                template.setCreatedBy(createdBy);
+            }
+            String appId = templateEntity.getAppId();
+            if (!StringUtils.isEmpty(appId)) {
+                template.setAppId(appId);
+            }
+            Clob body = templateEntity.getBody();
+            if (!StringUtils.isEmpty(body)) {
+                template.setBody(clobToString(body));
+            }
+            String description = templateEntity.getDescription();
+            if (!StringUtils.isEmpty(description)) {
+                template.setDescription(description);
+            }
+            String modifiedBy = templateEntity.getModifiedBy();
+            if (!StringUtils.isEmpty(modifiedBy)) {
+                template.setModifiedBy(modifiedBy);
+            }
+            String tagL1 = templateEntity.getTagl1();
+            if (!StringUtils.isEmpty(tagL1)) {
+                template.setTagl1(tagL1);
+            }
+            String tagL2 = templateEntity.getTagl2();
+            if (!StringUtils.isEmpty(tagL2)) {
+                template.setTagl2(tagL2);
+            }
+            String id = templateEntity.getId();
+            if (!StringUtils.isEmpty(id)) {
+                template.setId(id);
+            }
+            /*
+             * template.setLastModifiedOn(templateEntity.getLastModifiedOn());
+             * template.setCreatedOn(templateEntity.getCreatedOn());
+             */
+        }
         return template;
     }
 
@@ -646,18 +673,26 @@ public class NotificationManagementServiceImpl implements
             }
             if (!StringUtils.isEmpty(itemKey)) {
                 for (NotificationObj n : notificationList) {
-                    if (!itemKey.equalsIgnoreCase(n.getNotificationData()
-                            .getDataItemKey())) {
+                    NotificationDataObj notificationData = n
+                            .getNotificationData();
+                    if (!StringUtils.isEmpty(notificationData)
+                            && !itemKey.equalsIgnoreCase(notificationData
+                                    .getDataItemKey())) {
                         notificationList.remove(n);
                     }
                 }
+
             }
             if (!StringUtils.isEmpty(itemValue)) {
                 for (NotificationObj n : notificationList) {
-                    if (!itemValue.equalsIgnoreCase(n.getNotificationData()
-                            .getDataItemValue())) {
+                    NotificationDataObj notificationData = n
+                            .getNotificationData();
+                    if (!StringUtils.isEmpty(notificationData)
+                            && !itemValue.equalsIgnoreCase(notificationData
+                                    .getDataItemValue())) {
                         notificationList.remove(n);
                     }
+
                 }
             }
             if (!StringUtils.isEmpty(offset) && !StringUtils.isEmpty(limit)) {
