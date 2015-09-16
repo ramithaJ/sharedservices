@@ -57,7 +57,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         MimeMessage message = mailSender.createMimeMessage();
 
-        MimeMessageHelper mailMsg = new MimeMessageHelper(message);
+        MimeMessageHelper mailMsg = new MimeMessageHelper(message,true);
         mailMsg.setFrom(from);
         mailMsg.setTo(to.toArray(new String[to.size()]));
         if (!StringUtils.isEmpty(cc)) {
