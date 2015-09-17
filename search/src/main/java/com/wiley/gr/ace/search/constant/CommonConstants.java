@@ -7,4 +7,5 @@ public interface CommonConstants {
 
     String CLUSTER_NAME = "cluster.name";
     String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";
+    String ROLE_ADMIN = "ADMIN";
 }

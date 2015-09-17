@@ -6,11 +6,13 @@ import java.util.List;
  * Created by KKALYAN on 9/13/2015.
  */
 public class SearchCriteria {
+	private String role;
     private String appKey;
     private List<String> types;
     private String advancedQuery;
     private String simpleQuery;
     private List<Sorting> sort;
+    private List<Filter> Filters;
     private int offset = 0;
     private int rows = 10;
 
@@ -69,4 +71,20 @@ public class SearchCriteria {
     public void setSort(List<Sorting> sort) {
         this.sort = sort;
     }
+
+	public List<Filter> getFilters() {
+		return Filters;
+	}
+
+	public void setFilters(List<Filter> filters) {
+		Filters = filters;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }

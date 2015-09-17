@@ -23,7 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/v1")
 public class SearchController {
 
     @Autowired
@@ -70,15 +70,26 @@ public class SearchController {
 
     }
 
-    @RequestMapping(method = {RequestMethod.POST}, value = {"/_get"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Response search(@RequestBody SearchCriteria criteria) {
-        Response response = null;
-        try {
-            response = searchService.search(criteria);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
+    @RequestMapping(method = { RequestMethod.POST }, value = { "/api/_search" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Response search(@RequestBody SearchCriteria criteria) {
+		Response response = null;
+		try {
+			response = searchService.search(criteria, criteria.getRole());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	/*
+	 * @RequestMapping(method = {RequestMethod.POST}, value = {"/_get"},
+	 * produces = MediaType.APPLICATION_JSON_VALUE)
+	 * 
+	 * @ResponseBody public Response autoSearch(@RequestBody SearchCriteria
+	 * criteria) { Response response = null; try { response =
+	 * searchService.search(criteria); } catch (Exception e) {
+	 * e.printStackTrace(); } return response; }
+	 */
+
 }
