@@ -442,8 +442,8 @@ public class SearchServiceImpl implements SearchService {
 					return matchQueryBuilder;
 			
 			} else {
-//				matchQueryBuilder = QueryBuilders.multiMatchQuery(advancedQuery,searchFiledsArray)
-//					    .type(MatchQueryBuilder.Type.PHRASE_PREFIX);
+				matchQueryBuilder = QueryBuilders.multiMatchQuery(advancedQuery,searchFiledsArray)
+					    .type(MatchQueryBuilder.Type.PHRASE_PREFIX);
 				/*
 				 * for (Map.Entry<String, String> entry : fields.entrySet()) {
 				 * boolQuery.must(QueryBuilders.matchQuery(entry.getKey(),
