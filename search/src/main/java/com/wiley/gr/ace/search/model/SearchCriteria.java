@@ -10,7 +10,7 @@ public class SearchCriteria {
     private String appKey;
     private List<String> types;
     private String advancedQuery;
-    private String simpleQuery;
+    private List<SimpleQuery> simpleQuery;
     private List<Sorting> sort;
     private List<Filter> Filters;
     private int offset = 0;
@@ -40,11 +40,11 @@ public class SearchCriteria {
         this.advancedQuery = advancedQuery;
     }
 
-    public String getSimpleQuery() {
+    public List<SimpleQuery> getSimpleQuery() {
         return simpleQuery;
     }
 
-    public void setSimpleQuery(String simpleQuery) {
+    public void setSimpleQuery(List<SimpleQuery> simpleQuery) {
         this.simpleQuery = simpleQuery;
     }
 
