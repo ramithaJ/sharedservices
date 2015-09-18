@@ -519,9 +519,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return responseStatus.getStatus();
 	}
 
-	public static void main(String[] args) {
-		AuthenticationServiceImpl s = new AuthenticationServiceImpl();
-		s.lockUnlockUser("dishari3@virtusa.com",
-				"http://vmesbdev.wiley.com:15200/ALMService/LockUser/Lock");
-	}
 }
