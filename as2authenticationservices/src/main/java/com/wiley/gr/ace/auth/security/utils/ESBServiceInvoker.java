@@ -13,6 +13,8 @@
  */
 package com.wiley.gr.ace.auth.security.utils;
 
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -23,10 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.wiley.gr.ace.auth.security.constants.CommonConstant;
-import com.wiley.gr.ace.auth.security.model.Response;
 import com.wiley.gr.ace.auth.security.model.VerifyUserResponse;
-
-import java.net.URI;
 
 /**
  * @author Virtusa
@@ -66,12 +65,18 @@ public class ESBServiceInvoker {
 		return response.getBody();
 	}
 
+	/**
+	 * 
+	 * @param url the request value.
+	 * @param emailId the request value
+	 * @return boolean 
+	 */
 	public static boolean verifyEmail(final String url, final String emailId) {
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		try {
 			httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			httpHeaders.add("email", emailId);
+			httpHeaders.add(CommonConstant.EMAIL, emailId);
 			HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
 			VerifyUserResponse response = new RestTemplate().exchange(url,
 					HttpMethod.GET, httpEntity, VerifyUserResponse.class)
