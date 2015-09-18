@@ -264,6 +264,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         } catch (Exception e) {
             rollBackSession(session);
             LOGGER.error(CommonConstants.ERROR_USER_CREATE_SERVICE, e);
+			e.printStackTrace();
             throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             if (null != session) {
