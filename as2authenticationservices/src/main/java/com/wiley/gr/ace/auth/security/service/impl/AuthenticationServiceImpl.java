@@ -19,7 +19,7 @@ import com.wiley.gr.ace.auth.security.dao.UserLoginDAO;
 import com.wiley.gr.ace.auth.security.model.*;
 import com.wiley.gr.ace.auth.security.service.AuthenticationService;
 import com.wiley.gr.ace.auth.security.service.TokenService;
-import com.wiley.gr.ace.auth.security.utils.StubInvoker;
+import com.wiley.gr.ace.auth.security.utils.ESBServiceInvoker;
 import org.apache.commons.lang.StringUtils;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
@@ -155,6 +155,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Value("${as.AuthenticationType}")
     private String authenticationType;
+    
+    /**
+     * This field holds the value of verifyEmailurl.
+     */
+    @Value("${as.verifyemail.url}")
+    private String verifyEmailurl;
 
 
     /**
@@ -284,8 +290,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 request.getPassword(), request.getAuthenticationType(),
                 request.getAppKey());
         if (null == response) {
-            this.userLoginDao.insertUser(request.getUserId(),
-                    request.getAppKey());
+        	boolean status = ESBServiceInvoker.verifyEmail(verifyEmailurl, request.getUserId());
+        	if (status) {
+        		this.userLoginDao.insertUser(request.getUserId(),
+                        request.getAppKey());
+        	}
         }
         return response;
     }
@@ -485,7 +494,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userServiceRequest.setUpdateUserSecurityAttributes(userSecurityAttributes);
 
-        ResponseStatus responseStatus = (ResponseStatus) StubInvoker.restServiceInvoker(url,
+        ResponseStatus responseStatus = (ResponseStatus) ESBServiceInvoker.restServiceInvoker(url,
                 userServiceRequest, ResponseStatus.class);
         if ("success".equalsIgnoreCase(responseStatus.getStatus())) {
             LOGGER.info("User is locked/unLocked");

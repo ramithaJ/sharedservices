@@ -132,6 +132,11 @@ public class CommonConstant {
      * This field holds the value of SOURCESYSTEM
      */
     public static final String SOURCESYSTEM = "AS";
+    
+    /**
+     * This field holds the value of email
+     */
+    public static final String EMAIL = "email";
 
     private CommonConstant() {
 
