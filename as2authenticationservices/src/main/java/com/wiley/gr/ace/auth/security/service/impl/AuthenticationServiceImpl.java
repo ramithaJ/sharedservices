@@ -290,7 +290,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		if (null == response) {
 			boolean status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
 					request.getUserId());
-			if (status) {
+			if (!status) {
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
 			}
