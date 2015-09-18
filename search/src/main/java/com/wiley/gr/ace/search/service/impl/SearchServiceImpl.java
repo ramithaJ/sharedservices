@@ -137,7 +137,7 @@ public class SearchServiceImpl implements SearchService {
 		setTypes(requestBuilder, searchCriteria.getTypes());
 
 		// Add Aggregations
-		addAggregations(requestBuilder, "journal.type,article.title");
+		addAggregations(requestBuilder, "journal_type,article_title");
 
 		// Apply Page Navigation
 		setResultSize(requestBuilder, searchCriteria.getOffset(),
@@ -154,7 +154,7 @@ public class SearchServiceImpl implements SearchService {
 
 		// Set Facets to the response
 		searchResponse.setFacets(getAggregations(response,
-				"journal.type,article.title"));
+				"journal_type,article_title"));
 
 		return searchResponse;
 	}
@@ -479,7 +479,7 @@ public class SearchServiceImpl implements SearchService {
 					return matchQueryBuilder;
 			
 			} else {
-				matchQueryBuilder = QueryBuilders.multiMatchQuery(advancedQuery,searchFiledsArray)
+				matchQueryBuilder = QueryBuilders.multiMatchQuery(advancedQuery,"_all")
 					    .type(MatchQueryBuilder.Type.PHRASE_PREFIX);
 				/*
 				 * for (Map.Entry<String, String> entry : fields.entrySet()) {

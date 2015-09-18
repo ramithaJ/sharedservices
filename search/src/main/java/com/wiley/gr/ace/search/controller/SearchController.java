@@ -66,7 +66,7 @@ public class SearchController {
 
         // on shutdown
 
-        searchClientService.getClient().close();
+//        searchClientService.getClient().close();
 
     }
 
