@@ -60,24 +60,36 @@ public class SearchServiceImpl implements SearchService {
 
 	@Value("${admin.journal.search.result.fields}")
 	private String adminJournalSearchResultFields;
-
-	@Value("${nonadmin.journal.search.fields}")
-	private String nonAdminJournalSearchFields;
-
-	@Value("${nonadmin.journal.search.result.fields}")
-	private String nonAdminJournalSearchResultFields;
-
+	
 	@Value("${admin.article.search.fields}")
 	private String adminArticleSearchFields;
 
 	@Value("${admin.article.search.result.fields}")
 	private String adminArticleSearchResultFields;
 
-	@Value("${nonadmin.article.search.fields}")
-	private String nonAdminArticleSearchFields;
+	@Value("${registered.journal.search.fields}")
+	private String registeredJournalSearchFields;
 
-	@Value("${nonadmin.article.search.result.fields}")
-	private String nonAdminArticleSearchResultFields;
+	@Value("${registered.journal.search.result.fields}")
+	private String registeredJournalSearchResultFields;
+
+	@Value("${registered.article.search.fields}")
+	private String registeredArticleSearchFields;
+
+	@Value("${registered.article.search.result.fields}")
+	private String registeredArticleSearchResultFields;
+	
+	@Value("${guest.journal.search.fields}")
+	private String guestJournalSearchFields;
+
+	@Value("${guest.journal.search.result.fields}")
+	private String guestJournalSearchResultFields;
+	
+	@Value("${guest.article.search.fields}")
+	private String guestArticleSearchFields;
+
+	@Value("${guest.article.search.result.fields}")
+	private String guestArticleSearchResultFields;
 	
 	@Value("${wildcard.fields}")
 	private String wildcardFields;
@@ -187,12 +199,13 @@ public class SearchServiceImpl implements SearchService {
 	 * @return
 	 */
 	private void setTypes(SearchRequestBuilder requestBuilder, List<String> list) {
-		String[] types = new String[list.size()];  
+//		String[] types = new String[list.size()];
+		String[] types= list.toArray(new String[0]);
 //   	for(int i=0;i<list.size();i++){
 //   		types[i]=list.get(i);
 //   	}
 //   	
-   requestBuilder.setTypes("article","journal");
+   requestBuilder.setTypes(types);
 	}
 
 	/**
@@ -268,16 +281,26 @@ public class SearchServiceImpl implements SearchService {
 				searchFieldStringTokens = new StringTokenizer(
 						adminJournalSearchResultFields, ",");
 			} else {
+				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
+					searchFieldStringTokens = new StringTokenizer(
+							registeredJournalSearchResultFields, ",");
+				}
+				else
 				searchFieldStringTokens = new StringTokenizer(
-						nonAdminJournalSearchResultFields, ",");
+						guestJournalSearchResultFields, ",");
 			}
 		} else if ("article".equals(type)) {
 			if (CommonConstants.ROLE_ADMIN.equals(role)) {
 				searchFieldStringTokens = new StringTokenizer(
 						adminArticleSearchResultFields, ",");
 			} else {
+				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
+					searchFieldStringTokens = new StringTokenizer(
+							registeredArticleSearchResultFields, ",");
+				}
+				else
 				searchFieldStringTokens = new StringTokenizer(
-						nonAdminArticleSearchResultFields, ",");
+						guestArticleSearchResultFields, ",");
 			}
 
 		}
@@ -404,16 +427,30 @@ public class SearchServiceImpl implements SearchService {
 				}
 
 			} else {
+				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
 
+					if (types.contains("journal")) {
+						journalSearchFields = new StringTokenizer(
+								registeredJournalSearchFields, ",");
+					}
+
+					if (types.contains("article")) {
+						articleSearchFields = new StringTokenizer(
+								registeredArticleSearchFields, ",");
+					}
+
+				}
+				
+			else{
 				if (types.contains("journal")) {
 					journalSearchFields = new StringTokenizer(
-							nonAdminJournalSearchFields, ",");
+							guestJournalSearchFields, ",");
 				}
 
 				if (types.contains("article")) {
 					articleSearchFields = new StringTokenizer(
-							nonAdminArticleSearchFields, ",");
-				}
+							guestArticleSearchFields, ",");
+				}}
 			}
 
 			searchFiledsList = new ArrayList<String>();
