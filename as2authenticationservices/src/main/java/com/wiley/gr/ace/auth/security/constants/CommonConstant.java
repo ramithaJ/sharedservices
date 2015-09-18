@@ -72,6 +72,11 @@ public class CommonConstant {
      * This field holds the value of EXCEPTION
      */
     public static final String EXCEPTION = "Exception Occurred While Processing the Request";
+    
+    /**
+     * This field holds the value of INTERNAL_SERVER_ERROR
+     */
+    public static final String INTERNAL_SERVER_ERROR = "Unable to process your request. Please try after some time..";
 
     /**
      * This field holds the value of ISS
