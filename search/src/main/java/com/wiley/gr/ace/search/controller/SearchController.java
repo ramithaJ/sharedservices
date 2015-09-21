@@ -38,11 +38,6 @@ public class SearchController {
      */
     @RequestMapping(method = {RequestMethod.POST}, value = {"/_index"})
     public void createIndex(@RequestBody String json, @RequestParam(value = "type", required = false) String type) {
-//        IndexResponse response = client.prepareIndex("journals", "journal")
-//                .setSource(json)
-//                .execute()
-//                .actionGet();
-
         IndexResponse response = searchClientService.getClient().prepareIndex("search", type)
                 .setSource(json)
                 .execute()

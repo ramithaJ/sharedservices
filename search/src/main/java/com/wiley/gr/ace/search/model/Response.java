@@ -8,7 +8,12 @@ import java.util.List;
  */
 public class Response implements Serializable {
 
-    private long took;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private long took;
 
     private long total;
 

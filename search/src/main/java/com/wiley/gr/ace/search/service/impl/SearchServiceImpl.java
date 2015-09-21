@@ -60,7 +60,7 @@ public class SearchServiceImpl implements SearchService {
 
 	@Value("${admin.journal.search.result.fields}")
 	private String adminJournalSearchResultFields;
-	
+
 	@Value("${admin.article.search.fields}")
 	private String adminArticleSearchFields;
 
@@ -78,19 +78,19 @@ public class SearchServiceImpl implements SearchService {
 
 	@Value("${registered.article.search.result.fields}")
 	private String registeredArticleSearchResultFields;
-	
+
 	@Value("${guest.journal.search.fields}")
 	private String guestJournalSearchFields;
 
 	@Value("${guest.journal.search.result.fields}")
 	private String guestJournalSearchResultFields;
-	
+
 	@Value("${guest.article.search.fields}")
 	private String guestArticleSearchFields;
 
 	@Value("${guest.article.search.result.fields}")
 	private String guestArticleSearchResultFields;
-	
+
 	@Value("${wildcard.fields}")
 	private String wildcardFields;
 
@@ -126,10 +126,10 @@ public class SearchServiceImpl implements SearchService {
 				.prepareSearch(indexName)
 				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
 				.setQuery(getQueryBuilder(searchCriteria, role));
-		
-		//Get Source Value everytime
+
+		// Get Source Value everytime
 		requestBuilder.setTrackScores(true);
-		
+
 		// Set post Filter if facets selected
 		setFilter(requestBuilder, searchCriteria);
 
@@ -199,13 +199,13 @@ public class SearchServiceImpl implements SearchService {
 	 * @return
 	 */
 	private void setTypes(SearchRequestBuilder requestBuilder, List<String> list) {
-//		String[] types = new String[list.size()];
-		String[] types= list.toArray(new String[0]);
-//   	for(int i=0;i<list.size();i++){
-//   		types[i]=list.get(i);
-//   	}
-//   	
-   requestBuilder.setTypes(types);
+		// String[] types = new String[list.size()];
+		String[] types = list.toArray(new String[0]);
+		// for(int i=0;i<list.size();i++){
+		// types[i]=list.get(i);
+		// }
+		//
+		requestBuilder.setTypes(types);
 	}
 
 	/**
@@ -215,8 +215,8 @@ public class SearchServiceImpl implements SearchService {
 	 * @param facetFields
 	 * @return
 	 */
-	private void addAggregations(
-			SearchRequestBuilder requestBuilder, String facetFields) {
+	private void addAggregations(SearchRequestBuilder requestBuilder,
+			String facetFields) {
 		String[] fields = facetFields.split(",");
 		for (String field : fields) {
 			requestBuilder.addAggregation(terms(field).field(field).size(0));
@@ -250,13 +250,12 @@ public class SearchServiceImpl implements SearchService {
 
 			Map<String, Object> filteredSource = new HashMap<String, Object>();
 			Map<String, Object> tempMap = hit.getSource();
-			
 
 			while (searchFieldStringTokens.hasMoreTokens()) {
 				String key = searchFieldStringTokens.nextToken();
 				filteredSource.put(key, tempMap.get(key));
 			}
-			
+
 			searchHit.setSource(filteredSource);
 
 			hitsList.add(searchHit);
@@ -284,10 +283,9 @@ public class SearchServiceImpl implements SearchService {
 				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
 					searchFieldStringTokens = new StringTokenizer(
 							registeredJournalSearchResultFields, ",");
-				}
-				else
-				searchFieldStringTokens = new StringTokenizer(
-						guestJournalSearchResultFields, ",");
+				} else
+					searchFieldStringTokens = new StringTokenizer(
+							guestJournalSearchResultFields, ",");
 			}
 		} else if ("article".equals(type)) {
 			if (CommonConstants.ROLE_ADMIN.equals(role)) {
@@ -297,10 +295,9 @@ public class SearchServiceImpl implements SearchService {
 				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
 					searchFieldStringTokens = new StringTokenizer(
 							registeredArticleSearchResultFields, ",");
-				}
-				else
-				searchFieldStringTokens = new StringTokenizer(
-						guestArticleSearchResultFields, ",");
+				} else
+					searchFieldStringTokens = new StringTokenizer(
+							guestArticleSearchResultFields, ",");
 			}
 
 		}
@@ -316,8 +313,8 @@ public class SearchServiceImpl implements SearchService {
 	 * @param rows
 	 * @return
 	 */
-	private void setResultSize(
-			SearchRequestBuilder requestBuilder, int from, int rows) {
+	private void setResultSize(SearchRequestBuilder requestBuilder, int from,
+			int rows) {
 		requestBuilder.setFrom(from).setSize(rows);
 	}
 
@@ -440,17 +437,18 @@ public class SearchServiceImpl implements SearchService {
 					}
 
 				}
-				
-			else{
-				if (types.contains("journal")) {
-					journalSearchFields = new StringTokenizer(
-							guestJournalSearchFields, ",");
-				}
 
-				if (types.contains("article")) {
-					articleSearchFields = new StringTokenizer(
-							guestArticleSearchFields, ",");
-				}}
+				else {
+					if (types.contains("journal")) {
+						journalSearchFields = new StringTokenizer(
+								guestJournalSearchFields, ",");
+					}
+
+					if (types.contains("article")) {
+						articleSearchFields = new StringTokenizer(
+								guestArticleSearchFields, ",");
+					}
+				}
 			}
 
 			searchFiledsList = new ArrayList<String>();
@@ -474,13 +472,14 @@ public class SearchServiceImpl implements SearchService {
 				// matchQueryBuilder =
 				// QueryBuilders.multiMatchQuery(searchCriteria.getAdvancedQuery(),
 				// "_all");
-				if(null != searchCriteria.getSimpleQuery())
-					matchQueryBuilder= simpleSearch(searchCriteria);
-					return matchQueryBuilder;
-			
+				if (null != searchCriteria.getSimpleQuery())
+					matchQueryBuilder = simpleSearch(searchCriteria);
+				return matchQueryBuilder;
+
 			} else {
-				matchQueryBuilder = QueryBuilders.multiMatchQuery(advancedQuery,"_all")
-					    .type(MatchQueryBuilder.Type.PHRASE_PREFIX);
+				matchQueryBuilder = QueryBuilders.multiMatchQuery(
+						advancedQuery, searchFiledsArray).type(
+						MatchQueryBuilder.Type.PHRASE_PREFIX);
 				/*
 				 * for (Map.Entry<String, String> entry : fields.entrySet()) {
 				 * boolQuery.must(QueryBuilders.matchQuery(entry.getKey(),
@@ -491,54 +490,55 @@ public class SearchServiceImpl implements SearchService {
 
 		return matchQueryBuilder;
 	}
-	
+
 	private QueryBuilder simpleSearch(SearchCriteria searchCriteria) {
 
 		List<SimpleQuery> queryString = searchCriteria.getSimpleQuery();
 
-			BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-			for (SimpleQuery query : queryString) {
-				if (exactFields.contains(query.getField()))
-					addexactMatchBuilder(query, boolQuery);
-				else
-					if(rangeFields.contains(query.getField()))
-						addrangeBuilder(query, boolQuery);
-					else
-					addwildcardBuilder(query, boolQuery);
-			}
-			return boolQuery;
-		
+		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
+		for (SimpleQuery query : queryString) {
+			if (exactFields.contains(query.getField()))
+				addexactMatchBuilder(query, boolQuery);
+			else if (rangeFields.contains(query.getField()))
+				addrangeBuilder(query, boolQuery);
+			else
+				addwildcardBuilder(query, boolQuery);
+		}
+		return boolQuery;
+
 	}
 
-//	private QueryBuilder rangeQuery(SearchCriteria searchCriteria){
-//		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-//		for (RangeQuery query : searchCriteria.getRangeQuery()) 
-//		addrangeBuilder(query, boolQuery);
-//		return boolQuery;
-//	}
-	
-	
-	private void addwildcardBuilder(SimpleQuery query, BoolQueryBuilder boolQuery) {
+	// private QueryBuilder rangeQuery(SearchCriteria searchCriteria){
+	// BoolQueryBuilder boolQuery = new BoolQueryBuilder();
+	// for (RangeQuery query : searchCriteria.getRangeQuery())
+	// addrangeBuilder(query, boolQuery);
+	// return boolQuery;
+	// }
 
-		 boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(
-				query.getField(), query.getValue()));
-		 
-//		 FilterBuilders.andFilter(FilterBuilders.prefixFilter(name, prefix))
-		 
-	}
-	
-	private void addexactMatchBuilder(SimpleQuery query, BoolQueryBuilder boolQuery) {
+	private void addwildcardBuilder(SimpleQuery query,
+			BoolQueryBuilder boolQuery) {
 
-		boolQuery.must(QueryBuilders.termQuery(
-				query.getField(), query.getValue()));
+		boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(query.getField(),
+				query.getValue()));
+
+		// FilterBuilders.andFilter(FilterBuilders.prefixFilter(name, prefix))
+
 	}
 
-	private void addrangeBuilder(SimpleQuery query,BoolQueryBuilder boolQuery){
-		if(""==query.getTo())
+	private void addexactMatchBuilder(SimpleQuery query,
+			BoolQueryBuilder boolQuery) {
+
+		boolQuery.must(QueryBuilders.termQuery(query.getField(),
+				query.getValue()));
+	}
+
+	private void addrangeBuilder(SimpleQuery query, BoolQueryBuilder boolQuery) {
+		if ("" == query.getTo())
 			query.setTo(null);
-		if(""==query.getFrom())
+		if ("" == query.getFrom())
 			query.setFrom(null);
-		boolQuery.must(QueryBuilders.rangeQuery(query.getField()).from(query.getFrom()).to(query.getTo()));
+		boolQuery.must(QueryBuilders.rangeQuery(query.getField())
+				.from(query.getFrom()).to(query.getTo()));
 	}
 
 	@Override
@@ -554,9 +554,9 @@ public class SearchServiceImpl implements SearchService {
 		SuggestRequestBuilder suggestRequestBuilder = searchClientService
 				.getClient().prepareSuggest(indexName)
 				.addSuggestion(suggestionsBuilder);
-		
-		SuggestResponse suggestResponse = suggestRequestBuilder.execute().actionGet();
 
+		SuggestResponse suggestResponse = suggestRequestBuilder.execute()
+				.actionGet();
 
 		return suggestResponse;
 	}
