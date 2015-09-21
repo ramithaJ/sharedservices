@@ -1,3 +1,16 @@
+/**
+ * ****************************************************************************
+ * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
+ * <p>
+ * All material contained herein is proprietary to John Wiley & Sons
+ * and its third party suppliers, if any. The methods, techniques and
+ * technical concepts contained herein are considered trade secrets
+ * and confidential and may be protected by intellectual property laws.
+ * Reproduction or distribution of this material, in whole or in part,
+ * is strictly forbidden except by express prior written permission
+ * of John Wiley & Sons.
+ * *****************************************************************************
+ */
 package com.wiley.gr.ace.search.service.impl;
 
 import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
@@ -113,14 +126,7 @@ public class SearchServiceImpl implements SearchService {
 	 * @return response
 	 */
 	public Response search(SearchCriteria searchCriteria, String role) {
-		// http://www.programcreek.com/java-api-examples/index.php?api=org.elasticsearch.search.sort.SortOrder
 		Response searchResponse = new Response();
-
-		/*
-		 * AggregationBuilder aggregation = AggregationBuilders
-		 * .filter("journalType2")
-		 * .filter(FilterBuilders.termFilter("journal.type", "type101"));
-		 */
 
 		SearchRequestBuilder requestBuilder = searchClientService.getClient()
 				.prepareSearch(indexName)
@@ -159,6 +165,12 @@ public class SearchServiceImpl implements SearchService {
 		return searchResponse;
 	}
 
+	/**
+	 * Method to set filter on request
+	 * 
+	 * @param requestBuilder
+	 * @param searchCriteria
+	 */
 	private void setFilter(SearchRequestBuilder requestBuilder,
 			SearchCriteria searchCriteria) {
 
@@ -199,12 +211,7 @@ public class SearchServiceImpl implements SearchService {
 	 * @return
 	 */
 	private void setTypes(SearchRequestBuilder requestBuilder, List<String> list) {
-		// String[] types = new String[list.size()];
 		String[] types = list.toArray(new String[0]);
-		// for(int i=0;i<list.size();i++){
-		// types[i]=list.get(i);
-		// }
-		//
 		requestBuilder.setTypes(types);
 	}
 
@@ -349,7 +356,6 @@ public class SearchServiceImpl implements SearchService {
 	 * @return
 	 */
 	private Facets getAggregations(SearchResponse response, String fields) {
-		// https://github.com/elastic/elasticsearch/issues/4837
 		Facets facets = new Facets();
 		Tags tags = new Tags();
 		int bucketSize = 0;
@@ -371,23 +377,6 @@ public class SearchServiceImpl implements SearchService {
 		tags.setTotal(bucketSize);
 		facets.setTag(tags);
 		return facets;
-	}
-
-	/**
-	 * Util method.
-	 *
-	 * @param listOfValues
-	 * @return
-	 */
-	private String convertListintoString(List<String> listOfValues) {
-		StringBuilder builder = new StringBuilder();
-		for (String value : listOfValues) {
-			builder.append("\"");
-			builder.append(value);
-			builder.append("\",");
-
-		}
-		return builder.toString().replaceAll(",$", "");
 	}
 
 	/**
@@ -469,9 +458,6 @@ public class SearchServiceImpl implements SearchService {
 					.toArray(new String[searchFiledsList.size() - 1]);
 
 			if (StringUtils.isBlank(advancedQuery)) {
-				// matchQueryBuilder =
-				// QueryBuilders.multiMatchQuery(searchCriteria.getAdvancedQuery(),
-				// "_all");
 				if (null != searchCriteria.getSimpleQuery())
 					matchQueryBuilder = simpleSearch(searchCriteria);
 				return matchQueryBuilder;
@@ -480,17 +466,18 @@ public class SearchServiceImpl implements SearchService {
 				matchQueryBuilder = QueryBuilders.multiMatchQuery(
 						advancedQuery, searchFiledsArray).type(
 						MatchQueryBuilder.Type.PHRASE_PREFIX);
-				/*
-				 * for (Map.Entry<String, String> entry : fields.entrySet()) {
-				 * boolQuery.must(QueryBuilders.matchQuery(entry.getKey(),
-				 * entry.getValue())); }
-				 */
 			}
 		}
 
 		return matchQueryBuilder;
 	}
 
+	/**
+	 * Method to build a simple query
+	 * 
+	 * @param searchCriteria
+	 * @return
+	 */
 	private QueryBuilder simpleSearch(SearchCriteria searchCriteria) {
 
 		List<SimpleQuery> queryString = searchCriteria.getSimpleQuery();
@@ -508,23 +495,25 @@ public class SearchServiceImpl implements SearchService {
 
 	}
 
-	// private QueryBuilder rangeQuery(SearchCriteria searchCriteria){
-	// BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-	// for (RangeQuery query : searchCriteria.getRangeQuery())
-	// addrangeBuilder(query, boolQuery);
-	// return boolQuery;
-	// }
-
+	/**
+	 * Method to build wildcard query
+	 * 
+	 * @param query
+	 * @param boolQuery
+	 */
 	private void addwildcardBuilder(SimpleQuery query,
 			BoolQueryBuilder boolQuery) {
 
 		boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(query.getField(),
 				query.getValue()));
-
-		// FilterBuilders.andFilter(FilterBuilders.prefixFilter(name, prefix))
-
 	}
 
+	/**
+	 * Method to build exact match query
+	 * 
+	 * @param query
+	 * @param boolQuery
+	 */
 	private void addexactMatchBuilder(SimpleQuery query,
 			BoolQueryBuilder boolQuery) {
 
@@ -532,15 +521,24 @@ public class SearchServiceImpl implements SearchService {
 				query.getValue()));
 	}
 
+	/**
+	 * Method to build range query
+	 * 
+	 * @param query
+	 * @param boolQuery
+	 */
 	private void addrangeBuilder(SimpleQuery query, BoolQueryBuilder boolQuery) {
-		if ("" == query.getTo())
+		if (StringUtils.isBlank(query.getTo()))
 			query.setTo(null);
-		if ("" == query.getFrom())
+		if (StringUtils.isBlank(query.getFrom()))
 			query.setFrom(null);
 		boolQuery.must(QueryBuilders.rangeQuery(query.getField())
 				.from(query.getFrom()).to(query.getTo()));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wiley.gr.ace.search.service.SearchService#autoComplete(com.wiley.gr.ace.search.model.SearchCriteria, java.lang.String)
+	 */
 	@Override
 	public SuggestResponse autoComplete(SearchCriteria criteria, String role) {
 

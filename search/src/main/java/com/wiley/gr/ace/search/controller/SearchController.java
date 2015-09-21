@@ -22,50 +22,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author KKALYAN
+ *
+ */
 @RestController
 @RequestMapping("/v1")
 public class SearchController {
 
-    @Autowired
-    private SearchService searchService;
+	@Autowired
+	private SearchService searchService;
 
+	@Autowired
+	private SearchClientService searchClientService;
 
-    @Autowired
-    private SearchClientService searchClientService;
+	/**
+	 * Method create ES Index
+	 */
+	@RequestMapping(method = { RequestMethod.POST }, value = { "/_index" })
+	public void createIndex(@RequestBody String json,
+			@RequestParam(value = "type", required = false) String type) {
+		IndexResponse response = searchClientService.getClient()
+				.prepareIndex("search", type).setSource(json).execute()
+				.actionGet();
 
-    /**
-     * Method create ES Index
-     */
-    @RequestMapping(method = {RequestMethod.POST}, value = {"/_index"})
-    public void createIndex(@RequestBody String json, @RequestParam(value = "type", required = false) String type) {
-        IndexResponse response = searchClientService.getClient().prepareIndex("search", type)
-                .setSource(json)
-                .execute()
-                .actionGet();
+		// Index name
+		String _index = response.getIndex();
+		System.out.println(_index);
+		// Type name
+		String _type = response.getType();
+		System.out.println(_type);
+		// Document ID (generated or not)
+		String _id = response.getId();
+		System.out.println(_id);
+		// Version (if it's the first time you index this document, you will
+		// get: 1)
+		long _version = response.getVersion();
+		System.out.println(_version);
+		// isCreated() is true if the document is a new one, false if it has
+		// been updated
+		boolean created = response.isCreated();
+		System.out.println(created);
 
-        // Index name
-        String _index = response.getIndex();
-        System.out.println(_index);
-// Type name
-        String _type = response.getType();
-        System.out.println(_type);
-// Document ID (generated or not)
-        String _id = response.getId();
-        System.out.println(_id);
-// Version (if it's the first time you index this document, you will get: 1)
-        long _version = response.getVersion();
-        System.out.println(_version);
-// isCreated() is true if the document is a new one, false if it has been updated
-        boolean created = response.isCreated();
-        System.out.println(created);
+	}
 
-        // on shutdown
-
-//        searchClientService.getClient().close();
-
-    }
-
-    @RequestMapping(method = { RequestMethod.POST }, value = { "/api/_search" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	/**
+	 * Method to search the required data
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	@RequestMapping(method = { RequestMethod.POST }, value = { "/api/_search" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Response search(@RequestBody SearchCriteria criteria) {
 		Response response = null;
@@ -77,14 +84,22 @@ public class SearchController {
 		return response;
 	}
 
-	/*
-	 * @RequestMapping(method = {RequestMethod.POST}, value = {"/_get"},
-	 * produces = MediaType.APPLICATION_JSON_VALUE)
+	/**
+	 * Method to support Auto complete feature
 	 * 
-	 * @ResponseBody public Response autoSearch(@RequestBody SearchCriteria
-	 * criteria) { Response response = null; try { response =
-	 * searchService.search(criteria); } catch (Exception e) {
-	 * e.printStackTrace(); } return response; }
+	 * @param criteria
+	 * @return
 	 */
+	@RequestMapping(method = { RequestMethod.POST }, value = { "/_get" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Response autoSearch(@RequestBody SearchCriteria criteria) {
+		Response response = null;
+		try {
+			response = searchService.search(criteria, criteria.getRole());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
 
 }

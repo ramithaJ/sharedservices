@@ -11,12 +11,30 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.search.repository.impl;
+package com.wiley.gr.ace.search.Helper;
 
-import com.wiley.gr.ace.search.repository.SearchRepository;
+import java.util.List;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * @author rajatg
+ *
  */
-public class SearchRepositoryImpl implements SearchRepository {
+public class CommonHelperMethods {
+	/**
+	 * Util method.
+	 *
+	 * @param listOfValues
+	 * @return
+	 */
+	private String convertListintoString(List<String> listOfValues) {
+		StringBuilder builder = new StringBuilder();
+		for (String value : listOfValues) {
+			builder.append("\"");
+			builder.append(value);
+			builder.append("\",");
+
+		}
+		return builder.toString().replaceAll(",$", "");
+	}
+	
 }
