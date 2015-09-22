@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.wiley.gr.ace.search.constant.CommonConstants;
+import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Facets;
 import com.wiley.gr.ace.search.model.Filter;
 import com.wiley.gr.ace.search.model.Hits;
@@ -64,110 +65,111 @@ import com.wiley.gr.ace.search.service.SearchService;
  */
 public class SearchServiceImpl implements SearchService {
 
-	@Autowired
-	private SearchClientService searchClientService;
+    @Autowired
+    private SearchClientService searchClientService;
 
-	@Value("${index.name}")
-	private String indexName;
+    @Value("${index.name}")
+    private String indexName;
 
-	@Value("${admin.journal.search.fields}")
-	private String adminJournalSearchFields;
+    @Value("${admin.journal.search.fields}")
+    private String adminJournalSearchFields;
 
-	@Value("${admin.journal.search.result.fields}")
-	private String adminJournalSearchResultFields;
+    @Value("${admin.journal.search.result.fields}")
+    private String adminJournalSearchResultFields;
 
-	@Value("${admin.article.search.fields}")
-	private String adminArticleSearchFields;
+    @Value("${admin.article.search.fields}")
+    private String adminArticleSearchFields;
 
-	@Value("${admin.article.search.result.fields}")
-	private String adminArticleSearchResultFields;
+    @Value("${admin.article.search.result.fields}")
+    private String adminArticleSearchResultFields;
 
-	@Value("${registered.journal.search.fields}")
-	private String registeredJournalSearchFields;
+    @Value("${registered.journal.search.fields}")
+    private String registeredJournalSearchFields;
 
-	@Value("${registered.journal.search.result.fields}")
-	private String registeredJournalSearchResultFields;
+    @Value("${registered.journal.search.result.fields}")
+    private String registeredJournalSearchResultFields;
 
-	@Value("${registered.article.search.fields}")
-	private String registeredArticleSearchFields;
+    @Value("${registered.article.search.fields}")
+    private String registeredArticleSearchFields;
 
-	@Value("${registered.article.search.result.fields}")
-	private String registeredArticleSearchResultFields;
+    @Value("${registered.article.search.result.fields}")
+    private String registeredArticleSearchResultFields;
 
-	@Value("${guest.journal.search.fields}")
-	private String guestJournalSearchFields;
+    @Value("${guest.journal.search.fields}")
+    private String guestJournalSearchFields;
 
-	@Value("${guest.journal.search.result.fields}")
-	private String guestJournalSearchResultFields;
+    @Value("${guest.journal.search.result.fields}")
+    private String guestJournalSearchResultFields;
 
-	@Value("${guest.article.search.fields}")
-	private String guestArticleSearchFields;
+    @Value("${guest.article.search.fields}")
+    private String guestArticleSearchFields;
 
-	@Value("${guest.article.search.result.fields}")
-	private String guestArticleSearchResultFields;
+    @Value("${guest.article.search.result.fields}")
+    private String guestArticleSearchResultFields;
 
-	@Value("${wildcard.fields}")
-	private String wildcardFields;
+    @Value("${wildcard.fields}")
+    private String wildcardFields;
 
-	@Value("${exact.fields}")
-	private String exactFields;
+    @Value("${exact.fields}")
+    private String exactFields;
 
-	@Value("${range.fields}")
-	private String rangeFields;
+    @Value("${range.fields}")
+    private String rangeFields;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SearchServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(SearchServiceImpl.class);
 
-	/**
-	 * Method to search against ES index.
-	 * 
-	 * @param searchCriteria
-	 *            - the input value
-	 * @param role
-	 *            - the input value
-	 * @return response
-	 */
-	public Response search(SearchCriteria searchCriteria, String role) throws SharedSearchException {
-		Response searchResponse = new Response();
+    /**
+     * Method to search against ES index.
+     * 
+     * @param searchCriteria
+     *            - the input value
+     * @param role
+     *            - the input value
+     * @return response
+     */
+    public Response search(SearchCriteria searchCriteria, String role)
+            throws SharedSearchException {
+        Response searchResponse = new Response();
 
-		SearchRequestBuilder requestBuilder = searchClientService.getClient()
-				.prepareSearch(indexName)
-				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-				.setQuery(getQueryBuilder(searchCriteria, role));
+        SearchRequestBuilder requestBuilder = searchClientService.getClient()
+                .prepareSearch(indexName)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(getQueryBuilder(searchCriteria, role));
 
-		// Get Source Value everytime
-		requestBuilder.setTrackScores(true);
+        // Get Source Value everytime
+        requestBuilder.setTrackScores(true);
 
-		// Set post Filter if facets selected
-		setFilter(requestBuilder, searchCriteria);
+        // Set post Filter if facets selected
+        setFilter(requestBuilder, searchCriteria);
 
-		// Set Types
-		setTypes(requestBuilder, searchCriteria.getTypes());
+        // Set Types
+        setTypes(requestBuilder, searchCriteria.getTypes());
 
-		// Add Aggregations
-		addAggregations(requestBuilder, "journal_type,article_title");
+        // Add Aggregations
+        addAggregations(requestBuilder, "journal_type,article_title");
 
-		// Apply Page Navigation
-		setResultSize(requestBuilder, searchCriteria.getOffset(),
-				searchCriteria.getRows());
+        // Apply Page Navigation
+        setResultSize(requestBuilder, searchCriteria.getOffset(),
+                searchCriteria.getRows());
 
-		// Apply Sort if exists
-		addSort(searchCriteria, requestBuilder);
+        // Apply Sort if exists
+        addSort(searchCriteria, requestBuilder);
 
-		// Execute the request
-		SearchResponse response = requestBuilder.execute().actionGet();
+        // Execute the request
+        SearchResponse response = requestBuilder.execute().actionGet();
 
-		// Prepare response
-		searchResponse = prepareResponse(searchResponse, response, role);
+        // Prepare response
+        searchResponse = prepareResponse(searchResponse, response, role);
 
-		// Set Facets to the response
-		searchResponse.setFacets(getAggregations(response,
-				"journal_type,article_title"));
+        // Set Facets to the response
+        searchResponse.setFacets(getAggregations(response,
+                "journal_type,article_title"));
 
-		return searchResponse;
-	}
+        return searchResponse;
+    }
 
-	/**
+    /**
      * This method sets the Filter.
      * 
      * @param requestBuilder
@@ -179,18 +181,22 @@ public class SearchServiceImpl implements SearchService {
     private void setFilter(SearchRequestBuilder requestBuilder,
             SearchCriteria searchCriteria) throws SharedSearchException {
 
-		List<Filter> filterList = null;
-		List<FilterBuilder> filterBuilderList = null;
-		FilterBuilder filterbuilder = null;
+        Filter filter = null;
+        List<FilterBuilder> filterBuilderList = null;
+        FilterBuilder filterbuilder = null;
 
         try {
             filter = searchCriteria.getFilters();
             filterBuilderList = new ArrayList<FilterBuilder>();
             if (filter != null) {
-                Map<String, String> filterMap = filter.getTerm();
+                Map<String, List<String>> filterMap = filter.getTerm();
                 for (String key : filterMap.keySet()) {
-                    filterBuilderList.add(FilterBuilders.prefixFilter(key,
-                            filterMap.get(key)));
+                    List<String> valueList = filterMap.get(key);
+                    for (String value : valueList) {
+                        filterBuilderList.add(FilterBuilders.prefixFilter(key,
+                                value));
+                    }
+
                 }
 
                 if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
@@ -212,8 +218,8 @@ public class SearchServiceImpl implements SearchService {
                             + CommonConstants.INTERNAL_SERVER_ERROR);
         }
     }
-	
-	    /**
+
+    /**
      * Method to set data types in the index.
      *
      * @param requestBuilder
@@ -222,7 +228,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private void setTypes(SearchRequestBuilder requestBuilder, List<String> list)
             throws SharedSearchException {
-		 try {
+        try {
             String[] types = list.toArray(new String[0]);
             requestBuilder.setTypes(types);
         } catch (Exception e) {
@@ -231,9 +237,9 @@ public class SearchServiceImpl implements SearchService {
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
         }
-	}
+    }
 
-	 /**
+    /**
      * Method to add aggregations.
      *
      * @param requestBuilder
@@ -258,7 +264,7 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-	/**
+    /**
      * Method to prepare response.
      *
      * @param searchResponse
@@ -311,18 +317,19 @@ public class SearchServiceImpl implements SearchService {
         return searchResponse;
     }
 
-	/**
-	 * This method returns the tokens of the required fields
-	 * 
-	 * @param role
-	 * @param type
-	 * @return searchFieldStringTokens
-	 */
-	private StringTokenizer getSearchFiledAttributeTokenizers(String role,
-			String type) {
-		StringTokenizer searchFieldStringTokens = null;
+    /**
+     * This method returns the tokens of the required fields
+     * 
+     * @param role
+     * @param type
+     * @return searchFieldStringTokens
+     * @throws SharedSearchException
+     */
+    private StringTokenizer getSearchFiledAttributeTokenizers(String role,
+            String type) throws SharedSearchException {
+        StringTokenizer searchFieldStringTokens = null;
 
-try {
+        try {
             if ("journal".equals(type)) {
                 if (CommonConstants.ROLE_ADMIN.equals(role)) {
                     searchFieldStringTokens = new StringTokenizer(
@@ -359,7 +366,7 @@ try {
 
     }
 
-	/**
+    /**
      * Method to set Page Navigation.
      *
      * @param requestBuilder
@@ -369,14 +376,13 @@ try {
      * @param rows
      *            - the input value
      */
-	private void setResultSize(SearchRequestBuilder requestBuilder, int from,
-			int rows) {
-		requestBuilder.setFrom(from).setSize(rows);
-	}
+    private void setResultSize(SearchRequestBuilder requestBuilder, int from,
+            int rows) {
+        requestBuilder.setFrom(from).setSize(rows);
+    }
 
-	/**
-	 /**
-     * Method to sort the results.
+    /**
+     * /** Method to sort the results.
      *
      * @param searchCriteria
      *            - the input value
@@ -407,7 +413,7 @@ try {
         }
     }
 
-	/**
+    /**
      * Method to get facets from the response.
      *
      * @param response
@@ -417,8 +423,9 @@ try {
      * @return facets
      * @throws SharedSearchException
      */
-	private Facets getAggregations(SearchResponse response, String fields) {
-		Facets facets = new Facets();
+    private Facets getAggregations(SearchResponse response, String fields)
+            throws SharedSearchException {
+        Facets facets = new Facets();
         Tags tags = new Tags();
         int bucketSize = 0;
         LinkedList<Items> itemsLinkedList = new LinkedList<>();
@@ -446,10 +453,9 @@ try {
                             + CommonConstants.INTERNAL_SERVER_ERROR);
         }
         return facets;
-	}
+    }
 
-	
-     protected QueryBuilder getQueryBuilder(SearchCriteria searchCriteria,
+    protected QueryBuilder getQueryBuilder(SearchCriteria searchCriteria,
             String role) throws SharedSearchException {
         QueryBuilder matchQueryBuilder = null;
         List<String> searchFiledsList = null;
@@ -532,7 +538,7 @@ try {
                         .toArray(new String[searchFiledsList.size() - 1]);
 
                 if (StringUtils.isBlank(advancedQuery)) {
-                   
+
                     LOGGER.info(" Advanced Query is Blank ");
                     if (null != searchCriteria.getSimpleQuery())
                         matchQueryBuilder = simpleSearch(searchCriteria);
@@ -542,6 +548,7 @@ try {
                     LOGGER.info(" Advanced Query is not Blank ");
                     matchQueryBuilder = QueryBuilders.multiMatchQuery(
                             advancedQuery, searchFiledsArray).type(
+                            MatchQueryBuilder.Type.PHRASE_PREFIX);
                 }
             }
         } catch (Exception e) {
@@ -552,9 +559,9 @@ try {
         }
 
         return matchQueryBuilder;
-	}
+    }
 
-	/**
+    /**
      * Method returns simple searched query result.
      * 
      * @param searchCriteria
@@ -562,7 +569,7 @@ try {
      * @return queryBuilder
      * @throws SharedSearchException
      */
-	 private QueryBuilder simpleSearch(SearchCriteria searchCriteria)
+    private QueryBuilder simpleSearch(SearchCriteria searchCriteria)
             throws SharedSearchException {
 
         LOGGER.info("Inside simpleSearch method");
@@ -581,9 +588,9 @@ try {
         }
         return boolQuery;
 
-	}
+    }
 
-	/**
+    /**
      * Method adds wild card builder.
      * 
      * @param query
@@ -596,11 +603,11 @@ try {
 
         LOGGER.info("Inside addwildcardBuilder method");
 
-		boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(query.getField(),
-				query.getValue()));
-	}
+        boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(query.getField(),
+                query.getValue()));
+    }
 
-	 /**
+    /**
      * Method adds exact match builder.
      * 
      * @param query
@@ -612,11 +619,11 @@ try {
             BoolQueryBuilder boolQuery) {
         LOGGER.info("Inside addexactMatchBuilder method");
 
-		boolQuery.must(QueryBuilders.termQuery(query.getField(),
-				query.getValue()));
-	}
+        boolQuery.must(QueryBuilders.termQuery(query.getField(),
+                query.getValue()));
+    }
 
-	 /**
+    /**
      * Method adds range builder.
      * 
      * @param query
@@ -628,24 +635,24 @@ try {
     private void addrangeBuilder(SimpleQuery query, BoolQueryBuilder boolQuery)
             throws SharedSearchException {
         LOGGER.info("Inside addrangeBuilder method");
-		try {
-			if (StringUtils.isBlank(query.getTo())){
-				query.setTo(null);
-			}	
-			if (StringUtils.isBlank(query.getFrom())){
-				query.setFrom(null);
-			}	
-			boolQuery.must(QueryBuilders.rangeQuery(query.getField())
-					.from(query.getFrom()).to(query.getTo()));
-		} catch (Exception e) {
+        try {
+            if (StringUtils.isBlank(query.getTo())) {
+                query.setTo(null);
+            }
+            if (StringUtils.isBlank(query.getFrom())) {
+                query.setFrom(null);
+            }
+            boolQuery.must(QueryBuilders.rangeQuery(query.getField())
+                    .from(query.getFrom()).to(query.getTo()));
+        } catch (Exception e) {
             LOGGER.error("Exception Occurred during Lookup user...", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
-        }			
-	}
+        }
+    }
 
-	 /**
+    /**
      * Method returns suggestion response.
      * 
      * @param criteria
@@ -655,24 +662,24 @@ try {
      * @return suggestResponse.
      * 
      */
-	@Override
-	public SuggestResponse autoComplete(SearchCriteria criteria, String role) {
+    @Override
+    public SuggestResponse autoComplete(SearchCriteria criteria, String role) {
 
-		Response searchResponse = new Response();
+        // Response searchResponse = new Response();
 
-		CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
-				"completeMe");
+        CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
+                "completeMe");
 
-		suggestionsBuilder.text("");
-		suggestionsBuilder.field("suggest");
-		SuggestRequestBuilder suggestRequestBuilder = searchClientService
-				.getClient().prepareSuggest(indexName)
-				.addSuggestion(suggestionsBuilder);
+        suggestionsBuilder.text("");
+        suggestionsBuilder.field("suggest");
+        SuggestRequestBuilder suggestRequestBuilder = searchClientService
+                .getClient().prepareSuggest(indexName)
+                .addSuggestion(suggestionsBuilder);
 
-		SuggestResponse suggestResponse = suggestRequestBuilder.execute()
-				.actionGet();
+        SuggestResponse suggestResponse = suggestRequestBuilder.execute()
+                .actionGet();
 
-		return suggestResponse;
-	}
+        return suggestResponse;
+    }
 
 }

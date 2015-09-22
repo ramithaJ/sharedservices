@@ -15,6 +15,7 @@ package com.wiley.gr.ace.search.service;
 
 import org.elasticsearch.action.suggest.SuggestResponse;
 
+import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 

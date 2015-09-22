@@ -13,20 +13,33 @@
  */
 package com.wiley.gr.ace.search.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
- * @author rajatg
+ * The Class Filter.
  *
+ * @author virtusa version 1.0
  */
 public class Filter {
-	private Map<String, String> term;
+    
+    /** The map term.*/
+	private Map<String, List<String>> term;
 
-	public Map<String, String> getTerm() {
-		return term;
-	}
+    /**
+     * @return the term
+     */
+    public Map<String, List<String>> getTerm() {
+        return term;
+    }
 
-	public void setTerm(Map<String, String> term) {
-		this.term = term;
-	}
+    /**
+     * @param term the term to set
+     */
+    public void setTerm(Map<String, List<String>> term) {
+        this.term = term;
+    }
+	
+	
+
 }
