@@ -47,7 +47,8 @@ public interface SearchService {
      * @param role
      *            - the input value
      * @return suggestResponse
+     * @throws SharedSearchException
      */
-    SuggestResponse autoComplete(SearchCriteria criteria, String role);
+    SuggestResponse autoComplete(SearchCriteria criteria, String role)
+            throws SharedSearchException;
 }
-

@@ -116,6 +116,9 @@ public class SearchServiceImpl implements SearchService {
     @Value("${range.fields}")
     private String rangeFields;
 
+    @Value("${GENERIC_ERROR_MESSAGE}")
+    private String errorMesage;
+
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchServiceImpl.class);
 
@@ -212,7 +215,7 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " setFilter", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -232,7 +235,7 @@ public class SearchServiceImpl implements SearchService {
             String[] types = list.toArray(new String[0]);
             requestBuilder.setTypes(types);
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " setTypes", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -257,7 +260,7 @@ public class SearchServiceImpl implements SearchService {
                         .addAggregation(terms(field).field(field).size(0));
             }
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " addAggregations", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -309,7 +312,7 @@ public class SearchServiceImpl implements SearchService {
             }
             searchResponse.setHits(hitsList);
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " prepareResponse", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -357,7 +360,7 @@ public class SearchServiceImpl implements SearchService {
 
             }
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " getSearchFiledAttributeTokenizers", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -406,7 +409,7 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " addSort", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -447,7 +450,7 @@ public class SearchServiceImpl implements SearchService {
             tags.setTotal(bucketSize);
             facets.setTag(tags);
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " getAggregations", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -455,6 +458,16 @@ public class SearchServiceImpl implements SearchService {
         return facets;
     }
 
+    /**
+     * Method to get query builder.
+     * 
+     * @param searchCriteria
+     *            - the input value
+     * @param role
+     *            - the input value
+     * @return matchQueryBuilder
+     * @throws SharedSearchException
+     */
     protected QueryBuilder getQueryBuilder(SearchCriteria searchCriteria,
             String role) throws SharedSearchException {
         QueryBuilder matchQueryBuilder = null;
@@ -552,7 +565,7 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " getQueryBuilder", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -645,7 +658,7 @@ public class SearchServiceImpl implements SearchService {
             boolQuery.must(QueryBuilders.rangeQuery(query.getField())
                     .from(query.getFrom()).to(query.getTo()));
         } catch (Exception e) {
-            LOGGER.error("Exception Occurred during Lookup user...", e);
+            LOGGER.error(errorMesage + " addrangeBuilder", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
@@ -660,24 +673,33 @@ public class SearchServiceImpl implements SearchService {
      * @param role
      *            - the input value
      * @return suggestResponse.
+     * @throws SharedSearchException
      * 
      */
     @Override
-    public SuggestResponse autoComplete(SearchCriteria criteria, String role) {
+    public SuggestResponse autoComplete(SearchCriteria criteria, String role)
+            throws SharedSearchException {
 
         // Response searchResponse = new Response();
 
-        CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
-                "completeMe");
+        SuggestResponse suggestResponse;
+        try {
+            CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
+                    "completeMe");
 
-        suggestionsBuilder.text("");
-        suggestionsBuilder.field("suggest");
-        SuggestRequestBuilder suggestRequestBuilder = searchClientService
-                .getClient().prepareSuggest(indexName)
-                .addSuggestion(suggestionsBuilder);
+            suggestionsBuilder.text("");
+            suggestionsBuilder.field("suggest");
+            SuggestRequestBuilder suggestRequestBuilder = searchClientService
+                    .getClient().prepareSuggest(indexName)
+                    .addSuggestion(suggestionsBuilder);
 
-        SuggestResponse suggestResponse = suggestRequestBuilder.execute()
-                .actionGet();
+            suggestResponse = suggestRequestBuilder.execute().actionGet();
+        } catch (Exception e) {
+            LOGGER.error(errorMesage + " autoComplete", e);
+            throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+                    CommonConstants.ERROR_NOTE
+                            + CommonConstants.INTERNAL_SERVER_ERROR);
+        }
 
         return suggestResponse;
     }

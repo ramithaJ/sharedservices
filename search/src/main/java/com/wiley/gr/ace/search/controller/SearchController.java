@@ -17,6 +17,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Response;
@@ -24,13 +37,6 @@ import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
-
-import org.elasticsearch.action.index.IndexResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * @author KKALYAN
@@ -107,55 +113,52 @@ public class SearchController {
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { "/_get" }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Response autoSearch(@RequestBody SearchCriteria criteria) {
-        Response response = null;
+    public SuggestResponse autoSearch(@RequestBody SearchCriteria criteria) {
+        SuggestResponse response = null;
         try {
-            response = searchService.search(criteria, criteria.getRole());
+            response = searchService.autoComplete(criteria, criteria.getRole());
         } catch (SharedSearchException e) {
-            LOGGER.error("Error Occurred while searching", e);
+            LOGGER.error("Error Occurred while autoSuggest", e);
         }
         return response;
     }
-	
-	/**
+
+    /**
      * Method to log the input request in the log file.
      *
      * @param inputRequest
      *            Input Request Obj
      */
-    private void logInputRequest(SearchCriteria inputRequest, String request, String serviceCall, String role) {
-        
-        if(inputRequest != null){
+    private void logInputRequest(SearchCriteria inputRequest, String request,
+            String serviceCall, String role) {
+
+        if (inputRequest != null) {
             LOGGER.info(CommonConstants.SEPERATOR + serviceCall
                     + CommonConstants.COLON + getDate()
-                    + inputRequest.getAppKey() 
-                    + CommonConstants.COLON
-                    + role
+                    + inputRequest.getAppKey() + CommonConstants.COLON + role
                     + CommonConstants.SEPERATOR);
             LOGGER.info(inputRequest.toString());
-           
-        } else if (request != null){
+
+        } else if (request != null) {
             LOGGER.info(CommonConstants.SEPERATOR + serviceCall
-                    + CommonConstants.COLON + getDate()
-                    + CommonConstants.COLON
-                    + role
-                    + CommonConstants.SEPERATOR);
+                    + CommonConstants.COLON + getDate() + CommonConstants.COLON
+                    + role + CommonConstants.SEPERATOR);
             LOGGER.info(request);
         }
-        
+
         LOGGER.info(CommonConstants.SEPERATOR + serviceCall
-                + CommonConstants.COLON + getDate()
-                + CommonConstants.SEPERATOR);
-       
+                + CommonConstants.COLON + getDate() + CommonConstants.SEPERATOR);
+
     }
-    
+
     /**
      * Method to get date for logging purpose.
      *
      * @return
      */
     private String getDate() {
-        DateFormat dateFormat = new SimpleDateFormat(CommonConstants.YYYY_MM_DD_HH_MM_SS);
+        DateFormat dateFormat = new SimpleDateFormat(
+                CommonConstants.YYYY_MM_DD_HH_MM_SS);
         LOGGER.info("getDate() -----");
         Date date = new Date();
         return dateFormat.format(date);
