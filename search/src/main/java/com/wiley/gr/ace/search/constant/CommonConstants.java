@@ -14,13 +14,43 @@
 package com.wiley.gr.ace.search.constant;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * The interface CommonConstants.
+ *
+ * @author virtusa version 1.0
  */
 public interface CommonConstants {
 
-	String CLUSTER_NAME = "cluster.name";
-	String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";
-	String ROLE_ADMIN = "ADMIN";
-	String ROLE_REGISTERED_USER = "REGISTERED_USER";
-	String ROLE_GUEST_USER = "GUEST_USER";
+    public static final String CLUSTER_NAME = "cluster.name";
+    public static final String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_REGISTERED_USER = "REGISTERED_USER";
+    public static final String ROLE_GUEST_USER = "GUEST_USER";
+    
+    public static final String SEPERATOR = "#################################";
+    public static final String CREATE_INDEX = "CREATE_INDEX";
+    public static final String SEARCH_SERVICE = "SEARCH";
+    public static final String COLON = ":";
+    
+    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy/MM/dd HH:mm:ss";
+    
+    public static final String ERROR_NOTE = "Error :";
+    public static final String ERROR_CODE_100 = "1000";
+    public static final String ERROR_CODE_101 = "1001";
+    public static final String ERROR_CODE_102 = "1002";
+    public static final String ERROR_CODE_103 = "1003";
+    public static final String ERROR_CODE_104 = "1004";
+    public static final String ERROR_CODE_105 = "1005";
+    public static final String ERROR_CODE_107 = "1007";
+    public static final String ERROR_CODE_109 = "1009";
+    public static final String ERROR_CODE_110 = "1010";
+    public static final String ERROR_CODE_111 = "1011";
+    public static final String ERROR_CODE_112 = "1012";
+    public static final String ERROR_CODE_113 = "1013";
+    public static final String ERROR_CODE_114 = "1014";
+    public static final String ERROR_CODE_115 = "1015";
+    public static final String ERROR_CODE_116 = "1016";
+    public static final String ERROR_CODE_117 = "1017";
+    
+    public static final String INTERNAL_SERVER_ERROR = "Internal Server Error - Please check the logs";
+    
 }

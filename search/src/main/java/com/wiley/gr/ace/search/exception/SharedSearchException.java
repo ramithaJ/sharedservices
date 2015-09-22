@@ -11,42 +11,43 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.search.service;
-
-import org.elasticsearch.action.suggest.SuggestResponse;
-
-import com.wiley.gr.ace.search.model.Response;
-import com.wiley.gr.ace.search.model.SearchCriteria;
+package com.wiley.gr.ace.search.exception;
 
 /**
- * The Interface SearchService.
+ * The Class SharedSearchException.
  *
  * @author virtusa version 1.0
  */
-public interface SearchService {
+public class SharedSearchException extends Exception {
 
     /**
-     * The interface method SearchService.
      * 
-     * @param searchCriteria
-     *            - the input value
-     * @param role
-     *            - the input value
-     * @return response
-     * @throws SharedSearchException
      */
-    Response search(SearchCriteria searchCriteria, String role)
-            throws SharedSearchException;
+    private static final long serialVersionUID = 1L;
+
+    /** The error code. **/
+    private final String errorCode;
 
     /**
-     * The interface method autoComplete.
+     * Constructor method.
      * 
-     * @param criteria
+     * @param errorCode
      *            - the input value
-     * @param role
+     * @param message
      *            - the input value
-     * @return suggestResponse
      */
-    SuggestResponse autoComplete(SearchCriteria criteria, String role);
+    public SharedSearchException(String errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
+    /**
+     * The getter method.
+     * 
+     * @return errorCode.
+     */
+    public String getErrorCode() {
+        return errorCode;
+    }
+
 }
-
