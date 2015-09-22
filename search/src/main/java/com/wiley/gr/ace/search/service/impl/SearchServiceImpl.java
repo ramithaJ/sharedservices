@@ -52,7 +52,7 @@ import com.wiley.gr.ace.search.model.Hits;
 import com.wiley.gr.ace.search.model.Items;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
-import com.wiley.gr.ace.search.model.SimpleQuery;
+import com.wiley.gr.ace.search.model.AdvanceQuery;
 import com.wiley.gr.ace.search.model.Sorting;
 import com.wiley.gr.ace.search.model.Tags;
 import com.wiley.gr.ace.search.service.SearchClientService;
@@ -479,7 +479,7 @@ public class SearchServiceImpl implements SearchService {
         StringTokenizer journalSearchFields = null;
         StringTokenizer articleSearchFields = null;
 
-        String advancedQuery = searchCriteria.getAdvancedQuery();
+        String advancedQuery = searchCriteria.getSimpleQuery();
 
         types = searchCriteria.getTypes();
 
@@ -553,7 +553,7 @@ public class SearchServiceImpl implements SearchService {
                 if (StringUtils.isBlank(advancedQuery)) {
 
                     LOGGER.info(" Advanced Query is Blank ");
-                    if (null != searchCriteria.getSimpleQuery())
+                    if (null != searchCriteria.getAdvanceQuery())
                         matchQueryBuilder = simpleSearch(searchCriteria);
                     return matchQueryBuilder;
 
@@ -587,10 +587,10 @@ public class SearchServiceImpl implements SearchService {
 
         LOGGER.info("Inside simpleSearch method");
 
-        List<SimpleQuery> queryString = searchCriteria.getSimpleQuery();
+        List<AdvanceQuery> queryString = searchCriteria.getAdvanceQuery();
 
         BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-        for (SimpleQuery query : queryString) {
+        for (AdvanceQuery query : queryString) {
             if (exactFields.contains(query.getField())) {
                 addexactMatchBuilder(query, boolQuery);
             } else if (rangeFields.contains(query.getField())) {
@@ -611,7 +611,7 @@ public class SearchServiceImpl implements SearchService {
      * @param boolQuery
      *            - the input value
      */
-    private void addwildcardBuilder(SimpleQuery query,
+    private void addwildcardBuilder(AdvanceQuery query,
             BoolQueryBuilder boolQuery) {
 
         LOGGER.info("Inside addwildcardBuilder method");
@@ -628,7 +628,7 @@ public class SearchServiceImpl implements SearchService {
      * @param boolQuery
      *            - the input value
      */
-    private void addexactMatchBuilder(SimpleQuery query,
+    private void addexactMatchBuilder(AdvanceQuery query,
             BoolQueryBuilder boolQuery) {
         LOGGER.info("Inside addexactMatchBuilder method");
 
@@ -645,7 +645,7 @@ public class SearchServiceImpl implements SearchService {
      *            - the input value
      * @throws SharedSearchException
      */
-    private void addrangeBuilder(SimpleQuery query, BoolQueryBuilder boolQuery)
+    private void addrangeBuilder(AdvanceQuery query, BoolQueryBuilder boolQuery)
             throws SharedSearchException {
         LOGGER.info("Inside addrangeBuilder method");
         try {

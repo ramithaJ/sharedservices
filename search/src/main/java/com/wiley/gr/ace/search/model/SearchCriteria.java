@@ -21,151 +21,197 @@ import java.util.List;
  * @author virtusa version 1.0
  */
 public class SearchCriteria {
-    	    
-    /** The role. */
-	private String role;
-	
-	/** The appKey. */
+
+    /**
+     * The role.
+     */
+    private String role;
+
+    /**
+     * The appKey.
+     */
     private String appKey;
-    
-    /** The types. */
+
+    /**
+     * The types.
+     */
     private List<String> types;
-    
-    /** The advanced query. */
-    private String advancedQuery;
-    
-    /** The simple query*/
-    private List<SimpleQuery> simpleQuery;
-    
-    /** The sort.*/
+
+    /**
+     * The advanced query.
+     */
+    private String simpleQuery;
+
+    /**
+     * The simple query
+     */
+    private List<AdvanceQuery> advanceQuery;
+
+    /**
+     * The sort.
+     */
     private List<Sorting> sort;
-    
-    /** The filters. */
-    private Filter Filters;
-    
-    /** The offset. */
+
+    /**
+     * The filters.
+     */
+    private Filter filters;
+
+    /**
+     * The offset.
+     */
     private int offset = 0;
-    
-    /** The rows. */
+
+    /**
+     * The rows.
+     */
     private int rows = 10;
-	
-   /**
+
+    private boolean enableFacets;
+
+    /**
      * @return the role
      */
     public String getRole() {
         return role;
     }
+
     /**
      * @param role the role to set
      */
     public void setRole(String role) {
         this.role = role;
     }
+
     /**
      * @return the appKey
      */
     public String getAppKey() {
         return appKey;
     }
+
     /**
      * @param appKey the appKey to set
      */
     public void setAppKey(String appKey) {
         this.appKey = appKey;
     }
+
     /**
      * @return the types
      */
     public List<String> getTypes() {
         return types;
     }
+
     /**
      * @param types the types to set
      */
     public void setTypes(List<String> types) {
         this.types = types;
     }
-    /**
-     * @return the advancedQuery
-     */
-    public String getAdvancedQuery() {
-        return advancedQuery;
-    }
-    /**
-     * @param advancedQuery the advancedQuery to set
-     */
-    public void setAdvancedQuery(String advancedQuery) {
-        this.advancedQuery = advancedQuery;
-    }
+
     /**
      * @return the simpleQuery
      */
-    public List<SimpleQuery> getSimpleQuery() {
+    public String getSimpleQuery() {
         return simpleQuery;
     }
+
     /**
      * @param simpleQuery the simpleQuery to set
      */
-    public void setSimpleQuery(List<SimpleQuery> simpleQuery) {
+    public void setSimpleQuery(String simpleQuery) {
         this.simpleQuery = simpleQuery;
     }
+
+    /**
+     * @return the advanceQuery
+     */
+    public List<AdvanceQuery> getAdvanceQuery() {
+        return advanceQuery;
+    }
+
+    /**
+     * @param advanceQuery the advanceQuery to set
+     */
+    public void setAdvanceQuery(List<AdvanceQuery> advanceQuery) {
+        this.advanceQuery = advanceQuery;
+    }
+
     /**
      * @return the sort
      */
     public List<Sorting> getSort() {
         return sort;
     }
+
     /**
      * @param sort the sort to set
      */
     public void setSort(List<Sorting> sort) {
         this.sort = sort;
     }
+
     /**
      * @return the filters
      */
     public Filter getFilters() {
-        return Filters;
+        return filters;
     }
+
     /**
      * @param filters the filters to set
      */
     public void setFilters(Filter filters) {
-        Filters = filters;
+        this.filters = filters;
     }
+
     /**
      * @return the offset
      */
     public int getOffset() {
         return offset;
     }
+
     /**
      * @param offset the offset to set
      */
     public void setOffset(int offset) {
         this.offset = offset;
     }
+
     /**
      * @return the rows
      */
     public int getRows() {
         return rows;
     }
+
     /**
      * @param rows the rows to set
      */
     public void setRows(int rows) {
         this.rows = rows;
     }
+
+    public boolean isEnableFacets() {
+        return enableFacets;
+    }
+
+    public void setEnableFacets(boolean enableFacets) {
+        this.enableFacets = enableFacets;
+    }
+
     /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+         * @see java.lang.Object#toString()
+         */
     @Override
     public String toString() {
         return "SearchCriteria [role=" + role + ", appKey=" + appKey
-                + ", types=" + types + ", advancedQuery=" + advancedQuery
-                + ", simpleQuery=" + simpleQuery + ", sort=" + sort
-                + ", Filters=" + Filters + ", offset=" + offset + ", rows="
+                + ", types=" + types + ", simpleQuery=" + simpleQuery
+                + ", advanceQuery=" + advanceQuery + ", sort=" + sort
+                + ", filters=" + filters + ", offset=" + offset + ", rows="
                 + rows + "]";
     }
 

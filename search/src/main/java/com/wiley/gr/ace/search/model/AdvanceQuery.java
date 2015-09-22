@@ -18,7 +18,7 @@ package com.wiley.gr.ace.search.model;
  * @author rajatg
  *
  */
-public class SimpleQuery {
+public class AdvanceQuery {
 	private String field;
 	private String value;
 	private String from;
