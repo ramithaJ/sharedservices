@@ -13,10 +13,6 @@
  */
 package com.wiley.gr.ace.search.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.suggest.SuggestResponse;
 import org.slf4j.Logger;
@@ -37,6 +33,7 @@ import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
+import com.wiley.gr.ace.search.util.SearchUtil;
 
 /**
  * @author KKALYAN
@@ -96,7 +93,7 @@ public class SearchController {
     public Response search(@RequestBody SearchCriteria criteria) {
         Response response = null;
         try {
-            logInputRequest(criteria, null, CommonConstants.CREATE_INDEX,
+            SearchUtil.logInputRequest(criteria, null, CommonConstants.CREATE_INDEX,
                     criteria.getRole());
             response = searchService.search(criteria, criteria.getRole());
         } catch (SharedSearchException e) {
@@ -123,45 +120,6 @@ public class SearchController {
         return response;
     }
 
-    /**
-     * Method to log the input request in the log file.
-     *
-     * @param inputRequest
-     *            Input Request Obj
-     */
-    private void logInputRequest(SearchCriteria inputRequest, String request,
-            String serviceCall, String role) {
-
-        if (inputRequest != null) {
-            LOGGER.info(CommonConstants.SEPERATOR + serviceCall
-                    + CommonConstants.COLON + getDate()
-                    + inputRequest.getAppKey() + CommonConstants.COLON + role
-                    + CommonConstants.SEPERATOR);
-            LOGGER.info(inputRequest.toString());
-
-        } else if (request != null) {
-            LOGGER.info(CommonConstants.SEPERATOR + serviceCall
-                    + CommonConstants.COLON + getDate() + CommonConstants.COLON
-                    + role + CommonConstants.SEPERATOR);
-            LOGGER.info(request);
-        }
-
-        LOGGER.info(CommonConstants.SEPERATOR + serviceCall
-                + CommonConstants.COLON + getDate() + CommonConstants.SEPERATOR);
-
-    }
-
-    /**
-     * Method to get date for logging purpose.
-     *
-     * @return
-     */
-    private String getDate() {
-        DateFormat dateFormat = new SimpleDateFormat(
-                CommonConstants.YYYY_MM_DD_HH_MM_SS);
-        LOGGER.info("getDate() -----");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
+   
 
 }
