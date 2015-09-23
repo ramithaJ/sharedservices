@@ -13,6 +13,7 @@ package com.wiley.gr.ace.authorservices.services.service.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Reader;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -732,8 +735,9 @@ public class NotificationManagementServiceImpl implements
             final TemplateObj templateObj) throws Exception {
         LOGGER.info("inside sendEmailNotification Method of NotificationManagementServiceImpl");
         NotificationResponse notificationResponse = new NotificationResponse();
-        File[] files = notificationDetails.getAttachments();
+        Map<String, byte[]> files = notificationDetails.getAttachments();
         String path = null;
+        File[] locFiles = null;
         if (!StringUtils.isEmpty(files)) {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -742,16 +746,25 @@ public class NotificationManagementServiceImpl implements
             File directory = new File(path);
             boolean isCreated = directory.mkdirs();
             if (isCreated) {
-                for (File file : files) {
+                for (Entry<String, byte[]> entry : files.entrySet()) {
+                    File file = new File(entry.getKey());
+                    FileOutputStream fos = null;
+                    try {
+                        fos = new FileOutputStream(file);
+                        fos.write(entry.getValue());
+                    } finally {
+                        fos.flush();
+                        fos.close();
+                    }
                     FileUtils.copyFileToDirectory(file, directory);
                 }
-                files=directory.listFiles();
+                locFiles = directory.listFiles();
             }
         }
         mailSenderService.sendEmail(notificationDetails.getFrom(),
                 notificationDetails.getTo(), notificationDetails.getCcList(),
                 notificationDetails.getBccList(), templateObj.getDescription(),
-                templateObj.getBody(), files);
+                templateObj.getBody(), locFiles);
         NotificationObj notificationObj = new NotificationObj();
 
         notificationObj.setAppId(applicationId);
