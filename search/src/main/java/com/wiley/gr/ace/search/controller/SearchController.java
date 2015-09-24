@@ -36,16 +36,19 @@ import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
 import com.wiley.gr.ace.search.util.SearchUtil;
 
 /**
- * @author KKALYAN
+ * The Class SearchController.
  *
+ * @author virtusa version 1.0
  */
 @RestController
-@RequestMapping("/v1")
+@RequestMapping(CommonConstants.SEARCH_CONTROLLER_REQUEST_MAPPING)
 public class SearchController {
 
+    /** The search service. */
     @Autowired
     private SearchService searchService;
 
+    /** The search client service. */
     @Autowired
     private SearchClientService searchClientService;
 
@@ -88,14 +91,15 @@ public class SearchController {
      * @param criteria
      * @return
      */
-    @RequestMapping(method = { RequestMethod.POST }, value = { "/api/_search" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Response search(@RequestBody SearchCriteria criteria) {
+    public Response search(@RequestBody SearchCriteria criteria,
+            @RequestParam String role) {
         Response response = null;
         try {
-            SearchUtil.logInputRequest(criteria, null, CommonConstants.CREATE_INDEX,
-                    criteria.getRole());
-            response = searchService.search(criteria, criteria.getRole());
+            SearchUtil.logInputRequest(criteria, null,
+                    CommonConstants.CREATE_INDEX, role);
+            response = searchService.search(criteria, role);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while searching", e);
         }
@@ -108,18 +112,17 @@ public class SearchController {
      * @param criteria
      * @return
      */
-    @RequestMapping(method = { RequestMethod.POST }, value = { "/_get" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_AUTO_SUGGEST_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SuggestResponse autoSearch(@RequestBody SearchCriteria criteria) {
+    public SuggestResponse autoSearch(@RequestBody SearchCriteria criteria,
+            @RequestParam String role) {
         SuggestResponse response = null;
         try {
-            response = searchService.autoComplete(criteria, criteria.getRole());
+            response = searchService.autoComplete(criteria, role);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while autoSuggest", e);
         }
         return response;
     }
-
-   
 
 }

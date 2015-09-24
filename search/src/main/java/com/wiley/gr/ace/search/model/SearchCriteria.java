@@ -15,17 +15,14 @@ package com.wiley.gr.ace.search.model;
 
 import java.util.List;
 
+import com.wiley.gr.ace.search.constant.CommonConstants;
+
 /**
  * The Class SearchCriteria.
  *
  * @author virtusa version 1.0
  */
 public class SearchCriteria {
-
-    /**
-     * The role.
-     */
-    private String role;
 
     /**
      * The appKey.
@@ -60,28 +57,14 @@ public class SearchCriteria {
     /**
      * The offset.
      */
-    private int offset = 0;
+    private int offset = CommonConstants.SEARCH_CRITERIA_DEFAULT_OFFSET;
 
     /**
      * The rows.
      */
-    private int rows = 10;
+    private int rows = CommonConstants.SEARCH_CRITERIA_DEFAULT_ROWS;
 
     private boolean enableFacets;
-
-    /**
-     * @return the role
-     */
-    public String getRole() {
-        return role;
-    }
-
-    /**
-     * @param role the role to set
-     */
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     /**
      * @return the appKey
@@ -194,25 +177,32 @@ public class SearchCriteria {
     public void setRows(int rows) {
         this.rows = rows;
     }
-
+    
+    /**
+     * @return the enableFacets
+     */
     public boolean isEnableFacets() {
         return enableFacets;
     }
 
+    /**
+     * @param enableFacets the enableFacets to set
+     */
     public void setEnableFacets(boolean enableFacets) {
         this.enableFacets = enableFacets;
     }
 
-    /* (non-Javadoc)
-         * @see java.lang.Object#toString()
-         */
+    /**
+     * toString() method.
+     */
     @Override
     public String toString() {
-        return "SearchCriteria [role=" + role + ", appKey=" + appKey
-                + ", types=" + types + ", simpleQuery=" + simpleQuery
-                + ", advanceQuery=" + advanceQuery + ", sort=" + sort
-                + ", filters=" + filters + ", offset=" + offset + ", rows="
-                + rows + "]";
+        return "SearchCriteria [appKey=" + appKey + ", types=" + types
+                + ", simpleQuery=" + simpleQuery + ", advanceQuery="
+                + advanceQuery + ", sort=" + sort + ", filters=" + filters
+                + ", offset=" + offset + ", rows=" + rows + ", enableFacets="
+                + enableFacets + "]";
     }
+
 
 }

@@ -22,6 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class Property {
 
+    @Value("${SEARCH_SERVICE_ERROR_100}")
+    public String searchServiceError100;
+    
     @Value("${SEARCH_SERVICE_ERROR_101}")
     public String searchServiceError101;
 

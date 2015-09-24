@@ -22,9 +22,10 @@ public interface CommonConstants {
 
     public static final String CLUSTER_NAME = "cluster.name";
     public static final String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";
+    public static final String ROLES = "ROLES";
     public static final String ROLE_ADMIN = "ADMIN";
-    public static final String ROLE_REGISTERED_USER = "REGISTERED_USER";
-    public static final String ROLE_GUEST_USER = "GUEST_USER";
+    public static final String ROLE_REGISTERED_USER = "REGISTERED";
+    public static final String ROLE_GUEST_USER = "GUEST";
     
     public static final String SEPERATOR = "#################################";
     public static final String CREATE_INDEX = "CREATE_INDEX";
@@ -52,5 +53,28 @@ public interface CommonConstants {
     public static final String ERROR_CODE_117 = "1017";
     
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error - Please check the logs";
+    
+    public static final String SEARCH_CONTROLLER_REQUEST_MAPPING = "/v1";
+    public static final String SEARCH_URL_VALUE = "/api/_search"; 
+    public static final String SEARCH_AUTO_SUGGEST_URL_VALUE = "/_get";
+    
+    public static final String SEARCH_TYPE_JOURNAL = "journal";
+    public static final String SEARCH_TYPE_ARTICLE = "article";
+    
+    public static final String SEARCH_JOURNAL_FACET_ATTRIBUTES = "JOURNAL_FACET_ATTRIBUTES";
+    public static final String SEARCH_ARTICLE_FACET_ATTRIBUTES = "ARTICLE_FACET_ATTRIBUTES";
+    
+    public static final String SEARCH_JOURNAL_SEARCH_ATTR_KEY_STRING = "_JOURNAL_SEARCH_ATTRIBUTES";
+    public static final String SEARCH_ARTICLE_SEARCH_ATTR_KEY_STRING = "_ARTICLE_SEARCH_ATTRIBUTES"; 
+    public static final String SEARCH_JOURNAL_SEARCH_RESULT_ATTR_KEY_STRING = "_JOURNAL_SEARCH_RESULT_ATTRIBUTES";
+    public static final String SEARCH_ARTICLE_SEARCH_RESULT_ATTR_KEY_STRING = "_ARTICLE_SEARCH_RESULT_ATTRIBUTES"; 
+    
+    public static final int SEARCH_CRITERIA_DEFAULT_OFFSET = 0; 
+    public static final int SEARCH_CRITERIA_DEFAULT_ROWS = 10; 
+    
+    
+    
+    
+    
     
 }

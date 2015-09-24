@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -42,9 +43,11 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.wiley.gr.ace.search.constant.CommonConstants;
+import com.wiley.gr.ace.search.constant.Property;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Facets;
 import com.wiley.gr.ace.search.model.Filter;
@@ -63,7 +66,7 @@ import com.wiley.gr.ace.search.service.SearchService;
  *
  * @author virtusa version 1.0
  */
-public class SearchServiceImpl implements SearchService {
+public class SearchServiceImpl extends Property implements SearchService {
 
     @Autowired
     private SearchClientService searchClientService;
@@ -119,6 +122,10 @@ public class SearchServiceImpl implements SearchService {
     @Value("${GENERIC_ERROR_MESSAGE}")
     private String errorMesage;
 
+    @Autowired
+    @Qualifier(value = "search")
+    private Properties searchProperties;
+
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchServiceImpl.class);
 
@@ -133,7 +140,25 @@ public class SearchServiceImpl implements SearchService {
      */
     public Response search(SearchCriteria searchCriteria, String role)
             throws SharedSearchException {
+        boolean isRoleExists = false;
         Response searchResponse = new Response();
+
+        final String roles = searchProperties
+                .getProperty(CommonConstants.ROLES);
+
+        StringTokenizer stringTokenizer = new StringTokenizer(roles, ",");
+
+        while (stringTokenizer.hasMoreTokens()) {
+            if (role.equals(stringTokenizer.nextToken())) {
+                isRoleExists = true;
+                break;
+            }
+        }
+
+        if (!isRoleExists) {
+            throw new SharedSearchException(CommonConstants.ERROR_CODE_101,
+                    searchServiceError101);
+        }
 
         SearchRequestBuilder requestBuilder = searchClientService.getClient()
                 .prepareSearch(indexName)
@@ -150,7 +175,7 @@ public class SearchServiceImpl implements SearchService {
         setTypes(requestBuilder, searchCriteria.getTypes());
 
         // Add Aggregations
-        addAggregations(requestBuilder, "journal_type,article_title");
+        addAggregations(requestBuilder, searchCriteria.getTypes());
 
         // Apply Page Navigation
         setResultSize(requestBuilder, searchCriteria.getOffset(),
@@ -252,12 +277,50 @@ public class SearchServiceImpl implements SearchService {
      * @throws SharedSearchException
      */
     private void addAggregations(SearchRequestBuilder requestBuilder,
-            String facetFields) throws SharedSearchException {
+            List<String> types) throws SharedSearchException {
+
+        List<String> aggregationList = null;
+        StringTokenizer journalAggregationFields = null;
+        StringTokenizer articleAggregationFields = null;
+
         try {
-            String[] fields = facetFields.split(",");
-            for (String field : fields) {
-                requestBuilder
-                        .addAggregation(terms(field).field(field).size(0));
+            if (types != null && !types.isEmpty()) {
+                aggregationList = new ArrayList<String>();
+
+                if (types.contains(CommonConstants.SEARCH_TYPE_JOURNAL)) {
+                    LOGGER.info(" Types contain journal ");
+                    journalAggregationFields = new StringTokenizer(
+                            searchProperties
+                                    .getProperty(CommonConstants.SEARCH_JOURNAL_FACET_ATTRIBUTES),
+                            ",");
+
+                    if (journalAggregationFields != null) {
+                        while (journalAggregationFields.hasMoreTokens()) {
+                            aggregationList.add(journalAggregationFields
+                                    .nextToken());
+                        }
+                    }
+                }
+
+                if (types.contains(CommonConstants.SEARCH_TYPE_ARTICLE)) {
+                    LOGGER.info(" Types contain article ");
+                    articleAggregationFields = new StringTokenizer(
+                            searchProperties
+                                    .getProperty(CommonConstants.SEARCH_ARTICLE_FACET_ATTRIBUTES),
+                            ",");
+
+                    if (articleAggregationFields != null) {
+                        while (articleAggregationFields.hasMoreTokens()) {
+                            aggregationList.add(articleAggregationFields
+                                    .nextToken());
+                        }
+                    }
+                }
+                for (String aggregationAttribute : aggregationList) {
+                    requestBuilder.addAggregation(terms(aggregationAttribute)
+                            .field(aggregationAttribute).size(0));
+                }
+
             }
         } catch (Exception e) {
             LOGGER.error(errorMesage + " addAggregations", e);
@@ -292,8 +355,8 @@ public class SearchServiceImpl implements SearchService {
             for (SearchHit hit : results) {
                 Hits searchHit = new Hits();
 
-                searchFieldStringTokens = getSearchFiledAttributeTokenizers(
-                        role, hit.getType());
+                searchFieldStringTokens = getSearchResultAttributeTokens(role,
+                        hit.getType());
                 searchHit.setId(hit.getId());
                 searchHit.setScore(hit.getScore());
                 searchHit.setType(hit.getType());
@@ -328,35 +391,24 @@ public class SearchServiceImpl implements SearchService {
      * @return searchFieldStringTokens
      * @throws SharedSearchException
      */
-    private StringTokenizer getSearchFiledAttributeTokenizers(String role,
+    private StringTokenizer getSearchResultAttributeTokens(String role,
             String type) throws SharedSearchException {
         StringTokenizer searchFieldStringTokens = null;
 
         try {
             if ("journal".equals(type)) {
-                if (CommonConstants.ROLE_ADMIN.equals(role)) {
-                    searchFieldStringTokens = new StringTokenizer(
-                            adminJournalSearchResultFields, ",");
-                } else {
-                    if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
-                        searchFieldStringTokens = new StringTokenizer(
-                                registeredJournalSearchResultFields, ",");
-                    } else
-                        searchFieldStringTokens = new StringTokenizer(
-                                guestJournalSearchResultFields, ",");
-                }
+                searchFieldStringTokens = new StringTokenizer(
+                        searchProperties
+                                .getProperty(role
+                                        + CommonConstants.SEARCH_JOURNAL_SEARCH_RESULT_ATTR_KEY_STRING),
+                        ",");
+
             } else if ("article".equals(type)) {
-                if (CommonConstants.ROLE_ADMIN.equals(role)) {
-                    searchFieldStringTokens = new StringTokenizer(
-                            adminArticleSearchResultFields, ",");
-                } else {
-                    if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
-                        searchFieldStringTokens = new StringTokenizer(
-                                registeredArticleSearchResultFields, ",");
-                    } else
-                        searchFieldStringTokens = new StringTokenizer(
-                                guestArticleSearchResultFields, ",");
-                }
+                searchFieldStringTokens = new StringTokenizer(
+                        searchProperties
+                                .getProperty(role
+                                        + CommonConstants.SEARCH_ARTICLE_SEARCH_RESULT_ATTR_KEY_STRING),
+                        ",");
 
             }
         } catch (Exception e) {
@@ -479,58 +531,31 @@ public class SearchServiceImpl implements SearchService {
         StringTokenizer journalSearchFields = null;
         StringTokenizer articleSearchFields = null;
 
-        String advancedQuery = searchCriteria.getSimpleQuery();
+        String simpleQuery = searchCriteria.getSimpleQuery();
 
         types = searchCriteria.getTypes();
 
         try {
             if (types != null && !types.isEmpty()) {
                 LOGGER.info("Types is not null");
-                if (CommonConstants.ROLE_ADMIN.equals(role)) {
-                    LOGGER.info("ROLE : " + role);
+                LOGGER.info("ROLE : " + role);
 
-                    if (types.contains("journal")) {
-                        LOGGER.info(" Types contain journal ");
-                        journalSearchFields = new StringTokenizer(
-                                adminJournalSearchFields, ",");
-                    }
+                if (types.contains("journal")) {
+                    LOGGER.info(" Types contain journal ");
+                    journalSearchFields = new StringTokenizer(
+                            searchProperties
+                                    .getProperty(role
+                                            + CommonConstants.SEARCH_JOURNAL_SEARCH_ATTR_KEY_STRING),
+                            ",");
+                }
 
-                    if (types.contains("article")) {
-                        LOGGER.info(" Types contain article ");
-                        articleSearchFields = new StringTokenizer(
-                                adminArticleSearchFields, ",");
-                    }
-
-                } else {
-                    if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
-                        LOGGER.info("ROLE : " + role);
-
-                        if (types.contains("journal")) {
-                            LOGGER.info(" Types contain journal ");
-                            journalSearchFields = new StringTokenizer(
-                                    registeredJournalSearchFields, ",");
-                        }
-
-                        if (types.contains("article")) {
-                            LOGGER.info(" Types contain article ");
-                            articleSearchFields = new StringTokenizer(
-                                    registeredArticleSearchFields, ",");
-                        }
-
-                    } else {
-                        LOGGER.info("ROLE : Guest");
-                        if (types.contains("journal")) {
-                            LOGGER.info(" Types contain journal ");
-                            journalSearchFields = new StringTokenizer(
-                                    guestJournalSearchFields, ",");
-                        }
-
-                        if (types.contains("article")) {
-                            LOGGER.info(" Types contain article ");
-                            articleSearchFields = new StringTokenizer(
-                                    guestArticleSearchFields, ",");
-                        }
-                    }
+                if (types.contains("article")) {
+                    LOGGER.info(" Types contain article ");
+                    articleSearchFields = new StringTokenizer(
+                            searchProperties
+                                    .getProperty(role
+                                            + CommonConstants.SEARCH_ARTICLE_SEARCH_ATTR_KEY_STRING),
+                            ",");
                 }
 
                 searchFiledsList = new ArrayList<String>();
@@ -550,17 +575,17 @@ public class SearchServiceImpl implements SearchService {
                 searchFiledsArray = searchFiledsList
                         .toArray(new String[searchFiledsList.size() - 1]);
 
-                if (StringUtils.isBlank(advancedQuery)) {
+                if (StringUtils.isBlank(simpleQuery)) {
 
-                    LOGGER.info(" Advanced Query is Blank ");
+                    LOGGER.info(" Simple Query is Blank ");
                     if (null != searchCriteria.getAdvanceQuery())
-                        matchQueryBuilder = simpleSearch(searchCriteria);
+                        matchQueryBuilder = advancedSearch(searchCriteria);
                     return matchQueryBuilder;
 
                 } else {
-                    LOGGER.info(" Advanced Query is not Blank ");
+                    LOGGER.info(" Simple Query is not Blank ");
                     matchQueryBuilder = QueryBuilders.multiMatchQuery(
-                            advancedQuery, searchFiledsArray).type(
+                            simpleQuery, searchFiledsArray).type(
                             MatchQueryBuilder.Type.PHRASE_PREFIX);
                 }
             }
@@ -582,21 +607,21 @@ public class SearchServiceImpl implements SearchService {
      * @return queryBuilder
      * @throws SharedSearchException
      */
-    private QueryBuilder simpleSearch(SearchCriteria searchCriteria)
+    private QueryBuilder advancedSearch(SearchCriteria searchCriteria)
             throws SharedSearchException {
 
-        LOGGER.info("Inside simpleSearch method");
+        LOGGER.info("Inside advancedSearch method");
 
         List<AdvanceQuery> queryString = searchCriteria.getAdvanceQuery();
 
         BoolQueryBuilder boolQuery = new BoolQueryBuilder();
         for (AdvanceQuery query : queryString) {
             if (exactFields.contains(query.getField())) {
-                addexactMatchBuilder(query, boolQuery);
+                addExactMatchBuilder(query, boolQuery);
             } else if (rangeFields.contains(query.getField())) {
-                addrangeBuilder(query, boolQuery);
+                addRangeBuilder(query, boolQuery);
             } else {
-                addwildcardBuilder(query, boolQuery);
+                addWildCardBuilder(query, boolQuery);
             }
         }
         return boolQuery;
@@ -611,7 +636,7 @@ public class SearchServiceImpl implements SearchService {
      * @param boolQuery
      *            - the input value
      */
-    private void addwildcardBuilder(AdvanceQuery query,
+    private void addWildCardBuilder(AdvanceQuery query,
             BoolQueryBuilder boolQuery) {
 
         LOGGER.info("Inside addwildcardBuilder method");
@@ -628,7 +653,7 @@ public class SearchServiceImpl implements SearchService {
      * @param boolQuery
      *            - the input value
      */
-    private void addexactMatchBuilder(AdvanceQuery query,
+    private void addExactMatchBuilder(AdvanceQuery query,
             BoolQueryBuilder boolQuery) {
         LOGGER.info("Inside addexactMatchBuilder method");
 
@@ -645,7 +670,7 @@ public class SearchServiceImpl implements SearchService {
      *            - the input value
      * @throws SharedSearchException
      */
-    private void addrangeBuilder(AdvanceQuery query, BoolQueryBuilder boolQuery)
+    private void addRangeBuilder(AdvanceQuery query, BoolQueryBuilder boolQuery)
             throws SharedSearchException {
         LOGGER.info("Inside addrangeBuilder method");
         try {
