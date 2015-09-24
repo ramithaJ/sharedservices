@@ -98,7 +98,7 @@ public class SearchController {
         Response response = null;
         try {
             SearchUtil.logInputRequest(criteria, null,
-                    CommonConstants.CREATE_INDEX, role);
+                    CommonConstants.SEARCH_SERVICE, role);
             response = searchService.search(criteria, role);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while searching", e);
