@@ -185,14 +185,16 @@ public class SearchServiceImpl extends Property implements SearchService {
 				Map<String, List<String>> filterMap = filter.getTerm();
 				for (String key : filterMap.keySet()) {
 					List<String> valueList = filterMap.get(key);
-					for (String value : valueList) {
-						filterBuilderList.add(FilterBuilders.termFilter(key, value));
+					if (valueList != null && !valueList.isEmpty()) {
+						filterBuilderList.add(FilterBuilders.boolFilter()
+								.should(FilterBuilders.termsFilter(key,
+										valueList)));
 					}
-
 				}
 
 				if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
-					filterbuilder = FilterBuilders.boolFilter().should(filterBuilderList
+					filterbuilder = FilterBuilders
+							.andFilter(filterBuilderList
 									.toArray(new FilterBuilder[filterBuilderList
 											.size() - 1]));
 					if (filterbuilder != null) {
