@@ -287,9 +287,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		response = this.authenticate(request.getUserId(),
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
+		System.out.println("Response from authenticate:::"+response);
 		if (null == response) {
 			boolean status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
 					request.getUserId());
+			System.out.println("Value of status:::"+status);
 			if (!status) {
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
