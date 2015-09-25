@@ -14,7 +14,7 @@
 <hibernate-configuration>
 	<session-factory name="asdb">
 		<property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-		<property name="connection.url">jdbc:oracle:thin:@10.200.32.85:1525/pdasapp</property>
+		<property name="connection.url">jdbc:oracle:thin:@10.6.4.146:1521/pdasapp</property>
 		<property name="connection.username">as2appuser</property>
 		<property name="connection.password">as2appuser_123</property>
 		<property name="dialect">org.hibernate.dialect.OracleDialect</property>
