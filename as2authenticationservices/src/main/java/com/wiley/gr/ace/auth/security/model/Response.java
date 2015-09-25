@@ -144,6 +144,6 @@ public class Response {
     }
 
     public static enum STATUS {
-        ERROR, SUCCESS, FAILURE, LOCKED;
+        ERROR, SUCCESS, FAILURE, LOCKED, UNKNOWN;
     }
 }
