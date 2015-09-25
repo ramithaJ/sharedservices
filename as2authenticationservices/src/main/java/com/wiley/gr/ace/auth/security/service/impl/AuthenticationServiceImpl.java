@@ -373,9 +373,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 					request.getPassword(), request.getAuthenticationType(),
 					request.getAppKey());
 		}
+		System.out.println("UserId before checking locked table:::"+request.getUserId());
 		// get the user details from the table by using userId.
 		final LockedAccountDetails lockedAccountDetails = this.userLoginDao
 				.userAccountDetails(request.getUserId());
+		System.out.println("lockedAccountDetails:::"+lockedAccountDetails);
 		Response response = new Response();
 		// if record is not there in table.
 		if (null == lockedAccountDetails) {
