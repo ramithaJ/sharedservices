@@ -293,9 +293,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			if (!status) {
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
+			} else {
 				Response responseStatus = new Response();
 				responseStatus.setStatus(String.valueOf(Response.STATUS.UNREGISTERED));
-			} 
+				return responseStatus;
+			}
 		}
 		return response;
 	}
