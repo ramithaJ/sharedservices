@@ -283,9 +283,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private Response processAuthenticatedUser(final AuthenticateRequest request) {
 
-		Response response = new Response();
 		boolean status = false;
-		response = this.authenticate(request.getUserId(),
+		Response response = this.authenticate(request.getUserId(),
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
@@ -294,11 +293,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			if (!status) {
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
+				Response responseStatus = new Response();
+				responseStatus.setStatus(String.valueOf(Response.STATUS.UNKNOWN));
 			} 
-		}
-		System.out.println("the value of status---"+status);
-		if (status) {
-			response.setStatus(String.valueOf(Response.STATUS.UNKNOWN));
 		}
 		return response;
 	}
