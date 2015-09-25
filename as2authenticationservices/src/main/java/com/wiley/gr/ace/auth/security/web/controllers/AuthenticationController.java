@@ -75,10 +75,17 @@ public class AuthenticationController {
     @Value("${auth.message.007}")
     private String authMessage007;
     /**
-     * This field holds the value of authMessage007
+     * This field holds the value of authMessage008
      */
     @Value("${auth.message.008}")
     private String authMessage008;
+    
+    /**
+     * This field holds the value of authMessage009
+     */
+    @Value("${auth.message.009}")
+    private String authMessage009;
+    
     /**
      * This field holds the value of authenticationService
      */
@@ -148,6 +155,15 @@ public class AuthenticationController {
             return new ResponseEntity<>(new Response(
                     CommonConstant.LOCKED_CODE, this.authMessage007,
                     authResponse.getStatus()), null, HttpStatus.LOCKED);
+        }
+        
+        if (null != authResponse
+                && authResponse.getStatus().equalsIgnoreCase(
+                String.valueOf(Response.STATUS.UNREGISTERED))) {
+
+            return new ResponseEntity<>(new Response(
+                    CommonConstant.LOCKED_CODE, this.authMessage009,
+                    authResponse.getStatus()), null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
 
         if (null == authResponse
