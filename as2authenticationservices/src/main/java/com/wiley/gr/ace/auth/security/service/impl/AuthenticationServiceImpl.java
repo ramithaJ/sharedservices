@@ -296,7 +296,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 						request.getAppKey());
 			} 
 		}
-		if (!status) {
+		System.out.println("the value of status---"+status);
+		if (status) {
 			response.setStatus(String.valueOf(Response.STATUS.UNKNOWN));
 		}
 		return response;
