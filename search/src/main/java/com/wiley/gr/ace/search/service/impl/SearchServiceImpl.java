@@ -49,13 +49,13 @@ import org.springframework.beans.factory.annotation.Value;
 import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.constant.Property;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.AdvanceQuery;
 import com.wiley.gr.ace.search.model.Facets;
 import com.wiley.gr.ace.search.model.Filter;
 import com.wiley.gr.ace.search.model.Hits;
 import com.wiley.gr.ace.search.model.Items;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
-import com.wiley.gr.ace.search.model.AdvanceQuery;
 import com.wiley.gr.ace.search.model.Sorting;
 import com.wiley.gr.ace.search.model.Tags;
 import com.wiley.gr.ace.search.service.SearchClientService;
@@ -186,18 +186,15 @@ public class SearchServiceImpl extends Property implements SearchService {
 				for (String key : filterMap.keySet()) {
 					List<String> valueList = filterMap.get(key);
 					for (String value : valueList) {
-						filterBuilderList.add(FilterBuilders.prefixFilter(key,
-								value));
+						filterBuilderList.add(FilterBuilders.termFilter(key, value));
 					}
 
 				}
 
 				if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
-					filterbuilder = FilterBuilders
-							.andFilter(filterBuilderList
+					filterbuilder = FilterBuilders.boolFilter().should(filterBuilderList
 									.toArray(new FilterBuilder[filterBuilderList
 											.size() - 1]));
-
 					if (filterbuilder != null) {
 						requestBuilder.setPostFilter(filterbuilder);
 					}
@@ -423,6 +420,8 @@ public class SearchServiceImpl extends Property implements SearchService {
 							: SortOrder.ASC;
 					requestBuilder.addSort(sorting.getSortBy(), sortOrder);
 				}
+			} else {
+				requestBuilder.addSort("_score", SortOrder.DESC);
 			}
 		} catch (Exception e) {
 			LOGGER.error(errorMesage + " addSort", e);
