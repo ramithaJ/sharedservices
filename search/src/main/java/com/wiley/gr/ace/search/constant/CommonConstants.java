@@ -32,6 +32,7 @@ public interface CommonConstants {
     public static final String SEARCH_SERVICE = "SEARCH";
     public static final String COLON = ":";
     public static final String COMMA = ",";
+    public static final String UNDERSCORE = "_";
 
     public static final String YYYY_MM_DD_HH_MM_SS = "yyyy/MM/dd HH:mm:ss";
 
@@ -67,12 +68,11 @@ public interface CommonConstants {
 
     public static final String SEARCH_JOURNAL_FACET_ATTRIBUTES = "JOURNAL_FACET_ATTRIBUTES";
     public static final String SEARCH_ARTICLE_FACET_ATTRIBUTES = "ARTICLE_FACET_ATTRIBUTES";
+    public static final String SEARCH_FACET_ATTRIBUTES = "_FACET_ATTRIBUTES";
 
-    public static final String SEARCH_JOURNAL_SEARCH_ATTR_KEY_STRING = "_JOURNAL_SEARCH_ATTRIBUTES";
-    public static final String SEARCH_ARTICLE_SEARCH_ATTR_KEY_STRING = "_ARTICLE_SEARCH_ATTRIBUTES";
-    public static final String SEARCH_JOURNAL_SEARCH_RESULT_ATTR_KEY_STRING = "_JOURNAL_SEARCH_RESULT_ATTRIBUTES";
-    public static final String SEARCH_ARTICLE_SEARCH_RESULT_ATTR_KEY_STRING = "_ARTICLE_SEARCH_RESULT_ATTRIBUTES";
-
+    public static final String SEARCH_SEARCH_ATTR_KEY_STRING = "_SEARCH_ATTRIBUTES";
+    public static final String SEARCH_RESULT_ATTR_KEY_STRING = "_SEARCH_RESULT_ATTRIBUTES";
+    
     public static final int SEARCH_CRITERIA_DEFAULT_OFFSET = 0;
     public static final int SEARCH_CRITERIA_DEFAULT_ROWS = 10;
 
