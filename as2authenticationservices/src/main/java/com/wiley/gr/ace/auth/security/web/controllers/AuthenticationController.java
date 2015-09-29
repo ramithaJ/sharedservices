@@ -45,163 +45,176 @@ import javax.validation.Valid;
 @RequestMapping("/")
 public class AuthenticationController {
 
-    /**
-     * This field holds the value of LOGGER
-     */
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(AuthenticationController.class);
-    /**
-     * This field holds the value of AUTH_HEADER_NAME
-     */
-    private static String AUTH_HEADER_NAME = "X-AS2-AUTH-TOKEN";
-    /**
-     * This field holds the value of authMessage001
-     */
-    @Value("${auth.message.001}")
-    private String authMessage001;
-    /**
-     * This field holds the value of authMessage005
-     */
-    @Value("${auth.message.005}")
-    private String authMessage005;
-    /**
-     * This field holds the value of authMessage006
-     */
-    @Value("${auth.message.006}")
-    private String authMessage006;
-    /**
-     * This field holds the value of authMessage007
-     */
-    @Value("${auth.message.007}")
-    private String authMessage007;
-    /**
-     * This field holds the value of authMessage008
-     */
-    @Value("${auth.message.008}")
-    private String authMessage008;
-    
-    /**
-     * This field holds the value of authMessage009
-     */
-    @Value("${auth.message.009}")
-    private String authMessage009;
-    
-    /**
-     * This field holds the value of authenticationService
-     */
-    @Autowired(required = true)
-    private AuthenticationService authenticationService;
+	/**
+	 * This field holds the value of LOGGER
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AuthenticationController.class);
+	/**
+	 * This field holds the value of AUTH_HEADER_NAME
+	 */
+	private static String AUTH_HEADER_NAME = "X-AS2-AUTH-TOKEN";
+	/**
+	 * This field holds the value of authMessage001
+	 */
+	@Value("${auth.message.001}")
+	private String authMessage001;
+	/**
+	 * This field holds the value of authMessage005
+	 */
+	@Value("${auth.message.005}")
+	private String authMessage005;
+	/**
+	 * This field holds the value of authMessage006
+	 */
+	@Value("${auth.message.006}")
+	private String authMessage006;
+	/**
+	 * This field holds the value of authMessage007
+	 */
+	@Value("${auth.message.007}")
+	private String authMessage007;
+	/**
+	 * This field holds the value of authMessage008
+	 */
+	@Value("${auth.message.008}")
+	private String authMessage008;
 
-    /**
-     * Method to authenticate the user against Wiley AD (or) LDAP server based
-     * on the input authentication type parameter. If the authentication type
-     * parameter is passed as "AUTO" it will pick the corresponding
-     * authentication server details based on domain name in the userId value.
-     *
-     * @param request Request Object which will contain userId, Password,
-     *                ApplicationKey & Authentication Type
-     * @return ResponseEntity<Response>
-     */
-    @RequestMapping(value = CommonConstant.AUTHENTICATE_SERVICE_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Response> authenticateUser(@Valid @RequestBody final AuthenticateRequest request) {
-        AuthenticationController.LOGGER.info("Authenticating User...");
-        Response authResponse = null;
-        try {
+	/**
+	 * This field holds the value of authMessage009
+	 */
+	@Value("${auth.message.009}")
+	private String authMessage009;
 
-            // Validate the input request.
-            if (null == request) {
-                return new ResponseEntity<>(new Response(this.authMessage001),
-                        null, HttpStatus.OK);
-            }
+	/**
+	 * This field holds the value of authenticationService
+	 */
+	@Autowired(required = true)
+	private AuthenticationService authenticationService;
 
-            authResponse = authenticationService.userLogin(request);
+	/**
+	 * Method to authenticate the user against Wiley AD (or) LDAP server based
+	 * on the input authentication type parameter. If the authentication type
+	 * parameter is passed as "AUTO" it will pick the corresponding
+	 * authentication server details based on domain name in the userId value.
+	 *
+	 * @param request
+	 *            Request Object which will contain userId, Password,
+	 *            ApplicationKey & Authentication Type
+	 * @return ResponseEntity<Response>
+	 */
+	@RequestMapping(value = CommonConstant.AUTHENTICATE_SERVICE_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Response> authenticateUser(
+			@Valid @RequestBody final AuthenticateRequest request) {
+		AuthenticationController.LOGGER.info("Authenticating User...");
+		Response authResponse = null;
+		try {
 
-            //Validate authenticate response
-            ResponseEntity responseEntity = validateAuthenticateResponse(authResponse);
-            if (null != responseEntity) {
-                return responseEntity;
-            }
+			// Validate the input request.
+			if (null == request) {
+				return new ResponseEntity<>(new Response(this.authMessage001),
+						null, HttpStatus.OK);
+			}
 
-            // Set the token in the response headers.
-            final HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set(AuthenticationController.AUTH_HEADER_NAME,
-                    authResponse.getMessage());
-            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+			authResponse = authenticationService.userLogin(request);
 
-            return new ResponseEntity<>(new Response(
-                    CommonConstant.STATUS_CODE, this.authMessage006,
-                    String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
-                    HttpStatus.OK);
-        } catch (final Exception e) {
-            AuthenticationController.LOGGER.error(
-                    "Exception Occurred during user authentication...", e);
-            return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
-                    null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+			// Validate authenticate response
+			ResponseEntity responseEntity = validateAuthenticateResponse(authResponse);
+			if (null != responseEntity) {
+				return responseEntity;
+			}
 
-    /**
-     * Method to validate authenticate response.
-     *
-     * @param authResponse
-     * @return
-     */
-    private ResponseEntity validateAuthenticateResponse(Response authResponse) {
-        if (null != authResponse
-                && authResponse.getStatus().equalsIgnoreCase(
-                String.valueOf(Response.STATUS.LOCKED))) {
+			// Set the token in the response headers.
+			final HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set(AuthenticationController.AUTH_HEADER_NAME,
+					authResponse.getMessage());
+			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-            return new ResponseEntity<>(new Response(
-                    CommonConstant.LOCKED_CODE, this.authMessage007,
-                    authResponse.getStatus()), null, HttpStatus.LOCKED);
-        }
-        
-        if (null != authResponse
-                && authResponse.getStatus().equalsIgnoreCase(
-                String.valueOf(Response.STATUS.UNREGISTERED))) {
+			return new ResponseEntity<>(new Response(
+					CommonConstant.STATUS_CODE, this.authMessage006,
+					String.valueOf(Response.STATUS.SUCCESS)), responseHeaders,
+					HttpStatus.OK);
+		} catch (final Exception e) {
+			AuthenticationController.LOGGER.error(
+					"Exception Occurred during user authentication...", e);
+			return new ResponseEntity<>(new Response(CommonConstant.EXCEPTION),
+					null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-            return new ResponseEntity<>(new Response(
-                    CommonConstant.LOCKED_CODE, this.authMessage009,
-                    authResponse.getStatus()), null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
-        }
+	/**
+	 * Method to validate authenticate response.
+	 *
+	 * @param authResponse
+	 * @return
+	 */
+	private ResponseEntity validateAuthenticateResponse(Response authResponse) {
+		if (null != authResponse
+				&& authResponse.getStatus().equalsIgnoreCase(
+						String.valueOf(Response.STATUS.LOCKED))) {
 
-        if (null == authResponse
-                || authResponse.getStatus().equalsIgnoreCase(
-                String.valueOf(Response.STATUS.FAILURE))) {
+			return new ResponseEntity<>(new Response(
+					CommonConstant.LOCKED_CODE, this.authMessage007,
+					authResponse.getStatus()), null, HttpStatus.LOCKED);
+		}
 
-            AuthenticationController.LOGGER
-                    .info("Authentication Response..." + authResponse);
+		if (null != authResponse
+				&& authResponse.getStatus().equalsIgnoreCase(
+						String.valueOf(Response.STATUS.UNREGISTERED))) {
 
-            return new ResponseEntity<>(new Response(
-                    CommonConstant.FAIL_CODE, this.authMessage005,
-                    String.valueOf(Response.STATUS.FAILURE)), null,
-                    HttpStatus.UNAUTHORIZED);
-        }
-        return null;
-    }
+			return new ResponseEntity<>(new Response(
+					CommonConstant.LOCKED_CODE, this.authMessage009,
+					authResponse.getStatus()), null,
+					HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+		}
 
-    /**
-     * Method to search user.
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<User> searchUser(@Valid @RequestBody final TokenRequest request) {
-        try {
-            User user = authenticationService.searchUser(request.getUserId());
-            return new ResponseEntity<>(user, null, HttpStatus.OK);
-        } catch (NameNotFoundException | IndexOutOfBoundsException nameNotFoundException) {
-            LOGGER.error("NameNotFoundException in Search User", nameNotFoundException);
-            return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
-                    this.authMessage008, CommonConstant.FAILURE_STATUS), null,
-                    HttpStatus.UNAUTHORIZED);
-        } catch (AuthenticationException authenticationException) {
-        	return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
-        			CommonConstant.EXCEPTION, CommonConstant.FAILURE_STATUS), null,
-                    HttpStatus.OK);
-        }
-    }
+		if (null != authResponse
+				&& CommonConstant.LOCK_UNLOCK_FAIL_CODE
+						.equalsIgnoreCase(authResponse.getCode())) {
+			return new ResponseEntity<>(new Response(authResponse.getCode(),
+					authResponse.getMessage(), authResponse.getStatus()), null,
+					HttpStatus.OK);
+		}
+
+		if (null == authResponse
+				|| authResponse.getStatus().equalsIgnoreCase(
+						String.valueOf(Response.STATUS.FAILURE))) {
+
+			AuthenticationController.LOGGER.info("Authentication Response..."
+					+ authResponse);
+
+			return new ResponseEntity<>(new Response(CommonConstant.FAIL_CODE,
+					this.authMessage005,
+					String.valueOf(Response.STATUS.FAILURE)), null,
+					HttpStatus.UNAUTHORIZED);
+		}
+		return null;
+	}
+
+	/**
+	 * Method to search user.
+	 *
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = CommonConstant.SEARCH_USER_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<User> searchUser(
+			@Valid @RequestBody final TokenRequest request) {
+		try {
+			User user = authenticationService.searchUser(request.getUserId());
+			return new ResponseEntity<>(user, null, HttpStatus.OK);
+		} catch (NameNotFoundException | IndexOutOfBoundsException nameNotFoundException) {
+			LOGGER.error("NameNotFoundException in Search User",
+					nameNotFoundException);
+			return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
+					this.authMessage008, CommonConstant.FAILURE_STATUS), null,
+					HttpStatus.UNAUTHORIZED);
+		} catch (AuthenticationException authenticationException) {
+			return new ResponseEntity<>(new User(CommonConstant.FAIL_CODE,
+					CommonConstant.EXCEPTION, CommonConstant.FAILURE_STATUS),
+					null, HttpStatus.OK);
+		}
+	}
 }

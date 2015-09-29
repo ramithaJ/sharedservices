@@ -29,6 +29,9 @@ public class SearchCriteria {
      */
     private String appKey;
 
+    /** the index. */
+    private String index;
+
     /**
      * The types.
      */
@@ -40,7 +43,7 @@ public class SearchCriteria {
     private String simpleQuery;
 
     /**
-     * The simple query
+     * The simple query.
      */
     private List<AdvanceQuery> advanceQuery;
 
@@ -74,7 +77,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param appKey the appKey to set
+     * @param appKey
+     *            the appKey to set
      */
     public void setAppKey(String appKey) {
         this.appKey = appKey;
@@ -88,7 +92,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param types the types to set
+     * @param types
+     *            the types to set
      */
     public void setTypes(List<String> types) {
         this.types = types;
@@ -102,7 +107,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param simpleQuery the simpleQuery to set
+     * @param simpleQuery
+     *            the simpleQuery to set
      */
     public void setSimpleQuery(String simpleQuery) {
         this.simpleQuery = simpleQuery;
@@ -116,7 +122,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param advanceQuery the advanceQuery to set
+     * @param advanceQuery
+     *            the advanceQuery to set
      */
     public void setAdvanceQuery(List<AdvanceQuery> advanceQuery) {
         this.advanceQuery = advanceQuery;
@@ -130,7 +137,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param sort the sort to set
+     * @param sort
+     *            the sort to set
      */
     public void setSort(List<Sorting> sort) {
         this.sort = sort;
@@ -144,7 +152,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param filters the filters to set
+     * @param filters
+     *            the filters to set
      */
     public void setFilters(Filter filters) {
         this.filters = filters;
@@ -158,7 +167,8 @@ public class SearchCriteria {
     }
 
     /**
-     * @param offset the offset to set
+     * @param offset
+     *            the offset to set
      */
     public void setOffset(int offset) {
         this.offset = offset;
@@ -172,12 +182,13 @@ public class SearchCriteria {
     }
 
     /**
-     * @param rows the rows to set
+     * @param rows
+     *            the rows to set
      */
     public void setRows(int rows) {
         this.rows = rows;
     }
-    
+
     /**
      * @return the enableFacets
      */
@@ -186,10 +197,26 @@ public class SearchCriteria {
     }
 
     /**
-     * @param enableFacets the enableFacets to set
+     * @param enableFacets
+     *            the enableFacets to set
      */
     public void setEnableFacets(boolean enableFacets) {
         this.enableFacets = enableFacets;
+    }
+
+    /**
+     * @return the index
+     */
+    public String getIndex() {
+        return index;
+    }
+
+    /**
+     * @param index
+     *            the index to set
+     */
+    public void setIndex(String index) {
+        this.index = index;
     }
 
     /**
@@ -197,12 +224,11 @@ public class SearchCriteria {
      */
     @Override
     public String toString() {
-        return "SearchCriteria [appKey=" + appKey + ", types=" + types
-                + ", simpleQuery=" + simpleQuery + ", advanceQuery="
-                + advanceQuery + ", sort=" + sort + ", filters=" + filters
-                + ", offset=" + offset + ", rows=" + rows + ", enableFacets="
-                + enableFacets + "]";
+        return "SearchCriteria [appKey=" + appKey + ", index=" + index
+                + ", types=" + types + ", simpleQuery=" + simpleQuery
+                + ", advanceQuery=" + advanceQuery + ", sort=" + sort
+                + ", filters=" + filters + ", offset=" + offset + ", rows="
+                + rows + ", enableFacets=" + enableFacets + "]";
     }
-
 
 }

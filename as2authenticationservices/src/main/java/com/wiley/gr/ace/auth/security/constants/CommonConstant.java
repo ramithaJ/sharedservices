@@ -102,6 +102,11 @@ public class CommonConstant {
      * This field holds the value of FAIL_CODE
      */
     public static final String FAIL_CODE = "201";
+    
+    /**
+     * his field holds the value of LOCK_UNLOCK_FAIL_CODE
+     */
+    public static final String LOCK_UNLOCK_FAIL_CODE = "2015";
 
     /**
      * This field holds the value of LOCKED_CODE

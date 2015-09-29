@@ -124,6 +124,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 		searchResponse = prepareResponse(searchResponse, response, role);
 
 		// Set Facets to the response
+		if (searchCriteria.isEnableFacets())
 		searchResponse.setFacets(getAggregations(response, aggregationList));
 
 		return searchResponse;
@@ -520,7 +521,6 @@ public class SearchServiceImpl extends Property implements SearchService {
 					CommonConstants.ERROR_NOTE
 							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
-
 		return matchQueryBuilder;
 	}
 
