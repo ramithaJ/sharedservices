@@ -2,12 +2,16 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 //import com.wiley.gr.ace.staticcontentservices.model.external.ServerCatalog;
 
 
 /**
  * The Class UIMessageContent.
  */
+@JsonInclude(Include.NON_NULL)
 public class UIMessageContent {
 
 	/** The page name. */
@@ -24,6 +28,26 @@ public class UIMessageContent {
 	
 	/** The inline help. */
 	private HashMap<String, String> inlineHelp;
+	
+	private HashMap<String, String> confirmationMessages;
+	
+	private HashMap<String, String> statusMessages;
+
+	public HashMap<String, String> getConfirmationMessages() {
+		return confirmationMessages;
+	}
+
+	public void setConfirmationMessages(HashMap<String, String> confirmationMessages) {
+		this.confirmationMessages = confirmationMessages;
+	}
+
+	public HashMap<String, String> getStatusMessages() {
+		return statusMessages;
+	}
+
+	public void setStatusMessages(HashMap<String, String> statusMessages) {
+		this.statusMessages = statusMessages;
+	}
 
 	/** The server content. */
 	private ServerContent serverContent;

@@ -1,9 +1,13 @@
 package com.wiley.gr.ace.staticcontentservices.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 /**
  * The Class StaticContent.
  */
+@JsonInclude(Include.NON_NULL)
 public class StaticContent {
     
     

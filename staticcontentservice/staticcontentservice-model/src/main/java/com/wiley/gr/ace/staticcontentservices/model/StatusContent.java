@@ -2,11 +2,15 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 
 /**
  * The Class ConfirmationContent.
  */
+@JsonInclude(Include.NON_NULL)
 public class StatusContent {
 
     /** The content title. */

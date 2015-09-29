@@ -2,10 +2,14 @@ package com.wiley.gr.ace.staticcontentservices.model;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ServerContent.
  */
+@JsonInclude(Include.NON_NULL)
 public class ServerContent {
     
     /** The content title. */

@@ -65,6 +65,8 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 			uiMessageCatalog.setUniqueKey(uniqueKey);
 			uiMessageContent.setUiLabelMessages(uiMessageCatalog
 					.getUiLabelMessages());
+			uiMessageCatalog.setConfirmationMessages(uiMessageCatalog.getConfirmationMessages());
+			uiMessageCatalog.setStatusMessages(uiMessageCatalog.getStatusMessages());
 
 			if ("true".equalsIgnoreCase(fetchServerMessages)) {
 
