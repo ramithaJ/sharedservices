@@ -576,13 +576,13 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                     if (null != secondaryEmailId) {
                         Users userPrimaryCheck = (Users) userRepositoryHelper.getEntity(CommonConstants.PRIMARY_EMAIL_ID, secondaryEmailId, Users.class, false);
                         if (null != userPrimaryCheck && userPrimaryCheck.getUserId() != Integer.parseInt(userId)) {
-                            throw new SharedServiceException(CommonConstants.ERROR_CODE_119, userServiceError118);
+                            throw new SharedServiceException(CommonConstants.ERROR_CODE_119, userServiceError119);
                         }
                         UserSecondaryEmailAddr userSecondaryCheck = (UserSecondaryEmailAddr) userRepositoryHelper.getEntity(CommonConstants.SECONDARY_EMAIL_ID, secondaryEmailId, UserSecondaryEmailAddr.class, false);
                         if (null != userSecondaryCheck) {
                             Users usersPrimaryChecks = userSecondaryCheck.getUsersByUserId();
                             if (null != usersPrimaryChecks && usersPrimaryChecks.getUserId() != Integer.parseInt(userId)) {
-                                throw new SharedServiceException(CommonConstants.ERROR_CODE_119, userServiceError118);
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_119, userServiceError119);
                             }
                         }
                     }
