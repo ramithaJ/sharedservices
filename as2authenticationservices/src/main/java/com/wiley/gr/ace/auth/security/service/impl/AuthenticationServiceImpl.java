@@ -455,7 +455,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
 			return response;
 		} else {
-			return new Response(CommonConstant.FAIL_CODE,
+			return new Response(CommonConstant.LOCK_UNLOCK_FAIL_CODE,
 					CommonConstant.INTERNAL_SERVER_ERROR,
 					CommonConstant.FAILURE_STATUS);
 		}
@@ -494,7 +494,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				// removing the record in the temporary table.
 				this.userLoginDao.removeUser(request.getUserId());
 			} else {
-				return new Response(CommonConstant.FAIL_CODE,
+				return new Response(CommonConstant.LOCK_UNLOCK_FAIL_CODE,
 						CommonConstant.INTERNAL_SERVER_ERROR,
 						CommonConstant.FAILURE_STATUS);
 			}
