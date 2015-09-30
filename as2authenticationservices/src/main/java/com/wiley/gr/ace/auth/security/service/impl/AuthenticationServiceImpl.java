@@ -409,7 +409,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
-			this.userLoginDao.updateUser(request.getUserId());
+			//this.userLoginDao.updateUser(request.getUserId());
 		}
 
 		return response;

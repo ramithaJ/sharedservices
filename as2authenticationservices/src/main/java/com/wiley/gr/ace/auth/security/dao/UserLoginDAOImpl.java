@@ -129,6 +129,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
     @Override
     public boolean updateUser(final String userId) {
 
+    	System.out.println("updating the record...................");
         Session session = null;
         Transaction transaction = null;
         try {
