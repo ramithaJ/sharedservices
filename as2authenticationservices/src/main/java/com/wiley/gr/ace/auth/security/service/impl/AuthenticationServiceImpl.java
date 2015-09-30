@@ -302,6 +302,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				return responseStatus;
 			}
 		}
+		System.out.println("return the controll back..................");
 		return response;
 	}
 
@@ -391,6 +392,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		Response lockResponse = validateLockTime(request, response,
 				lockedAccountDetails);
+		System.out.println("got the response.......");
 		if (null != lockResponse) {
 			return lockResponse;
 		}
