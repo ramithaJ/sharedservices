@@ -283,14 +283,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private Response processAuthenticatedUser(final AuthenticateRequest request) {
 
+		System.out.println("proceed for authentication.......................");
 		boolean status = false;
 		Response response = this.authenticate(request.getUserId(),
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
+			System.out.println("authentication failed..................");
 			status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
 					request.getUserId());
 			if (!status) {
+				System.out.println("inserting the record...................");
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
 			} else {
@@ -429,6 +432,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final long minutes = TimeUnit.MILLISECONDS.toMinutes(new Date()
 				.getTime() - loginAttemptTime.getTime());
 		if (this.unlockTime < minutes) {
+			System.out.println("time taken...........................==="+minutes);
 			return checkUserUnlockCondition(request, lockedAccountDetails);
 		}
 		if (this.lockAttempts < lockedAccountDetails.getInvalidLoginCount()) {
@@ -499,6 +503,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 						CommonConstant.FAILURE_STATUS);
 			}
 		} else {
+			System.out.println("removing the record................................");
 			this.userLoginDao.removeUser(request.getUserId());
 		}
 		return this.processAuthenticatedUser(request);

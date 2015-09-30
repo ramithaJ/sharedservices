@@ -34,6 +34,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
     @Override
     public boolean insertUser(final String userId, final String appKey) {
 
+    	System.out.println("inserting the record............................");
         Session session = null;
         Transaction transaction = null;
         final LockedAccountDetails lockedAccountDetails = new LockedAccountDetails();
@@ -47,6 +48,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
             lockedAccountDetails.setCreatedDate(new Date());
             session.saveOrUpdate(lockedAccountDetails);
             transaction.commit();
+            System.out.println("recored inserted successfully...............");
         } finally {
             if (session != null) {
                 session.flush();
@@ -93,6 +95,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
      */
     @Override
     public boolean updateTimeStamp(final String userId) {
+    	System.out.println("updatating the record..........................");
         Session session = null;
         Transaction transaction = null;
         try {
@@ -106,6 +109,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
             lockedAccountDetails.setUpdatedDate(new Date());
             session.update(lockedAccountDetails);
             transaction.commit();
+            System.out.println("updating record successfully......................");
         } finally {
             if (session != null) {
                 session.flush();
