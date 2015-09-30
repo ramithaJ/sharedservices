@@ -45,7 +45,7 @@ public class UserLoginDAOImpl implements UserLoginDAO {
             lockedAccountDetails.setInvalidLoginCount(1);
             lockedAccountDetails.setLoginAttemptTime(new Date());
             lockedAccountDetails.setCreatedDate(new Date());
-            session.save(lockedAccountDetails);
+            session.saveOrUpdate(lockedAccountDetails);
             transaction.commit();
         } finally {
             if (session != null) {

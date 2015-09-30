@@ -20,5 +20,7 @@
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
     <util:properties id="messageProperties" location="classpath:/message.properties"/>
+    
+       <util:properties id="searchProperties" location="classpath:/search.properties"/>
 
 </beans>

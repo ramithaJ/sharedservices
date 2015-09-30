@@ -264,7 +264,7 @@ public class UserRepositoryImpl extends Property implements UserRepository {
         } catch (Exception e) {
             rollBackSession(session);
             LOGGER.error(CommonConstants.ERROR_USER_CREATE_SERVICE, e);
-			e.printStackTrace();
+            e.printStackTrace();
             throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + CommonConstants.INTERNAL_SERVER_ERROR);
         } finally {
             if (null != session) {
@@ -571,6 +571,23 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 //Recreate with new one.
                 String[] secondaryEmailIds = secondaryEmailCommaSeperatedList.split(CommonConstants.COMMA);
                 for (String secondaryEmailId : secondaryEmailIds) {
+
+                    //Secondary email address validation
+                    if (null != secondaryEmailId) {
+                        Users userPrimaryCheck = (Users) userRepositoryHelper.getEntity(CommonConstants.PRIMARY_EMAIL_ID, secondaryEmailId, Users.class, false);
+                        if (null != userPrimaryCheck && userPrimaryCheck.getUserId() != Integer.parseInt(userId)) {
+                            throw new SharedServiceException(CommonConstants.ERROR_CODE_119, userServiceError119);
+                        }
+                        UserSecondaryEmailAddr userSecondaryCheck = (UserSecondaryEmailAddr) userRepositoryHelper.getEntity(CommonConstants.SECONDARY_EMAIL_ID, secondaryEmailId, UserSecondaryEmailAddr.class, false);
+                        if (null != userSecondaryCheck) {
+                            Users usersPrimaryChecks = userSecondaryCheck.getUsersByUserId();
+                            if (null != usersPrimaryChecks && usersPrimaryChecks.getUserId() != Integer.parseInt(userId)) {
+                                throw new SharedServiceException(CommonConstants.ERROR_CODE_119, userServiceError119);
+                            }
+                        }
+                    }
+
+
                     UserSecondaryEmailAddr secondaryEmailAddr = new UserSecondaryEmailAddr();
                     secondaryEmailAddr = UserServiceHelper.setUserSecondaryEmailAddr(secondaryEmailId, secondaryEmailAddr, user);
                     //Set the secondary email address to the user object

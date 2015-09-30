@@ -11,12 +11,21 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.search.repository.impl;
+package com.wiley.gr.ace.search.constant;
 
-import com.wiley.gr.ace.search.repository.SearchRepository;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * The Class Property.
+ *
+ * @author virtusa version 1.0
  */
-public class SearchRepositoryImpl implements SearchRepository {
+public class Property {
+
+    @Value("${SEARCH_SERVICE_ERROR_100}")
+    public String searchServiceError100;
+    
+    @Value("${SEARCH_SERVICE_ERROR_101}")
+    public String searchServiceError101;
+
 }

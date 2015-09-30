@@ -11,12 +11,35 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.search.repository.impl;
+package com.wiley.gr.ace.search.model;
 
-import com.wiley.gr.ace.search.repository.SearchRepository;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * The Class Filter.
+ *
+ * @author virtusa version 1.0
  */
-public class SearchRepositoryImpl implements SearchRepository {
+public class Filter {
+    
+    /** The map term.*/
+	private Map<String, List<String>> term;
+
+    /**
+     * @return the term
+     */
+    public Map<String, List<String>> getTerm() {
+        return term;
+    }
+
+    /**
+     * @param term the term to set
+     */
+    public void setTerm(Map<String, List<String>> term) {
+        this.term = term;
+    }
+	
+	
+
 }

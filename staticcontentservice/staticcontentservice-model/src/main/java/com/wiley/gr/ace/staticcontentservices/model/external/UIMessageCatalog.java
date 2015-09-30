@@ -82,6 +82,26 @@ public class UIMessageCatalog {
 	/** The identifier. */
 	private String identifier;
 
+	private HashMap<String, String> confirmationMessages;
+	
+	private HashMap<String, String> statusMessages;
+	
+	public HashMap<String, String> getConfirmationMessages() {
+		return confirmationMessages;
+	}
+
+	public void setConfirmationMessages(HashMap<String, String> confirmationMessages) {
+		this.confirmationMessages = confirmationMessages;
+	}
+
+	public HashMap<String, String> getStatusMessages() {
+		return statusMessages;
+	}
+
+	public void setStatusMessages(HashMap<String, String> statusMessages) {
+		this.statusMessages = statusMessages;
+	}
+
 	/** The inline help option2. */
 	private HashMap<String, String> inlineHelpOption2;
 

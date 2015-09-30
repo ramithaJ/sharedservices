@@ -283,16 +283,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private Response processAuthenticatedUser(final AuthenticateRequest request) {
 
-		Response response = new Response();
-		response = this.authenticate(request.getUserId(),
+		boolean status = false;
+		Response response = this.authenticate(request.getUserId(),
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
-			boolean status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
+			status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
 					request.getUserId());
 			if (!status) {
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
+				Response responseStatus = new Response();
+				responseStatus.setStatus(String.valueOf(Response.STATUS.FAILURE));
+				return responseStatus;
+				
+			} else {
+				Response responseStatus = new Response();
+				responseStatus.setStatus(String.valueOf(Response.STATUS.UNREGISTERED));
+				return responseStatus;
 			}
 		}
 		return response;
@@ -384,6 +392,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		Response lockResponse = validateLockTime(request, response,
 				lockedAccountDetails);
+		
 		if (null != lockResponse) {
 			return lockResponse;
 		}
@@ -451,7 +460,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			response.setStatus(String.valueOf(Response.STATUS.LOCKED));
 			return response;
 		} else {
-			return new Response(CommonConstant.FAIL_CODE,
+			return new Response(CommonConstant.LOCK_UNLOCK_FAIL_CODE,
 					CommonConstant.INTERNAL_SERVER_ERROR,
 					CommonConstant.FAILURE_STATUS);
 		}
@@ -490,10 +499,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				// removing the record in the temporary table.
 				this.userLoginDao.removeUser(request.getUserId());
 			} else {
-				return new Response(CommonConstant.FAIL_CODE,
+				return new Response(CommonConstant.LOCK_UNLOCK_FAIL_CODE,
 						CommonConstant.INTERNAL_SERVER_ERROR,
 						CommonConstant.FAILURE_STATUS);
 			}
+		} else {
+			this.userLoginDao.removeUser(request.getUserId());
 		}
 		return this.processAuthenticatedUser(request);
 	}

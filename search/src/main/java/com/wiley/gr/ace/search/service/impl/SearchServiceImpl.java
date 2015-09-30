@@ -1,27 +1,31 @@
+/**
+ * ****************************************************************************
+ * Copyright (c) 2015 John Wiley & Sons, Inc. All rights reserved.
+ * <p>
+ * All material contained herein is proprietary to John Wiley & Sons
+ * and its third party suppliers, if any. The methods, techniques and
+ * technical concepts contained herein are considered trade secrets
+ * and confidential and may be protected by intellectual property laws.
+ * Reproduction or distribution of this material, in whole or in part,
+ * is strictly forbidden except by express prior written permission
+ * of John Wiley & Sons.
+ * *****************************************************************************
+ */
 package com.wiley.gr.ace.search.service.impl;
 
-import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
+import com.wiley.gr.ace.search.constant.CommonConstants;
+import com.wiley.gr.ace.search.constant.Property;
+import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.*;
+import com.wiley.gr.ace.search.service.SearchClientService;
+import com.wiley.gr.ace.search.service.SearchService;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.suggest.SuggestRequestBuilder;
 import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.common.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortOrder;
@@ -29,25 +33,19 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.wiley.gr.ace.search.constant.CommonConstants;
-import com.wiley.gr.ace.search.model.Facets;
-import com.wiley.gr.ace.search.model.Filter;
-import com.wiley.gr.ace.search.model.Hits;
-import com.wiley.gr.ace.search.model.Items;
-import com.wiley.gr.ace.search.model.Response;
-import com.wiley.gr.ace.search.model.SearchCriteria;
-import com.wiley.gr.ace.search.model.SimpleQuery;
-import com.wiley.gr.ace.search.model.Sorting;
-import com.wiley.gr.ace.search.model.Tags;
-import com.wiley.gr.ace.search.service.SearchClientService;
-import com.wiley.gr.ace.search.service.SearchService;
+import java.util.*;
+
+import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * The Class SearchServiceImpl.
+ *
+ * @author virtusa version 1.0
  */
-public class SearchServiceImpl implements SearchService {
+public class SearchServiceImpl extends Property implements SearchService {
 
 	@Autowired
 	private SearchClientService searchClientService;
@@ -55,81 +53,52 @@ public class SearchServiceImpl implements SearchService {
 	@Value("${index.name}")
 	private String indexName;
 
-	@Value("${admin.journal.search.fields}")
-	private String adminJournalSearchFields;
-
-	@Value("${admin.journal.search.result.fields}")
-	private String adminJournalSearchResultFields;
-	
-	@Value("${admin.article.search.fields}")
-	private String adminArticleSearchFields;
-
-	@Value("${admin.article.search.result.fields}")
-	private String adminArticleSearchResultFields;
-
-	@Value("${registered.journal.search.fields}")
-	private String registeredJournalSearchFields;
-
-	@Value("${registered.journal.search.result.fields}")
-	private String registeredJournalSearchResultFields;
-
-	@Value("${registered.article.search.fields}")
-	private String registeredArticleSearchFields;
-
-	@Value("${registered.article.search.result.fields}")
-	private String registeredArticleSearchResultFields;
-	
-	@Value("${guest.journal.search.fields}")
-	private String guestJournalSearchFields;
-
-	@Value("${guest.journal.search.result.fields}")
-	private String guestJournalSearchResultFields;
-	
-	@Value("${guest.article.search.fields}")
-	private String guestArticleSearchFields;
-
-	@Value("${guest.article.search.result.fields}")
-	private String guestArticleSearchResultFields;
-	
-	@Value("${wildcard.fields}")
+	@Value("${WILDCARD_FIELDS}")
 	private String wildcardFields;
 
-	@Value("${exact.fields}")
+	@Value("${EXACT_FIELDS}")
 	private String exactFields;
 
-	@Value("${range.fields}")
+	@Value("${RANGE_FIELDS}")
 	private String rangeFields;
 
-	private static final Logger logger = LoggerFactory
+	@Value("${GENERIC_ERROR_MESSAGE}")
+	private String errorMesage;
+
+	@Autowired
+	@Qualifier(value = "searchProperties")
+	private Properties searchProperties;
+
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchServiceImpl.class);
 
 	/**
 	 * Method to search against ES index.
-	 * 
+	 *
 	 * @param searchCriteria
 	 *            - the input value
 	 * @param role
 	 *            - the input value
 	 * @return response
 	 */
-	public Response search(SearchCriteria searchCriteria, String role) {
-		// http://www.programcreek.com/java-api-examples/index.php?api=org.elasticsearch.search.sort.SortOrder
-		Response searchResponse = new Response();
+	public Response search(SearchCriteria searchCriteria, String role)
+			throws SharedSearchException {
 
-		/*
-		 * AggregationBuilder aggregation = AggregationBuilders
-		 * .filter("journalType2")
-		 * .filter(FilterBuilders.termFilter("journal.type", "type101"));
-		 */
+		Response searchResponse = new Response();
+		List<String> aggregationList = null;
+		// TODO: Validate Request
+
+		// Check User Role
+		checkUserRole(role);
 
 		SearchRequestBuilder requestBuilder = searchClientService.getClient()
 				.prepareSearch(indexName)
 				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
 				.setQuery(getQueryBuilder(searchCriteria, role));
-		
-		//Get Source Value everytime
+
+		// Get Source Value every time
 		requestBuilder.setTrackScores(true);
-		
+
 		// Set post Filter if facets selected
 		setFilter(requestBuilder, searchCriteria);
 
@@ -137,7 +106,9 @@ public class SearchServiceImpl implements SearchService {
 		setTypes(requestBuilder, searchCriteria.getTypes());
 
 		// Add Aggregations
-		addAggregations(requestBuilder, "journal_type,article_title");
+		if (searchCriteria.isEnableFacets())
+			aggregationList = addAggregations(requestBuilder,
+					searchCriteria.getTypes());
 
 		// Apply Page Navigation
 		setResultSize(requestBuilder, searchCriteria.getOffset(),
@@ -153,156 +124,242 @@ public class SearchServiceImpl implements SearchService {
 		searchResponse = prepareResponse(searchResponse, response, role);
 
 		// Set Facets to the response
-		searchResponse.setFacets(getAggregations(response,
-				"journal_type,article_title"));
+		if (searchCriteria.isEnableFacets())
+		searchResponse.setFacets(getAggregations(response, aggregationList));
 
 		return searchResponse;
 	}
 
-	private void setFilter(SearchRequestBuilder requestBuilder,
-			SearchCriteria searchCriteria) {
+	/**
+	 * Method to check whether user role exists or not.
+	 *
+	 * @param role
+	 * @throws SharedSearchException
+	 */
+	private void checkUserRole(String role) throws SharedSearchException {
+		boolean isRoleExists = false;
+		final String roles = searchProperties
+				.getProperty(CommonConstants.ROLES);
 
-		List<Filter> filterList = null;
-		List<FilterBuilder> filterBuilderList = null;
-		FilterBuilder filterbuilder = null;
+		StringTokenizer stringTokenizer = new StringTokenizer(roles,
+				CommonConstants.COMMA);
 
-		filterList = searchCriteria.getFilters();
-		filterBuilderList = new ArrayList<FilterBuilder>();
-		if (filterList != null && !filterList.isEmpty()) {
-			for (Filter filter : filterList) {
-				Map<String, String> filterMap = filter.getTerm();
-				for (String key : filterMap.keySet()) {
-					filterBuilderList.add(FilterBuilders.prefixFilter(key,
-							filterMap.get(key)));
-				}
-			}
-
-			if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
-				filterbuilder = FilterBuilders
-						.andFilter(filterBuilderList
-								.toArray(new FilterBuilder[filterBuilderList
-										.size() - 1]));
-
-				if (filterbuilder != null) {
-					requestBuilder.setPostFilter(filterbuilder);
-				}
-
+		while (stringTokenizer.hasMoreTokens()) {
+			if (role.equals(stringTokenizer.nextToken())) {
+				isRoleExists = true;
+				break;
 			}
 		}
 
+		if (!isRoleExists) {
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_101,
+					searchServiceError101);
+		}
+	}
+
+	/**
+	 * This method sets the Filter.
+	 *
+	 * @param requestBuilder
+	 *            - the input value
+	 * @param searchCriteria
+	 *            - the input value
+	 * @throws SharedSearchException
+	 */
+	private void setFilter(SearchRequestBuilder requestBuilder,
+			SearchCriteria searchCriteria) throws SharedSearchException {
+
+		Filter filter = null;
+		List<FilterBuilder> filterBuilderList = null;
+		FilterBuilder filterbuilder = null;
+
+		try {
+			filter = searchCriteria.getFilters();
+			filterBuilderList = new ArrayList<FilterBuilder>();
+			if (filter != null) {
+				Map<String, List<String>> filterMap = filter.getTerm();
+				for (String key : filterMap.keySet()) {
+					List<String> valueList = filterMap.get(key);
+					if (valueList != null && !valueList.isEmpty()) {
+						filterBuilderList.add(FilterBuilders.boolFilter()
+								.should(FilterBuilders.termsFilter(key,
+										valueList)));
+					}
+				}
+
+				if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
+					filterbuilder = FilterBuilders
+							.andFilter(filterBuilderList
+									.toArray(new FilterBuilder[filterBuilderList
+											.size() - 1]));
+					if (filterbuilder != null) {
+						requestBuilder.setPostFilter(filterbuilder);
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " setFilter", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
 	 * Method to set data types in the index.
 	 *
 	 * @param requestBuilder
-	 * @return
+	 *            - the input value
+	 * @throws SharedSearchException
 	 */
-	private void setTypes(SearchRequestBuilder requestBuilder, List<String> list) {
-//		String[] types = new String[list.size()];
-		String[] types= list.toArray(new String[0]);
-//   	for(int i=0;i<list.size();i++){
-//   		types[i]=list.get(i);
-//   	}
-//   	
-   requestBuilder.setTypes(types);
+	private void setTypes(SearchRequestBuilder requestBuilder, List<String> list)
+			throws SharedSearchException {
+		try {
+			String[] types = list.toArray(new String[0]);
+			requestBuilder.setTypes(types);
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " setTypes", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
 	 * Method to add aggregations.
 	 *
 	 * @param requestBuilder
-	 * @param facetFields
-	 * @return
+	 * @param types
+	 * @throws SharedSearchException
 	 */
-	private void addAggregations(
-			SearchRequestBuilder requestBuilder, String facetFields) {
-		String[] fields = facetFields.split(",");
-		for (String field : fields) {
-			requestBuilder.addAggregation(terms(field).field(field).size(0));
+	private List<String> addAggregations(SearchRequestBuilder requestBuilder,
+			List<String> types) throws SharedSearchException {
+
+		StringTokenizer journalAggregationFields = null;
+		StringTokenizer articleAggregationFields = null;
+		List<String> aggregationList = null;
+
+		try {
+
+			aggregationList = new ArrayList<>();
+			if (types.contains(CommonConstants.SEARCH_TYPE_JOURNAL)) {
+				LOGGER.info(" Types contain journal ");
+				journalAggregationFields = new StringTokenizer(
+						searchProperties
+								.getProperty(CommonConstants.SEARCH_JOURNAL_FACET_ATTRIBUTES),
+						",");
+
+				if (journalAggregationFields != null) {
+					while (journalAggregationFields.hasMoreTokens()) {
+						aggregationList.add(journalAggregationFields
+								.nextToken());
+					}
+				}
+			}
+
+			if (types.contains(CommonConstants.SEARCH_TYPE_ARTICLE)) {
+				LOGGER.info(" Types contain article ");
+				articleAggregationFields = new StringTokenizer(
+						searchProperties
+								.getProperty(CommonConstants.SEARCH_ARTICLE_FACET_ATTRIBUTES),
+						",");
+
+				if (articleAggregationFields != null) {
+					while (articleAggregationFields.hasMoreTokens()) {
+						aggregationList.add(articleAggregationFields
+								.nextToken());
+					}
+				}
+			}
+			for (String aggregationAttribute : aggregationList) {
+				requestBuilder.addAggregation(terms(aggregationAttribute)
+						.field(aggregationAttribute).size(0));
+			}
+
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " addAggregations", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
+		return aggregationList;
 	}
 
 	/**
 	 * Method to prepare response.
 	 *
 	 * @param searchResponse
+	 *            - the input value
 	 * @param response
-	 * @return
+	 *            - the input value
+	 * @return response
+	 * @throws SharedSearchException
 	 */
 	private Response prepareResponse(Response searchResponse,
-			SearchResponse response, String role) {
+			SearchResponse response, String role) throws SharedSearchException {
 		List<Hits> hitsList = new LinkedList();
 		StringTokenizer searchFieldStringTokens = null;
-		SearchHit[] results = response.getHits().getHits();
-		searchResponse.setMax_score(response.getHits().getMaxScore());
-		searchResponse.setTotal(response.getHits().getTotalHits());
-		searchResponse.setTook(response.getTookInMillis());
 
-		for (SearchHit hit : results) {
-			Hits searchHit = new Hits();
+		try {
+			SearchHit[] results = response.getHits().getHits();
+			searchResponse.setMax_score(response.getHits().getMaxScore());
+			searchResponse.setTotal(response.getHits().getTotalHits());
+			searchResponse.setTook(response.getTookInMillis());
 
-			searchFieldStringTokens = getSearchFiledAttributeTokenizers(role,
-					hit.getType());
-			searchHit.setId(hit.getId());
-			searchHit.setScore(hit.getScore());
-			searchHit.setType(hit.getType());
+			for (SearchHit hit : results) {
+				Hits searchHit = new Hits();
 
-			Map<String, Object> filteredSource = new HashMap<String, Object>();
-			Map<String, Object> tempMap = hit.getSource();
-			
+				searchFieldStringTokens = getSearchResultAttributeTokens(role,
+						hit.getType());
+				searchHit.setId(hit.getId());
+				searchHit.setScore(hit.getScore());
+				searchHit.setType(hit.getType());
 
-			while (searchFieldStringTokens.hasMoreTokens()) {
-				String key = searchFieldStringTokens.nextToken();
-				filteredSource.put(key, tempMap.get(key));
+				Map<String, Object> filteredSource = new HashMap<String, Object>();
+				Map<String, Object> tempMap = hit.getSource();
+
+				while (searchFieldStringTokens.hasMoreTokens()) {
+					String key = searchFieldStringTokens.nextToken();
+					filteredSource.put(key, tempMap.get(key));
+				}
+
+				searchHit.setSource(filteredSource);
+
+				hitsList.add(searchHit);
 			}
-			
-			searchHit.setSource(filteredSource);
-
-			hitsList.add(searchHit);
+			searchResponse.setHits(hitsList);
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " prepareResponse", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
-		searchResponse.setHits(hitsList);
 		return searchResponse;
 	}
 
 	/**
 	 * This method returns the tokens of the required fields
-	 * 
+	 *
 	 * @param role
 	 * @param type
 	 * @return searchFieldStringTokens
+	 * @throws SharedSearchException
 	 */
-	private StringTokenizer getSearchFiledAttributeTokenizers(String role,
-			String type) {
+	private StringTokenizer getSearchResultAttributeTokens(String role,
+			String type) throws SharedSearchException {
 		StringTokenizer searchFieldStringTokens = null;
-
-		if ("journal".equals(type)) {
-			if (CommonConstants.ROLE_ADMIN.equals(role)) {
-				searchFieldStringTokens = new StringTokenizer(
-						adminJournalSearchResultFields, ",");
-			} else {
-				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
-					searchFieldStringTokens = new StringTokenizer(
-							registeredJournalSearchResultFields, ",");
-				}
-				else
-				searchFieldStringTokens = new StringTokenizer(
-						guestJournalSearchResultFields, ",");
-			}
-		} else if ("article".equals(type)) {
-			if (CommonConstants.ROLE_ADMIN.equals(role)) {
-				searchFieldStringTokens = new StringTokenizer(
-						adminArticleSearchResultFields, ",");
-			} else {
-				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
-					searchFieldStringTokens = new StringTokenizer(
-							registeredArticleSearchResultFields, ",");
-				}
-				else
-				searchFieldStringTokens = new StringTokenizer(
-						guestArticleSearchResultFields, ",");
-			}
-
+		try {
+			searchFieldStringTokens = new StringTokenizer(
+					searchProperties.getProperty(role
+							+ CommonConstants.UNDERSCORE + type.toUpperCase()
+							+ CommonConstants.SEARCH_RESULT_ATTR_KEY_STRING),
+					CommonConstants.COMMA);
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " getSearchFiledAttributeTokenizers", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
 		return searchFieldStringTokens;
 
@@ -312,35 +369,49 @@ public class SearchServiceImpl implements SearchService {
 	 * Method to set Page Navigation.
 	 *
 	 * @param requestBuilder
+	 *            - the input value
 	 * @param from
+	 *            - the input value
 	 * @param rows
-	 * @return
+	 *            - the input value
 	 */
-	private void setResultSize(
-			SearchRequestBuilder requestBuilder, int from, int rows) {
+	private void setResultSize(SearchRequestBuilder requestBuilder, int from,
+			int rows) {
 		requestBuilder.setFrom(from).setSize(rows);
 	}
 
 	/**
-	 * Method to sort the results.
+	 * /** Method to sort the results.
 	 *
 	 * @param searchCriteria
+	 *            - the input value
 	 * @param requestBuilder
-	 * @return
+	 *            - the input value
+	 * @throws SharedSearchException
 	 */
 	private void addSort(SearchCriteria searchCriteria,
-			SearchRequestBuilder requestBuilder) {
-		List<Sorting> sortList = searchCriteria.getSort();
-		boolean isDescOrder = false;
-		if (null != sortList) {
-			for (Sorting sorting : sortList) {
-				if (sorting.getSortOrder().equalsIgnoreCase("DESC")) {
-					isDescOrder = true;
+			SearchRequestBuilder requestBuilder) throws SharedSearchException {
+		try {
+			List<Sorting> sortList = searchCriteria.getSort();
+			boolean isDescOrder = false;
+			if (sortList != null && !sortList.isEmpty()) {
+				for (Sorting sorting : sortList) {
+					if (sorting.getSortOrder().equalsIgnoreCase(
+							CommonConstants.DESC)) {
+						isDescOrder = true;
+					}
+					final SortOrder sortOrder = isDescOrder ? SortOrder.DESC
+							: SortOrder.ASC;
+					requestBuilder.addSort(sorting.getSortBy(), sortOrder);
 				}
-				final SortOrder sortOrder = isDescOrder ? SortOrder.DESC
-						: SortOrder.ASC;
-				requestBuilder.addSort(sorting.getSortBy(), sortOrder);
+			} else {
+				requestBuilder.addSort(CommonConstants.SCORE, SortOrder.DESC);
 			}
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " addSort", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -348,215 +419,234 @@ public class SearchServiceImpl implements SearchService {
 	 * Method to get facets from the response.
 	 *
 	 * @param response
-	 * @param fields
 	 * @return
+	 * @throws SharedSearchException
 	 */
-	private Facets getAggregations(SearchResponse response, String fields) {
-		// https://github.com/elastic/elasticsearch/issues/4837
+	private Facets getAggregations(SearchResponse response,
+			List<String> aggregationList) throws SharedSearchException {
 		Facets facets = new Facets();
 		Tags tags = new Tags();
 		int bucketSize = 0;
 		LinkedList<Items> itemsLinkedList = new LinkedList<>();
-		String[] fieldValues = fields.split(",");
-		for (String fieldValue : fieldValues) {
-			Terms terms = response.getAggregations().get(fieldValue);
-			Collection<Terms.Bucket> buckets = terms.getBuckets();
-			bucketSize = bucketSize + buckets.size();
-			for (Terms.Bucket bucket : buckets) {
-				Items items = new Items();
-				items.setField(fieldValue);
-				items.setCount(bucket.getDocCount());
-				items.setTerm(bucket.getKeyAsText().string());
-				itemsLinkedList.add(items);
+		try {
+			if (aggregationList != null && !aggregationList.isEmpty()) {
+				for (String fieldValue : aggregationList) {
+					Terms terms = response.getAggregations().get(fieldValue);
+					Collection<Terms.Bucket> buckets = terms.getBuckets();
+					bucketSize = bucketSize + buckets.size();
+					for (Terms.Bucket bucket : buckets) {
+						Items items = new Items();
+						items.setField(fieldValue);
+						items.setCount(bucket.getDocCount());
+						items.setTerm(bucket.getKeyAsText().string());
+						itemsLinkedList.add(items);
+						tags.setTerms(itemsLinkedList);
+						tags.setTotal(bucketSize);
+						facets.setTag(tags);
+					}
+				}
 			}
+
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " getAggregations", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
-		tags.setTerms(itemsLinkedList);
-		tags.setTotal(bucketSize);
-		facets.setTag(tags);
 		return facets;
-	}
-
-	/**
-	 * Util method.
-	 *
-	 * @param listOfValues
-	 * @return
-	 */
-	private String convertListintoString(List<String> listOfValues) {
-		StringBuilder builder = new StringBuilder();
-		for (String value : listOfValues) {
-			builder.append("\"");
-			builder.append(value);
-			builder.append("\",");
-
-		}
-		return builder.toString().replaceAll(",$", "");
 	}
 
 	/**
 	 * Method to get query builder.
 	 *
 	 * @param searchCriteria
-	 * @return
+	 *            - the input value
+	 * @param role
+	 *            - the input value
+	 * @return matchQueryBuilder
+	 * @throws SharedSearchException
 	 */
 	protected QueryBuilder getQueryBuilder(SearchCriteria searchCriteria,
-			String role) {
+			String role) throws SharedSearchException {
 		QueryBuilder matchQueryBuilder = null;
 		List<String> searchFiledsList = null;
 		String[] searchFiledsArray = null;
 		List<String> types = null;
 
-		StringTokenizer journalSearchFields = null;
-		StringTokenizer articleSearchFields = null;
+		LOGGER.info("Inside getQueryBuilder method");
+		StringTokenizer searchFields = null;
 
-		String advancedQuery = searchCriteria.getAdvancedQuery();
+		String simpleQuery = searchCriteria.getSimpleQuery();
 
 		types = searchCriteria.getTypes();
 
-		if (types != null && !types.isEmpty()) {
-			if (CommonConstants.ROLE_ADMIN.equals(role)) {
-
-				if (types.contains("journal")) {
-					journalSearchFields = new StringTokenizer(
-							adminJournalSearchFields, ",");
-				}
-
-				if (types.contains("article")) {
-					articleSearchFields = new StringTokenizer(
-							adminArticleSearchFields, ",");
-				}
-
-			} else {
-				if (CommonConstants.ROLE_REGISTERED_USER.equals(role)) {
-
-					if (types.contains("journal")) {
-						journalSearchFields = new StringTokenizer(
-								registeredJournalSearchFields, ",");
-					}
-
-					if (types.contains("article")) {
-						articleSearchFields = new StringTokenizer(
-								registeredArticleSearchFields, ",");
-					}
-
-				}
-				
-			else{
-				if (types.contains("journal")) {
-					journalSearchFields = new StringTokenizer(
-							guestJournalSearchFields, ",");
-				}
-
-				if (types.contains("article")) {
-					articleSearchFields = new StringTokenizer(
-							guestArticleSearchFields, ",");
-				}}
-			}
+		try {
+			LOGGER.info("ROLE : " + role);
 
 			searchFiledsList = new ArrayList<String>();
 
-			if (journalSearchFields != null) {
-				while (journalSearchFields.hasMoreTokens()) {
-					searchFiledsList.add(journalSearchFields.nextToken());
-				}
-			}
-
-			if (articleSearchFields != null) {
-				while (articleSearchFields.hasMoreTokens()) {
-					searchFiledsList.add(articleSearchFields.nextToken());
+			searchFiledsList = new ArrayList<String>();
+			for (String type : types) {
+				searchFields = new StringTokenizer(
+						searchProperties
+								.getProperty(role
+										+ CommonConstants.UNDERSCORE
+										+ type.toUpperCase()
+										+ CommonConstants.SEARCH_SEARCH_ATTR_KEY_STRING),
+						CommonConstants.COMMA);
+				while (searchFields.hasMoreTokens()) {
+					searchFiledsList.add(searchFields.nextToken());
 				}
 			}
 
 			searchFiledsArray = searchFiledsList
 					.toArray(new String[searchFiledsList.size() - 1]);
 
-			if (StringUtils.isBlank(advancedQuery)) {
-				// matchQueryBuilder =
-				// QueryBuilders.multiMatchQuery(searchCriteria.getAdvancedQuery(),
-				// "_all");
-				if(null != searchCriteria.getSimpleQuery())
-					matchQueryBuilder= simpleSearch(searchCriteria);
-					return matchQueryBuilder;
-			
-			} else {
-				matchQueryBuilder = QueryBuilders.multiMatchQuery(advancedQuery,"_all")
-					    .type(MatchQueryBuilder.Type.PHRASE_PREFIX);
-				/*
-				 * for (Map.Entry<String, String> entry : fields.entrySet()) {
-				 * boolQuery.must(QueryBuilders.matchQuery(entry.getKey(),
-				 * entry.getValue())); }
-				 */
-			}
-		}
+			if (StringUtils.isBlank(simpleQuery)) {
 
+				LOGGER.info(" Simple Query is Blank ");
+				if (null != searchCriteria.getAdvanceQuery())
+					matchQueryBuilder = advancedSearch(searchCriteria);
+				return matchQueryBuilder;
+
+			} else {
+				LOGGER.info(" Simple Query is not Blank ");
+				matchQueryBuilder = QueryBuilders.multiMatchQuery(simpleQuery,
+						searchFiledsArray).type(
+						MatchQueryBuilder.Type.PHRASE_PREFIX);
+			}
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " getQueryBuilder", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
+		}
 		return matchQueryBuilder;
 	}
-	
-	private QueryBuilder simpleSearch(SearchCriteria searchCriteria) {
 
-		List<SimpleQuery> queryString = searchCriteria.getSimpleQuery();
+	/**
+	 * Method returns simple searched query result.
+	 *
+	 * @param searchCriteria
+	 *            - the input value
+	 * @return queryBuilder
+	 * @throws SharedSearchException
+	 */
+	private QueryBuilder advancedSearch(SearchCriteria searchCriteria)
+			throws SharedSearchException {
 
-			BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-			for (SimpleQuery query : queryString) {
-				if (exactFields.contains(query.getField()))
-					addexactMatchBuilder(query, boolQuery);
-				else
-					if(rangeFields.contains(query.getField()))
-						addrangeBuilder(query, boolQuery);
-					else
-					addwildcardBuilder(query, boolQuery);
+		LOGGER.info("Inside advancedSearch method");
+
+		List<AdvanceQuery> queryString = searchCriteria.getAdvanceQuery();
+
+		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
+		for (AdvanceQuery query : queryString) {
+			if (exactFields.contains(query.getField())) {
+				addExactMatchBuilder(query, boolQuery);
+			} else if (rangeFields.contains(query.getField())) {
+				addRangeBuilder(query, boolQuery);
+			} else {
+				addWildCardBuilder(query, boolQuery);
 			}
-			return boolQuery;
-		
+		}
+		return boolQuery;
+
 	}
 
-//	private QueryBuilder rangeQuery(SearchCriteria searchCriteria){
-//		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-//		for (RangeQuery query : searchCriteria.getRangeQuery()) 
-//		addrangeBuilder(query, boolQuery);
-//		return boolQuery;
-//	}
-	
-	
-	private void addwildcardBuilder(SimpleQuery query, BoolQueryBuilder boolQuery) {
+	/**
+	 * Method adds wild card builder.
+	 *
+	 * @param query
+	 *            - the input value
+	 * @param boolQuery
+	 *            - the input value
+	 */
+	private void addWildCardBuilder(AdvanceQuery query,
+			BoolQueryBuilder boolQuery) {
 
-		 boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(
-				query.getField(), query.getValue()));
-		 
-//		 FilterBuilders.andFilter(FilterBuilders.prefixFilter(name, prefix))
-		 
-	}
-	
-	private void addexactMatchBuilder(SimpleQuery query, BoolQueryBuilder boolQuery) {
+		LOGGER.info("Inside addwildcardBuilder method");
 
-		boolQuery.must(QueryBuilders.termQuery(
-				query.getField(), query.getValue()));
+		boolQuery.must(QueryBuilders.matchPhrasePrefixQuery(query.getField(),
+				query.getValue()));
 	}
 
-	private void addrangeBuilder(SimpleQuery query,BoolQueryBuilder boolQuery){
-		if(""==query.getTo())
-			query.setTo(null);
-		if(""==query.getFrom())
-			query.setFrom(null);
-		boolQuery.must(QueryBuilders.rangeQuery(query.getField()).from(query.getFrom()).to(query.getTo()));
+	/**
+	 * Method adds exact match builder.
+	 *
+	 * @param query
+	 *            - the input value
+	 * @param boolQuery
+	 *            - the input value
+	 */
+	private void addExactMatchBuilder(AdvanceQuery query,
+			BoolQueryBuilder boolQuery) {
+		LOGGER.info("Inside addexactMatchBuilder method");
+
+		boolQuery.must(QueryBuilders.termQuery(query.getField(),
+				query.getValue()));
 	}
 
+	/**
+	 * Method adds range builder.
+	 *
+	 * @param query
+	 *            - the input value
+	 * @param boolQuery
+	 *            - the input value
+	 * @throws SharedSearchException
+	 */
+	private void addRangeBuilder(AdvanceQuery query, BoolQueryBuilder boolQuery)
+			throws SharedSearchException {
+		LOGGER.info("Inside addrangeBuilder method");
+		try {
+			if (StringUtils.isBlank(query.getTo())) {
+				query.setTo(null);
+			}
+			if (StringUtils.isBlank(query.getFrom())) {
+				query.setFrom(null);
+			}
+			boolQuery.must(QueryBuilders.rangeQuery(query.getField())
+					.from(query.getFrom()).to(query.getTo()));
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " addrangeBuilder", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Method returns suggestion response.
+	 *
+	 * @param criteria
+	 *            - the input value
+	 * @param role
+	 *            - the input value
+	 * @return suggestResponse.
+	 * @throws SharedSearchException
+	 */
 	@Override
-	public SuggestResponse autoComplete(SearchCriteria criteria, String role) {
+	public SuggestResponse autoComplete(SearchCriteria criteria, String role)
+			throws SharedSearchException {
 
-		Response searchResponse = new Response();
+		SuggestResponse suggestResponse;
+		try {
+			CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
+					"completeMe");
 
-		CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
-				"completeMe");
+			suggestionsBuilder.text("");
+			suggestionsBuilder.field("suggest");
+			SuggestRequestBuilder suggestRequestBuilder = searchClientService
+					.getClient().prepareSuggest(indexName)
+					.addSuggestion(suggestionsBuilder);
 
-		suggestionsBuilder.text("");
-		suggestionsBuilder.field("suggest");
-		SuggestRequestBuilder suggestRequestBuilder = searchClientService
-				.getClient().prepareSuggest(indexName)
-				.addSuggestion(suggestionsBuilder);
-		
-		SuggestResponse suggestResponse = suggestRequestBuilder.execute().actionGet();
-
+			suggestResponse = suggestRequestBuilder.execute().actionGet();
+		} catch (Exception e) {
+			LOGGER.error(errorMesage + " autoComplete", e);
+			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
+					CommonConstants.ERROR_NOTE
+							+ CommonConstants.INTERNAL_SERVER_ERROR);
+		}
 
 		return suggestResponse;
 	}

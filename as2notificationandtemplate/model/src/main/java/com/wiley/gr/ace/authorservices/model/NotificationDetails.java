@@ -11,12 +11,13 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.model;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class NotificationDetails.
  * 
@@ -41,24 +42,23 @@ public class NotificationDetails {
     private TemplateDetails templateDetails;
 
     /** The attachments. */
-    private File[] attachments;
+    private Map<String,byte[]> attachments;
 
     /**
      * Gets the attachments.
      *
      * @return the attachments
      */
-    public final File[] getAttachments() {
+    public Map<String, byte[]> getAttachments() {
         return attachments;
     }
 
     /**
      * Sets the attachments.
      *
-     * @param attachments
-     *            the new attachments
+     * @param attachments the attachments
      */
-    public final void setAttachments(final File[] attachments) {
+    public void setAttachments(Map<String, byte[]> attachments) {
         this.attachments = attachments;
     }
 

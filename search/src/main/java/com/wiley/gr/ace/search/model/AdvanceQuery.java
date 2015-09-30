@@ -11,12 +11,43 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.search.repository.impl;
+package com.wiley.gr.ace.search.model;
 
-import com.wiley.gr.ace.search.repository.SearchRepository;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * @author rajatg
+ *
  */
-public class SearchRepositoryImpl implements SearchRepository {
+public class AdvanceQuery {
+	private String field;
+	private String value;
+	private String from;
+	private String to;
+	
+	public String getField() {
+		return field;
+	}
+	public void setField(String field) {
+		this.field = field;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	public String getFrom() {
+		return from;
+	}
+	public void setFrom(String from) {
+		this.from = from;
+	}
+	public String getTo() {
+		return to;
+	}
+	public void setTo(String to) {
+		this.to = to;
+	}
+	
+	
 }

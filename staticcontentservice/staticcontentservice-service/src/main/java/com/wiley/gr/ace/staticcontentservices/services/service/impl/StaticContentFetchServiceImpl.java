@@ -62,9 +62,11 @@ public class StaticContentFetchServiceImpl implements StaticContentFetchService 
 					.getInlineHelpOption2());
 			uiMessageContent.setLocale(locale);
 			uiMessageContent.setPageName(pageName);
-			uiMessageCatalog.setUniqueKey(uniqueKey);
+			uiMessageContent.setUniqueKey(uniqueKey);
 			uiMessageContent.setUiLabelMessages(uiMessageCatalog
 					.getUiLabelMessages());
+			uiMessageContent.setConfirmationMessages(uiMessageCatalog.getConfirmationMessages());
+			uiMessageContent.setStatusMessages(uiMessageCatalog.getStatusMessages());
 
 			if ("true".equalsIgnoreCase(fetchServerMessages)) {
 
