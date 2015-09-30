@@ -302,7 +302,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				return responseStatus;
 			}
 		}
-		System.out.println("return the controll back..................");
+		System.out.println("return the controll back.................."+response);
 		return response;
 	}
 
@@ -392,8 +392,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		Response lockResponse = validateLockTime(request, response,
 				lockedAccountDetails);
-		System.out.println("got the response.......");
+		System.out.println("got the response......."+lockResponse);
+		
 		if (null != lockResponse) {
+			System.out.println("lock response............");
 			return lockResponse;
 		}
 
@@ -435,6 +437,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				.getTime() - loginAttemptTime.getTime());
 		if (this.unlockTime < minutes) {
 			System.out.println("time taken...........................==="+minutes);
+			System.out.println("validateLockTiem..........."+checkUserUnlockCondition(request, lockedAccountDetails));
 			return checkUserUnlockCondition(request, lockedAccountDetails);
 		}
 		if (this.lockAttempts < lockedAccountDetails.getInvalidLoginCount()) {
@@ -508,6 +511,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			System.out.println("removing the record................................");
 			this.userLoginDao.removeUser(request.getUserId());
 		}
+		System.out.println("checkUserUnlockCondition........."+this.processAuthenticatedUser(request));
 		return this.processAuthenticatedUser(request);
 	}
 
