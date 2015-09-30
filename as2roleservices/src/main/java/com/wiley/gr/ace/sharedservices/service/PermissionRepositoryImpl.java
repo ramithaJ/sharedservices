@@ -1,6 +1,7 @@
 package com.wiley.gr.ace.sharedservices.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -111,6 +112,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 session.close();
             }
         }
+        
+        Collections.sort(roleList);
 
         return roleList;
     }
@@ -199,7 +202,6 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
             final Roles roles = (Roles) session.createCriteria(Roles.class)
                     .add(Restrictions.eq("roleId", roleId)).uniqueResult();
-
             if (null == roles) {
                 return null;
             }
