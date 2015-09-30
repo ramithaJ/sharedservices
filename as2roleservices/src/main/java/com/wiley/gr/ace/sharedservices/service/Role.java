@@ -9,7 +9,7 @@ import com.wiley.gr.ace.sharedservices.controller.UserRole;
 /**
  * The Class Role.
  */
-public class Role {
+public class Role implements Comparable<Role>{
 
     /** The role id. */
     private int roleId;
@@ -50,12 +50,12 @@ public class Role {
     /**
      * Instantiates a new role.
      *
-     * @param roleId
-     *            the role id
-     * @param roleName
-     *            the role name
-     * @param permissions
-     *            the permissions
+     * @param roleId            the role id
+     * @param roleName            the role name
+     * @param roleDescription the role description
+     * @param permissions            the permissions
+     * @param usersList the users list
+     * @param roleType the role type
      */
     public Role(final int roleId, final String roleName, final String roleDescription, final List<Permission> permissions,
             final List<UserRole> usersList, final String roleType) {
@@ -70,12 +70,10 @@ public class Role {
     /**
      * Instantiates a new role.
      *
-     * @param roleId
-     *            the role id
-     * @param roleName
-     *            the role name
-     * @param permissions
-     *            the permissions
+     * @param roleId            the role id
+     * @param roleName            the role name
+     * @param permissions            the permissions
+     * @param roleType the role type
      */
     public Role(final int roleId, final String roleName, final List<Permission> permissions,
             final String roleType) {
@@ -257,6 +255,8 @@ public class Role {
     }
 
     /**
+     * Gets the users.
+     *
      * @return the usersList
      */
     public List<UserRole> getUsers() {
@@ -264,11 +264,20 @@ public class Role {
     }
 
     /**
-     * @param usersList
-     *            the usersList to set
+     * Sets the users.
+     *
+     * @param usersList            the usersList to set
      */
     public void setUsers(final List<UserRole> usersList) {
         users = usersList;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(final Role role) {
+        return this.roleName.compareTo(role.getRoleName());
     }
 
 }
