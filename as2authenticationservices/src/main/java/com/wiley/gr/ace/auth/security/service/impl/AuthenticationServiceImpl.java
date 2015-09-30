@@ -283,26 +283,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private Response processAuthenticatedUser(final AuthenticateRequest request) {
 
-		System.out.println("proceed for authentication.......................");
 		boolean status = false;
 		Response response = this.authenticate(request.getUserId(),
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
-			System.out.println("authentication failed..................");
 			status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
 					request.getUserId());
 			if (!status) {
-				System.out.println("inserting the record...................");
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
+				Response responseStatus = new Response();
+				responseStatus.setStatus(String.valueOf(Response.STATUS.FAILURE));
+				return responseStatus;
+				
 			} else {
 				Response responseStatus = new Response();
 				responseStatus.setStatus(String.valueOf(Response.STATUS.UNREGISTERED));
 				return responseStatus;
 			}
 		}
-		System.out.println("return the controll back.................."+response);
 		return response;
 	}
 
@@ -392,10 +392,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		Response lockResponse = validateLockTime(request, response,
 				lockedAccountDetails);
-		System.out.println("got the response......."+lockResponse);
 		
 		if (null != lockResponse) {
-			System.out.println("lock response............");
 			return lockResponse;
 		}
 
@@ -411,7 +409,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
-			//this.userLoginDao.updateUser(request.getUserId());
+			this.userLoginDao.updateUser(request.getUserId());
 		}
 
 		return response;
@@ -436,8 +434,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final long minutes = TimeUnit.MILLISECONDS.toMinutes(new Date()
 				.getTime() - loginAttemptTime.getTime());
 		if (this.unlockTime < minutes) {
-			System.out.println("time taken...........................==="+minutes);
-			System.out.println("validateLockTiem..........."+checkUserUnlockCondition(request, lockedAccountDetails));
 			return checkUserUnlockCondition(request, lockedAccountDetails);
 		}
 		if (this.lockAttempts < lockedAccountDetails.getInvalidLoginCount()) {
@@ -508,10 +504,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 						CommonConstant.FAILURE_STATUS);
 			}
 		} else {
-			System.out.println("removing the record................................");
 			this.userLoginDao.removeUser(request.getUserId());
 		}
-		System.out.println("checkUserUnlockCondition........."+this.processAuthenticatedUser(request));
 		return this.processAuthenticatedUser(request);
 	}
 
