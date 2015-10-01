@@ -20,6 +20,7 @@ import com.wiley.gr.ace.authorservices.persistence.entity.Schedule;
 import com.wiley.gr.ace.authorservices.persistence.entity.ScheduleTemplate;
 import com.wiley.gr.ace.authorservices.persistence.entity.Template;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface NotificationManagementDAO.
  * 
@@ -119,7 +120,7 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	Notification getNotification(String applicationId, Integer notificationId)
+	Notification getNotification(String applicationId, Long notificationId)
 			throws Exception;
 
 	/**
@@ -133,7 +134,7 @@ public interface NotificationManagementDAO {
 	 * @throws Exception
 	 *             the exception
 	 */
-	boolean setNotificationFlag(String applicationId, Integer notificationId)
+	boolean setNotificationFlag(String applicationId, Long notificationId)
 			throws Exception;
 
 	/**
@@ -158,17 +159,16 @@ public interface NotificationManagementDAO {
 	 *             the exception
 	 */
 	ArrayList<NotificationRecipients> getNotificationRecipients(
-			Integer notificationId) throws Exception;
+			Long notificationId) throws Exception;
+
 
 	/**
 	 * Creates the notification history.
 	 *
-	 * @param notification
-	 *            the notification
-	 * @return the integer
-	 * @throws Exception
-	 *             the exception
+	 * @param notification the notification
+	 * @return the long
+	 * @throws Exception the exception
 	 */
-	Integer createNotificationHistory(Notification notification)
+	Long createNotificationHistory(Notification notification)
 			throws Exception;
 }

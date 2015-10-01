@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class NotificationRecipientsObj {
 
     /** The notification id. */
-    private Integer notificationId;
+    private Long notificationId;
 
     /** The notification. */
     private NotificationObj notification;
@@ -42,7 +42,7 @@ public class NotificationRecipientsObj {
      *
      * @return the notification id
      */
-    public final Integer getNotificationId() {
+    public final Long getNotificationId() {
         return notificationId;
     }
 
@@ -52,7 +52,7 @@ public class NotificationRecipientsObj {
      * @param notificationId
      *            the new notification id
      */
-    public final void setNotificationId(final Integer notificationId) {
+    public final void setNotificationId(final Long notificationId) {
         this.notificationId = notificationId;
     }
 

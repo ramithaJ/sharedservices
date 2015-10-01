@@ -412,7 +412,7 @@ public class NotificationManagementController {
     @RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.GET)
     public final Service getNotification(
             @PathVariable("applicationId") final String applicationId,
-            @PathVariable("notificationId") final Integer notificationId) {
+            @PathVariable("notificationId") final Long notificationId) {
         LOGGER.info("inside getNotification method of NotificationManagementController");
         Service service = new Service();
         NotificationObj notification = null;
@@ -452,7 +452,7 @@ public class NotificationManagementController {
     @RequestMapping(value = "/{applicationId}/{notificationId}", method = RequestMethod.PUT)
     public final Service setNotificationFlag(
             @PathVariable("applicationId") final String applicationId,
-            @PathVariable("notificationId") final Integer notificationId) {
+            @PathVariable("notificationId") final Long notificationId) {
         LOGGER.info("inside setNotificationFlag method of NotificationManagementController");
         Service service = new Service();
         boolean isSet = false;
@@ -607,7 +607,7 @@ public class NotificationManagementController {
     @RequestMapping(value = "/{applicationId}/resend/{notificationId}", method = RequestMethod.POST)
     public final Service resendNotification(
             @PathVariable("applicationId") final String applicationId,
-            @PathVariable("notificationId") final Integer notificationId) {
+            @PathVariable("notificationId") final Long notificationId) {
         LOGGER.info("inside resendNotification method of NotificationManagementController");
         Service service = new Service();
         NotificationResponse notificationResponse = null;

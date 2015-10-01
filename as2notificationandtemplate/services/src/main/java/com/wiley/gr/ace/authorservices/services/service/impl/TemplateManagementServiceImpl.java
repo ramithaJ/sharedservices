@@ -11,16 +11,12 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.services.service.impl;
 
-import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.sql.rowset.serial.SerialClob;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -135,8 +131,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
         if (!StringUtils.isEmpty(template)) {
             Template templateEntity = new Template();
             templateEntity.setAppId(template.getAppId());
-            templateEntity.setBody(new SerialClob(template.getBody()
-                    .toCharArray()));
+            templateEntity.setBody(template.getBody().getBytes());
             templateEntity.setCreatedBy(template.getCreatedBy());
             templateEntity.setCreatedOn(getDate(template.getCreatedOn()));
             templateEntity.setDescription(template.getDescription());
@@ -181,7 +176,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
             }
             String body = templateObj.getBody();
             if (!StringUtils.isEmpty(body)) {
-                templateEntity.setBody(new SerialClob(body.toCharArray()));
+                templateEntity.setBody(body.getBytes());
             }
             String description = templateObj.getDescription();
             if (!StringUtils.isEmpty(description)) {
@@ -263,9 +258,9 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
         if (!StringUtils.isEmpty(appiD)) {
             template.setAppId(appiD);
         }
-        Clob body = templateEntity.getBody();
+        byte[] body = templateEntity.getBody();
         if (!StringUtils.isEmpty(body)) {
-            template.setBody(clobStringConversion(body));
+            template.setBody(new String(body));
         }
         String createdBY = templateEntity.getCreatedBy();
         if (!StringUtils.isEmpty(createdBY)) {
@@ -337,7 +332,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
             }
 
             StringWriter sw = new StringWriter();
-            String templateStr = clobStringConversion(templateEntity.getBody());
+            String templateStr = new String(templateEntity.getBody());
 
             Velocity.evaluate(vCtx, sw, "template", templateStr);
 
@@ -347,38 +342,6 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
         } else {
             return null;
         }
-    }
-
-    /**
-     * Clob string conversion.
-     *
-     * @param clb
-     *            the clb
-     * @return the string
-     * @throws Exception
-     *             the exception
-     */
-    private String clobStringConversion(final Clob clb) throws Exception {
-        LOGGER.info("inside clobStringConversion Method of TemplateManagementServiceImpl");
-        if (clb == null) {
-            return "";
-        }
-        StringBuilder str = null;
-        BufferedReader bufferRead = null;
-        try {
-            str = new StringBuilder();
-            String strng;
-
-            bufferRead = new BufferedReader(
-                    clb.getCharacterStream());
-
-            while ((strng = bufferRead.readLine()) != null) {
-                str.append(strng);
-            }
-        } finally {
-            bufferRead.close();
-        }
-        return str.toString();
     }
 
     /**
@@ -418,7 +381,7 @@ public class TemplateManagementServiceImpl implements TemplateManagementService 
             templateEntity = templateManagementDAO.getTemplate(templateId,
                     applicationId);
 
-            String templateBody = clobStringConversion(templateEntity.getBody());
+            String templateBody = new String(templateEntity.getBody());
 
             RuntimeServices rs = RuntimeSingleton.getRuntimeServices();
             StringReader reader = new StringReader(templateBody);

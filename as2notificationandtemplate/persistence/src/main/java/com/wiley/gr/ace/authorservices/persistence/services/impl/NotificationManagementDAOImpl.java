@@ -264,7 +264,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
      */
     @Override
     public final Notification getNotification(final String applicationId,
-            final Integer notificationId) throws Exception {
+            final Long notificationId) throws Exception {
         LOGGER.info("inside getNotification method of NotificationManagementDAOImpl");
         Notification notification = null;
         Session session = null;
@@ -274,7 +274,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                 session = getSessionFactory().openSession();
                 String hql = "from Notification n where n.id = :notificationId and n.appId = :applicationId";
                 notification = (Notification) session.createQuery(hql)
-                        .setInteger("notificationId", notificationId)
+                        .setLong("notificationId", notificationId)
                         .setString("applicationId", applicationId).list()
                         .get(0);
             } finally {
@@ -300,7 +300,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
      */
     @Override
     public final boolean setNotificationFlag(final String applicationId,
-            final Integer notificationId) throws Exception {
+            final Long notificationId) throws Exception {
         LOGGER.info("inside setNotificationFlag method of NotificationManagementDAOImpl");
         boolean isSet = false;
         Session session = null;
@@ -308,13 +308,13 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                 && !StringUtils.isEmpty(notificationId)) {
             Notification notification = getNotification(applicationId,
                     notificationId);
-            String unread = notification.getUnread().toString();
-            if (!"n".equalsIgnoreCase(unread)) {
+            Boolean unread = notification.getUnread();
+            if (unread) {
                 try {
 
                     session = getSessionFactory().openSession();
                     session.beginTransaction();
-                    notification.setUnread('n');
+                    notification.setUnread(false);
                     session.saveOrUpdate(notification);
                     session.getTransaction().commit();
                     isSet = true;
@@ -381,7 +381,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
      */
     @Override
     public final ArrayList<NotificationRecipients> getNotificationRecipients(
-            final Integer notificationId) throws Exception {
+            final Long notificationId) throws Exception {
         LOGGER.info("inside getNotificationRecipients method of NotificationManagementDAOImpl");
         ArrayList<NotificationRecipients> recipientList = null;
         Session session = null;
@@ -391,7 +391,7 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
                 String hql = "from NotificationRecipients nr where nr.notificationId = :notificationId";
                 recipientList = (ArrayList<NotificationRecipients>) session
                         .createQuery(hql)
-                        .setInteger("notificationId", notificationId).list();
+                        .setLong("notificationId", notificationId).list();
             } finally {
                 if (!StringUtils.isEmpty(session)) {
                     session.flush();
@@ -412,11 +412,11 @@ public class NotificationManagementDAOImpl implements NotificationManagementDAO 
      *             the exception
      */
     @Override
-    public final Integer createNotificationHistory(
+    public final Long createNotificationHistory(
             final Notification notification) throws Exception {
         LOGGER.info("inside createNotificationHistory method of NotificationManagementDAOImpl");
         Session session = null;
-        Integer notificationId = null;
+        Long notificationId = null;
         try {
             session = getSessionFactory().openSession();
             session.beginTransaction();

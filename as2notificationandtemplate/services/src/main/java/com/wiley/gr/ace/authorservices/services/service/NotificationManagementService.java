@@ -111,7 +111,7 @@ public interface NotificationManagementService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	NotificationObj getNotification(String applicationId, Integer notificationId)
+	NotificationObj getNotification(String applicationId, Long notificationId)
 			throws Exception;
 
 	/**
@@ -125,7 +125,7 @@ public interface NotificationManagementService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	boolean setNotificationFlag(String applicationId, Integer notificationId)
+	boolean setNotificationFlag(String applicationId, Long notificationId)
 			throws Exception;
 
 	/**
@@ -217,7 +217,9 @@ public interface NotificationManagementService {
 	 *             the exception
 	 */
 	NotificationResponse resendEmailNotification(String applicationId,
-			Integer notificationId) throws AddressException,
+			Long notificationId) throws AddressException,
 			MessagingException, Exception;
+
+
 
 }
