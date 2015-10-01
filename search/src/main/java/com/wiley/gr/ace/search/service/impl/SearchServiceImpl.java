@@ -13,19 +13,30 @@
  */
 package com.wiley.gr.ace.search.service.impl;
 
-import com.wiley.gr.ace.search.constant.CommonConstants;
-import com.wiley.gr.ace.search.constant.Property;
-import com.wiley.gr.ace.search.exception.SharedSearchException;
-import com.wiley.gr.ace.search.model.*;
-import com.wiley.gr.ace.search.service.SearchClientService;
-import com.wiley.gr.ace.search.service.SearchService;
+import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
+
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.suggest.SuggestRequestBuilder;
 import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.common.lang3.StringUtils;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.FilterBuilder;
+import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.FilteredQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortOrder;
@@ -36,9 +47,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.*;
-
-import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
+import com.wiley.gr.ace.search.constant.CommonConstants;
+import com.wiley.gr.ace.search.constant.Property;
+import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.AdvanceQuery;
+import com.wiley.gr.ace.search.model.Facets;
+import com.wiley.gr.ace.search.model.Filter;
+import com.wiley.gr.ace.search.model.Hits;
+import com.wiley.gr.ace.search.model.Items;
+import com.wiley.gr.ace.search.model.Response;
+import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.Sorting;
+import com.wiley.gr.ace.search.model.Tags;
+import com.wiley.gr.ace.search.service.SearchClientService;
+import com.wiley.gr.ace.search.service.SearchService;
 
 /**
  * The Class SearchServiceImpl.
@@ -99,9 +121,6 @@ public class SearchServiceImpl extends Property implements SearchService {
 		// Get Source Value every time
 		requestBuilder.setTrackScores(true);
 
-		// Set post Filter if facets selected
-		setFilter(requestBuilder, searchCriteria);
-
 		// Set Types
 		setTypes(requestBuilder, searchCriteria.getTypes());
 
@@ -125,7 +144,8 @@ public class SearchServiceImpl extends Property implements SearchService {
 
 		// Set Facets to the response
 		if (searchCriteria.isEnableFacets())
-		searchResponse.setFacets(getAggregations(response, aggregationList));
+			searchResponse
+					.setFacets(getAggregations(response, aggregationList));
 
 		return searchResponse;
 	}
@@ -166,12 +186,11 @@ public class SearchServiceImpl extends Property implements SearchService {
 	 *            - the input value
 	 * @throws SharedSearchException
 	 */
-	private void setFilter(SearchRequestBuilder requestBuilder,
-			SearchCriteria searchCriteria) throws SharedSearchException {
-
+	private FilterBuilder setFilter(SearchCriteria searchCriteria)
+			throws SharedSearchException {
+		FilterBuilder filterbuilder = null;
 		Filter filter = null;
 		List<FilterBuilder> filterBuilderList = null;
-		FilterBuilder filterbuilder = null;
 
 		try {
 			filter = searchCriteria.getFilters();
@@ -192,10 +211,6 @@ public class SearchServiceImpl extends Property implements SearchService {
 							.andFilter(filterBuilderList
 									.toArray(new FilterBuilder[filterBuilderList
 											.size() - 1]));
-					if (filterbuilder != null) {
-						requestBuilder.setPostFilter(filterbuilder);
-					}
-
 				}
 			}
 		} catch (Exception e) {
@@ -204,6 +219,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 					CommonConstants.ERROR_NOTE
 							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
+		return filterbuilder;
 	}
 
 	/**
@@ -236,42 +252,22 @@ public class SearchServiceImpl extends Property implements SearchService {
 	private List<String> addAggregations(SearchRequestBuilder requestBuilder,
 			List<String> types) throws SharedSearchException {
 
-		StringTokenizer journalAggregationFields = null;
-		StringTokenizer articleAggregationFields = null;
+		StringTokenizer aggregationFields = null;
 		List<String> aggregationList = null;
 
 		try {
 
 			aggregationList = new ArrayList<>();
-			if (types.contains(CommonConstants.SEARCH_TYPE_JOURNAL)) {
-				LOGGER.info(" Types contain journal ");
-				journalAggregationFields = new StringTokenizer(
-						searchProperties
-								.getProperty(CommonConstants.SEARCH_JOURNAL_FACET_ATTRIBUTES),
-						",");
-
-				if (journalAggregationFields != null) {
-					while (journalAggregationFields.hasMoreTokens()) {
-						aggregationList.add(journalAggregationFields
-								.nextToken());
-					}
+			for (String type : types) {
+				aggregationFields = new StringTokenizer(
+						searchProperties.getProperty(type.toUpperCase()
+								+ CommonConstants.SEARCH_FACET_ATTRIBUTES),
+						CommonConstants.COMMA);
+				while (aggregationFields.hasMoreTokens()) {
+					aggregationList.add(aggregationFields.nextToken());
 				}
 			}
 
-			if (types.contains(CommonConstants.SEARCH_TYPE_ARTICLE)) {
-				LOGGER.info(" Types contain article ");
-				articleAggregationFields = new StringTokenizer(
-						searchProperties
-								.getProperty(CommonConstants.SEARCH_ARTICLE_FACET_ATTRIBUTES),
-						",");
-
-				if (articleAggregationFields != null) {
-					while (articleAggregationFields.hasMoreTokens()) {
-						aggregationList.add(articleAggregationFields
-								.nextToken());
-					}
-				}
-			}
 			for (String aggregationAttribute : aggregationList) {
 				requestBuilder.addAggregation(terms(aggregationAttribute)
 						.field(aggregationAttribute).size(0));
@@ -431,6 +427,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 		try {
 			if (aggregationList != null && !aggregationList.isEmpty()) {
 				for (String fieldValue : aggregationList) {
+
 					Terms terms = response.getAggregations().get(fieldValue);
 					Collection<Terms.Bucket> buckets = terms.getBuckets();
 					bucketSize = bucketSize + buckets.size();
@@ -466,8 +463,11 @@ public class SearchServiceImpl extends Property implements SearchService {
 	 * @return matchQueryBuilder
 	 * @throws SharedSearchException
 	 */
-	protected QueryBuilder getQueryBuilder(SearchCriteria searchCriteria,
-			String role) throws SharedSearchException {
+	protected FilteredQueryBuilder getQueryBuilder(
+			SearchCriteria searchCriteria, String role)
+			throws SharedSearchException {
+		FilterBuilder filterbuilder = null;
+		FilteredQueryBuilder fileterQuery = null;
 		QueryBuilder matchQueryBuilder = null;
 		List<String> searchFiledsList = null;
 		String[] searchFiledsArray = null;
@@ -507,7 +507,6 @@ public class SearchServiceImpl extends Property implements SearchService {
 				LOGGER.info(" Simple Query is Blank ");
 				if (null != searchCriteria.getAdvanceQuery())
 					matchQueryBuilder = advancedSearch(searchCriteria);
-				return matchQueryBuilder;
 
 			} else {
 				LOGGER.info(" Simple Query is not Blank ");
@@ -521,7 +520,10 @@ public class SearchServiceImpl extends Property implements SearchService {
 					CommonConstants.ERROR_NOTE
 							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
-		return matchQueryBuilder;
+		filterbuilder = setFilter(searchCriteria);
+		fileterQuery = QueryBuilders.filteredQuery(matchQueryBuilder,
+				filterbuilder);
+		return fileterQuery;
 	}
 
 	/**
@@ -582,7 +584,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 			BoolQueryBuilder boolQuery) {
 		LOGGER.info("Inside addexactMatchBuilder method");
 
-		boolQuery.must(QueryBuilders.termQuery(query.getField(),
+		boolQuery.must(QueryBuilders.matchQuery(query.getField(),
 				query.getValue()));
 	}
 
