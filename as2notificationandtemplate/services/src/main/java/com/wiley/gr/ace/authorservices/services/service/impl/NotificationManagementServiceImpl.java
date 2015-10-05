@@ -941,9 +941,12 @@ public class NotificationManagementServiceImpl implements
         NotificationData notificationData = new NotificationData();
         NotificationDataObj notificationDataObj = notificationObj
                 .getNotificationData();
-        notificationData.setDataItemKey(notificationDataObj.getDataItemKey());
-        notificationData.setDataItemValue(notificationDataObj
-                .getDataItemValue());
+        if (!StringUtils.isEmpty(notificationDataObj)) {
+            notificationData.setDataItemKey(notificationDataObj
+                    .getDataItemKey());
+            notificationData.setDataItemValue(notificationDataObj
+                    .getDataItemValue());
+        }
         notificationData.setNotification(notification);
         notification.setNotificationData(notificationData);
         Template template = new Template();
