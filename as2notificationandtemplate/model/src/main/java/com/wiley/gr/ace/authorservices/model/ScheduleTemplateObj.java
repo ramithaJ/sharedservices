@@ -29,7 +29,7 @@ public class ScheduleTemplateObj {
     private String onscreen;
 
     /** The delay. */
-    private Integer delay;
+    private Long delay;
 
     /**
      * Gets the template by onscreen tmpl id.
@@ -74,7 +74,7 @@ public class ScheduleTemplateObj {
      *
      * @return the delay
      */
-    public final Integer getDelay() {
+    public final Long getDelay() {
         return delay;
     }
 
@@ -84,7 +84,7 @@ public class ScheduleTemplateObj {
      * @param delay
      *            the new delay
      */
-    public final void setDelay(final Integer delay) {
+    public final void setDelay(final Long delay) {
         this.delay = delay;
     }
 

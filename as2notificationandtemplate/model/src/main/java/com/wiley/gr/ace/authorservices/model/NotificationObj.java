@@ -28,7 +28,7 @@ public class NotificationObj {
 
 
     /** The id. */
-    private Integer id;
+    private Long id;
 
 
     /** The template. */
@@ -60,7 +60,7 @@ public class NotificationObj {
 
 
     /** The unread. */
-    private Character unread;
+    private Boolean unread;
 
 
     /** The notification recipients objs. */
@@ -114,7 +114,7 @@ public class NotificationObj {
      *
      * @return the id
      */
-    public final Integer getId() {
+    public final Long getId() {
         return id;
     }
 
@@ -124,7 +124,7 @@ public class NotificationObj {
      *
      * @param id the new id
      */
-    public final void setId(final Integer id) {
+    public final void setId(final Long id) {
         this.id = id;
     }
 
@@ -274,7 +274,7 @@ public class NotificationObj {
      *
      * @return the unread
      */
-    public final Character getUnread() {
+    public final Boolean getUnread() {
         return unread;
     }
 
@@ -284,7 +284,7 @@ public class NotificationObj {
      *
      * @param unread the new unread
      */
-    public final void setUnread(final Character unread) {
+    public final void setUnread(final Boolean unread) {
         this.unread = unread;
     }
 

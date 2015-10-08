@@ -11,11 +11,8 @@
  *******************************************************************************/
 package com.wiley.gr.ace.authorservices.services.service.impl;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.Reader;
-import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,8 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.sql.rowset.serial.SerialClob;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -265,7 +260,7 @@ public class NotificationManagementServiceImpl implements
                     applcationId);
             scheduleTemplate.setTemplateByEmailTmpl(temTemplate);
         }
-        Integer delay = scheduleTemplateObj.getDelay();
+        Long delay = scheduleTemplateObj.getDelay();
         if (!StringUtils.isEmpty(delay)) {
             scheduleTemplate.setDelay(delay);
         }
@@ -342,7 +337,7 @@ public class NotificationManagementServiceImpl implements
         if (!StringUtils.isEmpty(email)) {
             scheduleTemplate.setEmail(email.getId());
         }
-        Integer delay = scheduleTemplateEntity.getDelay();
+        Long delay = scheduleTemplateEntity.getDelay();
         if (!StringUtils.isEmpty(delay)) {
             scheduleTemplate.setDelay(delay);
         }
@@ -366,11 +361,11 @@ public class NotificationManagementServiceImpl implements
         if (!StringUtils.isEmpty(appId)) {
             notification.setAppId(appId);
         }
-        Clob content = notificationEntity.getContent();
+        byte[] content = notificationEntity.getContent();
         if (!StringUtils.isEmpty(content)) {
-            notification.setContent(content.toString());
+            notification.setContent(new String(content));
         }
-        Integer id = notificationEntity.getId();
+        Long id = notificationEntity.getId();
         if (!StringUtils.isEmpty(id)) {
             notification.setId(id);
         }
@@ -401,7 +396,7 @@ public class NotificationManagementServiceImpl implements
         if (!StringUtils.isEmpty(sentOn)) {
             notification.setSentOn(sentOn);
         }
-        Character unread = notificationEntity.getUnread();
+        Boolean unread = notificationEntity.getUnread();
         if (!StringUtils.isEmpty(unread)) {
             notification.setUnread(unread);
         }
@@ -458,7 +453,6 @@ public class NotificationManagementServiceImpl implements
             throws Exception {
         LOGGER.info("inside getTemplateVO Method of NotificationManagementServiceImpl");
         TemplateObj template = new TemplateObj();
-        System.err.println(templateEntity);
         if (!StringUtils.isEmpty(templateEntity)) {
             String createdBy = templateEntity.getCreatedBy();
             if (!StringUtils.isEmpty(createdBy)) {
@@ -468,9 +462,9 @@ public class NotificationManagementServiceImpl implements
             if (!StringUtils.isEmpty(appId)) {
                 template.setAppId(appId);
             }
-            Clob body = templateEntity.getBody();
+            byte[] body = templateEntity.getBody();
             if (!StringUtils.isEmpty(body)) {
-                template.setBody(clobToString(body));
+                template.setBody(new String(body));
             }
             String description = templateEntity.getDescription();
             if (!StringUtils.isEmpty(description)) {
@@ -544,7 +538,7 @@ public class NotificationManagementServiceImpl implements
      */
     @Override
     public final NotificationObj getNotification(final String applicationId,
-            final Integer notificationId) throws Exception {
+            final Long notificationId) throws Exception {
         LOGGER.info("inside getNotification Method of NotificationManagementServiceImpl");
         NotificationObj notification = null;
         if (!StringUtils.isEmpty(applicationId)
@@ -568,7 +562,7 @@ public class NotificationManagementServiceImpl implements
      */
     @Override
     public final boolean setNotificationFlag(final String applicationId,
-            final Integer notificationId) throws Exception {
+            final Long notificationId) throws Exception {
         LOGGER.info("inside setNotificationFlag Method of NotificationManagementServiceImpl");
         boolean isSet = false;
         if (!StringUtils.isEmpty(applicationId)
@@ -772,7 +766,7 @@ public class NotificationManagementServiceImpl implements
         notificationObj.setSenderEmail(notificationDetails.getFrom());
         notificationObj.setTemplate(templateObj);
         notificationObj.setType("email");
-        notificationObj.setUnread('n');
+        notificationObj.setUnread(false);
         notificationObj.setSentOn(new Date());
         notificationObj.setNotificationData(notificationDetails
                 .getNotificationData());
@@ -807,7 +801,7 @@ public class NotificationManagementServiceImpl implements
             }
         }
 
-        Integer notificationId = createNotificationHistory(notificationObj,
+        Long notificationId = createNotificationHistory(notificationObj,
                 recipientList);
         if (!StringUtils.isEmpty(notificationId)) {
             notificationResponse.setNotificationId(notificationId.toString());
@@ -834,7 +828,7 @@ public class NotificationManagementServiceImpl implements
      */
     @Override
     public final NotificationResponse resendEmailNotification(
-            final String applicationId, final Integer notificationId)
+            final String applicationId, final Long notificationId)
             throws Exception {
         LOGGER.info("inside resendEmailNotification Method of NotificationManagementServiceImpl");
         NotificationResponse notificationResponse = new NotificationResponse();
@@ -933,7 +927,7 @@ public class NotificationManagementServiceImpl implements
      * @throws Exception
      *             the exception
      */
-    private Integer createNotificationHistory(
+    private Long createNotificationHistory(
             final NotificationObj notificationObj,
             final ArrayList<NotificationRecipientsObj> notificationRecipientsObjList)
             throws Exception {
@@ -941,22 +935,24 @@ public class NotificationManagementServiceImpl implements
         Notification notification = new Notification();
 
         notification.setAppId(notificationObj.getAppId());
-        notification.setContent(new SerialClob(notificationObj.getContent()
-                .toCharArray()));
+        notification.setContent(notificationObj.getContent().getBytes());
         notification.setSenderEmail(notificationObj.getSenderEmail());
         notification.setSentOn(notificationObj.getSentOn());
         NotificationData notificationData = new NotificationData();
         NotificationDataObj notificationDataObj = notificationObj
                 .getNotificationData();
-        notificationData.setDataItemKey(notificationDataObj.getDataItemKey());
-        notificationData.setDataItemValue(notificationDataObj
-                .getDataItemValue());
+        if (!StringUtils.isEmpty(notificationDataObj)) {
+            notificationData.setDataItemKey(notificationDataObj
+                    .getDataItemKey());
+            notificationData.setDataItemValue(notificationDataObj
+                    .getDataItemValue());
+        }
         notificationData.setNotification(notification);
         notification.setNotificationData(notificationData);
         Template template = new Template();
         TemplateObj templateObj = notificationObj.getTemplate();
         template.setAppId(templateObj.getAppId());
-        template.setBody(new SerialClob(templateObj.getBody().toCharArray()));
+        template.setBody(templateObj.getBody().getBytes());
         template.setDescription(templateObj.getDescription());
         template.setId(templateObj.getId());
         notification.setTemplate(template);
@@ -979,33 +975,5 @@ public class NotificationManagementServiceImpl implements
         notification.setNotificationRecipientses(notificationRecipientsSet);
         return notificationManagementDAO
                 .createNotificationHistory(notification);
-    }
-
-    /**
-     * Clob to string.
-     *
-     * @param data
-     *            the data
-     * @return the string
-     * @throws Exception
-     *             the exception
-     */
-    private String clobToString(final Clob data) throws Exception {
-        Reader reader = null;
-        BufferedReader br = null;
-        StringBuilder sb;
-        try {
-            sb = new StringBuilder();
-            reader = data.getCharacterStream();
-            br = new BufferedReader(reader);
-            String line;
-            while (null != (line = br.readLine())) {
-                sb.append(line);
-            }
-        } finally {
-            reader.close();
-            br.close();
-        }
-        return sb.toString();
     }
 }

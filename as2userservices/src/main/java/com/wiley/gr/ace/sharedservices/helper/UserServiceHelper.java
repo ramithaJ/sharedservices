@@ -200,6 +200,7 @@ public class UserServiceHelper {
         address.setState(addressProfile.getStateCd());
         address.setPostalcode(addressProfile.getPostalCd());
         address.setCountryCd(addressProfile.getCountryCd());
+        address.setPhone(addressProfile.getPhoneNo());
         address.setFax(addressProfile.getFaxNo());
         address.setUpdatedDate(getDate());
         return address;
