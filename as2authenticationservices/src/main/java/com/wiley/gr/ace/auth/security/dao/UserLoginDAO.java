@@ -13,49 +13,51 @@
  */
 package com.wiley.gr.ace.auth.security.dao;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Virtusa
+ * The Interface UserLoginDAO.
  *
+ * @author Virtusa
  */
 public interface UserLoginDAO {
 
     /**
-     * This method inserts User
+     * This method inserts User.
      *
-     * @param userId
-     * @param appKey
+     * @param userId the user id
+     * @param appKey the app key
      * @return boolean
      */
     boolean insertUser(String userId, String appKey);
 
     /**
-     * This method removes User
+     * This method removes User.
      *
-     * @param userId
+     * @param userId the user id
      * @return boolean
      */
     boolean removeUser(String userId);
 
     /**
-     * This method updates Time Stamp
+     * This method updates Time Stamp.
      *
-     * @param userId
+     * @param userId the user id
      * @return boolean
      */
     boolean updateTimeStamp(String userId);
 
     /**
-     * This method updates User
+     * This method updates User.
      *
-     * @param userId
+     * @param userId the user id
      * @return boolean
      */
     boolean updateUser(String userId);
 
     /**
-     * This method returns user Account Details
+     * This method returns user Account Details.
      *
-     * @param userId
+     * @param userId the user id
      * @return LockedAccountDetails
      */
     LockedAccountDetails userAccountDetails(String userId);
