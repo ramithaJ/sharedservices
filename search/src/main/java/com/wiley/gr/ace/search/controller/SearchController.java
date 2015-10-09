@@ -13,8 +13,9 @@
  */
 package com.wiley.gr.ace.search.controller;
 
+import java.util.List;
+
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.suggest.SuggestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SuggestCriteria;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
@@ -53,11 +55,15 @@ public class SearchController {
     @Autowired
     private SearchClientService searchClientService;
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchServiceImpl.class);
 
     /**
-     * Method create ES Index
+     * Method create ES Index.
+     *
+     * @param json the json
+     * @param type the type
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { "/_index" })
     public void createIndex(@RequestBody String json,
@@ -87,10 +93,11 @@ public class SearchController {
     }
 
     /**
-     * Method to search the required data
-     * 
-     * @param criteria
-     * @return
+     * Method to search the required data.
+     *
+     * @param criteria the criteria
+     * @param role the role
+     * @return the response
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -108,18 +115,17 @@ public class SearchController {
     }
 
     /**
-     * Method to support Auto complete feature
-     * 
-     * @param criteria
-     * @return
+     * Method to support Auto complete feature.
+     *
+     * @param criteria the criteria
+     * @return the list
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_AUTO_SUGGEST_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public SuggestResponse autoSearch(@RequestBody SearchCriteria criteria,
-            @RequestParam String role) {
-        SuggestResponse response = null;
+//    @ResponseBody
+    public List<String> autoSearch(@RequestBody SuggestCriteria criteria) {
+    	List<String> response = null;
         try {
-            response = searchService.autoComplete(criteria, role);
+            response = searchService.autoComplete(criteria);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while autoSuggest", e);
         }

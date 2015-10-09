@@ -75,6 +75,8 @@ public interface CommonConstants {
     
     public static final int SEARCH_CRITERIA_DEFAULT_OFFSET = 0;
     public static final int SEARCH_CRITERIA_DEFAULT_ROWS = 10;
+    
+    public static final String AUTOCOMPLETE_ANALYZER= "completion";
 
 
 }

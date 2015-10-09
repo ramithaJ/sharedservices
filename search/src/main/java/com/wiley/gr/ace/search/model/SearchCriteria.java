@@ -67,9 +67,12 @@ public class SearchCriteria {
      */
     private int rows = CommonConstants.SEARCH_CRITERIA_DEFAULT_ROWS;
 
+    /** The enable facets. */
     private boolean enableFacets;
 
     /**
+     * Gets the app key.
+     *
      * @return the appKey
      */
     public String getAppKey() {
@@ -77,14 +80,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param appKey
-     *            the appKey to set
+     * Sets the app key.
+     *
+     * @param appKey            the appKey to set
      */
     public void setAppKey(String appKey) {
         this.appKey = appKey;
     }
 
     /**
+     * Gets the types.
+     *
      * @return the types
      */
     public List<String> getTypes() {
@@ -92,14 +98,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param types
-     *            the types to set
+     * Sets the types.
+     *
+     * @param types            the types to set
      */
     public void setTypes(List<String> types) {
         this.types = types;
     }
 
     /**
+     * Gets the simple query.
+     *
      * @return the simpleQuery
      */
     public String getSimpleQuery() {
@@ -107,14 +116,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param simpleQuery
-     *            the simpleQuery to set
+     * Sets the simple query.
+     *
+     * @param simpleQuery            the simpleQuery to set
      */
     public void setSimpleQuery(String simpleQuery) {
         this.simpleQuery = simpleQuery;
     }
 
     /**
+     * Gets the advance query.
+     *
      * @return the advanceQuery
      */
     public List<AdvanceQuery> getAdvanceQuery() {
@@ -122,14 +134,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param advanceQuery
-     *            the advanceQuery to set
+     * Sets the advance query.
+     *
+     * @param advanceQuery            the advanceQuery to set
      */
     public void setAdvanceQuery(List<AdvanceQuery> advanceQuery) {
         this.advanceQuery = advanceQuery;
     }
 
     /**
+     * Gets the sort.
+     *
      * @return the sort
      */
     public List<Sorting> getSort() {
@@ -137,14 +152,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param sort
-     *            the sort to set
+     * Sets the sort.
+     *
+     * @param sort            the sort to set
      */
     public void setSort(List<Sorting> sort) {
         this.sort = sort;
     }
 
     /**
+     * Gets the filters.
+     *
      * @return the filters
      */
     public Filter getFilters() {
@@ -152,14 +170,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param filters
-     *            the filters to set
+     * Sets the filters.
+     *
+     * @param filters            the filters to set
      */
     public void setFilters(Filter filters) {
         this.filters = filters;
     }
 
     /**
+     * Gets the offset.
+     *
      * @return the offset
      */
     public int getOffset() {
@@ -167,14 +188,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param offset
-     *            the offset to set
+     * Sets the offset.
+     *
+     * @param offset            the offset to set
      */
     public void setOffset(int offset) {
         this.offset = offset;
     }
 
     /**
+     * Gets the rows.
+     *
      * @return the rows
      */
     public int getRows() {
@@ -182,14 +206,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param rows
-     *            the rows to set
+     * Sets the rows.
+     *
+     * @param rows            the rows to set
      */
     public void setRows(int rows) {
         this.rows = rows;
     }
 
     /**
+     * Checks if is enable facets.
+     *
      * @return the enableFacets
      */
     public boolean isEnableFacets() {
@@ -197,14 +224,17 @@ public class SearchCriteria {
     }
 
     /**
-     * @param enableFacets
-     *            the enableFacets to set
+     * Sets the enable facets.
+     *
+     * @param enableFacets            the enableFacets to set
      */
     public void setEnableFacets(boolean enableFacets) {
         this.enableFacets = enableFacets;
     }
 
     /**
+     * Gets the index.
+     *
      * @return the index
      */
     public String getIndex() {
@@ -212,8 +242,9 @@ public class SearchCriteria {
     }
 
     /**
-     * @param index
-     *            the index to set
+     * Sets the index.
+     *
+     * @param index            the index to set
      */
     public void setIndex(String index) {
         this.index = index;
@@ -221,6 +252,8 @@ public class SearchCriteria {
 
     /**
      * toString() method.
+     *
+     * @return the string
      */
     @Override
     public String toString() {
