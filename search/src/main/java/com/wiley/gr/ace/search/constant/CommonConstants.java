@@ -20,10 +20,6 @@ package com.wiley.gr.ace.search.constant;
  */
 public class CommonConstants {
 
-    private CommonConstants() {
-        super();
-    }
-
     public static final String CLUSTER_NAME = "cluster.name";
     public static final String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";
     public static final String ROLES = "ROLES";
@@ -81,5 +77,9 @@ public class CommonConstants {
     public static final int SEARCH_CRITERIA_DEFAULT_ROWS = 10;
 
     public static final String AUTOCOMPLETE_ANALYZER = "completion";
+
+    private CommonConstants() {
+        super();
+    }
 
 }

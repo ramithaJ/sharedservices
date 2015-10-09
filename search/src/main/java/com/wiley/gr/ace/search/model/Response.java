@@ -18,7 +18,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-// TODO: Auto-generated Javadoc
 /**
  * Created by kkalyan on 9/8/2015.
  */
