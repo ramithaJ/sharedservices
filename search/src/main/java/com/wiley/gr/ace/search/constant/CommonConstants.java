@@ -18,7 +18,7 @@ package com.wiley.gr.ace.search.constant;
  *
  * @author virtusa version 1.0
  */
-public interface CommonConstants {
+public class CommonConstants {
 
     public static final String CLUSTER_NAME = "cluster.name";
     public static final String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";

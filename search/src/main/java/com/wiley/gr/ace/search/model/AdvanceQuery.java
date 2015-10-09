@@ -13,41 +13,99 @@
  */
 package com.wiley.gr.ace.search.model;
 
-
 /**
- * @author rajatg
+ * The Class AdvanceQuery.
  *
+ * @author rajatg
  */
 public class AdvanceQuery {
-	private String field;
-	private String value;
-	private String from;
-	private String to;
-	
-	public String getField() {
-		return field;
-	}
-	public void setField(String field) {
-		this.field = field;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	public String getFrom() {
-		return from;
-	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
-	public String getTo() {
-		return to;
-	}
-	public void setTo(String to) {
-		this.to = to;
-	}
-	
-	
+
+    /** The field. */
+    private String field;
+
+    /** The value. */
+    private String value;
+
+    /** The from. */
+    private String from;
+
+    /** The to. */
+    private String to;
+
+    /**
+     * Gets the field.
+     *
+     * @return the field
+     */
+    public String getField() {
+        return field;
+    }
+
+    /**
+     * Sets the field.
+     *
+     * @param field
+     *            the new field
+     */
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value.
+     *
+     * @param value
+     *            the new value
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the from.
+     *
+     * @return the from
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Sets the from.
+     *
+     * @param from
+     *            the new from
+     */
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    /**
+     * Gets the to.
+     *
+     * @return the to
+     */
+    public String getTo() {
+        return to;
+    }
+
+    /**
+     * Sets the to.
+     *
+     * @param to
+     *            the new to
+     */
+    public void setTo(String to) {
+        this.to = to;
+    }
+
 }

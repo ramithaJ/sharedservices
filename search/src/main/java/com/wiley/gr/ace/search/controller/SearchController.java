@@ -62,8 +62,10 @@ public class SearchController {
     /**
      * Method create ES Index.
      *
-     * @param json the json
-     * @param type the type
+     * @param json
+     *            the json
+     * @param type
+     *            the type
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { "/_index" })
     public void createIndex(@RequestBody String json,
@@ -80,24 +82,26 @@ public class SearchController {
         LOGGER.info(response.getId());
         // Version (if it's the first time you index this document, you will
         // get: 1)
-        LOGGER.info(""+response.getVersion());
+        LOGGER.info("" + response.getVersion());
         // isCreated() is true if the document is a new one, false if it has
         // been updated
-        LOGGER.info(""+response.isCreated());
+        LOGGER.info("" + response.isCreated());
 
     }
 
     /**
      * Method to search the required data.
      *
-     * @param criteria the criteria
-     * @param role the role
+     * @param criteria
+     *            the criteria
+     * @param role
+     *            the role
      * @return the response
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Response search(@RequestBody SearchCriteria criteria,
-    		@RequestHeader(value="role") String role) {
+            @RequestHeader(value = "role") String role) {
         Response response = null;
         try {
             SearchUtil.logInputRequest(criteria, null,
@@ -112,13 +116,14 @@ public class SearchController {
     /**
      * Method to support Auto complete feature.
      *
-     * @param criteria the criteria
+     * @param criteria
+     *            the criteria
      * @return the list
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_AUTO_SUGGEST_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
+    // @ResponseBody
     public List<String> autoSearch(@RequestBody SuggestCriteria criteria) {
-    	List<String> response = null;
+        List<String> response = null;
         try {
             response = searchService.autoComplete(criteria);
         } catch (SharedSearchException e) {

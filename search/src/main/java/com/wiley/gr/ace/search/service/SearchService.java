@@ -20,7 +20,6 @@ import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface SearchService.
  *

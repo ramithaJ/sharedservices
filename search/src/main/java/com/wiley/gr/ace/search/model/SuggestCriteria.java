@@ -13,94 +13,97 @@
  */
 package com.wiley.gr.ace.search.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SuggestCriteria.
  */
 public class SuggestCriteria {
 
-	/** The app key. */
-	private String appKey;
+    /** The app key. */
+    private String appKey;
 
-	/** the index. */
-	private String index;
+    /** the index. */
+    private String index;
 
-	/** The auto complete query. */
-	private AutoCompleteQuery autoCompleteQuery;
+    /** The auto complete query. */
+    private AutoCompleteQuery autoCompleteQuery;
 
-	/** The size. */
-	private int size = Integer.MAX_VALUE;
+    /** The size. */
+    private int size = Integer.MAX_VALUE;
 
-	/**
-	 * Gets the app key.
-	 *
-	 * @return the app key
-	 */
-	public String getAppKey() {
-		return appKey;
-	}
+    /**
+     * Gets the app key.
+     *
+     * @return the app key
+     */
+    public String getAppKey() {
+        return appKey;
+    }
 
-	/**
-	 * Sets the app key.
-	 *
-	 * @param appKey the new app key
-	 */
-	public void setAppKey(String appKey) {
-		this.appKey = appKey;
-	}
+    /**
+     * Sets the app key.
+     *
+     * @param appKey
+     *            the new app key
+     */
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
 
-	/**
-	 * Gets the index.
-	 *
-	 * @return the index
-	 */
-	public String getIndex() {
-		return index;
-	}
+    /**
+     * Gets the index.
+     *
+     * @return the index
+     */
+    public String getIndex() {
+        return index;
+    }
 
-	/**
-	 * Sets the index.
-	 *
-	 * @param index the new index
-	 */
-	public void setIndex(String index) {
-		this.index = index;
-	}
+    /**
+     * Sets the index.
+     *
+     * @param index
+     *            the new index
+     */
+    public void setIndex(String index) {
+        this.index = index;
+    }
 
-	/**
-	 * Gets the auto complete query.
-	 *
-	 * @return the auto complete query
-	 */
-	public AutoCompleteQuery getAutoCompleteQuery() {
-		return autoCompleteQuery;
-	}
+    /**
+     * Gets the auto complete query.
+     *
+     * @return the auto complete query
+     */
+    public AutoCompleteQuery getAutoCompleteQuery() {
+        return autoCompleteQuery;
+    }
 
-	/**
-	 * Sets the auto complete query.
-	 *
-	 * @param autoCompleteQuery the new auto complete query
-	 */
-	public void setAutoCompleteQuery(AutoCompleteQuery autoCompleteQuery) {
-		this.autoCompleteQuery = autoCompleteQuery;
-	}
+    /**
+     * Sets the auto complete query.
+     *
+     * @param autoCompleteQuery
+     *            the new auto complete query
+     */
+    public void setAutoCompleteQuery(AutoCompleteQuery autoCompleteQuery) {
+        this.autoCompleteQuery = autoCompleteQuery;
+    }
 
-	/**
-	 * Gets the size.
-	 *
-	 * @return the size
-	 */
-	public int getSize() {
-		return size;
-	}
+    /**
+     * Gets the size.
+     *
+     * @return the size
+     */
+    public int getSize() {
+        return size;
+    }
 
-	/**
-	 * Sets the size.
-	 *
-	 * @param size the new size
-	 */
-	public void setSize(int size) {
-		this.size = size;
-	}
+    /**
+     * Sets the size.
+     *
+     * @param size
+     *            the new size
+     */
+    public void setSize(int size) {
+        this.size = size;
+    }
 
 }

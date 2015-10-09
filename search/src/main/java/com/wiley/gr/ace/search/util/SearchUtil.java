@@ -33,13 +33,11 @@ public class SearchUtil {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchUtil.class);
 
-    
     private SearchUtil() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+        super();
+    }
 
-	/**
+    /**
      * Util method to convert List to String.
      *
      * @param listOfValues
@@ -56,15 +54,15 @@ public class SearchUtil {
         }
         return builder.toString().replaceAll(",$", "");
     }
-    
+
     /**
      * Method to log the input request in the log file.
      *
      * @param inputRequest
      *            Input Request Obj
      */
-    public static void logInputRequest(SearchCriteria inputRequest, String request,
-            String serviceCall, String role) {
+    public static void logInputRequest(SearchCriteria inputRequest,
+            String request, String serviceCall, String role) {
 
         if (inputRequest != null) {
             LOGGER.info(CommonConstants.SEPERATOR + serviceCall

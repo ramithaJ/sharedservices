@@ -77,7 +77,7 @@ public class SearchClientServiceImpl implements SearchClientService {
 
                 transportClient = transportClient.addTransportAddress(new InetSocketTransportAddress(machine, port));
 
-                if (transportClient.connectedNodes().size() == 0) {
+                if (transportClient.connectedNodes().isEmpty()) {
                     LOGGER.error("There are no active nodes available for the transport, it will be automatically added once nodes are live!");
                 }
                 client = transportClient;

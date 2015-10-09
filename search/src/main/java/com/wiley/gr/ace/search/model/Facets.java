@@ -18,13 +18,13 @@ package com.wiley.gr.ace.search.model;
  */
 public class Facets {
 
-	private Tags tag;
+    private Tags tag;
 
-	public Tags getTag() {
-		return tag;
-	}
+    public Tags getTag() {
+        return tag;
+    }
 
-	public void setTag(Tags tag) {
-		this.tag = tag;
-	}
+    public void setTag(Tags tag) {
+        this.tag = tag;
+    }
 }
