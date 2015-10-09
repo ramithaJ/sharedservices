@@ -13,12 +13,14 @@
  */
 package com.wiley.gr.ace.search.service;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+import java.util.List;
 
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SuggestCriteria;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface SearchService.
  *
@@ -28,27 +30,22 @@ public interface SearchService {
 
     /**
      * The interface method SearchService.
-     * 
-     * @param searchCriteria
-     *            - the input value
-     * @param role
-     *            - the input value
+     *
+     * @param searchCriteria            - the input value
+     * @param role            - the input value
      * @return response
-     * @throws SharedSearchException
+     * @throws SharedSearchException the shared search exception
      */
     Response search(SearchCriteria searchCriteria, String role)
             throws SharedSearchException;
 
     /**
      * The interface method autoComplete.
-     * 
-     * @param criteria
-     *            - the input value
-     * @param role
-     *            - the input value
+     *
+     * @param criteria            - the input value
      * @return suggestResponse
-     * @throws SharedSearchException
+     * @throws SharedSearchException the shared search exception
      */
-    SuggestResponse autoComplete(SearchCriteria criteria, String role)
+    List<String> autoComplete(SuggestCriteria criteria)
             throws SharedSearchException;
 }

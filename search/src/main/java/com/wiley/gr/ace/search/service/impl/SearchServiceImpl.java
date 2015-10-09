@@ -18,6 +18,7 @@ import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,8 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortOrder;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.elasticsearch.search.suggest.Suggest;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionFuzzyBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,7 @@ import com.wiley.gr.ace.search.model.Items;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.Sorting;
+import com.wiley.gr.ace.search.model.SuggestCriteria;
 import com.wiley.gr.ace.search.model.Tags;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
@@ -69,39 +72,46 @@ import com.wiley.gr.ace.search.service.SearchService;
  */
 public class SearchServiceImpl extends Property implements SearchService {
 
+	/** The search client service. */
 	@Autowired
 	private SearchClientService searchClientService;
 
+	/** The index name. */
 	@Value("${index.name}")
 	private String indexName;
 
+	/** The wildcard fields. */
 	@Value("${WILDCARD_FIELDS}")
 	private String wildcardFields;
 
+	/** The exact fields. */
 	@Value("${EXACT_FIELDS}")
 	private String exactFields;
 
+	/** The range fields. */
 	@Value("${RANGE_FIELDS}")
 	private String rangeFields;
 
+	/** The error mesage. */
 	@Value("${GENERIC_ERROR_MESSAGE}")
 	private String errorMesage;
 
+	/** The search properties. */
 	@Autowired
 	@Qualifier(value = "searchProperties")
 	private Properties searchProperties;
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchServiceImpl.class);
 
 	/**
 	 * Method to search against ES index.
 	 *
-	 * @param searchCriteria
-	 *            - the input value
-	 * @param role
-	 *            - the input value
+	 * @param searchCriteria            - the input value
+	 * @param role            - the input value
 	 * @return response
+	 * @throws SharedSearchException the shared search exception
 	 */
 	public Response search(SearchCriteria searchCriteria, String role)
 			throws SharedSearchException {
@@ -153,8 +163,8 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method to check whether user role exists or not.
 	 *
-	 * @param role
-	 * @throws SharedSearchException
+	 * @param role the role
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private void checkUserRole(String role) throws SharedSearchException {
 		boolean isRoleExists = false;
@@ -180,11 +190,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * This method sets the Filter.
 	 *
-	 * @param requestBuilder
-	 *            - the input value
-	 * @param searchCriteria
-	 *            - the input value
-	 * @throws SharedSearchException
+	 * @param searchCriteria            - the input value
+	 * @return the filter builder
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private FilterBuilder setFilter(SearchCriteria searchCriteria)
 			throws SharedSearchException {
@@ -225,9 +233,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method to set data types in the index.
 	 *
-	 * @param requestBuilder
-	 *            - the input value
-	 * @throws SharedSearchException
+	 * @param requestBuilder            - the input value
+	 * @param list the list
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private void setTypes(SearchRequestBuilder requestBuilder, List<String> list)
 			throws SharedSearchException {
@@ -245,9 +253,10 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method to add aggregations.
 	 *
-	 * @param requestBuilder
-	 * @param types
-	 * @throws SharedSearchException
+	 * @param requestBuilder the request builder
+	 * @param types the types
+	 * @return the list
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private List<String> addAggregations(SearchRequestBuilder requestBuilder,
 			List<String> types) throws SharedSearchException {
@@ -285,12 +294,11 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method to prepare response.
 	 *
-	 * @param searchResponse
-	 *            - the input value
-	 * @param response
-	 *            - the input value
+	 * @param searchResponse            - the input value
+	 * @param response            - the input value
+	 * @param role the role
 	 * @return response
-	 * @throws SharedSearchException
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private Response prepareResponse(Response searchResponse,
 			SearchResponse response, String role) throws SharedSearchException {
@@ -335,12 +343,12 @@ public class SearchServiceImpl extends Property implements SearchService {
 	}
 
 	/**
-	 * This method returns the tokens of the required fields
+	 * This method returns the tokens of the required fields.
 	 *
-	 * @param role
-	 * @param type
+	 * @param role the role
+	 * @param type the type
 	 * @return searchFieldStringTokens
-	 * @throws SharedSearchException
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private StringTokenizer getSearchResultAttributeTokens(String role,
 			String type) throws SharedSearchException {
@@ -379,11 +387,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * /** Method to sort the results.
 	 *
-	 * @param searchCriteria
-	 *            - the input value
-	 * @param requestBuilder
-	 *            - the input value
-	 * @throws SharedSearchException
+	 * @param searchCriteria            - the input value
+	 * @param requestBuilder            - the input value
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private void addSort(SearchCriteria searchCriteria,
 			SearchRequestBuilder requestBuilder) throws SharedSearchException {
@@ -414,9 +420,10 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method to get facets from the response.
 	 *
-	 * @param response
-	 * @return
-	 * @throws SharedSearchException
+	 * @param response the response
+	 * @param aggregationList the aggregation list
+	 * @return the aggregations
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private Facets getAggregations(SearchResponse response,
 			List<String> aggregationList) throws SharedSearchException {
@@ -456,12 +463,10 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method to get query builder.
 	 *
-	 * @param searchCriteria
-	 *            - the input value
-	 * @param role
-	 *            - the input value
+	 * @param searchCriteria            - the input value
+	 * @param role            - the input value
 	 * @return matchQueryBuilder
-	 * @throws SharedSearchException
+	 * @throws SharedSearchException the shared search exception
 	 */
 	protected FilteredQueryBuilder getQueryBuilder(
 			SearchCriteria searchCriteria, String role)
@@ -529,10 +534,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method returns simple searched query result.
 	 *
-	 * @param searchCriteria
-	 *            - the input value
+	 * @param searchCriteria            - the input value
 	 * @return queryBuilder
-	 * @throws SharedSearchException
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private QueryBuilder advancedSearch(SearchCriteria searchCriteria)
 			throws SharedSearchException {
@@ -591,11 +595,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method adds range builder.
 	 *
-	 * @param query
-	 *            - the input value
-	 * @param boolQuery
-	 *            - the input value
-	 * @throws SharedSearchException
+	 * @param query            - the input value
+	 * @param boolQuery            - the input value
+	 * @throws SharedSearchException the shared search exception
 	 */
 	private void addRangeBuilder(AdvanceQuery query, BoolQueryBuilder boolQuery)
 			throws SharedSearchException {
@@ -620,29 +622,35 @@ public class SearchServiceImpl extends Property implements SearchService {
 	/**
 	 * Method returns suggestion response.
 	 *
-	 * @param criteria
-	 *            - the input value
-	 * @param role
-	 *            - the input value
+	 * @param criteria            - the input value
 	 * @return suggestResponse.
-	 * @throws SharedSearchException
+	 * @throws SharedSearchException the shared search exception
 	 */
 	@Override
-	public SuggestResponse autoComplete(SearchCriteria criteria, String role)
+	public List<String> autoComplete(SuggestCriteria criteria)
 			throws SharedSearchException {
-
+		List<String> items;
 		SuggestResponse suggestResponse;
 		try {
-			CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder(
-					"completeMe");
-
-			suggestionsBuilder.text("");
-			suggestionsBuilder.field("suggest");
+			CompletionSuggestionFuzzyBuilder suggestionsBuilder = new CompletionSuggestionFuzzyBuilder(
+					CommonConstants.AUTOCOMPLETE_ANALYZER);
+			suggestionsBuilder.text(criteria.getAutoCompleteQuery().getValue());
+			suggestionsBuilder.field(criteria.getAutoCompleteQuery().getField());
+			suggestionsBuilder.size(criteria.getSize());
 			SuggestRequestBuilder suggestRequestBuilder = searchClientService
 					.getClient().prepareSuggest(indexName)
 					.addSuggestion(suggestionsBuilder);
 
 			suggestResponse = suggestRequestBuilder.execute().actionGet();
+			Iterator<? extends Suggest.Suggestion.Entry.Option> iterator = suggestResponse
+					.getSuggest().getSuggestion(CommonConstants.AUTOCOMPLETE_ANALYZER).iterator().next()
+					.getOptions().iterator();
+
+			items = new ArrayList<>();
+			while (iterator.hasNext()) {
+				Suggest.Suggestion.Entry.Option next = iterator.next();
+				items.add(new String(next.getText().string()));
+			}
 		} catch (Exception e) {
 			LOGGER.error(errorMesage + " autoComplete", e);
 			throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
@@ -650,7 +658,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 							+ CommonConstants.INTERNAL_SERVER_ERROR);
 		}
 
-		return suggestResponse;
+		return items;
 	}
 
 }
