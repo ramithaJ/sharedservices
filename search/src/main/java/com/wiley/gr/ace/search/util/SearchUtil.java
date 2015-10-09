@@ -33,7 +33,13 @@ public class SearchUtil {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchUtil.class);
 
-    /**
+    
+    private SearchUtil() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
      * Util method to convert List to String.
      *
      * @param listOfValues

@@ -80,10 +80,6 @@ public class SearchServiceImpl extends Property implements SearchService {
 	@Value("${index.name}")
 	private String indexName;
 
-	/** The wildcard fields. */
-	@Value("${WILDCARD_FIELDS}")
-	private String wildcardFields;
-
 	/** The exact fields. */
 	@Value("${EXACT_FIELDS}")
 	private String exactFields;
@@ -135,10 +131,10 @@ public class SearchServiceImpl extends Property implements SearchService {
 		setTypes(requestBuilder, searchCriteria.getTypes());
 
 		// Add Aggregations
-		if (searchCriteria.isEnableFacets())
+		if (searchCriteria.isEnableFacets()){
 			aggregationList = addAggregations(requestBuilder,
 					searchCriteria.getTypes());
-
+		}
 		// Apply Page Navigation
 		setResultSize(requestBuilder, searchCriteria.getOffset(),
 				searchCriteria.getRows());
@@ -153,10 +149,10 @@ public class SearchServiceImpl extends Property implements SearchService {
 		searchResponse = prepareResponse(searchResponse, response, role);
 
 		// Set Facets to the response
-		if (searchCriteria.isEnableFacets())
+		if (searchCriteria.isEnableFacets()){
 			searchResponse
 					.setFacets(getAggregations(response, aggregationList));
-
+}
 		return searchResponse;
 	}
 
@@ -307,7 +303,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 
 		try {
 			SearchHit[] results = response.getHits().getHits();
-			searchResponse.setMax_score(response.getHits().getMaxScore());
+			searchResponse.setMaxScore(response.getHits().getMaxScore());
 			searchResponse.setTotal(response.getHits().getTotalHits());
 			searchResponse.setTook(response.getTookInMillis());
 
@@ -510,9 +506,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 			if (StringUtils.isBlank(simpleQuery)) {
 
 				LOGGER.info(" Simple Query is Blank ");
-				if (null != searchCriteria.getAdvanceQuery())
+				if (null != searchCriteria.getAdvanceQuery()){
 					matchQueryBuilder = advancedSearch(searchCriteria);
-
+				}
 			} else {
 				LOGGER.info(" Simple Query is not Blank ");
 				matchQueryBuilder = QueryBuilders.multiMatchQuery(simpleQuery,

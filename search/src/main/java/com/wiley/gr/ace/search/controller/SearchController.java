@@ -73,22 +73,17 @@ public class SearchController {
                 .actionGet();
 
         // Index name
-        String _index = response.getIndex();
-        System.out.println(_index);
+        LOGGER.info(response.getIndex());
         // Type name
-        String _type = response.getType();
-        System.out.println(_type);
+        LOGGER.info(response.getType());
         // Document ID (generated or not)
-        String _id = response.getId();
-        System.out.println(_id);
+        LOGGER.info(response.getId());
         // Version (if it's the first time you index this document, you will
         // get: 1)
-        long _version = response.getVersion();
-        System.out.println(_version);
+        LOGGER.info(""+response.getVersion());
         // isCreated() is true if the document is a new one, false if it has
         // been updated
-        boolean created = response.isCreated();
-        System.out.println(created);
+        LOGGER.info(""+response.isCreated());
 
     }
 

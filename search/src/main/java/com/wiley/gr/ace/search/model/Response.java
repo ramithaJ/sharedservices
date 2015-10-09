@@ -16,6 +16,8 @@ package com.wiley.gr.ace.search.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by kkalyan on 9/8/2015.
  */
@@ -30,9 +32,11 @@ public class Response implements Serializable {
 
     private long total;
 
-    private boolean timed_out;
+    @JsonProperty("timed_out")
+    private boolean timedOut;
 
-    private float max_score;
+    @JsonProperty("max_score")
+    private float maxScore;
 
     private List<Hits> hits;
 
@@ -54,20 +58,20 @@ public class Response implements Serializable {
         this.total = total;
     }
 
-    public boolean isTimed_out() {
-        return timed_out;
+    public boolean isTimedOut() {
+        return timedOut;
     }
 
-    public void setTimed_out(boolean timed_out) {
-        this.timed_out = timed_out;
+    public void setTimedOut(boolean timedOut) {
+        this.timedOut = timedOut;
     }
 
-    public float getMax_score() {
-        return max_score;
+    public float getMaxScore() {
+        return maxScore;
     }
 
-    public void setMax_score(float max_score) {
-        this.max_score = max_score;
+    public void setMaxScore(float maxScore) {
+        this.maxScore = maxScore;
     }
 
     public List<Hits> getHits() {
