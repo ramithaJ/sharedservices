@@ -29,7 +29,7 @@ public class SuggestCriteria {
 	private AutoCompleteQuery autoCompleteQuery;
 
 	/** The size. */
-	private int size;
+	private int size = Integer.MAX_VALUE;
 
 	/**
 	 * Gets the app key.

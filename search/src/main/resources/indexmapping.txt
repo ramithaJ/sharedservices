@@ -3,7 +3,7 @@
         "journal": {
             "properties": {
                 "journal_title": {
-                    "type": "String"
+                    "type": "completion"
                 },
                 "journal_acronym": {
                     "type": "String"
@@ -54,7 +54,7 @@
                     "type": "String"
                 },
                 "journal_society_name": {
-                    "type": "String"
+                    "type": "completion"
                 },
                 "journal_society_acronym": {
                     "type": "String"
@@ -196,13 +196,13 @@
                     "type": "string"
                 },
                 "article_title": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "article_journal_elec_issn": {
                     "type": "string"
                 },
                 "article_journal_title": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "article_edit_ref_code": {
                     "type": "string"
@@ -210,17 +210,14 @@
                 "article_journal_doi": {
                     "type": "string"
                 },
-                "article_user_first_name": {
-                    "type": "string"
-                },
-                "article_user_last_name": {
-                    "type": "string"
+                "article_user_name": {
+                    "type": "completion"
                 },
                 "article_user_role": {
                     "type": "string"
                 },
                 "article_corres_auth_name": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "article_unique_id": {
                     "type": "string"
@@ -265,7 +262,7 @@
                     "type": "string"
                 },
                 "article_collegues": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "article_coress_auth_user_id": {
                     "type": "string"
@@ -280,7 +277,7 @@
                     "type": "string"
                 },
                 "article_coauth_name": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "article_journal_code_print": {
                     "type": "string"
@@ -317,25 +314,25 @@
                     "type": "string"
                 },
                 "user_country": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_orcid_id": {
                     "type": "string"
                 },
                 "user_institution_affiliation": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_research_funder": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_society": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_journal_title": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_area_of_expertise": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_id": {
                     "type": "string"
@@ -344,7 +341,7 @@
                     "type": "string"
                 },
                 "user_woa_account": {
-                    "type": "string"
+                    "type": "completion"
                 },
                 "user_registered_date": {
                     "type": "date"
