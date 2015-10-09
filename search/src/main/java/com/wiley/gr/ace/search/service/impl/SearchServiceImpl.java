@@ -451,7 +451,7 @@ public class SearchServiceImpl extends Property implements SearchService {
         Facets facets = new Facets();
         Tags tags = new Tags();
         int bucketSize = 0;
-        LinkedList<Items> itemsLinkedList = new LinkedList<>();
+        List<Items> itemsLinkedList = new LinkedList<>();
         try {
             if (aggregationList != null && !aggregationList.isEmpty()) {
                 for (String fieldValue : aggregationList) {
