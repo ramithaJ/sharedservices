@@ -58,7 +58,8 @@ public class CommonConstants {
 
     public static final String SEARCH_CONTROLLER_REQUEST_MAPPING = "/v1";
     public static final String SEARCH_URL_VALUE = "/api/_search";
-    public static final String SEARCH_AUTO_SUGGEST_URL_VALUE = "/_get";
+    public static final String SITE_SEARCH_URL_VALUE = "/api/_sitesearch";
+    public static final String SEARCH_AUTO_SUGGEST_URL_VALUE = "/api/_suggest";
     public static final String SCORE = "_score";
     public static final String ASC = "ASC";
     public static final String DESC = "DESC";

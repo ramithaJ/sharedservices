@@ -15,10 +15,14 @@ package com.wiley.gr.ace.search.service;
 
 import java.util.List;
 
+import org.elasticsearch.action.search.SearchResponse;
+
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SiteSearchRequest;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
+import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 
 /**
  * The Interface SearchService.
@@ -45,6 +49,8 @@ public interface SearchService {
      * @return suggestResponse
      * @throws SharedSearchException the shared search exception
      */
-    List<String> autoComplete(SuggestCriteria criteria)
+    AutoSuggestResponse autoComplete(SuggestCriteria criteria)
             throws SharedSearchException;
+    
+    List<SearchResponse> siteSearch(SiteSearchRequest request) throws SharedSearchException;
 }

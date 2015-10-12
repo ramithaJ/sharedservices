@@ -16,6 +16,7 @@ package com.wiley.gr.ace.search.controller;
 import java.util.List;
 
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,9 @@ import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SiteSearchRequest;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
+import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
@@ -122,12 +125,26 @@ public class SearchController {
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_AUTO_SUGGEST_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     // @ResponseBody
-    public List<String> autoSearch(@RequestBody SuggestCriteria criteria) {
-        List<String> response = null;
+    public AutoSuggestResponse autoSearch(@RequestBody SuggestCriteria criteria) {
+        AutoSuggestResponse response = null;
         try {
             response = searchService.autoComplete(criteria);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while autoSuggest", e);
+        }
+        return response;
+    }
+    
+    @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SITE_SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<SearchResponse> siteSearch(@RequestBody SiteSearchRequest request) {
+        List<SearchResponse> response = null;
+        try {
+//            SearchUtil.logInputRequest(request, null,
+//                    CommonConstants.SEARCH_SERVICE, role);
+            response = searchService.siteSearch(request);
+        } catch (SharedSearchException e) {
+            LOGGER.error("Error Occurred while searching", e);
         }
         return response;
     }

@@ -53,12 +53,14 @@ import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.constant.Property;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.AdvanceQuery;
+import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Facets;
 import com.wiley.gr.ace.search.model.Filter;
 import com.wiley.gr.ace.search.model.Hits;
 import com.wiley.gr.ace.search.model.Items;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SiteSearchRequest;
 import com.wiley.gr.ace.search.model.Sorting;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
 import com.wiley.gr.ace.search.model.Tags;
@@ -658,8 +660,9 @@ public class SearchServiceImpl extends Property implements SearchService {
      *             the shared search exception
      */
     @Override
-    public List<String> autoComplete(SuggestCriteria criteria)
+    public AutoSuggestResponse autoComplete(SuggestCriteria criteria)
             throws SharedSearchException {
+        AutoSuggestResponse sugesstions = new AutoSuggestResponse();
         List<String> items;
         SuggestResponse suggestResponse;
         try {
@@ -690,8 +693,44 @@ public class SearchServiceImpl extends Property implements SearchService {
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
         }
+        sugesstions.setSuggestions(items);
+        sugesstions.setTotal(items.size());
+        return sugesstions;
+    }
 
-        return items;
+    @Override
+    public List<SearchResponse> siteSearch(SiteSearchRequest request)
+            throws SharedSearchException {
+        List<String> types = request.getTypes();
+        List<SearchResponse> searchResponses = new LinkedList<SearchResponse>();
+        SearchResponse searchResponse = null;
+        SearchRequestBuilder requestBuilder = null;
+        String[] searchFields = request.getSearchFields().toArray(
+                new String[request.getSearchFields().size() - 1]);
+        String[] responseFields = request.getResponseFields().toArray(
+                new String[request.getResponseFields().size() - 1]);
+        for (String type : types) {
+            requestBuilder = searchClientService
+                    .getClient()
+                    .prepareSearch(indexName)
+                    .setTypes(type)
+                    .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                    .setQuery(
+                            siteQueryBulider(request.getQuery(), searchFields))
+                    .setSize(1).addFields(responseFields);
+            searchResponse = requestBuilder.execute().actionGet();
+            searchResponses.add(searchResponse);
+        }
+        return searchResponses;
+    }
+
+    private QueryBuilder siteQueryBulider(String query, String[] fields) {
+        QueryBuilder queryBuilder = null;
+        queryBuilder = QueryBuilders.multiMatchQuery(query, fields).type(
+                MatchQueryBuilder.Type.PHRASE_PREFIX);
+
+        return queryBuilder;
+
     }
 
 }
