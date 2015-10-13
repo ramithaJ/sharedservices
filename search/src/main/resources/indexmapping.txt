@@ -3,7 +3,15 @@
         "journal": {
             "properties": {
                 "journal_title": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "journal_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "journal_acronym": {
                     "type": "String"
@@ -54,7 +62,15 @@
                     "type": "String"
                 },
                 "journal_society_name": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "journal_society_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "journal_society_acronym": {
                     "type": "String"
@@ -196,13 +212,29 @@
                     "type": "string"
                 },
                 "article_title": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "article_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "article_journal_elec_issn": {
                     "type": "string"
                 },
                 "article_journal_title": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "article_journal_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "article_edit_ref_code": {
                     "type": "string"
@@ -211,13 +243,29 @@
                     "type": "string"
                 },
                 "article_user_name": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "article_user_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "article_user_role": {
                     "type": "string"
                 },
                 "article_corres_auth_name": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "article_corres_auth_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "article_unique_id": {
                     "type": "string"
@@ -262,7 +310,15 @@
                     "type": "string"
                 },
                 "article_collegues": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "article_collegues": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "article_coress_auth_user_id": {
                     "type": "string"
@@ -277,7 +333,15 @@
                     "type": "string"
                 },
                 "article_coauth_name": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "article_coauth_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "article_journal_code_print": {
                     "type": "string"
@@ -314,25 +378,73 @@
                     "type": "string"
                 },
                 "user_country": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_country": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_orcid_id": {
                     "type": "string"
                 },
                 "user_institution_affiliation": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_institution_affiliation": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_research_funder": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_research_funder": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_society": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_society": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_journal_title": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_journal_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_area_of_expertise": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_area_of_expertise": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_id": {
                     "type": "string"
@@ -341,7 +453,15 @@
                     "type": "string"
                 },
                 "user_woa_account": {
-                    "type": "completion"
+                    "type": "multi_field",
+                    "fields": {
+                        "user_woa_account": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
                 },
                 "user_registered_date": {
                     "type": "date"

@@ -78,6 +78,7 @@ public class CommonConstants {
     public static final int SEARCH_CRITERIA_DEFAULT_ROWS = 10;
 
     public static final String AUTOCOMPLETE_ANALYZER = "completion";
+    public static final String AUTOCOMPLETE_FIELD_SUFFIX = ".suggestion";
 
     private CommonConstants() {
         super();

@@ -669,8 +669,8 @@ public class SearchServiceImpl extends Property implements SearchService {
             CompletionSuggestionFuzzyBuilder suggestionsBuilder = new CompletionSuggestionFuzzyBuilder(
                     CommonConstants.AUTOCOMPLETE_ANALYZER);
             suggestionsBuilder.text(criteria.getAutoCompleteQuery().getValue());
-            suggestionsBuilder
-                    .field(criteria.getAutoCompleteQuery().getField());
+            suggestionsBuilder.field(criteria.getAutoCompleteQuery().getField()
+                    + CommonConstants.AUTOCOMPLETE_FIELD_SUFFIX);
             suggestionsBuilder.size(criteria.getSize());
             SuggestRequestBuilder suggestRequestBuilder = searchClientService
                     .getClient().prepareSuggest(indexName)
