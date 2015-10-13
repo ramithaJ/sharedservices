@@ -161,6 +161,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	@Value("${as.verifyemail.url}")
 	private String verifyEmailurl;
+	
+	@Value("${as.almsearch.url}")
+	private String almSearchUrl;
 
 	/**
 	 * Method to authenticate the user.
@@ -288,9 +291,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				request.getPassword(), request.getAuthenticationType(),
 				request.getAppKey());
 		if (null == response) {
-			status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
-					request.getUserId());
-			if (!status) {
+//			status = ESBServiceInvoker.verifyEmail(verifyEmailurl,
+//					request.getUserId());
+			String ecid = ESBServiceInvoker.searchUserInALM(almSearchUrl+request.getUserId());
+			if (ecid != null) {
 				this.userLoginDao.insertUser(request.getUserId(),
 						request.getAppKey());
 				Response responseStatus = new Response();
