@@ -2,6 +2,8 @@ package com.wiley.gr.ace.sharedservices.persistence.entity;
 // default package
 // Generated Jun 23, 2015 4:17:36 PM by Hibernate Tools 3.4.0.CR1
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -87,6 +89,7 @@ public class UserSecondaryEmailAddr implements java.io.Serializable {
     }
 
     @Column(name = "SECONDARY_EMAIL_ADDR", length = 100)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     public String getSecondaryEmailAddr() {
         return this.secondaryEmailAddr;
     }
