@@ -16,7 +16,6 @@ package com.wiley.gr.ace.search.controller;
 import java.util.List;
 
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.SiteSearchRequest;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
-import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
@@ -124,7 +123,7 @@ public class SearchController {
      * @return the list
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_AUTO_SUGGEST_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
-    // @ResponseBody
+    @ResponseBody
     public AutoSuggestResponse autoSearch(@RequestBody SuggestCriteria criteria) {
         AutoSuggestResponse response = null;
         try {
@@ -134,15 +133,23 @@ public class SearchController {
         }
         return response;
     }
-    
+
+    /**
+     * Site search.
+     *
+     * @param request
+     *            the request
+     * @param role
+     *            the role
+     * @return the list
+     */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SITE_SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<SearchResponse> siteSearch(@RequestBody SiteSearchRequest request) {
-        List<SearchResponse> response = null;
+    public List<Response> siteSearch(@RequestBody SiteSearchRequest request,
+            @RequestHeader(value = "role") String role) {
+        List<Response> response = null;
         try {
-//            SearchUtil.logInputRequest(request, null,
-//                    CommonConstants.SEARCH_SERVICE, role);
-            response = searchService.siteSearch(request);
+            response = searchService.siteSearch(request, role);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while searching", e);
         }

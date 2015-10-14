@@ -145,15 +145,14 @@ public class SearchServiceImpl extends Property implements SearchService {
 
         // Apply Sort if exists
         addSort(searchCriteria, requestBuilder);
-
         // Execute the request
         SearchResponse response = requestBuilder.execute().actionGet();
 
         // Prepare response
         searchResponse = prepareResponse(searchResponse, response, role);
-
         // Set Facets to the response
-        if (searchCriteria.isEnableFacets()) {
+        if (searchCriteria.isEnableFacets() && aggregationList != null
+                && !aggregationList.isEmpty()) {
             searchResponse
                     .setFacets(getAggregations(response, aggregationList));
         }
@@ -455,22 +454,20 @@ public class SearchServiceImpl extends Property implements SearchService {
         int bucketSize = 0;
         List<Items> itemsLinkedList = new LinkedList<>();
         try {
-            if (aggregationList != null && !aggregationList.isEmpty()) {
-                for (String fieldValue : aggregationList) {
+            for (String fieldValue : aggregationList) {
 
-                    Terms terms = response.getAggregations().get(fieldValue);
-                    Collection<Terms.Bucket> buckets = terms.getBuckets();
-                    bucketSize = bucketSize + buckets.size();
-                    for (Terms.Bucket bucket : buckets) {
-                        Items items = new Items();
-                        items.setField(fieldValue);
-                        items.setCount(bucket.getDocCount());
-                        items.setTerm(bucket.getKeyAsText().string());
-                        itemsLinkedList.add(items);
-                        tags.setTerms(itemsLinkedList);
-                        tags.setTotal(bucketSize);
-                        facets.setTag(tags);
-                    }
+                Terms terms = response.getAggregations().get(fieldValue);
+                Collection<Terms.Bucket> buckets = terms.getBuckets();
+                bucketSize = bucketSize + buckets.size();
+                for (Terms.Bucket bucket : buckets) {
+                    Items items = new Items();
+                    items.setField(fieldValue);
+                    items.setCount(bucket.getDocCount());
+                    items.setTerm(bucket.getKeyAsText().string());
+                    itemsLinkedList.add(items);
+                    tags.setTerms(itemsLinkedList);
+                    tags.setTotal(bucketSize);
+                    facets.setTag(tags);
                 }
             }
 
@@ -500,12 +497,10 @@ public class SearchServiceImpl extends Property implements SearchService {
         FilterBuilder filterbuilder = null;
         FilteredQueryBuilder fileterQuery = null;
         QueryBuilder matchQueryBuilder = null;
-        List<String> searchFiledsList = null;
         String[] searchFiledsArray = null;
         List<String> types = null;
 
         LOGGER.info("Inside getQueryBuilder method");
-        StringTokenizer searchFields = null;
 
         String simpleQuery = searchCriteria.getSimpleQuery();
 
@@ -513,25 +508,9 @@ public class SearchServiceImpl extends Property implements SearchService {
 
         try {
             LOGGER.info("ROLE : " + role);
-
-            searchFiledsList = new ArrayList<String>();
-
-            searchFiledsList = new ArrayList<String>();
             for (String type : types) {
-                searchFields = new StringTokenizer(
-                        searchProperties
-                                .getProperty(role
-                                        + CommonConstants.UNDERSCORE
-                                        + type.toUpperCase()
-                                        + CommonConstants.SEARCH_SEARCH_ATTR_KEY_STRING),
-                        CommonConstants.COMMA);
-                while (searchFields.hasMoreTokens()) {
-                    searchFiledsList.add(searchFields.nextToken());
-                }
+                searchFiledsArray = getSearchFields(role, type);
             }
-
-            searchFiledsArray = searchFiledsList
-                    .toArray(new String[searchFiledsList.size() - 1]);
 
             if (StringUtils.isBlank(simpleQuery)) {
 
@@ -551,7 +530,9 @@ public class SearchServiceImpl extends Property implements SearchService {
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
         }
-        filterbuilder = setFilter(searchCriteria);
+        if (searchCriteria.getFilters() != null) {
+            filterbuilder = setFilter(searchCriteria);
+        }
         fileterQuery = QueryBuilders.filteredQuery(matchQueryBuilder,
                 filterbuilder);
         return fileterQuery;
@@ -698,32 +679,48 @@ public class SearchServiceImpl extends Property implements SearchService {
         return sugesstions;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wiley.gr.ace.search.service.SearchService#siteSearch(com.wiley.gr
+     * .ace.search.model.SiteSearchRequest, java.lang.String)
+     */
     @Override
-    public List<SearchResponse> siteSearch(SiteSearchRequest request)
+    public List<Response> siteSearch(SiteSearchRequest request, String role)
             throws SharedSearchException {
+        String[] searchFiledsArray = null;
         List<String> types = request.getTypes();
-        List<SearchResponse> searchResponses = new LinkedList<SearchResponse>();
+        Response response = new Response();
+        List<Response> searchResponses = new LinkedList<Response>();
         SearchResponse searchResponse = null;
         SearchRequestBuilder requestBuilder = null;
-        String[] searchFields = request.getSearchFields().toArray(
-                new String[request.getSearchFields().size() - 1]);
-        String[] responseFields = request.getResponseFields().toArray(
-                new String[request.getResponseFields().size() - 1]);
         for (String type : types) {
+            searchFiledsArray = getSearchFields(role, type);
             requestBuilder = searchClientService
                     .getClient()
                     .prepareSearch(indexName)
                     .setTypes(type)
                     .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                     .setQuery(
-                            siteQueryBulider(request.getQuery(), searchFields))
-                    .setSize(1).addFields(responseFields);
+                            siteQueryBulider(request.getQuery(),
+                                    searchFiledsArray)).setSize(1);
             searchResponse = requestBuilder.execute().actionGet();
-            searchResponses.add(searchResponse);
+            response = prepareResponse(response, searchResponse, role);
+            searchResponses.add(response);
         }
         return searchResponses;
     }
 
+    /**
+     * Site query bulider.
+     *
+     * @param query
+     *            the query
+     * @param fields
+     *            the fields
+     * @return the query builder
+     */
     private QueryBuilder siteQueryBulider(String query, String[] fields) {
         QueryBuilder queryBuilder = null;
         queryBuilder = QueryBuilders.multiMatchQuery(query, fields).type(
@@ -733,4 +730,29 @@ public class SearchServiceImpl extends Property implements SearchService {
 
     }
 
+    /**
+     * Gets the search fields.
+     *
+     * @param role
+     *            the role
+     * @param type
+     *            the type
+     * @return the search fields
+     */
+    String[] getSearchFields(String role, String type) {
+        List<String> searchFiledsList = new ArrayList<String>();
+        StringTokenizer searchFields = null;
+        String[] searchFiledsArray = null;
+        searchFields = new StringTokenizer(searchProperties.getProperty(role
+                + CommonConstants.UNDERSCORE + type.toUpperCase()
+                + CommonConstants.SEARCH_SEARCH_ATTR_KEY_STRING),
+                CommonConstants.COMMA);
+        while (searchFields.hasMoreTokens()) {
+            searchFiledsList.add(searchFields.nextToken());
+        }
+        searchFiledsArray = searchFiledsList
+                .toArray(new String[searchFiledsList.size() - 1]);
+        return searchFiledsArray;
+
+    }
 }

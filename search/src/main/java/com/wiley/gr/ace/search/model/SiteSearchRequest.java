@@ -32,12 +32,6 @@ public class SiteSearchRequest {
     /** The query. */
     private String query;
     
-    /** The search fields. */
-    private List<String> searchFields;
-    
-    /** The response fields. */
-    private List<String> responseFields;
-    
     /**
      * Gets the app key.
      *
@@ -108,42 +102,6 @@ public class SiteSearchRequest {
      */
     public void setQuery(String query) {
         this.query = query;
-    }
-    
-    /**
-     * Gets the search fields.
-     *
-     * @return the search fields
-     */
-    public List<String> getSearchFields() {
-        return searchFields;
-    }
-    
-    /**
-     * Sets the search fields.
-     *
-     * @param searchFields the new search fields
-     */
-    public void setSearchFields(List<String> searchFields) {
-        this.searchFields = searchFields;
-    }
-    
-    /**
-     * Gets the response fields.
-     *
-     * @return the response fields
-     */
-    public List<String> getResponseFields() {
-        return responseFields;
-    }
-    
-    /**
-     * Sets the response fields.
-     *
-     * @param responseFields the new response fields
-     */
-    public void setResponseFields(List<String> responseFields) {
-        this.responseFields = responseFields;
     }
     
 }
