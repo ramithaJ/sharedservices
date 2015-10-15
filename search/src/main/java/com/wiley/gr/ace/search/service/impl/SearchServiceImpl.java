@@ -206,7 +206,6 @@ public class SearchServiceImpl extends Property implements SearchService {
         try {
             filter = searchCriteria.getFilters();
             filterBuilderList = new ArrayList<FilterBuilder>();
-            if (filter != null) {
                 Map<String, List<String>> filterMap = filter.getTerm();
                 for (String key : filterMap.keySet()) {
                     List<String> valueList = filterMap.get(key);
@@ -223,7 +222,6 @@ public class SearchServiceImpl extends Property implements SearchService {
                                     .toArray(new FilterBuilder[filterBuilderList
                                             .size() - 1]));
                 }
-            }
         } catch (Exception e) {
             LOGGER.error(errorMesage + " setFilter", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
