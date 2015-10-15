@@ -13,20 +13,26 @@
  */
 package com.wiley.gr.ace.profile.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * This is the generic errorVO returned by the service.
  *
  * @author virtusa version 1.0
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorResponse {
 
-	private int errorCode;
+	@JsonProperty("ErrorCode")
+	private String errorCode;
 
-	public int getErrorCode() {
+	public String getErrorCode() {
 		return errorCode;
 	}
 
-	public void setErrorCode(int errorCode) {
+	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
 
@@ -38,6 +44,7 @@ public class ErrorResponse {
 		this.errorMessage = errorMessage;
 	}
 
+	@JsonProperty("ErrorMessage")
 	private String errorMessage;
 
 }

@@ -13,7 +13,6 @@
  */
 package com.wiley.gr.ace.profile.common;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,73 +23,54 @@ import com.wiley.gr.ace.profile.model.updateProfileRequest;
 
 public class CommonUtil {
 
-	
-	
-    public static List<String> getEntityTypeList() {
-    
-    	final List<String> entityTypeList=new ArrayList<String>();
-    	
-    	if (entityTypeList == null ||entityTypeList.isEmpty()){
-    		
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_PROFILE);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_ADDRESS);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_AFFILIATION);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_EMAIL);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_FAVJOURNAL);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_INTEREST);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_RESEARCH_FUNDER);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_SOCIETY);
-    		entityTypeList.add(CommonConstants.ENTITY_TYPE_ALERT);   
-    
-    	}
+	public static List<String> getEntityTypeList() {
+
+		final List<String> entityTypeList = new ArrayList<String>();
+
+		if (entityTypeList == null || entityTypeList.isEmpty()) {
+
+			entityTypeList.add(CommonConstants.ENTITY_TYPE_PROFILE);
+			entityTypeList.add(CommonConstants.ENTITY_TYPE_ADDRESS);
+			entityTypeList.add(CommonConstants.ENTITY_TYPE_EMAIL);
+			entityTypeList.add(CommonConstants.ENTITY_TYPE_FAVJOURNAL);
+			entityTypeList.add(CommonConstants.ENTITY_TYPE_INTEREST);
+			entityTypeList.add(CommonConstants.ENTITY_TYPE_ALERT);
+
+		}
 		return entityTypeList;
 	}
 
+	private CommonUtil() {
 
-	private CommonUtil(){
-    	
-  
-    }
+	}
 
+	/**
+	 * Method to set code, message & status to Service.
+	 *
+	 * @param code
+	 *            Code
+	 * @param message
+	 *            Message
+	 * @param status
+	 *            Status
+	 * @return
+	 */
+	public static Service setServiceMessage(String code, String message,
+			String status) {
+		Service service = new Service();
+		ErrorResponse error = new ErrorResponse();
+		if(code!=null){
+		error.setErrorCode(code);
+		}
+		error.setErrorMessage(message);
+		service.setStatus(status);
+		service.setError(error);
+		return service;
+	}
 
-    /**
-     * Method to set code, message & status to Service.
-     *
-     * @param code    Code
-     * @param message Message
-     * @param status  Status
-     * @return
-     */
-    public static Service setServiceMessage(String code, String message, String status) {
-        Service service = new Service();
-        ErrorResponse error = new ErrorResponse();
-        error.setErrorCode(Integer.parseInt(code));
-        error.setErrorMessage(message);
-        service.setStatus(status);
-        service.setError(error);
-        return service;
-    }
-
-    /**
-     * Util method to throw error.
-     *
-     * @param exception Exception
-     * @throws SharedServiceException
-     */
- /*   public static void throwError(Exception exception) throws SharedServiceException {
-        if (null != exception.getCause()) {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + exception.getCause().getMessage());
-        } else {
-            throw new SharedServiceException(CommonConstants.ERROR_CODE_100, CommonConstants.ERROR_NOTE + exception);
-        }
-    }
-*/
-  
-   
+	
 	public static void validateEntity(updateProfileRequest profile)
 			throws SharedServiceException {
-
-
 
 		if (profile.getEntityId() != null || !profile.getEntityId().isEmpty()) {
 
@@ -101,7 +81,7 @@ public class CommonUtil {
 
 					throw new SharedServiceException(
 							CommonConstants.ERROR_CODE_400,
-						    CommonConstants.ERROR_NOT_SUPPORT_ENTITY);
+							CommonConstants.ERROR_NOT_SUPPORT_ENTITY);
 				} else if (profile.getEntityValue() == null) {
 
 					throw new SharedServiceException(
@@ -123,6 +103,6 @@ public class CommonUtil {
 		}
 
 	}
-	
 
+	
 }

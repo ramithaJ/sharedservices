@@ -29,7 +29,7 @@
             ignore-unresolvable="true"/>
 
 <!-- <context:property-placeholder
-	location="classpath:log4j.properties"
+	location="classpath:mockurls.properties,classpath:orcid.properties,classpath:userManagement.properties,classpath:exception.properties,classpath:orderStatusOO.properties"
 	ignore-unresolvable="true" />
  -->	
     <mvc:annotation-driven/>

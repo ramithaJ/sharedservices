@@ -1,11 +1,13 @@
 package com.wiley.gr.ace.profile.model;
 
+import java.io.Serializable;
 
 
 
-public class updateProfileRequest {
+
+public class updateProfileRequest{
 	
-	private Object entityValue;
+	private EntityValue entityValue;
 	
 	private String sourceSystem;
 	private String entityId;
@@ -13,10 +15,10 @@ public class updateProfileRequest {
 	
 	
 	
-	public Object getEntityValue() {
+	public EntityValue getEntityValue() {
 		return entityValue;
 	}
-	public void setEntityValue(Object entityValue) {
+	public void setEntityValue(EntityValue entityValue) {
 		this.entityValue = entityValue;
 	}
 	public String getEntityType() {
