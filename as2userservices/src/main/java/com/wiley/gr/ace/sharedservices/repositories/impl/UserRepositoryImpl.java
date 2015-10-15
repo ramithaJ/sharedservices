@@ -561,6 +561,24 @@ public class UserRepositoryImpl extends Property implements UserRepository {
             if (null != userServiceRequest.getUserProfile().getRecoveryEmailAddress()) {
                 String secondaryEmailCommaSeperatedList = userServiceRequest.getUserProfile().getRecoveryEmailAddress();
                 Set<UserSecondaryEmailAddr> secondaryEmailAddrs = user.getUserSecondaryEmailAddrsForUserId();
+
+               /* LinkedList<String> finalList = new LinkedList<>();
+                List<String> items = Arrays.asList(secondaryEmailCommaSeperatedList.split(CommonConstants.COMMA));
+                if (null != secondaryEmailAddrs && !secondaryEmailAddrs.isEmpty()) {
+                    for (String inputItem : items) {
+                        for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrs) {
+                            if (!inputItem.equals(secondaryEmailAddr.getSecondaryEmailAddr())) {
+                                finalList.add(inputItem);
+                            }
+                        }
+
+                    }
+                } else {
+                    for (String inputItem : items) {
+                        finalList.add(inputItem);
+                    }
+                }*/
+
                 //Delete All existing ids.
                 if (!CollectionUtils.isEmpty(secondaryEmailAddrs)) {
                     for (UserSecondaryEmailAddr secondaryEmailAddr : secondaryEmailAddrs) {
@@ -569,8 +587,8 @@ public class UserRepositoryImpl extends Property implements UserRepository {
                 }
 
                 //Recreate with new one.
-                String[] secondaryEmailIds = secondaryEmailCommaSeperatedList.split(CommonConstants.COMMA);
-                for (String secondaryEmailId : secondaryEmailIds) {
+
+                for (String secondaryEmailId : secondaryEmailCommaSeperatedList.split(CommonConstants.COMMA)) {
 
                     //Secondary email address validation
                     if (null != secondaryEmailId) {

@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class SearchClientServiceImpl implements SearchClientService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SearchClientServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchClientServiceImpl.class);
 
 
     @Value("${cluster.name}")
@@ -63,8 +63,8 @@ public class SearchClientServiceImpl implements SearchClientService {
      */
     protected Client createClient() {
         if (client == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Creating client for Search!");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Creating client for Search!");
             }
             //Try starting search client at context loading
             try {
@@ -77,13 +77,13 @@ public class SearchClientServiceImpl implements SearchClientService {
 
                 transportClient = transportClient.addTransportAddress(new InetSocketTransportAddress(machine, port));
 
-                if (transportClient.connectedNodes().size() == 0) {
-                    logger.error("There are no active nodes available for the transport, it will be automatically added once nodes are live!");
+                if (transportClient.connectedNodes().isEmpty()) {
+                    LOGGER.error("There are no active nodes available for the transport, it will be automatically added once nodes are live!");
                 }
                 client = transportClient;
             } catch (Exception ex) {
                 //ignore any exception, dont want to stop context loading
-                logger.error("Error occured while creating search client!", ex);
+                LOGGER.error("Error occured while creating search client!", ex);
             }
         }
         return client;

@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.wiley.gr.ace.auth.security.constants.CommonConstant;
+import com.wiley.gr.ace.auth.security.model.UserSearchResponse;
 import com.wiley.gr.ace.auth.security.model.VerifyUserResponse;
 
 /**
@@ -91,6 +92,34 @@ public class ESBServiceInvoker {
 
 		return false;
 
+	}
+	
+	
+	/**
+	 * Search user in alm.
+	 *
+	 * @param url the url
+	 * @param emailId the email id
+	 * @return the string
+	 */
+	public static String searchUserInALM(final String url) {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		try {
+			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+			UserSearchResponse response = new RestTemplate().exchange(url,
+					HttpMethod.GET, httpEntity, UserSearchResponse.class)
+					.getBody();
+			if (CommonConstant.SUCCESS_STATUS.equalsIgnoreCase(response.getStatus())) {
+				return response.getUserData().getUserPayLoadList().get(0).getEcid();
+			}
+		} catch (final Exception e) {
+			ESBServiceInvoker.LOGGER.error("RestServiceInvoke stub exception",
+					e);
+		}
+
+		return null;
 	}
 
 }

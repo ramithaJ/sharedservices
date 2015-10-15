@@ -13,8 +13,9 @@
  */
 package com.wiley.gr.ace.search.controller;
 
+import java.util.List;
+
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.suggest.SuggestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.gr.ace.search.constant.CommonConstants;
 import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SiteSearchRequest;
+import com.wiley.gr.ace.search.model.SuggestCriteria;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
@@ -53,11 +57,17 @@ public class SearchController {
     @Autowired
     private SearchClientService searchClientService;
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchServiceImpl.class);
 
     /**
-     * Method create ES Index
+     * Method create ES Index.
+     *
+     * @param json
+     *            the json
+     * @param type
+     *            the type
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { "/_index" })
     public void createIndex(@RequestBody String json,
@@ -67,35 +77,33 @@ public class SearchController {
                 .actionGet();
 
         // Index name
-        String _index = response.getIndex();
-        System.out.println(_index);
+        LOGGER.info(response.getIndex());
         // Type name
-        String _type = response.getType();
-        System.out.println(_type);
+        LOGGER.info(response.getType());
         // Document ID (generated or not)
-        String _id = response.getId();
-        System.out.println(_id);
+        LOGGER.info(response.getId());
         // Version (if it's the first time you index this document, you will
         // get: 1)
-        long _version = response.getVersion();
-        System.out.println(_version);
+        LOGGER.info("" + response.getVersion());
         // isCreated() is true if the document is a new one, false if it has
         // been updated
-        boolean created = response.isCreated();
-        System.out.println(created);
+        LOGGER.info("" + response.isCreated());
 
     }
 
     /**
-     * Method to search the required data
-     * 
+     * Method to search the required data.
+     *
      * @param criteria
-     * @return
+     *            the criteria
+     * @param role
+     *            the role
+     * @return the response
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Response search(@RequestBody SearchCriteria criteria,
-    		@RequestHeader(value="role") String role) {
+            @RequestHeader(value = "role") String role) {
         Response response = null;
         try {
             SearchUtil.logInputRequest(criteria, null,
@@ -108,20 +116,42 @@ public class SearchController {
     }
 
     /**
-     * Method to support Auto complete feature
-     * 
+     * Method to support Auto complete feature.
+     *
      * @param criteria
-     * @return
+     *            the criteria
+     * @return the list
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SEARCH_AUTO_SUGGEST_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SuggestResponse autoSearch(@RequestBody SearchCriteria criteria,
-            @RequestParam String role) {
-        SuggestResponse response = null;
+    public AutoSuggestResponse autoSearch(@RequestBody SuggestCriteria criteria) {
+        AutoSuggestResponse response = null;
         try {
-            response = searchService.autoComplete(criteria, role);
+            response = searchService.autoComplete(criteria);
         } catch (SharedSearchException e) {
             LOGGER.error("Error Occurred while autoSuggest", e);
+        }
+        return response;
+    }
+
+    /**
+     * Site search.
+     *
+     * @param request
+     *            the request
+     * @param role
+     *            the role
+     * @return the list
+     */
+    @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SITE_SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Response> siteSearch(@RequestBody SiteSearchRequest request,
+            @RequestHeader(value = "role") String role) {
+        List<Response> response = null;
+        try {
+            response = searchService.siteSearch(request, role);
+        } catch (SharedSearchException e) {
+            LOGGER.error("Error Occurred while searching", e);
         }
         return response;
     }

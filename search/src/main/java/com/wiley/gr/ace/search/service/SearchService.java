@@ -13,11 +13,14 @@
  */
 package com.wiley.gr.ace.search.service;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+import java.util.List;
 
 import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
+import com.wiley.gr.ace.search.model.SiteSearchRequest;
+import com.wiley.gr.ace.search.model.SuggestCriteria;
 
 /**
  * The Interface SearchService.
@@ -28,27 +31,41 @@ public interface SearchService {
 
     /**
      * The interface method SearchService.
-     * 
+     *
      * @param searchCriteria
      *            - the input value
      * @param role
      *            - the input value
      * @return response
      * @throws SharedSearchException
+     *             the shared search exception
      */
     Response search(SearchCriteria searchCriteria, String role)
             throws SharedSearchException;
 
     /**
      * The interface method autoComplete.
-     * 
+     *
      * @param criteria
-     *            - the input value
-     * @param role
      *            - the input value
      * @return suggestResponse
      * @throws SharedSearchException
+     *             the shared search exception
      */
-    SuggestResponse autoComplete(SearchCriteria criteria, String role)
+    AutoSuggestResponse autoComplete(SuggestCriteria criteria)
+            throws SharedSearchException;
+
+    /**
+     * Site search.
+     *
+     * @param request
+     *            the request
+     * @param role
+     *            the role
+     * @return the list
+     * @throws SharedSearchException
+     *             the shared search exception
+     */
+    List<Response> siteSearch(SiteSearchRequest request, String role)
             throws SharedSearchException;
 }

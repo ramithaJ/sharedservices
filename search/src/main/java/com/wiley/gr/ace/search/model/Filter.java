@@ -22,9 +22,9 @@ import java.util.Map;
  * @author virtusa version 1.0
  */
 public class Filter {
-    
-    /** The map term.*/
-	private Map<String, List<String>> term;
+
+    /** The map term. */
+    private Map<String, List<String>> term;
 
     /**
      * @return the term
@@ -34,12 +34,11 @@ public class Filter {
     }
 
     /**
-     * @param term the term to set
+     * @param term
+     *            the term to set
      */
     public void setTerm(Map<String, List<String>> term) {
         this.term = term;
     }
-	
-	
 
 }

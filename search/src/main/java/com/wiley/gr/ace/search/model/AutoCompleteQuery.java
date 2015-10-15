@@ -14,23 +14,15 @@
 package com.wiley.gr.ace.search.model;
 
 /**
- * The Class AdvanceQuery.
- *
- * @author rajatg
+ * The Class AutoCompleteQuery.
  */
-public class AdvanceQuery {
+public class AutoCompleteQuery {
 
     /** The field. */
     private String field;
 
     /** The value. */
     private String value;
-
-    /** The from. */
-    private String from;
-
-    /** The to. */
-    private String to;
 
     /**
      * Gets the field.
@@ -63,49 +55,10 @@ public class AdvanceQuery {
     /**
      * Sets the value.
      *
-     * @param value
+     * @param query
      *            the new value
      */
-    public void setValue(String value) {
-        this.value = value;
+    public void setValue(String query) {
+        this.value = query;
     }
-
-    /**
-     * Gets the from.
-     *
-     * @return the from
-     */
-    public String getFrom() {
-        return from;
-    }
-
-    /**
-     * Sets the from.
-     *
-     * @param from
-     *            the new from
-     */
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    /**
-     * Gets the to.
-     *
-     * @return the to
-     */
-    public String getTo() {
-        return to;
-    }
-
-    /**
-     * Sets the to.
-     *
-     * @param to
-     *            the new to
-     */
-    public void setTo(String to) {
-        this.to = to;
-    }
-
 }

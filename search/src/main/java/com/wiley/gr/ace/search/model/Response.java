@@ -16,72 +16,146 @@ package com.wiley.gr.ace.search.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by kkalyan on 9/8/2015.
  */
 public class Response implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
 
-	private long took;
+    /** The took. */
+    private long took;
 
+    /** The total. */
     private long total;
 
-    private boolean timed_out;
+    /** The timed out. */
+    @JsonProperty("timed_out")
+    private boolean timedOut;
 
-    private float max_score;
+    /** The max score. */
+    @JsonProperty("max_score")
+    private float maxScore;
 
+    /** The hits. */
     private List<Hits> hits;
 
+    /** The facets. */
     private Facets facets;
 
+    /**
+     * Gets the took.
+     *
+     * @return the took
+     */
     public long getTook() {
         return took;
     }
 
+    /**
+     * Sets the took.
+     *
+     * @param took
+     *            the new took
+     */
     public void setTook(long took) {
         this.took = took;
     }
 
+    /**
+     * Gets the total.
+     *
+     * @return the total
+     */
     public long getTotal() {
         return total;
     }
 
+    /**
+     * Sets the total.
+     *
+     * @param total
+     *            the new total
+     */
     public void setTotal(long total) {
         this.total = total;
     }
 
-    public boolean isTimed_out() {
-        return timed_out;
+    /**
+     * Checks if is timed out.
+     *
+     * @return true, if is timed out
+     */
+    public boolean isTimedOut() {
+        return timedOut;
     }
 
-    public void setTimed_out(boolean timed_out) {
-        this.timed_out = timed_out;
+    /**
+     * Sets the timed out.
+     *
+     * @param timedOut
+     *            the new timed out
+     */
+    public void setTimedOut(boolean timedOut) {
+        this.timedOut = timedOut;
     }
 
-    public float getMax_score() {
-        return max_score;
+    /**
+     * Gets the max score.
+     *
+     * @return the max score
+     */
+    public float getMaxScore() {
+        return maxScore;
     }
 
-    public void setMax_score(float max_score) {
-        this.max_score = max_score;
+    /**
+     * Sets the max score.
+     *
+     * @param maxScore
+     *            the new max score
+     */
+    public void setMaxScore(float maxScore) {
+        this.maxScore = maxScore;
     }
 
+    /**
+     * Gets the hits.
+     *
+     * @return the hits
+     */
     public List<Hits> getHits() {
         return hits;
     }
 
+    /**
+     * Sets the hits.
+     *
+     * @param hits
+     *            the new hits
+     */
     public void setHits(List<Hits> hits) {
         this.hits = hits;
     }
 
+    /**
+     * Gets the facets.
+     *
+     * @return the facets
+     */
     public Facets getFacets() {
         return facets;
     }
 
+    /**
+     * Sets the facets.
+     *
+     * @param facets
+     *            the new facets
+     */
     public void setFacets(Facets facets) {
         this.facets = facets;
     }

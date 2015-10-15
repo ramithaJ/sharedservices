@@ -1,304 +1,475 @@
 {
-  "mappings": 
-  {
-    "journal": {
-        "properties": {
-            "journal_title": {
-                "type": "String" 
-            },
-            "journal_acronym": {
-                "type": "String" 
-            },
-            "journal_type": {
-                "type": "String" 
-            },
-            "journal_setup_state": {
-                "type": "String" 
-            },
-            "journal_status": {
-                "type": "String" 
-            },
-            "journal_ownership_type": {
-                "type": "String" 
-            },
-            "journal_business_unit": {
-                "type": "String" 
-            },
-            "journal_production_editor": {
-                "type": "String" 
-            },
-            "journal_publication_manager": {
-                "type": "String" 
-            },
-            "journal_doi": {
-                "type": "String" 
-            },
-            "journal_electronic_issn": {
-                "type": "String" 
-            },
-            "journal_fornmer_title": {
-                "type": "String" 
-            },
-            "journal_nickname": {
-                "type": "String" 
-            },
-            "journal_title_display_ooo": {
-                "type": "String" 
-            },
-            "journal_primary_sub_code_desc1": {
-                "type": "String" 
-            },
-            "journal_print_issn": {
-                "type": "String" 
-            },
-            "journal_sales_model": {
-                "type": "String" 
-            },
-            "journal_society_name": {
-                "type": "String" 
-            },
-            "journal_society_acronym": {
-                "type": "String" 
-            },
-            "journal_sub_desc_code2": {
-                "type": "String" 
-            },
-            "journal_jpcms_identifier": {
-                "type": "String" 
-            },
-            "journal_jpcms_internal_id": {
-                "type": "String" 
-            },
-            "journal_last_updated": {
-                "type": "date" 
-            },
-            "journal_license_signed_all_author": {
-                "type": "String" 
-            },
-            "journal_primary_sub_code": {
-                "type": "String" 
-            },
-            "journal_group_code": {
-                "type": "String" 
-            },
-            "journal_discount_price": {
-                "type": "String" 
-            },
-            "journal_ownership_status": {
-                "type": "String" 
-            },
-            "journal_participate_wal": {
-                "type": "String" 
-            },
-            "journal_pub_source": {
-                "type": "String" 
-            },
-            "journal_pubmed_central_participate": {
-                "type": "String" 
-            },
-            "journal_pubmed_participate": {
-                "type": "String" 
-            },
-            "journal_wol_code": {
-                "type": "String" 
-            },
-            "journal_merger_date": {
-                "type": "date" 
-            },
-            "journal_invited_as": {
-                "type": "String" 
-            },
-            "journal_complaint_funder_mandate_license": {
-                "type": "String" 
-            },
-            "journal_subscription_licenses_oo_article": {
-                "type": "String" 
-            },
-            "journal_as_unique_identifier": {
-                "type": "String" 
-            },
-            "journal_discontinue": {
-                "type": "String" 
-            },
-            "journal_participate_selection_ooo": {
-                "type": "String" 
-            },
-            "journal_isbn": {
-                "type": "String" 
-            },
-            "journal_articlelevel_data_in_jpcms": {
-                "type": "String" 
-            },
-            "journal_in_jpcms": {
-                "type": "String" 
-            },
-            "journal_sub_code2": {
-                "type": "String" 
-            },
-            "journal_cluster_code": {
-                "type": "String" 
-            },
-            "journal_cluster_name": {
-                "type": "String" 
-            },
-            "journal_wal_participate_date": {
-                "type": "date" 
-            },
-            "journal_invited_as_date": {
-                "type": "date" 
-            },
-            "journal_family_code": {
-                "type": "String" 
-            },
-            "journal_code_print": {
-                "type": "String" 
-            },
-            "journal_code_electronic": {
-                "type": "String" 
-            },
-            "journal_discontinue_date": {
-                "type": "date" 
-            },
-            "journal_DAAS_participation": {
-                "type": "String" 
+    "mappings": {
+        "journal": {
+            "properties": {
+                "journal_title": {
+                    "type": "multi_field",
+                    "fields": {
+                        "journal_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "journal_acronym": {
+                    "type": "String"
+                },
+                "journal_type": {
+                    "type": "String"
+                },
+                "journal_setup_state": {
+                    "type": "String"
+                },
+                "journal_status": {
+                    "type": "String"
+                },
+                "journal_ownership_type": {
+                    "type": "String"
+                },
+                "journal_business_unit": {
+                    "type": "String"
+                },
+                "journal_production_editor": {
+                    "type": "String"
+                },
+                "journal_publication_manager": {
+                    "type": "String"
+                },
+                "journal_doi": {
+                    "type": "String"
+                },
+                "journal_electronic_issn": {
+                    "type": "String"
+                },
+                "journal_fornmer_title": {
+                    "type": "String"
+                },
+                "journal_nickname": {
+                    "type": "String"
+                },
+                "journal_title_display_ooo": {
+                    "type": "String"
+                },
+                "journal_primary_sub_code_desc1": {
+                    "type": "String"
+                },
+                "journal_print_issn": {
+                    "type": "String"
+                },
+                "journal_sales_model": {
+                    "type": "String"
+                },
+                "journal_society_name": {
+                    "type": "multi_field",
+                    "fields": {
+                        "journal_society_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "journal_society_acronym": {
+                    "type": "String"
+                },
+                "journal_sub_desc_code2": {
+                    "type": "String"
+                },
+                "journal_jpcms_identifier": {
+                    "type": "String"
+                },
+                "journal_jpcms_internal_id": {
+                    "type": "String"
+                },
+                "journal_last_updated": {
+                    "type": "date"
+                },
+                "journal_license_signed_all_author": {
+                    "type": "String"
+                },
+                "journal_primary_sub_code": {
+                    "type": "String"
+                },
+                "journal_group_code": {
+                    "type": "String"
+                },
+                "journal_discount_price": {
+                    "type": "String"
+                },
+                "journal_ownership_status": {
+                    "type": "String"
+                },
+                "journal_participate_wal": {
+                    "type": "String"
+                },
+                "journal_pub_source": {
+                    "type": "String"
+                },
+                "journal_pubmed_central_participate": {
+                    "type": "String"
+                },
+                "journal_pubmed_participate": {
+                    "type": "String"
+                },
+                "journal_wol_code": {
+                    "type": "String"
+                },
+                "journal_merger_date": {
+                    "type": "date"
+                },
+                "journal_invited_as": {
+                    "type": "String"
+                },
+                "journal_complaint_funder_mandate_license": {
+                    "type": "String"
+                },
+                "journal_subscription_licenses_oo_article": {
+                    "type": "String"
+                },
+                "journal_as_unique_identifier": {
+                    "type": "String"
+                },
+                "journal_discontinue": {
+                    "type": "String"
+                },
+                "journal_participate_selection_ooo": {
+                    "type": "String"
+                },
+                "journal_isbn": {
+                    "type": "String"
+                },
+                "journal_articlelevel_data_in_jpcms": {
+                    "type": "String"
+                },
+                "journal_in_jpcms": {
+                    "type": "String"
+                },
+                "journal_sub_code2": {
+                    "type": "String"
+                },
+                "journal_cluster_code": {
+                    "type": "String"
+                },
+                "journal_cluster_name": {
+                    "type": "String"
+                },
+                "journal_wal_participate_date": {
+                    "type": "date"
+                },
+                "journal_invited_as_date": {
+                    "type": "date"
+                },
+                "journal_family_code": {
+                    "type": "String"
+                },
+                "journal_code_print": {
+                    "type": "String"
+                },
+                "journal_code_electronic": {
+                    "type": "String"
+                },
+                "journal_discontinue_date": {
+                    "type": "date"
+                },
+                "journal_DAAS_participation": {
+                    "type": "String"
+                }
             }
-        }
-    },
-    "article": {
-        "properties": {
-            "article_published_in_issue": {
-                "type": "date"
-            },
-            "article_publication_date": {
-                "type": "date"
-            },
-            "article_accepted_date": {
-                "type": "date"
-            },
-            "article_production_stage_date": {
-                "type": "date"
-            },
-            "article_oo_oa_payment_rec_date": {
-                "type": "date"
-            },
-            "article_published_online_date": {
-                "type": "date"
-            },
-            "article_withdrawn_after_accept_date": {
-                "type": "date"
-            },
-            "article_wal_participdate_date": {
-                "type": "date"
-            },
-            "article_aid": {
-                "type": "string"
-            },
-            "article_doi": {
-                "type": "string"
-            },
-            "article_title": {
-                "type": "string"
-            },
-            "article_journal_elec_issn": {
-                "type": "string"
-            },
-            "article_journal_title": {
-                "type": "string"
-            },
-            "article_edit_ref_code": {
-                "type": "string"
-            },
-            "article_journal_doi": {
-                "type": "string"
-            },
-            "article_user_first_name": {
-                "type": "string"
-            },
-            "article_user_last_name": {
-                "type": "string"
-            },
-            "article_user_role": {
-                "type": "string"
-            },
-            "article_corres_auth_name": {
-                "type": "string"
-            },
-            "article_unique_id": {
-                "type": "string"
-            },
-            "article_coress_auth_email": {
-                "type": "string"
-            },
-            "article_coauth_email": {
-                "type": "string"
-            },
-            "article_collegue_email": {
-                "type": "string"
-            },
-            "article_invited_in_as": {
-                "type": "string"
-            },
-            "article_production_stage": {
-                "type": "string"
-            },
-            "article_production_tracking_path": {
-                "type": "string"
-            },
-            "article_publication_status": {
-                "type": "string"
-            },
-            "article_license_verification_flag": {
-                "type": "string"
-            },
-            "article_reset_licanse_flag": {
-                "type": "string"
-            },
-            "article_jpcms_identifier": {
-                "type": "string"
-            },
-            "article_as_unique_id": {
-                "type": "string"
-            },
-            "article_volume_num": {
-                "type": "string"
-            },
-            "article_issue_num": {
-                "type": "string"
-            },
-            "article_collegues": {
-                "type": "string"
-            },
-            "article_coress_auth_user_id": {
-                "type": "string"
-            },
-            "article_coauth_user_id": {
-                "type": "string"
-            },
-            "article_production_status": {
-                "type": "string"
-            },
-            "article_quote_order_status": {
-                "type": "string"
-            },
-            "article_coauth_name": {
-                "type": "string"
-            },
-            "article_journal_code_print": {
-                "type": "string"
-            },
-            "article_journal_family_code": {
-                "type": "string"
-            },
-            "article_journal_group_code": {
-                "type": "string"
-            },
-            "article_jpcms_internal_id": {
-                "type": "string"
-            },
-            "article_wal_participation": {
-                "type": "string"
+        },
+        "article": {
+            "properties": {
+                "article_published_in_issue": {
+                    "type": "date"
+                },
+                "article_publication_date": {
+                    "type": "date"
+                },
+                "article_accepted_date": {
+                    "type": "date"
+                },
+                "article_production_stage_date": {
+                    "type": "date"
+                },
+                "article_oo_oa_payment_rec_date": {
+                    "type": "date"
+                },
+                "article_published_online_date": {
+                    "type": "date"
+                },
+                "article_withdrawn_after_accept_date": {
+                    "type": "date"
+                },
+                "article_wal_participdate_date": {
+                    "type": "date"
+                },
+                "article_aid": {
+                    "type": "string"
+                },
+                "article_doi": {
+                    "type": "string"
+                },
+                "article_title": {
+                    "type": "multi_field",
+                    "fields": {
+                        "article_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "article_journal_elec_issn": {
+                    "type": "string"
+                },
+                "article_journal_title": {
+                    "type": "multi_field",
+                    "fields": {
+                        "article_journal_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "article_edit_ref_code": {
+                    "type": "string"
+                },
+                "article_journal_doi": {
+                    "type": "string"
+                },
+                "article_user_name": {
+                    "type": "multi_field",
+                    "fields": {
+                        "article_user_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "article_user_role": {
+                    "type": "string"
+                },
+                "article_corres_auth_name": {
+                    "type": "multi_field",
+                    "fields": {
+                        "article_corres_auth_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "article_unique_id": {
+                    "type": "string"
+                },
+                "article_coress_auth_email": {
+                    "type": "string"
+                },
+                "article_coauth_email": {
+                    "type": "string"
+                },
+                "article_collegue_email": {
+                    "type": "string"
+                },
+                "article_invited_in_as": {
+                    "type": "string"
+                },
+                "article_production_stage": {
+                    "type": "string"
+                },
+                "article_production_tracking_path": {
+                    "type": "string"
+                },
+                "article_publication_status": {
+                    "type": "string"
+                },
+                "article_license_verification_flag": {
+                    "type": "string"
+                },
+                "article_reset_licanse_flag": {
+                    "type": "string"
+                },
+                "article_jpcms_identifier": {
+                    "type": "string"
+                },
+                "article_as_unique_id": {
+                    "type": "string"
+                },
+                "article_volume_num": {
+                    "type": "string"
+                },
+                "article_issue_num": {
+                    "type": "string"
+                },
+                "article_collegues": {
+                    "type": "multi_field",
+                    "fields": {
+                        "article_collegues": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "article_coress_auth_user_id": {
+                    "type": "string"
+                },
+                "article_coauth_user_id": {
+                    "type": "string"
+                },
+                "article_production_status": {
+                    "type": "string"
+                },
+                "article_quote_order_status": {
+                    "type": "string"
+                },
+                "article_coauth_name": {
+                    "type": "multi_field",
+                    "fields": {
+                        "article_coauth_name": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "article_journal_code_print": {
+                    "type": "string"
+                },
+                "article_journal_family_code": {
+                    "type": "string"
+                },
+                "article_journal_group_code": {
+                    "type": "string"
+                },
+                "article_jpcms_internal_id": {
+                    "type": "string"
+                },
+                "article_wal_participation": {
+                    "type": "string"
+                }
+            }
+        },
+        "user": {
+            "properties": {
+                "user_primary_email": {
+                    "type": "string"
+                },
+                "user_secondary_email": {
+                    "type": "string"
+                },
+                "user_recovery_email": {
+                    "type": "string"
+                },
+                "user_first_name": {
+                    "type": "string"
+                },
+                "user_last_name": {
+                    "type": "string"
+                },
+                "user_country": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_country": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_orcid_id": {
+                    "type": "string"
+                },
+                "user_institution_affiliation": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_institution_affiliation": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_research_funder": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_research_funder": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_society": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_society": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_journal_title": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_journal_title": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_area_of_expertise": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_area_of_expertise": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "user_role": {
+                    "type": "string"
+                },
+                "user_woa_account": {
+                    "type": "multi_field",
+                    "fields": {
+                        "user_woa_account": {
+                            "type": "string"
+                        },
+                        "suggestion": {
+                            "type": "completion"
+                        }
+                    }
+                },
+                "user_registered_date": {
+                    "type": "date"
+                },
+                "user_last_modified_date": {
+                    "type": "date"
+                }
             }
         }
     }
-}
 }

@@ -13,11 +13,11 @@
                                          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory name="asdb">
-		<property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-		<property name="connection.url">jdbc:oracle:thin:@10.200.32.85:1525/pdasapp</property>
-		<property name="connection.username">as2appuser</property>
-		<property name="connection.password">as2appuser_123</property>
-		<property name="dialect">org.hibernate.dialect.OracleDialect</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://10.6.4.146:3310/wpp_auth_db</property>
+		<property name="connection.username">wpp_auth_usr</property>
+		<property name="connection.password">wpp_auth_usr</property>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="show_sql">true</property>
 		<!-- <property name="validationQuery">select 1 from dual</property> -->
 		<property name="format_sql">true</property>
@@ -28,98 +28,7 @@
 		<property name="hibernate.c3p0.idle_test_period">3000</property>
 		<property name="hibernate.c3p0.max_statements">50</property>
 		<property name="hibernate.c3p0.timeout">1800</property>
-		<mapping
-            class="com.wiley.gr.ace.auth.security.dao.AdditionalPermissions" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.Permissions" />
-        <mapping class="com.wiley.gr.ace.auth.security.dao.Alerts" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.AuthCoauthDetails" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.AuthColleagueDetails" />
-        <mapping class="com.wiley.gr.ace.auth.security.dao.Journals" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.ResearchFunders" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.RolePermissions" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.RolePermissionsId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserFunderGrants" />
-        <mapping class="com.wiley.gr.ace.auth.security.dao.Users" />
-        <mapping class="com.wiley.gr.ace.auth.security.dao.Roles" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserProfileAttribVisible" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserReferenceData" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserAlerts" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserAlertsId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserPreferredJournals" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserPreferredJournalsId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.LookupValues" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserSocietyDetails" />
-                <mapping
-            class="com.wiley.gr.ace.auth.security.dao.Societies" />
-        <mapping class="com.wiley.gr.ace.auth.security.dao.Address" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.AreaOfInterest" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserAffiliations" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserWoaAccounts" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserWoaAccountsId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserRoles" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserAreaOfInterest" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserAreaOfInterestId" />
-
-        <mapping class="com.wiley.gr.ace.auth.security.dao.Actions" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.AuditDetails" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.ProfileAttributeList" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserAddresses" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserProfileAttribVisibleId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserRolesId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserSecondaryEmailAddr" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.InviteResetpwdLog" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.AddressType" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.AdminProfile" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.Databasechangelog" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.DatabasechangelogId" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.Databasechangeloglock" />
         <mapping
             class="com.wiley.gr.ace.auth.security.dao.LockedAccountDetails" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.ObjectTypes" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.PermissionGroups" />
-        <mapping
-            class="com.wiley.gr.ace.auth.security.dao.PermissionGroupsId" />
-            <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserFunders" />
-            <mapping
-            class="com.wiley.gr.ace.auth.security.dao.UserProfile" />
-		
-
 	</session-factory>
 </hibernate-configuration>

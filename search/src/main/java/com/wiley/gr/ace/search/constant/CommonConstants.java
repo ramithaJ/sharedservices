@@ -14,11 +14,11 @@
 package com.wiley.gr.ace.search.constant;
 
 /**
- * The interface CommonConstants.
+ * The class CommonConstants.
  *
  * @author virtusa version 1.0
  */
-public interface CommonConstants {
+public class CommonConstants {
 
     public static final String CLUSTER_NAME = "cluster.name";
     public static final String CLUSTER_TRANSPORT_SNIFF = "client.transport.sniff";
@@ -58,7 +58,8 @@ public interface CommonConstants {
 
     public static final String SEARCH_CONTROLLER_REQUEST_MAPPING = "/v1";
     public static final String SEARCH_URL_VALUE = "/api/_search";
-    public static final String SEARCH_AUTO_SUGGEST_URL_VALUE = "/_get";
+    public static final String SITE_SEARCH_URL_VALUE = "/api/_sitesearch";
+    public static final String SEARCH_AUTO_SUGGEST_URL_VALUE = "/api/_suggest";
     public static final String SCORE = "_score";
     public static final String ASC = "ASC";
     public static final String DESC = "DESC";
@@ -72,9 +73,15 @@ public interface CommonConstants {
 
     public static final String SEARCH_SEARCH_ATTR_KEY_STRING = "_SEARCH_ATTRIBUTES";
     public static final String SEARCH_RESULT_ATTR_KEY_STRING = "_SEARCH_RESULT_ATTRIBUTES";
-    
+
     public static final int SEARCH_CRITERIA_DEFAULT_OFFSET = 0;
     public static final int SEARCH_CRITERIA_DEFAULT_ROWS = 10;
 
+    public static final String AUTOCOMPLETE_ANALYZER = "completion";
+    public static final String AUTOCOMPLETE_FIELD_SUFFIX = ".suggestion";
+
+    private CommonConstants() {
+        super();
+    }
 
 }
