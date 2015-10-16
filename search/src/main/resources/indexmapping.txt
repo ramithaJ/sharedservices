@@ -43,7 +43,7 @@
                 "journal_electronic_issn": {
                     "type": "String"
                 },
-                "journal_fornmer_title": {
+                "journal_former_title": {
                     "type": "String"
                 },
                 "journal_nickname": {
@@ -327,9 +327,6 @@
                     "type": "string"
                 },
                 "article_production_status": {
-                    "type": "string"
-                },
-                "article_quote_order_status": {
                     "type": "string"
                 },
                 "article_coauth_name": {

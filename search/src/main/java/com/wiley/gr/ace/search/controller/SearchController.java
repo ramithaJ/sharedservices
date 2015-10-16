@@ -13,8 +13,6 @@
  */
 package com.wiley.gr.ace.search.controller;
 
-import java.util.List;
-
 import org.elasticsearch.action.index.IndexResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +32,7 @@ import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.SiteSearchRequest;
+import com.wiley.gr.ace.search.model.SiteSearchResponse;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
@@ -145,9 +144,9 @@ public class SearchController {
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SITE_SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Response> siteSearch(@RequestBody SiteSearchRequest request,
+    public SiteSearchResponse siteSearch(@RequestBody SiteSearchRequest request,
             @RequestHeader(value = "role") String role) {
-        List<Response> response = null;
+        SiteSearchResponse response = null;
         try {
             response = searchService.siteSearch(request, role);
         } catch (SharedSearchException e) {

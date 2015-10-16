@@ -13,13 +13,12 @@
  */
 package com.wiley.gr.ace.search.service;
 
-import java.util.List;
-
 import com.wiley.gr.ace.search.exception.SharedSearchException;
 import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.SiteSearchRequest;
+import com.wiley.gr.ace.search.model.SiteSearchResponse;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
 
 /**
@@ -66,6 +65,6 @@ public interface SearchService {
      * @throws SharedSearchException
      *             the shared search exception
      */
-    List<Response> siteSearch(SiteSearchRequest request, String role)
+    SiteSearchResponse siteSearch(SiteSearchRequest request, String role)
             throws SharedSearchException;
 }

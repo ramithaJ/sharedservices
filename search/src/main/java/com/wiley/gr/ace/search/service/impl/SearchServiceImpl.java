@@ -61,6 +61,7 @@ import com.wiley.gr.ace.search.model.Items;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.SiteSearchRequest;
+import com.wiley.gr.ace.search.model.SiteSearchResponse;
 import com.wiley.gr.ace.search.model.Sorting;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
 import com.wiley.gr.ace.search.model.Tags;
@@ -206,22 +207,21 @@ public class SearchServiceImpl extends Property implements SearchService {
         try {
             filter = searchCriteria.getFilters();
             filterBuilderList = new ArrayList<FilterBuilder>();
-                Map<String, List<String>> filterMap = filter.getTerm();
-                for (String key : filterMap.keySet()) {
-                    List<String> valueList = filterMap.get(key);
-                    if (valueList != null && !valueList.isEmpty()) {
-                        filterBuilderList.add(FilterBuilders.boolFilter()
-                                .should(FilterBuilders.termsFilter(key,
-                                        valueList)));
-                    }
+            Map<String, List<String>> filterMap = filter.getTerm();
+            for (String key : filterMap.keySet()) {
+                List<String> valueList = filterMap.get(key);
+                if (valueList != null && !valueList.isEmpty()) {
+                    filterBuilderList.add(FilterBuilders.boolFilter().should(
+                            FilterBuilders.termsFilter(key, valueList)));
                 }
+            }
 
-                if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
-                    filterbuilder = FilterBuilders
-                            .andFilter(filterBuilderList
-                                    .toArray(new FilterBuilder[filterBuilderList
-                                            .size() - 1]));
-                }
+            if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
+                filterbuilder = FilterBuilders
+                        .andFilter(filterBuilderList
+                                .toArray(new FilterBuilder[filterBuilderList
+                                        .size() - 1]));
+            }
         } catch (Exception e) {
             LOGGER.error(errorMesage + " setFilter", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
@@ -685,15 +685,17 @@ public class SearchServiceImpl extends Property implements SearchService {
      * .ace.search.model.SiteSearchRequest, java.lang.String)
      */
     @Override
-    public List<Response> siteSearch(SiteSearchRequest request, String role)
+    public SiteSearchResponse siteSearch(SiteSearchRequest request, String role)
             throws SharedSearchException {
         String[] searchFiledsArray = null;
         List<String> types = request.getTypes();
-        Response response = new Response();
-        List<Response> searchResponses = new LinkedList<Response>();
+
+        List<Response> searchResponses = new ArrayList<Response>();
         SearchResponse searchResponse = null;
+        SiteSearchResponse siteSearchResponse = new SiteSearchResponse();
         SearchRequestBuilder requestBuilder = null;
         for (String type : types) {
+            Response response = new Response();
             searchFiledsArray = getSearchFields(role, type);
             requestBuilder = searchClientService
                     .getClient()
@@ -705,9 +707,12 @@ public class SearchServiceImpl extends Property implements SearchService {
                                     searchFiledsArray)).setSize(1);
             searchResponse = requestBuilder.execute().actionGet();
             response = prepareResponse(response, searchResponse, role);
-            searchResponses.add(response);
+            if (!response.getHits().isEmpty()) {
+                searchResponses.add(response);
+            }
         }
-        return searchResponses;
+        siteSearchResponse.setResponse(searchResponses);
+        return siteSearchResponse;
     }
 
     /**
