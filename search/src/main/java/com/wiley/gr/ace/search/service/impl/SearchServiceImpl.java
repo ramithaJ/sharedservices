@@ -704,7 +704,7 @@ public class SearchServiceImpl extends Property implements SearchService {
                     .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                     .setQuery(
                             siteQueryBulider(request.getQuery(),
-                                    searchFiledsArray)).setSize(1);
+                                    searchFiledsArray)).setSize(request.getSize());
             searchResponse = requestBuilder.execute().actionGet();
             response = prepareResponse(response, searchResponse, role);
             if (!response.getHits().isEmpty()) {
