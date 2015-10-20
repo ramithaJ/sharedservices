@@ -19,19 +19,41 @@ import java.util.List;
  * The Class SiteSearchRequest.
  */
 public class SiteSearchRequest {
-    
+
     /** The app key. */
     private String appKey;
-    
+
     /** The index. */
     private String index;
-    
+
     /** The types. */
     private List<String> types;
-    
+
     /** The query. */
     private String query;
-    
+
+    /** The size. */
+    private int size;
+
+    /**
+     * Gets the size.
+     *
+     * @return the size
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Sets the size.
+     *
+     * @param size
+     *            the new size
+     */
+    public void setSize(int size) {
+        this.size = size;
+    }
+
     /**
      * Gets the app key.
      *
@@ -40,16 +62,17 @@ public class SiteSearchRequest {
     public String getAppKey() {
         return appKey;
     }
-    
+
     /**
      * Sets the app key.
      *
-     * @param appKey the new app key
+     * @param appKey
+     *            the new app key
      */
     public void setAppKey(String appKey) {
         this.appKey = appKey;
     }
-    
+
     /**
      * Gets the index.
      *
@@ -58,16 +81,17 @@ public class SiteSearchRequest {
     public String getIndex() {
         return index;
     }
-    
+
     /**
      * Sets the index.
      *
-     * @param index the new index
+     * @param index
+     *            the new index
      */
     public void setIndex(String index) {
         this.index = index;
     }
-    
+
     /**
      * Gets the types.
      *
@@ -76,16 +100,17 @@ public class SiteSearchRequest {
     public List<String> getTypes() {
         return types;
     }
-    
+
     /**
      * Sets the types.
      *
-     * @param types the new types
+     * @param types
+     *            the new types
      */
     public void setTypes(List<String> types) {
         this.types = types;
     }
-    
+
     /**
      * Gets the query.
      *
@@ -94,14 +119,15 @@ public class SiteSearchRequest {
     public String getQuery() {
         return query;
     }
-    
+
     /**
      * Sets the query.
      *
-     * @param query the new query
+     * @param query
+     *            the new query
      */
     public void setQuery(String query) {
         this.query = query;
     }
-    
+
 }

@@ -13,31 +13,19 @@
  */
 package com.wiley.gr.ace.search.service.impl;
 
-import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
-
+import com.wiley.gr.ace.search.constant.CommonConstants;
+import com.wiley.gr.ace.search.constant.Property;
+import com.wiley.gr.ace.search.exception.SharedSearchException;
+import com.wiley.gr.ace.search.model.*;
+import com.wiley.gr.ace.search.service.SearchClientService;
+import com.wiley.gr.ace.search.service.SearchService;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.suggest.SuggestRequestBuilder;
 import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.common.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.index.query.FilteredQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortOrder;
@@ -49,23 +37,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.wiley.gr.ace.search.constant.CommonConstants;
-import com.wiley.gr.ace.search.constant.Property;
-import com.wiley.gr.ace.search.exception.SharedSearchException;
-import com.wiley.gr.ace.search.model.AdvanceQuery;
-import com.wiley.gr.ace.search.model.AutoSuggestResponse;
-import com.wiley.gr.ace.search.model.Facets;
-import com.wiley.gr.ace.search.model.Filter;
-import com.wiley.gr.ace.search.model.Hits;
-import com.wiley.gr.ace.search.model.Items;
-import com.wiley.gr.ace.search.model.Response;
-import com.wiley.gr.ace.search.model.SearchCriteria;
-import com.wiley.gr.ace.search.model.SiteSearchRequest;
-import com.wiley.gr.ace.search.model.Sorting;
-import com.wiley.gr.ace.search.model.SuggestCriteria;
-import com.wiley.gr.ace.search.model.Tags;
-import com.wiley.gr.ace.search.service.SearchClientService;
-import com.wiley.gr.ace.search.service.SearchService;
+import java.util.*;
+
+import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
 
 /**
  * The Class SearchServiceImpl.
@@ -74,45 +48,56 @@ import com.wiley.gr.ace.search.service.SearchService;
  */
 public class SearchServiceImpl extends Property implements SearchService {
 
-    /** The search client service. */
+    /**
+     * The search client service.
+     */
     @Autowired
     private SearchClientService searchClientService;
 
-    /** The index name. */
+    /**
+     * The index name.
+     */
     @Value("${index.name}")
     private String indexName;
 
-    /** The exact fields. */
+    /**
+     * The exact fields.
+     */
     @Value("${EXACT_FIELDS}")
     private String exactFields;
 
-    /** The range fields. */
+    /**
+     * The range fields.
+     */
     @Value("${RANGE_FIELDS}")
     private String rangeFields;
 
-    /** The error mesage. */
+    /**
+     * The error mesage.
+     */
     @Value("${GENERIC_ERROR_MESSAGE}")
     private String errorMesage;
 
-    /** The search properties. */
+    /**
+     * The search properties.
+     */
     @Autowired
     @Qualifier(value = "searchProperties")
     private Properties searchProperties;
 
-    /** The Constant LOGGER. */
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchServiceImpl.class);
 
     /**
      * Method to search against ES index.
      *
-     * @param searchCriteria
-     *            - the input value
-     * @param role
-     *            - the input value
-     * @return response
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @param searchCriteria Search Criteria
+     * @param role           Role of the user who is invoking the search
+     * @return response Search Response
+     * @throws SharedSearchException the shared search exception
      */
     public Response search(SearchCriteria searchCriteria, String role)
             throws SharedSearchException {
@@ -121,12 +106,10 @@ public class SearchServiceImpl extends Property implements SearchService {
         List<String> aggregationList = null;
 
         // Check User Role
-        checkUserRole(role);
+        validateUserRole(role);
 
-        SearchRequestBuilder requestBuilder = searchClientService.getClient()
-                .prepareSearch(indexName)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(getQueryBuilder(searchCriteria, role));
+        //Preparing Search Request
+        SearchRequestBuilder requestBuilder = prepareRequestBuilder(searchCriteria, role);
 
         // Get Source Value every time
         requestBuilder.setTrackScores(true);
@@ -145,11 +128,13 @@ public class SearchServiceImpl extends Property implements SearchService {
 
         // Apply Sort if exists
         addSort(searchCriteria, requestBuilder);
+
         // Execute the request
         SearchResponse response = requestBuilder.execute().actionGet();
 
         // Prepare response
         searchResponse = prepareResponse(searchResponse, response, role);
+
         // Set Facets to the response
         if (searchCriteria.isEnableFacets() && aggregationList != null
                 && !aggregationList.isEmpty()) {
@@ -160,28 +145,52 @@ public class SearchServiceImpl extends Property implements SearchService {
     }
 
     /**
+     * Do some basic checks on the request object.
+     *
+     * @param searchCriteria User Search Criteria
+     * @throws SharedSearchException the shared search exception
+     */
+    private void validateRequest(SearchCriteria searchCriteria) throws SharedSearchException {
+
+        //If types is emtpy throw error
+        if (searchCriteria.getTypes().isEmpty()) {
+            throw new SharedSearchException(CommonConstants.ERROR_CODE_102,
+                    searchServiceError102);
+        }
+
+        //If both simple and advanced query is emtpy throw error
+        if (searchCriteria.getSimpleQuery().isEmpty() && searchCriteria.getAdvanceQuery().isEmpty()) {
+            throw new SharedSearchException(CommonConstants.ERROR_CODE_103,
+                    searchServiceError103);
+        }
+
+    }
+
+    /**
      * Method to check whether user role exists or not.
      *
-     * @param role
-     *            the role
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @param role User role
+     * @throws SharedSearchException the shared search exception
      */
-    private void checkUserRole(String role) throws SharedSearchException {
+    private void validateUserRole(String role) throws SharedSearchException {
         boolean isRoleExists = false;
+
+        //Get configured roles from the search prop file
         final String roles = searchProperties
                 .getProperty(CommonConstants.ROLES);
 
         StringTokenizer stringTokenizer = new StringTokenizer(roles,
                 CommonConstants.COMMA);
 
+        //Iterate the roles
         while (stringTokenizer.hasMoreTokens()) {
-            if (role.equals(stringTokenizer.nextToken())) {
+            if (role.equalsIgnoreCase(stringTokenizer.nextToken())) {
                 isRoleExists = true;
                 break;
             }
         }
 
+        //Throw error if role is not matching with the configured roles
         if (!isRoleExists) {
             throw new SharedSearchException(CommonConstants.ERROR_CODE_101,
                     searchServiceError101);
@@ -189,39 +198,52 @@ public class SearchServiceImpl extends Property implements SearchService {
     }
 
     /**
-     * This method sets the Filter.
+     * Prepare search request.
      *
      * @param searchCriteria
-     *            - the input value
-     * @return the filter builder
+     * @param role
+     * @return
      * @throws SharedSearchException
-     *             the shared search exception
+     */
+    private SearchRequestBuilder prepareRequestBuilder(SearchCriteria searchCriteria, String role) throws SharedSearchException {
+        return searchClientService.getClient()
+                .prepareSearch(indexName)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(getQueryBuilder(searchCriteria, role));
+    }
+
+
+    /**
+     * This method sets the Filter.
+     *
+     * @param searchCriteria - the input value
+     * @return the filter builder
+     * @throws SharedSearchException the shared search exception
      */
     private FilterBuilder setFilter(SearchCriteria searchCriteria)
             throws SharedSearchException {
         FilterBuilder filterbuilder = null;
-        Filter filter = null;
-        List<FilterBuilder> filterBuilderList = null;
+        Filter filter;
+        List<FilterBuilder> filterBuilderList;
 
         try {
             filter = searchCriteria.getFilters();
             filterBuilderList = new ArrayList<FilterBuilder>();
-                Map<String, List<String>> filterMap = filter.getTerm();
-                for (String key : filterMap.keySet()) {
-                    List<String> valueList = filterMap.get(key);
-                    if (valueList != null && !valueList.isEmpty()) {
-                        filterBuilderList.add(FilterBuilders.boolFilter()
-                                .should(FilterBuilders.termsFilter(key,
-                                        valueList)));
-                    }
+            Map<String, List<String>> filterMap = filter.getTerm();
+            for (String key : filterMap.keySet()) {
+                List<String> valueList = filterMap.get(key);
+                if (valueList != null && !valueList.isEmpty()) {
+                    filterBuilderList.add(FilterBuilders.boolFilter().should(
+                            FilterBuilders.termsFilter(key, valueList)));
                 }
+            }
 
-                if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
-                    filterbuilder = FilterBuilders
-                            .andFilter(filterBuilderList
-                                    .toArray(new FilterBuilder[filterBuilderList
-                                            .size() - 1]));
-                }
+            if (filterBuilderList != null && !filterBuilderList.isEmpty()) {
+                filterbuilder = FilterBuilders
+                        .andFilter(filterBuilderList
+                                .toArray(new FilterBuilder[filterBuilderList
+                                        .size() - 1]));
+            }
         } catch (Exception e) {
             LOGGER.error(errorMesage + " setFilter", e);
             throw new SharedSearchException(CommonConstants.ERROR_CODE_100,
@@ -234,12 +256,9 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method to set data types in the index.
      *
-     * @param requestBuilder
-     *            - the input value
-     * @param list
-     *            the list
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @param requestBuilder - the input value
+     * @param list           the list
+     * @throws SharedSearchException the shared search exception
      */
     private void setTypes(SearchRequestBuilder requestBuilder, List<String> list)
             throws SharedSearchException {
@@ -257,19 +276,16 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method to add aggregations.
      *
-     * @param requestBuilder
-     *            the request builder
-     * @param types
-     *            the types
+     * @param requestBuilder the request builder
+     * @param types          the types
      * @return the list
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     private List<String> addAggregations(SearchRequestBuilder requestBuilder,
-            List<String> types) throws SharedSearchException {
+                                         List<String> types) throws SharedSearchException {
 
-        StringTokenizer aggregationFields = null;
-        List<String> aggregationList = null;
+        StringTokenizer aggregationFields;
+        List<String> aggregationList;
 
         try {
 
@@ -301,20 +317,16 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method to prepare response.
      *
-     * @param searchResponse
-     *            - the input value
-     * @param response
-     *            - the input value
-     * @param role
-     *            the role
+     * @param searchResponse - the input value
+     * @param response       - the input value
+     * @param role           the role
      * @return response
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     private Response prepareResponse(Response searchResponse,
-            SearchResponse response, String role) throws SharedSearchException {
+                                     SearchResponse response, String role) throws SharedSearchException {
         List<Hits> hitsList = new LinkedList<Hits>();
-        StringTokenizer searchFieldStringTokens = null;
+        StringTokenizer searchFieldStringTokens;
 
         try {
             SearchHit[] results = response.getHits().getHits();
@@ -356,17 +368,14 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * This method returns the tokens of the required fields.
      *
-     * @param role
-     *            the role
-     * @param type
-     *            the type
+     * @param role the role
+     * @param type the type
      * @return searchFieldStringTokens
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     private StringTokenizer getSearchResultAttributeTokens(String role,
-            String type) throws SharedSearchException {
-        StringTokenizer searchFieldStringTokens = null;
+                                                           String type) throws SharedSearchException {
+        StringTokenizer searchFieldStringTokens;
         try {
             searchFieldStringTokens = new StringTokenizer(
                     searchProperties.getProperty(role
@@ -386,34 +395,28 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method to set Page Navigation.
      *
-     * @param requestBuilder
-     *            - the input value
-     * @param from
-     *            - the input value
-     * @param rows
-     *            - the input value
+     * @param requestBuilder - the input value
+     * @param from           - the input value
+     * @param rows           - the input value
      */
     private void setResultSize(SearchRequestBuilder requestBuilder, int from,
-            int rows) {
+                               int rows) {
         requestBuilder.setFrom(from).setSize(rows);
     }
 
     /**
      * /** Method to sort the results.
      *
-     * @param searchCriteria
-     *            - the input value
-     * @param requestBuilder
-     *            - the input value
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @param searchCriteria - the input value
+     * @param requestBuilder - the input value
+     * @throws SharedSearchException the shared search exception
      */
     private void addSort(SearchCriteria searchCriteria,
-            SearchRequestBuilder requestBuilder) throws SharedSearchException {
+                         SearchRequestBuilder requestBuilder) throws SharedSearchException {
         try {
             List<Sorting> sortList = searchCriteria.getSort();
             boolean isDescOrder = false;
-            if (sortList != null && !sortList.isEmpty()) {
+            if (null != sortList && !sortList.isEmpty()) {
                 for (Sorting sorting : sortList) {
                     if (sorting.getSortOrder().equalsIgnoreCase(
                             CommonConstants.DESC)) {
@@ -437,23 +440,19 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method to get facets from the response.
      *
-     * @param response
-     *            the response
-     * @param aggregationList
-     *            the aggregation list
+     * @param response        the response
+     * @param aggregationList the aggregation list
      * @return the aggregations
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     private Facets getAggregations(SearchResponse response,
-            List<String> aggregationList) throws SharedSearchException {
+                                   List<String> aggregationList) throws SharedSearchException {
         Facets facets = new Facets();
         Tags tags = new Tags();
         int bucketSize = 0;
         List<Items> itemsLinkedList = new LinkedList<>();
         try {
             for (String fieldValue : aggregationList) {
-
                 Terms terms = response.getAggregations().get(fieldValue);
                 Collection<Terms.Bucket> buckets = terms.getBuckets();
                 bucketSize = bucketSize + buckets.size();
@@ -481,22 +480,19 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method to get query builder.
      *
-     * @param searchCriteria
-     *            - the input value
-     * @param role
-     *            - the input value
+     * @param searchCriteria - the input value
+     * @param role           - the input value
      * @return matchQueryBuilder
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     protected FilteredQueryBuilder getQueryBuilder(
             SearchCriteria searchCriteria, String role)
             throws SharedSearchException {
         FilterBuilder filterbuilder = null;
-        FilteredQueryBuilder fileterQuery = null;
+        FilteredQueryBuilder fileterQuery;
         QueryBuilder matchQueryBuilder = null;
         String[] searchFiledsArray = null;
-        List<String> types = null;
+        List<String> types;
 
         LOGGER.info("Inside getQueryBuilder method");
 
@@ -506,6 +502,7 @@ public class SearchServiceImpl extends Property implements SearchService {
 
         try {
             LOGGER.info("ROLE : " + role);
+            //TODO: Below logic is not ok.
             for (String type : types) {
                 searchFiledsArray = getSearchFields(role, type);
             }
@@ -539,11 +536,9 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method returns simple searched query result.
      *
-     * @param searchCriteria
-     *            - the input value
+     * @param searchCriteria - the input value
      * @return queryBuilder
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     private QueryBuilder advancedSearch(SearchCriteria searchCriteria)
             throws SharedSearchException {
@@ -569,13 +564,11 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method adds wild card builder.
      *
-     * @param query
-     *            - the input value
-     * @param boolQuery
-     *            - the input value
+     * @param query     - the input value
+     * @param boolQuery - the input value
      */
     private void addWildCardBuilder(AdvanceQuery query,
-            BoolQueryBuilder boolQuery) {
+                                    BoolQueryBuilder boolQuery) {
 
         LOGGER.info("Inside addwildcardBuilder method");
 
@@ -586,13 +579,11 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method adds exact match builder.
      *
-     * @param query
-     *            - the input value
-     * @param boolQuery
-     *            - the input value
+     * @param query     - the input value
+     * @param boolQuery - the input value
      */
     private void addExactMatchBuilder(AdvanceQuery query,
-            BoolQueryBuilder boolQuery) {
+                                      BoolQueryBuilder boolQuery) {
         LOGGER.info("Inside addexactMatchBuilder method");
 
         boolQuery.must(QueryBuilders.matchQuery(query.getField(),
@@ -602,12 +593,9 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method adds range builder.
      *
-     * @param query
-     *            - the input value
-     * @param boolQuery
-     *            - the input value
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @param query     - the input value
+     * @param boolQuery - the input value
+     * @throws SharedSearchException the shared search exception
      */
     private void addRangeBuilder(AdvanceQuery query, BoolQueryBuilder boolQuery)
             throws SharedSearchException {
@@ -632,11 +620,9 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Method returns suggestion response.
      *
-     * @param criteria
-     *            - the input value
+     * @param criteria - the input value
      * @return suggestResponse.
-     * @throws SharedSearchException
-     *             the shared search exception
+     * @throws SharedSearchException the shared search exception
      */
     @Override
     public AutoSuggestResponse autoComplete(SuggestCriteria criteria)
@@ -685,15 +671,16 @@ public class SearchServiceImpl extends Property implements SearchService {
      * .ace.search.model.SiteSearchRequest, java.lang.String)
      */
     @Override
-    public List<Response> siteSearch(SiteSearchRequest request, String role)
+    public SiteSearchResponse siteSearch(SiteSearchRequest request, String role)
             throws SharedSearchException {
-        String[] searchFiledsArray = null;
+        String[] searchFiledsArray;
         List<String> types = request.getTypes();
-        Response response = new Response();
-        List<Response> searchResponses = new LinkedList<Response>();
-        SearchResponse searchResponse = null;
-        SearchRequestBuilder requestBuilder = null;
+        List<Response> searchResponses = new ArrayList<Response>();
+        SearchResponse searchResponse;
+        SiteSearchResponse siteSearchResponse = new SiteSearchResponse();
+        SearchRequestBuilder requestBuilder;
         for (String type : types) {
+            Response response = new Response();
             searchFiledsArray = getSearchFields(role, type);
             requestBuilder = searchClientService
                     .getClient()
@@ -705,22 +692,23 @@ public class SearchServiceImpl extends Property implements SearchService {
                                     searchFiledsArray)).setSize(1);
             searchResponse = requestBuilder.execute().actionGet();
             response = prepareResponse(response, searchResponse, role);
-            searchResponses.add(response);
+            if (!response.getHits().isEmpty()) {
+                searchResponses.add(response);
+            }
         }
-        return searchResponses;
+        siteSearchResponse.setResponse(searchResponses);
+        return siteSearchResponse;
     }
 
     /**
      * Site query bulider.
      *
-     * @param query
-     *            the query
-     * @param fields
-     *            the fields
+     * @param query  the query
+     * @param fields the fields
      * @return the query builder
      */
     private QueryBuilder siteQueryBulider(String query, String[] fields) {
-        QueryBuilder queryBuilder = null;
+        QueryBuilder queryBuilder;
         queryBuilder = QueryBuilders.multiMatchQuery(query, fields).type(
                 MatchQueryBuilder.Type.PHRASE_PREFIX);
 
@@ -731,16 +719,14 @@ public class SearchServiceImpl extends Property implements SearchService {
     /**
      * Gets the search fields.
      *
-     * @param role
-     *            the role
-     * @param type
-     *            the type
+     * @param role the role
+     * @param type the type
      * @return the search fields
      */
     String[] getSearchFields(String role, String type) {
         List<String> searchFiledsList = new ArrayList<String>();
-        StringTokenizer searchFields = null;
-        String[] searchFiledsArray = null;
+        StringTokenizer searchFields;
+        String[] searchFiledsArray;
         searchFields = new StringTokenizer(searchProperties.getProperty(role
                 + CommonConstants.UNDERSCORE + type.toUpperCase()
                 + CommonConstants.SEARCH_SEARCH_ATTR_KEY_STRING),

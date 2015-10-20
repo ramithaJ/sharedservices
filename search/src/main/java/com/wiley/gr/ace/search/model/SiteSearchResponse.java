@@ -11,12 +11,39 @@
  * of John Wiley & Sons.
  * *****************************************************************************
  */
-package com.wiley.gr.ace.search.repository.impl;
+package com.wiley.gr.ace.search.model;
 
-import com.wiley.gr.ace.search.repository.SearchRepository;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * Created by KKALYAN on 7/2/2015.
+ * The Class SiteSearchResponse.
  */
-public class SearchRepositoryImpl implements SearchRepository {
+public class SiteSearchResponse implements Serializable {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    /** The response. */
+    private List<Response> response;
+
+    /**
+     * Gets the response.
+     *
+     * @return the response
+     */
+    public List<Response> getResponse() {
+        return response;
+    }
+
+    /**
+     * Sets the response.
+     *
+     * @param response the new response
+     */
+    public void setResponse(List<Response> response) {
+        this.response = response;
+    }
+
 }

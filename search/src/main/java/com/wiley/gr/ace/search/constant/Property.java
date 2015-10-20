@@ -24,8 +24,14 @@ public class Property {
 
     @Value("${SEARCH_SERVICE_ERROR_100}")
     public String searchServiceError100;
-    
+
     @Value("${SEARCH_SERVICE_ERROR_101}")
     public String searchServiceError101;
+
+    @Value("${SEARCH_SERVICE_ERROR_102}")
+    public String searchServiceError102;
+
+    @Value("${SEARCH_SERVICE_ERROR_103}")
+    public String searchServiceError103;
 
 }
