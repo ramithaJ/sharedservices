@@ -18,6 +18,7 @@ import com.wiley.gr.ace.profile.model.person.Person;
 import com.wiley.gr.ace.profile.model.user.UpdateUserAttributes;
 import com.wiley.gr.ace.profile.model.user.UpdateUserRequest;
 import com.wiley.gr.ace.profile.model.user.UpdateUserSecurityAttributes;
+import com.wiley.gr.ace.profile.model.user.UserAddress;
 import com.wiley.gr.ace.profile.model.user.UserPayload;
 import com.wiley.gr.ace.profile.model.user.UserSearchResponse;
 
@@ -47,8 +48,9 @@ public class ObjectUtil {
         participant.setJobTitle(profile.getTitleCode());
         participant.setEmail(profile.getPrimaryEmail());
         participant.setRecoveryEmail(profile.getRecoveryEmail());
-        participant.setCreated("1444176000000");
-        participant.setModified("1444830415000");
+        participant.setAreasOfInterest(profile.getInterestList());
+      //  participant.setCreated("1444176000000");
+       // participant.setModified("1444830415000");
         participant.setState(profile.getState());
         
 		return participant;
@@ -212,11 +214,25 @@ public static UpdateUserRequest getUserObject(Object object, String entityType) 
 	
 	}else if(entityType.equalsIgnoreCase(CommonConstants.ENTITY_TYPE_ADDRESS)){
 		com.wiley.gr.ace.profile.model.Address address = (com.wiley.gr.ace.profile.model.Address)object;
-		userAttributes.getUserAddress().setAddress(address.getAddressLine1());
-		userAttributes.getUserAddress().setStreet(address.getAddressLine2());
-		userAttributes.getUserAddress().setCountry(address.getCountryCode());
-		userAttributes.getUserAddress().setState(address.getStateCode());
+		
+		userAttributes.setLastName(null);
+		userAttributes.setFirstName(null);
 		userAttributes.setEmail(address.getPrimaryEmail());
+		userAttributes.seteCID(null);
+		userAttributes.setUserStatus(null);		
+		
+		UserAddress userAddress = new UserAddress();
+		userAddress.setAddress(address.getAddressLine1());
+		userAddress.setStreet(address.getAddressLine2());
+		userAddress.setState(address.getStateCode());
+		userAddress.setCountry(address.getCountryCode());
+		userAddress.setZipCode(address.getZipCode());
+		userAttributes.setUserAddress(userAddress);
+				userAttributes.setCustomerType(null);
+		userAttributes.settCFlag(null);
+		userAttributes.setSendEmail(null);
+		
+		
 		
 	}else if(entityType.equalsIgnoreCase(CommonConstants.ENTITY_TYPE_USER)){
 		

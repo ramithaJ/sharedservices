@@ -95,6 +95,7 @@ public class OrchestrationServiceImpl implements OrchestrationService {
 			try{
 				
 			Participant participant = ObjectUtil.getParticipantObject(profile);
+			
 			participant.setParticipantId(ptpId);
 			
 			participantService.updateParticipant(participant);
@@ -264,7 +265,7 @@ public class OrchestrationServiceImpl implements OrchestrationService {
 		//TODO: Need to get a participant id for address and send to CDM;
 		
 		Person person = ObjectUtil.getCustomerAddressObject(address, ptpId);
-	    //personService.updatePerson(person);
+	    personService.updatePerson(person);
 	
 		LOGGER.info("update address data in person master sucessfull");
 		

@@ -19,7 +19,7 @@ public class Profile {
 	String recoveryEmail;
 	String oldEmail;
 	String authorFlag;
-	List<Interest> interestList; 
+	List<String> interestList; 
 	String registrantFlag;
 	String userRole;
 	String created;
@@ -58,10 +58,10 @@ public class Profile {
 	public void setOldEmail(String oldEmail) {
 		this.oldEmail = oldEmail;
 	}
-	public List<Interest> getInterestList() {
+	public List<String> getInterestList() {
 		return interestList;
 	}
-	public void setInterestList(List<Interest> interestList) {
+	public void setInterestList(List<String> interestList) {
 		this.interestList = interestList;
 	}
 	public String getTitleCode() {

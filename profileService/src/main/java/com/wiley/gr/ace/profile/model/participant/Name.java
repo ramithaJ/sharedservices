@@ -1,12 +1,15 @@
 package com.wiley.gr.ace.profile.model.participant;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 
 /**
  * A container for localized, contextualized names
  **/
+@JsonInclude(Include.NON_NULL)
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-10-08T17:06:09.937Z")
 public class Name   {
   

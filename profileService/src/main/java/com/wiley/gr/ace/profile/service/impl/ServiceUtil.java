@@ -69,7 +69,6 @@ public class ServiceUtil {
 		
 		 ResponseEntity<T> response =null;
 		 
-		 response = new RestTemplate().postForEntity(url, requestEntityClass, responseEntityClass);
 			
 		try{
 
@@ -84,7 +83,9 @@ public class ServiceUtil {
 				LOGGER.info(e.getMessage());
 			}
 					
-			
+	
+			 response = new RestTemplate().postForEntity(url, requestEntityClass, responseEntityClass);
+				
 	    
 		} catch(Exception e){
 	    	throw new SharedServiceException(null, e.getMessage());
@@ -108,6 +109,17 @@ public class ServiceUtil {
 			   logRequest(requestEntityClass);
 								
 				RestTemplate restTemplate = new RestTemplate();
+				
+				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+				try {
+					String json = ow.writeValueAsString(requestEntityClass);
+				//	LOGGER.debug(json);
+					System.out.println(json);
+					
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					LOGGER.info(e.getMessage());
+				}
 			
 				restTemplate.put(url, getHeaderDetails(requestEntityClass), requestEntityClass.getClass());
 				
