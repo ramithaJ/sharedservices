@@ -220,15 +220,16 @@ public static UpdateUserRequest getUserObject(Object object, String entityType) 
 		userAttributes.setEmail(address.getPrimaryEmail());
 		userAttributes.seteCID(null);
 		userAttributes.setUserStatus(null);		
-		
+		userAttributes.setSourceSystem(null);
 		UserAddress userAddress = new UserAddress();
 		userAddress.setAddress(address.getAddressLine1());
 		userAddress.setStreet(address.getAddressLine2());
 		userAddress.setState(address.getStateCode());
 		userAddress.setCountry(address.getCountryCode());
 		userAddress.setZipCode(address.getZipCode());
+		
 		userAttributes.setUserAddress(userAddress);
-				userAttributes.setCustomerType(null);
+		userAttributes.setCustomerType(null);
 		userAttributes.settCFlag(null);
 		userAttributes.setSendEmail(null);
 		

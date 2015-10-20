@@ -272,9 +272,9 @@ public class OrchestrationServiceImpl implements OrchestrationService {
 		
 		}else if(requestType.equals(RequestMethod.PUT)){
 			
-	     user = userService.searchUser((address.getPrimaryEmail()));
+	  //   user = userService.searchUser((address.getPrimaryEmail()));
 			
-		 updateUser(address, CommonConstants.ENTITY_TYPE_ADDRESS,SourceSystem);
+	//	 updateUser(address, CommonConstants.ENTITY_TYPE_ADDRESS,SourceSystem);
 		
 			LOGGER.info("update address data in user master sucessfull");
 			
