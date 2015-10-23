@@ -159,7 +159,10 @@
                 "journal_wal_participate_date": {
                     "type": "date"
                 },
-                "journal_invited_as_date": {
+                "journal_invited_as_end_date": {
+                    "type": "date"
+                },
+                "journal_invited_as_start_date": {
                     "type": "date"
                 },
                 "journal_family_code": {

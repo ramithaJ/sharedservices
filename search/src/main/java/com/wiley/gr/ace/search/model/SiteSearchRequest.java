@@ -30,7 +30,7 @@ public class SiteSearchRequest {
     private List<String> types;
 
     /** The query. */
-    private String query;
+    private String simpleQuery;
 
     /** The size. */
     private int size;
@@ -116,8 +116,8 @@ public class SiteSearchRequest {
      *
      * @return the query
      */
-    public String getQuery() {
-        return query;
+    public String getSimpleQuery() {
+        return simpleQuery;
     }
 
     /**
@@ -126,8 +126,8 @@ public class SiteSearchRequest {
      * @param query
      *            the new query
      */
-    public void setQuery(String query) {
-        this.query = query;
+    public void setSimpleQuery(String simpleQuery) {
+        this.simpleQuery = simpleQuery;
     }
 
 }

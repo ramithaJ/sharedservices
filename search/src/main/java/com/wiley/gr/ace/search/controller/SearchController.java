@@ -32,8 +32,8 @@ import com.wiley.gr.ace.search.model.AutoSuggestResponse;
 import com.wiley.gr.ace.search.model.Response;
 import com.wiley.gr.ace.search.model.SearchCriteria;
 import com.wiley.gr.ace.search.model.SiteSearchRequest;
-import com.wiley.gr.ace.search.model.SiteSearchResponse;
 import com.wiley.gr.ace.search.model.SuggestCriteria;
+import com.wiley.gr.ace.search.model.TopBarResponse;
 import com.wiley.gr.ace.search.service.SearchClientService;
 import com.wiley.gr.ace.search.service.SearchService;
 import com.wiley.gr.ace.search.service.impl.SearchServiceImpl;
@@ -144,9 +144,9 @@ public class SearchController {
      */
     @RequestMapping(method = { RequestMethod.POST }, value = { CommonConstants.SITE_SEARCH_URL_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SiteSearchResponse siteSearch(@RequestBody SiteSearchRequest request,
+    public TopBarResponse siteSearch(@RequestBody SiteSearchRequest request,
             @RequestHeader(value = "role") String role) {
-        SiteSearchResponse response = null;
+        TopBarResponse response = null;
         try {
             response = searchService.siteSearch(request, role);
         } catch (SharedSearchException e) {
