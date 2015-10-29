@@ -25,7 +25,7 @@ import com.wiley.gr.ace.sharedservices.service.PermissionRepository;
  * The Class PermissionController.
  */
 @Controller
-@RequestMapping("/permissions")
+@RequestMapping("/v1/permissions")
 public class PermissionController extends AbstractController {
 
     /** The Constant LOGGER. */

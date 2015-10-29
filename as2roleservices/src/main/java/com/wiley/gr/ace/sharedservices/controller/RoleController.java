@@ -26,7 +26,7 @@ import com.wiley.gr.ace.sharedservices.service.Role;
  * The Class RoleController.
  */
 @Controller
-@RequestMapping("/roles")
+@RequestMapping("/v1/roles")
 public class RoleController extends AbstractController {
 
     /** The Constant LOGGER. */
