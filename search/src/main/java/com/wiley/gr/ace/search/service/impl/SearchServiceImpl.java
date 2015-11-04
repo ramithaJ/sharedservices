@@ -601,7 +601,7 @@ public class SearchServiceImpl extends Property implements SearchService {
                     CommonConstants.ERROR_NOTE
                             + CommonConstants.INTERNAL_SERVER_ERROR);
         }
-        if (searchCriteria.getFilters() != null) {
+        if (searchCriteria.getFilters() != null && searchCriteria.getFilters().getTerm() !=null) {
             filterbuilder = setFilter(searchCriteria);
         }
         fileterQuery = QueryBuilders.filteredQuery(matchQueryBuilder,
