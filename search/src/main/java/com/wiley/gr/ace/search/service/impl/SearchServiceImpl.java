@@ -82,12 +82,6 @@ public class SearchServiceImpl extends Property implements SearchService {
     private SearchClientService searchClientService;
 
     /**
-     * The index name.
-     */
-    @Value("${index.name}")
-    private String indexName;
-
-    /**
      * The exact fields.
      */
     @Value("${EXACT_FIELDS}")
@@ -248,7 +242,7 @@ public class SearchServiceImpl extends Property implements SearchService {
     private SearchRequestBuilder prepareRequestBuilder(
             SearchCriteria searchCriteria, String role)
             throws SharedSearchException {
-        return searchClientService.getClient().prepareSearch(indexName)
+        return searchClientService.getClient().prepareSearch(searchCriteria.getIndex())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(getQueryBuilder(searchCriteria, role));
     }
@@ -725,7 +719,7 @@ public class SearchServiceImpl extends Property implements SearchService {
                     + CommonConstants.AUTOCOMPLETE_FIELD_SUFFIX);
             suggestionsBuilder.size(criteria.getSize());
             SuggestRequestBuilder suggestRequestBuilder = searchClientService
-                    .getClient().prepareSuggest(indexName)
+                    .getClient().prepareSuggest(criteria.getIndex())
                     .addSuggestion(suggestionsBuilder);
 
             suggestResponse = suggestRequestBuilder.execute().actionGet();
@@ -772,7 +766,7 @@ public class SearchServiceImpl extends Property implements SearchService {
             searchFiledsArray = getSearchFields(role, type);
             requestBuilder = searchClientService
                     .getClient()
-                    .prepareSearch(indexName)
+                    .prepareSearch(request.getIndex())
                     .setTypes(type)
                     .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                     .setQuery(
